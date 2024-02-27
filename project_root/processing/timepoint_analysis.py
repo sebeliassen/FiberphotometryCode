@@ -75,20 +75,18 @@ def aggregate_signals(sessions, timepoint_name, regions_to_aggregate, ax,
         aggregated_signals -= np.mean(aggregated_signals[:, :150], axis=1, keepdims=True)
 
     if aggregated_signals.size > 0:
-        # Calculate mean and standard error of the mean
         mean_signal = np.mean(aggregated_signals, axis=0)
         sem_signal = stats.sem(aggregated_signals, axis=0)
-        # Calculate the upper and lower bounds of the 95% confidence interval
         ci_95 = sem_signal * stats.t.ppf((1 + 0.95) / 2., len(aggregated_signals)-1)
         lower_bound = mean_signal - ci_95
         upper_bound = mean_signal + ci_95
 
-        # Plot directly to the provided ax object
         ax.plot(time_axis / 20, mean_signal, label='Mean Signal', color=color)
         ax.fill_between(time_axis / 20, lower_bound, upper_bound, color=color, alpha=0.2, label='95% CI')    
         ax.set_title(subtitle)
         ax.set_xlabel("Time from event (s)")
         ax.set_ylabel("Z-score")
+
         ax.legend()
         return lower_bound.min(), upper_bound.max()
     else:
@@ -186,3 +184,52 @@ def plot_session_events_and_signal(session, brain_reg, fig, row, col, title_suff
     # Updating layout for each subplot individually if needed
     fig.update_xaxes(title_text='Time (s)', row=row, col=col, range=x_range)
     fig.update_yaxes(title_text='Signal', row=row, col=col, range=y_range)
+
+
+def find_interval_for_auc(xs, ys, ax):
+    # Fit the polynomial to the data
+    # (time_axis / 20)[100:-75], mean_signal[100:-75]
+    coefficients = np.polyfit(xs, ys, 8)
+    p = np.poly1d(coefficients)
+
+    # Find the first derivative and its roots for extrema
+    p_derivative = np.polyder(p)
+    extrema_roots = np.sort(p_derivative.roots[np.isreal(p_derivative.roots)].real)
+
+    # Find c_x: the x-value of the extrema closest to zero
+    if extrema_roots.size > 0:
+        c_x = extrema_roots[np.argmin(np.abs(extrema_roots))]
+
+        # Second derivative for inflection points
+        p_double_derivative = np.polyder(p_derivative)
+        inflection_roots = np.sort(p_double_derivative.roots[np.isreal(p_double_derivative.roots)].real)
+
+        # Determine the extrema closest to c_x on both sides
+        left_extrema = extrema_roots[extrema_roots < c_x]
+        right_extrema = extrema_roots[extrema_roots > c_x]
+
+        points_to_plot = []
+
+        # Check left side for extrema or fallback to inflection point
+        if left_extrema.size > 0:
+            left_point = left_extrema[-1]  # Closest on the left
+        else:
+            left_inflections = inflection_roots[inflection_roots < c_x]
+            left_point = left_inflections[-1] if left_inflections.size > 0 else None
+
+        if left_point is not None:
+            points_to_plot.append((left_point, p(left_point)))
+
+        # Check right side for extrema or fallback to inflection point
+        if right_extrema.size > 0:
+            right_point = right_extrema[0]  # Closest on the right
+        else:
+            right_inflections = inflection_roots[inflection_roots > c_x]
+            right_point = right_inflections[0] if right_inflections.size > 0 else None
+
+        if right_point is not None:
+            points_to_plot.append((right_point, p(right_point)))
+
+        # Plot the determined points
+        for point in points_to_plot:
+            ax.scatter(*point, color='red', zorder=5)
