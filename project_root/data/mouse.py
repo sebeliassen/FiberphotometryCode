@@ -3,12 +3,12 @@ from collections import defaultdict
 
 class Mouse:
     def __init__(self, mouse_sessions):
-        all_mouse_ids = {mouse_session[1].mouse_id for mouse_session in mouse_sessions}
+        all_mouse_ids = {mouse_session.mouse_id for mouse_session in mouse_sessions}
         if len(all_mouse_ids) != 1:
             raise AssertionError("Only sessions with the same mouse_id can be used for instantiation")
         
         self.mouse_id = all_mouse_ids.pop()  # Assuming all IDs are the same, pop the single element
-        self.session_idxs, self.sessions = zip(*mouse_sessions)
+        self.sessions = mouse_sessions
         #self.event_counts = self.set_event_counts()
 
     def set_event_counts(self):
@@ -25,8 +25,8 @@ class Mouse:
 def create_mice_dict(sessions):
     all_mouse_sessions = defaultdict(list)
 
-    for idx, session in enumerate(sessions):
-        all_mouse_sessions[session.mouse_id].append((idx, session))
+    for session in sessions:
+        all_mouse_sessions[session.mouse_id].append(session)
 
     all_mice = {}
     for mouse_id, mouse_sessions in all_mouse_sessions.items():
