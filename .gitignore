@@ -6,6 +6,7 @@
 !LICENSE
 !README.md
 !project_root/
+!project_root/**/*
 
 # Within project_root/, ignore:
 project_root/**/__pycache__/
