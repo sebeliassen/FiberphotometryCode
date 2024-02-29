@@ -37,3 +37,10 @@ actions_attr_dict = {"Hit": "hit",
                     "Correct Rejection": "cor_reject"}
 
 reward_attr_dict = {"Reward Collected Start ITI": "reward_collect"}
+
+
+attr_interval_dict = {'hit': (-2.5, 5),
+                      'miss': (-2.5, 2),
+                      'cor_reject': (-2.5, 2),
+                      'mistake': (-2.5, 2.5),
+                      'reward_collect': (-3, 4.5)}

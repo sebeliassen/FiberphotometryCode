@@ -60,6 +60,17 @@ def participation(event_counts):
 def total_hits(event_counts):
     return event_counts['hit']
 
+def total_mistakes(event_counts):
+    return event_counts['mistake']
+
+
+def hit_rate(event_counts):
+    return calculate_rate(event_counts, 'hit', 'miss')
+
+
+def false_alarm_rate(event_counts):
+    return calculate_rate(event_counts, 'mistake', 'cor_reject')
+
 
 def add_performance_container(mouse):
     metric_container = DataContainer(float)
@@ -70,7 +81,10 @@ def add_performance_container(mouse):
         'd_prime': d_prime,
         'c_score': c_score,
         'participation': participation,
-        'total_hits': total_hits
+        'total_hits': total_hits,
+        'total_mistakes': total_mistakes,
+        'hit_rate': hit_rate,
+        'false_alarm_rate': false_alarm_rate,
     }
     
     # Loop through the dictionary, calculating and adding each metric
