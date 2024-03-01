@@ -64,9 +64,9 @@ def calculate_signal_response_metrics(signal, interval):
     right_minima = adjusted_signal[-1]
 
     slope_up = ((maxima - left_minima) / peak_idx if
-                peak_idx != 0 else -float('inf'))  # Avoid division by zero
-    slope_down = ((maxima - right_minima) / (len(adjusted_signal) - peak_idx - 1) if
-                  peak_idx != len(adjusted_signal) - 1 else -float('inf'))  # Adjust for index
+                peak_idx != 0 else float('inf'))  # Avoid division by zero
+    slope_down = ((maxima - right_minima) / (len(adjusted_signal) - peak_idx) if
+                  peak_idx != len(adjusted_signal) else float('inf'))  # Adjust for index
 
     response_metrics = {
         'slope_up': slope_up,
