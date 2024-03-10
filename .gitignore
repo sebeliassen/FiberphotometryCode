@@ -18,6 +18,12 @@ venv/
 *.log
 *.sqlite
 .DS_Store
+*.zip
+
+# Remember to remove this at some point
+*.csv
+*.png
+*.PNG
 
 # IDE-specific directories
 .vscode/

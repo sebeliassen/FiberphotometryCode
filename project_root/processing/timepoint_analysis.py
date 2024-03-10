@@ -49,12 +49,13 @@ def get_signal_around_timepoint(session, timepoint_name, brain_region):
 
 
 def aggregate_signals(sessions, timepoint_name, regions_to_aggregate, 
-                      aggregate_by_session=True, normalize_baseline=False):
+                      aggregate_by_session=True, normalize_baseline=False, fetch_all_signals=False):
     aggregated_signals = []
     fps = PLOTTING_CONFIG['fps']
     time_axis = np.arange(-interval_start, interval_end) / fps
 
     start_time, end_time = attr_interval_dict[timepoint_name]
+    # start_time, end_time = -2.5, 2.5
     start_event_idx = int(start_time * fps + interval_start)
     end_event_idx = int(end_time * fps + interval_start)
 
@@ -69,7 +70,6 @@ def aggregate_signals(sessions, timepoint_name, regions_to_aggregate,
                     signal_data = signal_data.mean(axis=0)
                 aggregated_signals.append(signal_data)
 
-    # Convert list of signals into a NumPy array for vectorized operations
     if aggregate_by_session:
         aggregated_signals = np.array(aggregated_signals)
     else:
@@ -80,6 +80,14 @@ def aggregate_signals(sessions, timepoint_name, regions_to_aggregate,
         # aggregated_signals -= np.mean(aggregated_signals[:, :150], axis=1, keepdims=True)
 
     if aggregated_signals.size > 0:
+        if fetch_all_signals:
+            # Smooth the aggregated signals
+            window_length = 1
+            window = np.ones(window_length) / window_length
+            smoothed_signals = np.apply_along_axis(lambda x: np.convolve(x, window, 'same'), axis=1, arr=aggregated_signals)
+            
+            return time_axis, smoothed_signals, (start_event_idx, end_event_idx)
+
         mean_signal = np.mean(aggregated_signals, axis=0)
         # Smoothing
         window_length = 5

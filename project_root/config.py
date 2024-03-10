@@ -43,4 +43,6 @@ attr_interval_dict = {'hit': (-2.5, 5),
                       'miss': (-2.5, 2),
                       'cor_reject': (-2.5, 2),
                       'mistake': (-2.5, 2.5),
-                      'reward_collect': (-3, 4.5)}
+                      'reward_collect': (-3, 4.5),
+                      'before_dispimg_mistake': (-2.5, 2.5),
+                      'before_dispimg_hit': (-2.5, 2.5)}

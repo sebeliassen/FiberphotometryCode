@@ -1,4 +1,6 @@
 import numpy as np
+from tqdm import tqdm
+from processing.timepoint_analysis import aggregate_signals
 
 
 def find_interval_for_auc(xs, ys):
@@ -77,3 +79,37 @@ def calculate_signal_response_metrics(signal, interval):
     }
 
     return response_metrics
+
+
+def is_relevant_session(brain_regions, event_type, session):
+    return ((brain_regions[0] in session.brain_regions 
+             or brain_regions[1] in session.brain_regions)
+             and session.timepoints_container.get_data(event_type))
+
+
+def assign_responses(mice, disable_tqdm=False):
+    for mouse in tqdm(mice, disable=disable_tqdm):
+        # Initialize a flat dictionary for each mouse
+        flattened_responses = {}
+        
+        # Iterate over combinations of brain regions and event types
+        for brain_regions in [['VS_left', 'VS_right'], ['DMS_left', 'DMS_right'], ['DLS_left', 'DLS_right']]:
+            for event_type in ['hit', 'mistake', 'miss', 'cor_reject', 'reward_collect']:
+                filtered_sessions = [session for session in mouse.sessions if is_relevant_session(brain_regions, event_type, session)]
+
+                if filtered_sessions:
+                    _, ys, _, _, interval = aggregate_signals(filtered_sessions, event_type, brain_regions, 
+                                                            aggregate_by_session=False, normalize_baseline=True)
+                    response_metrics = calculate_signal_response_metrics(ys, interval)
+
+                    # Generate a unique key by combining brain region (prefix) and event type
+                    unique_key_prefix = brain_regions[0].split('_')[0]  # Extract region prefix (e.g., "VS")
+                    unique_key = f"{unique_key_prefix}_{event_type}"
+                    
+                    # Add suffixes to each metric and merge them into the flattened_responses dictionary
+                    for metric_name, metric_value in response_metrics.items():
+                        flattened_key = f"{unique_key}_{metric_name}"
+                        flattened_responses[flattened_key] = metric_value
+        
+        # Assign the flattened dictionary to the current mouse
+        mouse.response_metrics = flattened_responses
