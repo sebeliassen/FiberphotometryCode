@@ -1,5 +1,6 @@
 from config import actions_attr_dict
 from collections import defaultdict
+from utils import count_session_events
 
 class Mouse:
     def __init__(self, mouse_sessions):
@@ -15,8 +16,7 @@ class Mouse:
         event_counts = {}
 
         for event_type in actions_attr_dict.values():
-            total = sum(len(mouse_session.timepoints_container.data.get(event_type, []))
-                        for mouse_session in self.sessions)
+            total = count_session_events(self.sessions, event_type)
             event_counts[event_type] = total
 
         return event_counts

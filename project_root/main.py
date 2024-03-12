@@ -18,11 +18,14 @@ This will of course need to change if we don't have any raw_df for instance.
 import pickle
 from data.data_loading import load_all_sessions
 from data.setup_utils import Renamer, Syncer
-from data.timepoints import create_timepoint_container_for_sessions
+from data.timepoints import create_event_idxs_container_for_sessions
 from processing.plotting_setup import PlottingSetup
-from processing.timepoint_analysis import plot_session_events_and_signal, aggregate_signals
+from processing.response_metrics_setup import add_response_metrics_to_sessions
+from analysis.timepoint_analysis import aggregate_signals
+from plotting.main_plotting import plot_session_events_and_signal
 from config import *
 import matplotlib.pyplot as plt
+from utils import find_session_by_trial_mouse_id
 
 
 def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=False, 
@@ -46,34 +49,29 @@ def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=
     plotting_setup = PlottingSetup(**PLOTTING_CONFIG)
     plotting_setup.apply_plotting_setup_to_sessions(sessions)
 
-    # add timepoints
-    create_timepoint_container_for_sessions(sessions, actions_attr_dict, reward_attr_dict)
-
+    # add event_idxs
+    create_event_idxs_container_for_sessions(sessions, actions_attr_dict, reward_attr_dict)
+    add_response_metrics_to_sessions(sessions)
     return sessions
 
-
 # sessions = load_and_prepare_sessions("../Baseline", load_from_pickle=True, remove_bad_signal_sessions=True)
-# for session in sessions:
-#     session.d_prime = d_prime(session) 
-#     session.c_score = c_score(session) 
-#     session.participation = participation(session) 
-
-# sorted_d_prime_sessions = sorted(sessions, key=lambda sesh: sesh.d_prime)
-# sorted_d_prime_sessions = [sesh for sesh in sorted_d_prime_sessions if sesh.brain_regions[-1][0] == 'V' \
-#                            and sesh.d_prime != -1]
-
-# sorted_c_score_sessions = sorted(sessions, key=lambda sesh: sesh.d_prime)
-# sorted_c_score_sessions = [sesh for sesh in sorted_c_score_sessions if sesh.brain_regions[-1][0] == 'V' \
-#                            and sesh.c_score != -1]
-
-# sorted_participation_sessions = sorted(sessions, key=lambda sesh: sesh.d_prime)
-# sorted_participation_sessions = [sesh for sesh in sorted_participation_sessions if sesh.brain_regions[-1][0] == 'V' \
-#                                  and sesh.participation != -1]
 
 
-# fig, (ax1, ax2) = plt.subplots(figsize=(10, 5), ncols=2)
-# aggregate_signals(sorted_d_prime_sessions[:5], 'hit', ['VS_left', 'VS_right'], ax1, brain_reg_name='bad')
-# aggregate_signals(sorted_d_prime_sessions[-5:], 'hit', ['VS_left', 'VS_right'], ax2, brain_reg_name='good')
-# fig.suptitle(f'hit_signals_r{5}')
-# plt.show()
+# import plotly.graph_objects as go
+# from plotly.subplots import make_subplots
+# from scipy.signal import savgol_filter
+# import numpy as np
 
+# # Your session and brain_reg objects should be defined here
+# session = find_session_by_trial_mouse_id(sessions, 20, 45)  # Your session object
+# brain_reg = session.brain_regions[-1]  # Your brain region object
+
+# # Step 3: Create a Plotly figure object for subplots
+# # Adjust rows and cols based on your layout needs
+# fig = make_subplots(rows=1, cols=1)
+
+# # Step 4: Call the function with your specific parameters
+# plot_session_events_and_signal(session, brain_reg, fig, row=1, col=1, title_suffix="Your Title Suffix Here")
+
+# # Finally, show the figure
+# fig.show()

@@ -1,6 +1,6 @@
 import numpy as np
 from tqdm import tqdm
-from processing.timepoint_analysis import aggregate_signals
+from analysis.timepoint_analysis import aggregate_signals
 
 
 def find_interval_for_auc(xs, ys):
@@ -84,7 +84,7 @@ def calculate_signal_response_metrics(signal, interval):
 def is_relevant_session(brain_regions, event_type, session):
     return ((brain_regions[0] in session.brain_regions 
              or brain_regions[1] in session.brain_regions)
-             and session.timepoints_container.get_data(event_type))
+             and session.event_idxs_container.get_data(event_type))
 
 
 def assign_responses(mice, disable_tqdm=False):
@@ -98,8 +98,7 @@ def assign_responses(mice, disable_tqdm=False):
                 filtered_sessions = [session for session in mouse.sessions if is_relevant_session(brain_regions, event_type, session)]
 
                 if filtered_sessions:
-                    _, ys, _, _, interval = aggregate_signals(filtered_sessions, event_type, brain_regions, 
-                                                            aggregate_by_session=False, normalize_baseline=True)
+                    _, ys, _, _, interval = aggregate_signals(filtered_sessions, event_type, brain_regions)
                     response_metrics = calculate_signal_response_metrics(ys, interval)
 
                     # Generate a unique key by combining brain region (prefix) and event type

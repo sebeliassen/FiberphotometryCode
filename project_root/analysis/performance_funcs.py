@@ -1,14 +1,14 @@
 from config import * 
 from scipy.stats import norm
 from data.data_loading import DataContainer
+from utils import count_session_events
 
 
 def set_event_counts(mouse):
         event_counts = {}
 
         for event_type in actions_attr_dict.values():
-            total = sum(len(mouse_session.timepoints_container.data.get(event_type, []))
-                        for mouse_session in mouse.sessions)
+            total = count_session_events(mouse.sessions, event_type)
             event_counts[event_type] = total
 
         mouse.event_counts = event_counts
