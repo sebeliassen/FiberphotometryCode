@@ -32,10 +32,13 @@ class MiceAnalysis:
 
             for mouse in sorted(self.mice_dict.values(), key=lambda m: m.metric_container.data[metric]):
                 # Generate all combinations of sessions, brain regions (without postfix), and event types
-                all_brain_regions = set(br.split('_')[0] for session in mouse.sessions for br in session.brain_regions)
+                # TODO: hardcoded for now, should not be
+                all_brain_regions = ['VS', 'DMS', 'DLS']
                 combinations = product(mouse.sessions, all_brain_regions, attr_interval_dict.keys())
 
                 for session, brain_region, event_type in combinations:
+                    if brain_region not in '_'.join(session.brain_regions):
+                        continue
                     curr_cumsum = cumulative_events[(brain_region, event_type)]
 
                     prev_sum = curr_cumsum[-1][1] if curr_cumsum else 0
@@ -52,45 +55,49 @@ class MiceAnalysis:
                                      n=1000, min_mice=3, max_mice=3):
         mouse_ids, cumsums = zip(*self.cumulative_events_by_metric[metric][(brain_region, event_type)])
 
-        low_mouse_ids_needed = 0
-        high_mouse_ids_needed = 0
-
         if max_mice > len(mouse_ids) // 2:
             max_mice = len(mouse_ids) // 2
             print(f"max_mice was set to {max_mice} because it was too high in relation to the number of mice.")
 
-        for cumsum in cumsums:
-            low_mouse_ids_needed += 1
-            if cumsum >= n:
-                break
-            
-        for cumsum in cumsums[::-1]:
-            cumsum = cumsums[-1] - cumsum
-            high_mouse_ids_needed += 1
-            if cumsum >= n:
-                break
-
         low_mouse_ids = set()
         high_mouse_ids = set()
 
-        for mouse_id in mouse_ids:
-            low_mouse_ids.add(mouse_id)
-            if (len(low_mouse_ids) >= low_mouse_ids_needed \
-                or len(low_mouse_ids) >= max_mice)\
-                and len(low_mouse_ids) >= min_mice:
+        from_left_idxs = []
+        for i in range(len(mouse_ids) - 1):
+            if mouse_ids[i] != mouse_ids[i + 1]:
+                from_left_idxs.append(i)
+    
+        from_right_idxs = [i + 1 for i in from_left_idxs[::-1]]
+        
+        for from_left_idx, from_right_idx in zip(from_left_idxs, from_right_idxs):
+            if len(low_mouse_ids) >= max_mice:
                 break
 
-        for mouse_id in mouse_ids[::-1]:
-            high_mouse_ids.add(mouse_id)
-            if (len(high_mouse_ids) >= high_mouse_ids_needed \
-                or len(high_mouse_ids) >= max_mice)\
-                and len(high_mouse_ids) >= min_mice:
+            left_mouse_id = mouse_ids[from_left_idx]
+            left_cumsum = cumsums[from_left_idx]
+
+            right_mouse_id = mouse_ids[from_right_idx]
+            right_cumsum = cumsums[-1] - cumsums[from_right_idx]
+
+            low_mouse_ids.add(left_mouse_id)
+            high_mouse_ids.add(right_mouse_id)
+            if left_cumsum >= n and right_cumsum >= n and len(low_mouse_ids) >= min_mice:
                 break
 
-        lowest_sessions = [self.mice_dict[mouse_id].sessions for mouse_id in low_mouse_ids]
-        lowest_sessions = list(chain(*lowest_sessions))
-        highest_sessions = [self.mice_dict[mouse_id].sessions for mouse_id in high_mouse_ids]
-        highest_sessions = list(chain(*highest_sessions))
+        # Initialize empty lists for the lowest and highest sessions
+        lowest_sessions = []
+        highest_sessions = []
+
+        # Iterate through low mouse IDs and extend the lowest_sessions list with filtered sessions
+        for mouse_id in low_mouse_ids:
+            filtered_sessions = [session for session in self.mice_dict[mouse_id].sessions if brain_region in '_'.join(session.brain_regions)]
+            lowest_sessions.extend(filtered_sessions)
+
+        # Iterate through high mouse IDs and extend the highest_sessions list with filtered sessions
+        for mouse_id in high_mouse_ids:
+            filtered_sessions = [session for session in self.mice_dict[mouse_id].sessions if brain_region in '_'.join(session.brain_regions)]
+            highest_sessions.extend(filtered_sessions)
+
         return lowest_sessions, highest_sessions
     
     def sample_response_metrics(self, metric, brain_region, event_type, n=200):

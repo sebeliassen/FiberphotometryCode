@@ -4,7 +4,7 @@ from scipy import stats
 from data.data_loading import DataContainer
 from config import *
 from collections import defaultdict
-from utils import find_start_end_idxs
+from utils import count_session_events, find_start_end_idxs
 
 from scipy.signal import savgol_filter
 import plotly.graph_objects as go
@@ -91,7 +91,6 @@ def aggregate_signals(sessions, event_type, regions_to_aggregate, aggregate_by_s
                       normalize_baseline=True, n=None):
     time_axis, all_signals, (start_event_idx, end_event_idx) = \
         collect_signals(sessions, event_type, regions_to_aggregate, aggregate_by_session)
-
     if normalize_baseline:
         all_signals -= np.mean(all_signals[:, start_event_idx-7:start_event_idx+7], axis=1, keepdims=True)
 
