@@ -46,3 +46,7 @@ attr_interval_dict = {'hit': (-2.5, 5),
                       'reward_collect': (-3, 4.5),
                       'before_dispimg_mistake': (-2.5, 2.5),
                       'before_dispimg_hit': (-2.5, 2.5)}
+
+all_brain_regions = ['VS', 'DMS', 'DLS']
+all_event_types = ['hit', 'mistake', 'miss', 'cor_reject', 'reward_collect']
+all_metrics = ['c_score', 'd_prime', 'participation']

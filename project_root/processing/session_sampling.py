@@ -53,31 +53,26 @@ class MiceAnalysis:
 
     def sample_high_and_low_sessions(self, metric, brain_region, event_type,
                                      n=1000, min_mice=3, max_mice=3):
-        mouse_ids, cumsums = zip(*self.cumulative_events_by_metric[metric][(brain_region, event_type)])
+        id_cumsum_pairs = self.cumulative_events_by_metric[metric][(brain_region, event_type)]
 
-        if max_mice > len(mouse_ids) // 2:
-            max_mice = len(mouse_ids) // 2
+        if max_mice > len(id_cumsum_pairs) // 2:
+            max_mice = len(id_cumsum_pairs) // 2
             print(f"max_mice was set to {max_mice} because it was too high in relation to the number of mice.")
 
         low_mouse_ids = set()
         high_mouse_ids = set()
 
-        from_left_idxs = []
-        for i in range(len(mouse_ids) - 1):
-            if mouse_ids[i] != mouse_ids[i + 1]:
-                from_left_idxs.append(i)
-    
-        from_right_idxs = [i + 1 for i in from_left_idxs[::-1]]
-        
-        for from_left_idx, from_right_idx in zip(from_left_idxs, from_right_idxs):
+        # this basically removes duplicates based on the mouse_id, and chooses to keep the last entry from the left or 
+        # right respectively. Note that this nifty trick only works for python 3.7 and up.
+
+        from_left_scan = {k: v for (k, v) in id_cumsum_pairs}
+        from_right_scan = {k: id_cumsum_pairs[1][-1] - v for (k, v) in reversed(id_cumsum_pairs)}
+  
+        for (left_mouse_id, left_cumsum), (right_mouse_id, right_cumsum) \
+            in zip(from_left_scan.items(), from_right_scan.items()):
+
             if len(low_mouse_ids) >= max_mice:
                 break
-
-            left_mouse_id = mouse_ids[from_left_idx]
-            left_cumsum = cumsums[from_left_idx]
-
-            right_mouse_id = mouse_ids[from_right_idx]
-            right_cumsum = cumsums[-1] - cumsums[from_right_idx]
 
             low_mouse_ids.add(left_mouse_id)
             high_mouse_ids.add(right_mouse_id)
@@ -107,19 +102,13 @@ class MiceAnalysis:
         low_vals = defaultdict(list)
         high_vals = defaultdict(list)
 
-        for session in low_sessions:
-            for response_metric in self.all_response_metrics:
-                key = (event_type, brain_region, response_metric)
-                values = session.response_metrics[key]
-                values = [v for v in values if not np.isinf(v) and not np.isnan(v)]
-                low_vals[response_metric].extend(values)
-
-        for session in high_sessions:
-            for response_metric in self.all_response_metrics:
-                key = (event_type, brain_region, response_metric)
-                values = session.response_metrics[key]
-                values = [v for v in values if not np.isinf(v) and not np.isnan(v)]
-                high_vals[response_metric].extend(values)
+        for session_group, val_dict in zip([low_sessions, high_sessions], [low_vals, high_vals]):
+            for session in session_group:
+                for response_metric in self.all_response_metrics:
+                    key = (event_type, brain_region, response_metric)
+                    values = session.response_metrics[key]
+                    values = [v for v in values if not np.isinf(v) and not np.isnan(v)]
+                    val_dict[response_metric].extend(values)
 
         low_sampled_vals = defaultdict(list)
         high_sampled_vals = defaultdict(list)
@@ -127,7 +116,9 @@ class MiceAnalysis:
         for response_metric in low_vals.keys():
             low_vals_by_metric = low_vals[response_metric]
             high_vals_by_metric = high_vals[response_metric]
+
             final_n = min(n, len(low_vals_by_metric), len(high_vals_by_metric))            
+
             low_sampled_vals[response_metric] = random.sample(low_vals_by_metric, final_n)
             high_sampled_vals[response_metric] = random.sample(high_vals_by_metric, final_n)
         
@@ -138,10 +129,23 @@ class MiceAnalysis:
             self.sample_high_and_low_sessions(metric, brain_region, event_type, n=n)
         
         regions_to_aggregate = [f'{brain_region}_{suffix}' for suffix in ['left', 'right']]
+        
+        lo_vals = []
+        for lo_session in low_sessions:
+            lo_vals.extend(lo_session.response_metrics[(event_type, brain_region, 'peak_timing')])
 
+
+        hi_vals = []
+        for hi_session in high_sessions:
+            hi_vals.extend(hi_session.response_metrics[(event_type, brain_region, 'peak_timing')])
+
+        lo_vals_avg = round(sum(lo_vals) / len(lo_vals), 3)
+        hi_vals_avg = round(sum(hi_vals) / len(hi_vals), 3)
+        
         final_n = min(n, count_session_events(low_sessions, event_type), 
                          count_session_events(high_sessions, event_type))
+        
         low_out = aggregate_signals(low_sessions, event_type, regions_to_aggregate, n=final_n)
         high_out = aggregate_signals(high_sessions, event_type, regions_to_aggregate, n=final_n)
 
-        return low_out, high_out, low_sessions, high_sessions
+        return low_out, high_out, final_n, (lo_vals_avg, hi_vals_avg)

@@ -66,8 +66,8 @@ def plot_session_events_and_signal(session, brain_reg, fig, row, col, title_suff
     fig.update_xaxes(title_text='Time (s)', row=row, col=col, range=x_range)
     fig.update_yaxes(title_text='Signal', row=row, col=col, range=y_range)
 
-def adjust_and_plot(ax, data, title, ylim, color='blue', label='Mean Signal'):
-    """Adjusts the y-limits based on provided bounds and plots the data."""
+def adjust_and_plot(ax, data, title, ylim, color='blue', label='Mean Signal', shading_boundaries=None):
+    """Adjusts the y-limits based on provided bounds, plots the data, and shades areas outside specified boundaries."""
     time_axis, mean_signal, lower_bound, upper_bound = data
     ax.plot(time_axis, mean_signal, label=label, color=color)
     ax.fill_between(time_axis, lower_bound, upper_bound, color=color, alpha=0.2, label='95% CI')
@@ -78,22 +78,27 @@ def adjust_and_plot(ax, data, title, ylim, color='blue', label='Mean Signal'):
     ax.set_ylim(ylim)
     ax.set_xlim(time_axis.min(), time_axis.max())
     ax.grid()
+    
+    # Shade areas outside the specified boundaries, if provided
+    if shading_boundaries is not None:
+        ax.axvspan(time_axis.min(), shading_boundaries[0], color='grey', alpha=0.2)
+        ax.axvspan(shading_boundaries[1], time_axis.max(), color='grey', alpha=0.2)
 
-def main_plotting_function(outs, subtitles, suptitle, color):
-    """Plots aggregated signal data from multiple session groups.
+def main_plotting_function(outs, subtitles, suptitle, color, shading_boundaries=None, fname=None):
+    """Plots aggregated signal data from multiple session groups with optional shading outside specified boundaries.
     
     Parameters:
     - outs: A list of tuples, each containing (time_axis, mean_signal, lower_bound, upper_bound) for a session group.
     - suptitle: Super title for the plot.
-    - colors: Optional list of colors for each session group plot. If not provided, defaults to 'blue'.
+    - colors: List of colors for each session group plot.
+    - shading_boundaries: Tuple indicating the start and end of the region not to be shaded.
     """
-    fig, axs = plt.subplots(figsize=(10, 5), ncols=len(outs), dpi=300)
+    _, axs = plt.subplots(figsize=(10, 5), ncols=len(outs), dpi=300)
     if len(outs) == 1:  # Ensure axs is iterable for a single subplot
         axs = [axs]
     
     # Determine global y-limits
-    all_lbs = [lb for _, _, lb, _ in outs]
-    all_ubs = [ub for _, _, _, ub in outs]
+    _, _, all_lbs, all_ubs = zip(*outs)
     global_lb = min(lb.min() for lb in all_lbs)
     global_ub = max(ub.max() for ub in all_ubs)
     if (global_ub - global_lb) < 2:
@@ -101,10 +106,14 @@ def main_plotting_function(outs, subtitles, suptitle, color):
     else:
         global_ylim = (global_lb, global_ub)
 
-    # Plotting with adjusted y-limits
+    # Plotting with adjusted y-limits and optional shading
     for data, ax, subtitle in zip(outs, axs, subtitles):
-        adjust_and_plot(ax, data, title=subtitle, ylim=global_ylim, color=color)
+        adjust_and_plot(ax, data, title=subtitle, ylim=global_ylim, color=color, shading_boundaries=shading_boundaries)
 
     plt.suptitle(suptitle)
     plt.tight_layout()
-    plt.show()
+    if fname:
+        plt.savefig(fname, dpi=300)
+        plt.clf()
+    else:
+        plt.show()

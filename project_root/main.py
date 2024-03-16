@@ -54,8 +54,10 @@ def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=
     add_response_metrics_to_sessions(sessions)
     return sessions
 
-# sessions = load_and_prepare_sessions("../Baseline", load_from_pickle=True, remove_bad_signal_sessions=True)
-
+# sessions = load_and_prepare_sessions("../Baseline", load_from_pickle=False, remove_bad_signal_sessions=True)
+# # save sessions to pickle
+# with open("../Baseline/sessions.pickle", "wb") as f:
+#     pickle.dump(sessions, f)
 
 # import plotly.graph_objects as go
 # from plotly.subplots import make_subplots
