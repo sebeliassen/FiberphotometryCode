@@ -1,8 +1,9 @@
 import numpy as np
+from scipy import stats
 from scipy.signal import savgol_filter
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
-from analysis.timepoint_analysis import aggregate_signals
+import config
 
 
 def plot_session_events_and_signal(session, brain_reg, fig, row, col, title_suffix=""):
@@ -66,39 +67,56 @@ def plot_session_events_and_signal(session, brain_reg, fig, row, col, title_suff
     fig.update_xaxes(title_text='Time (s)', row=row, col=col, range=x_range)
     fig.update_yaxes(title_text='Signal', row=row, col=col, range=y_range)
 
-def adjust_and_plot(ax, data, title, ylim, color='blue', label='Mean Signal', shading_boundaries=None):
-    """Adjusts the y-limits based on provided bounds, plots the data, and shades areas outside specified boundaries."""
-    time_axis, mean_signal, lower_bound, upper_bound = data
-    ax.plot(time_axis, mean_signal, label=label, color=color)
-    ax.fill_between(time_axis, lower_bound, upper_bound, color=color, alpha=0.2, label='95% CI')
+def adjust_and_plot(ax, xs, ys, lb, ub, title, ylim, color='blue', label='Mean Signal', 
+                    shading_boundaries=None):
+    """Adjusts the y-limits based on provided bounds, plots the data, shades areas outside specified boundaries, and optionally adds vertical lines on the x-axis."""
+    ax.plot(xs, ys, label=label, color=color)
+    ax.fill_between(xs, lb, ub, color=color, alpha=0.2, label='95% CI')
     ax.set_title(title)
     ax.set_xlabel("Time from event (s)")
     ax.set_ylabel("Z-score")
     ax.legend()
     ax.set_ylim(ylim)
-    ax.set_xlim(time_axis.min(), time_axis.max())
+    ax.set_xlim(xs.min(), xs.max())
     ax.grid()
     
     # Shade areas outside the specified boundaries, if provided
     if shading_boundaries is not None:
-        ax.axvspan(time_axis.min(), shading_boundaries[0], color='grey', alpha=0.2)
-        ax.axvspan(shading_boundaries[1], time_axis.max(), color='grey', alpha=0.2)
+        ax.axvspan(xs.min(), shading_boundaries[0], color='grey', alpha=0.2)
+        ax.axvspan(shading_boundaries[1], xs.max(), color='grey', alpha=0.2)
 
-def main_plotting_function(outs, subtitles, suptitle, color, shading_boundaries=None, fname=None):
-    """Plots aggregated signal data from multiple session groups with optional shading outside specified boundaries.
-    
-    Parameters:
-    - outs: A list of tuples, each containing (time_axis, mean_signal, lower_bound, upper_bound) for a session group.
-    - suptitle: Super title for the plot.
-    - colors: List of colors for each session group plot.
-    - shading_boundaries: Tuple indicating the start and end of the region not to be shaded.
-    """
-    _, axs = plt.subplots(figsize=(10, 5), ncols=len(outs), dpi=300)
-    if len(outs) == 1:  # Ensure axs is iterable for a single subplot
-        axs = [axs]
+def plot_signals(all_signals, subtitles, suptitle, color, smoothing_len, shading_boundaries, scatters, fname):
+    interval_start = config.peak_interval_config["interval_start"]
+    interval_end = config.peak_interval_config["interval_end"]
+    fps = config.PLOTTING_CONFIG['fps']
+
+    xs = np.arange(-interval_start, interval_end) / fps
+
+    all_ys = []
+    all_lbs = []
+    all_ubs = []
+
+    for signals in all_signals:
+        ys = np.mean(signals, axis=0)
+
+        # Smoothing
+        window_length = smoothing_len
+        window = np.ones(window_length) / window_length
+        ys = np.convolve(ys, window, 'same')
+
+        sem_signal = stats.sem(signals, axis=0)
+        ci_95 = sem_signal * stats.t.ppf((1 + 0.95) / 2., len(signals)-1)
+
+        lb = ys - ci_95
+        ub = ys + ci_95
+
+        all_ys.append(ys)
+        all_lbs.append(lb)
+        all_ubs.append(ub)
+
+    _, axs = plt.subplots(figsize=(10, 10), ncols=len(all_signals), nrows=2, dpi=300)
     
     # Determine global y-limits
-    _, _, all_lbs, all_ubs = zip(*outs)
     global_lb = min(lb.min() for lb in all_lbs)
     global_ub = max(ub.max() for ub in all_ubs)
     if (global_ub - global_lb) < 2:
@@ -107,8 +125,18 @@ def main_plotting_function(outs, subtitles, suptitle, color, shading_boundaries=
         global_ylim = (global_lb, global_ub)
 
     # Plotting with adjusted y-limits and optional shading
-    for data, ax, subtitle in zip(outs, axs, subtitles):
-        adjust_and_plot(ax, data, title=subtitle, ylim=global_ylim, color=color, shading_boundaries=shading_boundaries)
+    for ax_main, ax_scatter, ys, lb, ub, subtitle, scatter_data in zip(axs[0], axs[1], all_ys, all_lbs, all_ubs, subtitles, scatters):
+        adjust_and_plot(ax_main, xs, ys, lb, ub, title=subtitle, ylim=global_ylim, color=color,
+                        shading_boundaries=shading_boundaries)
+
+        # If scatter data is provided, plot it
+        if scatter_data is not None:
+            ax_scatter.plot(xs, ys, color=color)
+            ax_scatter.scatter(scatter_data[0], scatter_data[1], color=color, s=10, alpha=0.6)
+            ax_scatter.set_xlim(xs.min(), xs.max())
+            # ax_scatter.set_ylim(0, 1)  # Set y-limits for scatter plot if needed
+            # ax_scatter.axis('off')  # Hide the axis for the scatter plot
+            ax_scatter.grid()
 
     plt.suptitle(suptitle)
     plt.tight_layout()

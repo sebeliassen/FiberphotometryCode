@@ -1,7 +1,6 @@
 import numpy as np
 from tqdm import tqdm
-from analysis.timepoint_analysis import aggregate_signals
-
+import config
 
 def calculate_signal_response_metrics(signal, interval):
     # Assuming 'interval' is a slice or range, adjust signal accordingly
@@ -29,3 +28,36 @@ def calculate_signal_response_metrics(signal, interval):
     }
 
     return response_metrics
+
+
+def calculate_signal_response_metrics_matrix(signals, interval):
+    # Adjust signals according to interval
+    if isinstance(interval, (list, tuple, range)):
+        signals = signals[:, interval[0]:interval[1]+1]
+    fps = config.PLOTTING_CONFIG['fps']
+    
+    maxima = np.max(signals, axis=1)
+    left_minima = signals[:, 0]
+    right_minima = signals[:, -1]
+    
+    peak_indices = np.argmax(signals, axis=1) / fps
+    
+    # Calculating slopes with np.divide to handle division by zero gracefully
+    slope_up = np.divide(maxima - left_minima, peak_indices, where=peak_indices!=0)
+    slope_down_dxs = signals.shape[1] / fps - peak_indices
+    slope_down = np.divide(maxima - right_minima, slope_down_dxs, where=slope_down_dxs!=0)
+
+    auc = np.trapz(signals, dx=1, axis=1)
+    
+    result_matrix = np.vstack((slope_up, slope_down, maxima, peak_indices, auc)).T
+    
+    # Define metric names dictionary
+    metric_names = {
+        0: 'slope_up',
+        1: 'slope_down',
+        2: 'maximal_value',
+        3: 'peak_timing',
+        4: 'auc'
+    }
+
+    return result_matrix, metric_names

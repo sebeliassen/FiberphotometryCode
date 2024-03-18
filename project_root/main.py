@@ -20,12 +20,8 @@ from data.data_loading import load_all_sessions
 from data.setup_utils import Renamer, Syncer
 from data.timepoints import create_event_idxs_container_for_sessions
 from processing.plotting_setup import PlottingSetup
-from processing.response_metrics_setup import add_response_metrics_to_sessions
-from analysis.timepoint_analysis import aggregate_signals
-from plotting.main_plotting import plot_session_events_and_signal
+from processing.signal_info_setup import assign_sessions_signal_info
 from config import *
-import matplotlib.pyplot as plt
-from utils import find_session_by_trial_mouse_id
 
 
 def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=False, 
@@ -51,7 +47,7 @@ def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=
 
     # add event_idxs
     create_event_idxs_container_for_sessions(sessions, actions_attr_dict, reward_attr_dict)
-    add_response_metrics_to_sessions(sessions)
+    assign_sessions_signal_info(sessions)
     return sessions
 
 # sessions = load_and_prepare_sessions("../Baseline", load_from_pickle=False, remove_bad_signal_sessions=True)

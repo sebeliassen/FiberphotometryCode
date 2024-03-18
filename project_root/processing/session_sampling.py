@@ -1,6 +1,5 @@
 from collections import defaultdict
 from itertools import chain, product
-from analysis.timepoint_analysis import aggregate_signals, collect_signals, get_signal_around_event
 from analysis.performance_funcs import add_performance_container
 from data.mouse import create_mice_dict
 from config import attr_interval_dict
@@ -42,9 +41,12 @@ class MiceAnalysis:
                     curr_cumsum = cumulative_events[(brain_region, event_type)]
 
                     prev_sum = curr_cumsum[-1][1] if curr_cumsum else 0
-                    key = (event_type, brain_region, self.all_response_metrics[0])
+                    # key = (event_type, brain_region, self.all_response_metrics[0])
 
-                    addend = len(session.response_metrics[key]) if key in session.response_metrics else 0
+                    if session.signal_info.get((brain_region, event_type)):
+                        addend = session.signal_info[(brain_region, event_type)]['signal_matrix'].shape[1]
+                    else:
+                        addend = 0
                     curr_cumsum.append((mouse.mouse_id, prev_sum + addend))
 
             cumulative_events_by_metric[metric] = cumulative_events
@@ -124,28 +126,28 @@ class MiceAnalysis:
         
         return low_sampled_vals, high_sampled_vals
     
-    def sample_phot_signals(self, metric, brain_region, event_type, n=200):
-        low_sessions, high_sessions = \
-            self.sample_high_and_low_sessions(metric, brain_region, event_type, n=n)
+    # def sample_phot_signals(self, metric, brain_region, event_type, n=200):
+    #     low_sessions, high_sessions = \
+    #         self.sample_high_and_low_sessions(metric, brain_region, event_type, n=n)
         
-        regions_to_aggregate = [f'{brain_region}_{suffix}' for suffix in ['left', 'right']]
+    #     regions_to_aggregate = [f'{brain_region}_{suffix}' for suffix in ['left', 'right']]
         
-        lo_vals = []
-        for lo_session in low_sessions:
-            lo_vals.extend(lo_session.response_metrics[(event_type, brain_region, 'peak_timing')])
+    #     lo_vals = []
+    #     for lo_session in low_sessions:
+    #         lo_vals.extend(lo_session.response_metrics[(event_type, brain_region, 'peak_timing')])
 
 
-        hi_vals = []
-        for hi_session in high_sessions:
-            hi_vals.extend(hi_session.response_metrics[(event_type, brain_region, 'peak_timing')])
+    #     hi_vals = []
+    #     for hi_session in high_sessions:
+    #         hi_vals.extend(hi_session.response_metrics[(event_type, brain_region, 'peak_timing')])
 
-        lo_vals_avg = round(sum(lo_vals) / len(lo_vals), 3)
-        hi_vals_avg = round(sum(hi_vals) / len(hi_vals), 3)
+    #     lo_vals_avg = round(sum(lo_vals) / len(lo_vals), 3)
+    #     hi_vals_avg = round(sum(hi_vals) / len(hi_vals), 3)
         
-        final_n = min(n, count_session_events(low_sessions, event_type), 
-                         count_session_events(high_sessions, event_type))
+    #     final_n = min(n, count_session_events(low_sessions, event_type), 
+    #                      count_session_events(high_sessions, event_type))
         
-        low_out = aggregate_signals(low_sessions, event_type, regions_to_aggregate, n=final_n)
-        high_out = aggregate_signals(high_sessions, event_type, regions_to_aggregate, n=final_n)
+    #     low_out = aggregate_signals(low_sessions, event_type, regions_to_aggregate, n=final_n)
+    #     high_out = aggregate_signals(high_sessions, event_type, regions_to_aggregate, n=final_n)
 
-        return low_out, high_out, final_n, (lo_vals_avg, hi_vals_avg)
+    #     return low_out, high_out, final_n, (lo_vals_avg, hi_vals_avg)

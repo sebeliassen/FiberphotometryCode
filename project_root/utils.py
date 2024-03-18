@@ -1,3 +1,5 @@
+import numpy as np
+from collections import defaultdict
 from config import * 
 
 interval_start = peak_interval_config["interval_start"]
@@ -28,3 +30,13 @@ def find_session_by_trial_mouse_id(sessions, trial_id, mouse_id):
 
 def count_session_events(sessions, event_type):
     return sum(len(session.event_idxs_container.data.get(event_type, [])) for session in sessions)
+
+def concat_dicts(dicts):
+    concatenated_dict = defaultdict(list)
+
+    # Iterate through each dictionary and append the values to the defaultdict
+    for d in dicts:
+        for key, value in d.items():
+            concatenated_dict[key].extend(value)
+    concatenated_dict = {k: np.array(v) for k, v in concatenated_dict.items()}
+    
