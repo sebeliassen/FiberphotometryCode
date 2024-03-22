@@ -39,4 +39,11 @@ def concat_dicts(dicts):
         for key, value in d.items():
             concatenated_dict[key].extend(value)
     concatenated_dict = {k: np.array(v) for k, v in concatenated_dict.items()}
-    
+
+def mouse_br_events_count(mouse, brain_region, event_type):
+    total = 0
+    for session in mouse.sessions:
+        maybe_signal_info = session.signal_info.get((brain_region, event_type))
+        if maybe_signal_info:
+            total += maybe_signal_info['signal_matrix'].shape[0]
+    return total

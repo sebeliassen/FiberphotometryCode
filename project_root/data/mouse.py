@@ -10,7 +10,7 @@ class Mouse:
         
         self.mouse_id = all_mouse_ids.pop()  # Assuming all IDs are the same, pop the single element
         self.sessions = mouse_sessions
-        #self.event_counts = self.set_event_counts()
+        self.event_counts = self.set_event_counts()
 
     def set_event_counts(self):
         event_counts = {}

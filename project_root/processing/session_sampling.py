@@ -3,8 +3,9 @@ from itertools import chain, product
 from analysis.performance_funcs import add_performance_container
 from data.mouse import create_mice_dict
 from config import attr_interval_dict
+import config
 import random
-from utils import count_session_events
+from utils import mouse_br_events_count
 import numpy as np
 
 
@@ -12,10 +13,11 @@ from collections import defaultdict
 from itertools import chain, product
 
 class MiceAnalysis:
-    def __init__(self, sessions):
+    def __init__(self, sessions, min_counts=0):
         self.mice_dict = create_mice_dict(sessions)
+        self.min_counts = min_counts
         self.set_all_metrics(sessions)
-        self.cumulative_events_by_metric = self.calculate_cumulative_events(attr_interval_dict)
+        self.cumulative_events_by_metric = self.calculate_cumulative_events()
 
     def set_all_metrics(self, sessions):
         for mouse in self.mice_dict.values():
@@ -23,7 +25,7 @@ class MiceAnalysis:
         self.all_performance_metrics = list(self.mice_dict.values())[0].metric_container.data.keys()
         self.all_response_metrics = list({metric[-1] for metric in sessions[0].response_metrics.keys()})
 
-    def calculate_cumulative_events(self, attr_interval_dict):
+    def calculate_cumulative_events(self):
         cumulative_events_by_metric = {}
         for metric in self.all_performance_metrics:
             # Cumulative events data for the current metric
@@ -31,15 +33,15 @@ class MiceAnalysis:
 
             for mouse in sorted(self.mice_dict.values(), key=lambda m: m.metric_container.data[metric]):
                 # Generate all combinations of sessions, brain regions (without postfix), and event types
-                # TODO: hardcoded for now, should not be
-                all_brain_regions = ['VS', 'DMS', 'DLS']
-                combinations = product(mouse.sessions, all_brain_regions, attr_interval_dict.keys())
+                combinations = product(mouse.sessions, config.all_brain_regions, config.all_event_types)
 
                 for session, brain_region, event_type in combinations:
                     if brain_region not in '_'.join(session.brain_regions):
                         continue
-                    curr_cumsum = cumulative_events[(brain_region, event_type)]
+                    if mouse_br_events_count(mouse, brain_region, event_type) < self.min_counts:
+                        continue
 
+                    curr_cumsum = cumulative_events[(brain_region, event_type)]
                     prev_sum = curr_cumsum[-1][1] if curr_cumsum else 0
                     # key = (event_type, brain_region, self.all_response_metrics[0])
 
@@ -67,6 +69,9 @@ class MiceAnalysis:
         # this basically removes duplicates based on the mouse_id, and chooses to keep the last entry from the left or 
         # right respectively. Note that this nifty trick only works for python 3.7 and up.
 
+        # TODO: for each mouse id in the sets, check that the mouse id has more then min_n_events, if not, remove its
+        # Important: you need to change the cumsum to accomodate, but since the length of the sets are equal, we don't need to for now
+
         from_left_scan = {k: v for (k, v) in id_cumsum_pairs}
         from_right_scan = {k: id_cumsum_pairs[1][-1] - v for (k, v) in reversed(id_cumsum_pairs)}
   
@@ -87,12 +92,14 @@ class MiceAnalysis:
 
         # Iterate through low mouse IDs and extend the lowest_sessions list with filtered sessions
         for mouse_id in low_mouse_ids:
-            filtered_sessions = [session for session in self.mice_dict[mouse_id].sessions if brain_region in '_'.join(session.brain_regions)]
+            filtered_sessions = [session for session in self.mice_dict[mouse_id].sessions 
+                                 if brain_region in '_'.join(session.brain_regions)]
             lowest_sessions.extend(filtered_sessions)
 
         # Iterate through high mouse IDs and extend the highest_sessions list with filtered sessions
         for mouse_id in high_mouse_ids:
-            filtered_sessions = [session for session in self.mice_dict[mouse_id].sessions if brain_region in '_'.join(session.brain_regions)]
+            filtered_sessions = [session for session in self.mice_dict[mouse_id].sessions 
+                                 if brain_region in '_'.join(session.brain_regions)]
             highest_sessions.extend(filtered_sessions)
 
         return lowest_sessions, highest_sessions
@@ -125,29 +132,3 @@ class MiceAnalysis:
             high_sampled_vals[response_metric] = random.sample(high_vals_by_metric, final_n)
         
         return low_sampled_vals, high_sampled_vals
-    
-    # def sample_phot_signals(self, metric, brain_region, event_type, n=200):
-    #     low_sessions, high_sessions = \
-    #         self.sample_high_and_low_sessions(metric, brain_region, event_type, n=n)
-        
-    #     regions_to_aggregate = [f'{brain_region}_{suffix}' for suffix in ['left', 'right']]
-        
-    #     lo_vals = []
-    #     for lo_session in low_sessions:
-    #         lo_vals.extend(lo_session.response_metrics[(event_type, brain_region, 'peak_timing')])
-
-
-    #     hi_vals = []
-    #     for hi_session in high_sessions:
-    #         hi_vals.extend(hi_session.response_metrics[(event_type, brain_region, 'peak_timing')])
-
-    #     lo_vals_avg = round(sum(lo_vals) / len(lo_vals), 3)
-    #     hi_vals_avg = round(sum(hi_vals) / len(hi_vals), 3)
-        
-    #     final_n = min(n, count_session_events(low_sessions, event_type), 
-    #                      count_session_events(high_sessions, event_type))
-        
-    #     low_out = aggregate_signals(low_sessions, event_type, regions_to_aggregate, n=final_n)
-    #     high_out = aggregate_signals(high_sessions, event_type, regions_to_aggregate, n=final_n)
-
-    #     return low_out, high_out, final_n, (lo_vals_avg, hi_vals_avg)
