@@ -1,6 +1,7 @@
 import numpy as np
 from collections import defaultdict
 from itertools import chain
+from utils import mouse_br_events_count
 
 def collect_sessions_data(sessions, event_type, regions_to_aggregate):
     if not isinstance(regions_to_aggregate, list):
@@ -24,7 +25,8 @@ def collect_sessions_data(sessions, event_type, regions_to_aggregate):
     return all_signals, all_resp_metrics, mouse_ids, curr_signal_info['response_metrics'][1]
 
 def sample_signals_and_metrics(sessions, event_type, brain_regions, n=None, weight_method='events'):
-    '''weight_method: 'mice', 'mice_events', 'events' '''
+    '''weight_method: 'mice', 'mice_events', 'events' \n
+    returns all_signals, all_resp_metrics, curr_signal_info'''
     if weight_method == 'mice_events' and n is None:
         raise ValueError("n must be set when using weight_method='mice_events'")
 
@@ -68,12 +70,30 @@ def sample_signals_and_metrics(sessions, event_type, brain_regions, n=None, weig
 
     else:
         raise ValueError(f"Invalid weight method: {weight_method}")
-        
-    
-    if n and weight_method == 'events':
-        sample_idxs = np.random.choice(all_signals.shape[0], size=n, replace=False)
-        all_signals = all_signals[sample_idxs]
-        all_resp_metrics = all_signals[sample_idxs]
     
     return all_signals, all_resp_metrics, curr_signal_info
 
+
+def sample_low_and_high_signals(weight_method, performance_metric, brain_region, event, mouse_analyser, n=None):
+    '''weight_method: 'mice', 'mice_events', 'events'\n
+    returns low_signals, high_signals, low_resp_metrics, high_resp_metrics, resp_metric_names'''
+    low_sessions, high_sessions = \
+        mouse_analyser.sample_high_and_low_sessions(performance_metric, brain_region, event)
+
+    if weight_method == 'mice_events':
+        mouse_ids = {session.mouse_id for session in (low_sessions + high_sessions)}
+        n = min(mouse_br_events_count(mouse_analyser.mice_dict[mouse_id], brain_region, event) for mouse_id in mouse_ids)
+
+    low_signals, low_resp_metrics, resp_metric_names = sample_signals_and_metrics(low_sessions, event, brain_region, 
+                                                                                  weight_method=weight_method, n=n)
+    high_signals, high_resp_metrics, _ = sample_signals_and_metrics(high_sessions, event, brain_region, 
+                                                                    weight_method=weight_method, n=n)
+
+    if weight_method == 'events' and n is not None:
+        n = min(n, low_signals.shape[0], high_signals.shape[0])
+        sample_idxs = np.random.choice(n, size=n, replace=False)
+
+        low_signals = low_signals[sample_idxs]
+        high_signals = high_signals[sample_idxs]
+
+    return low_signals, high_signals, low_resp_metrics, high_resp_metrics, resp_metric_names

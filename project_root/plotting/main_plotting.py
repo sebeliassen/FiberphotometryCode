@@ -74,7 +74,7 @@ def adjust_and_plot(ax, xs, ys, lb, ub, title, ylim, color='blue', label='Mean S
     ax.set_title(title)
     ax.set_xlabel("Time from event (s)")
     ax.set_ylabel("Z-score")
-    ax.legend()
+    # ax.legend()
     ax.set_ylim(ylim)
     ax.set_xlim(xs.min(), xs.max())
     ax.grid()
@@ -94,13 +94,21 @@ def preprocess_signals(all_signals, smoothing_len):
     all_lbs = []
     all_ubs = []
     for signals in all_signals:
+        # Smooth the mean signal
         ys = np.mean(signals, axis=0)
         window = np.ones(smoothing_len) / smoothing_len
         ys = np.convolve(ys, window, 'same')
-        sem_signal = stats.sem(signals, axis=0)
-        ci_95 = sem_signal * stats.t.ppf((1 + 0.95) / 2., len(signals)-1)
-        lb = ys - ci_95
-        ub = ys + ci_95
+
+        # Calculate the standard deviation of the mean
+        std_signal = np.std(signals, axis=0) / np.sqrt(len(signals))
+
+        # Use scipy.stats.norm.interval to get the 95% confidence interval
+        alpha = 0.95
+        ci_lower, ci_upper = stats.norm.interval(alpha, loc=ys, scale=std_signal)
+
+        # The lower and upper bounds
+        lb = ci_lower
+        ub = ci_upper
         all_ys.append(ys)
         all_lbs.append(lb)
         all_ubs.append(ub)
@@ -172,6 +180,7 @@ def plot_signals_p_values(all_signals, subtitles, suptitle, color, smoothing_len
     p_values = np.convolve(p_values, np.ones(5)/5, mode='same')
     # ax2.plot(xs, p_values_smoothed, label='P-Value (Smoothed)', color='black', alpha=0.8)
     ax2.plot(xs, p_values, label='P-Value', color='black', alpha=0.8)
+    ax2.axhline(y=0.05, color='orange', linestyle='--', label='Significance Threshold')
     ax2.axhline(y=1/3000, color='red', linestyle='--', label='Significance Threshold')
     ax2.set_yscale('log')  # Setting logarithmic scale
     ax2.set_ylim(1, np.min(p_values))  # Adjust this range as needed
