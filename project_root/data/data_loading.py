@@ -15,7 +15,7 @@ class DataContainer:
         if self.data_type is None:
             self.data_type = type(data)
         elif not isinstance(data, self.data_type):
-            raise TypeError(f"Data must be of type {self.data_type.__name__}")
+            raise TypeError(f"Data must be of type {self.data_type.__name__}, but is of type {type(data)}")
 
         self.data[name] = data
 
@@ -42,6 +42,21 @@ class Session:
         self.chamber_id = chamber_id.upper()  # Ensure chamber_id is uppercase
         self.setup_id = session_guide.setup_id
         self.dig_input = "0" if chamber_id in "ac" else "1"
+
+        self.task = session_guide.task
+        
+        #TODO: In the future this should be possible without a try/except clause
+        try:
+            self.genotype = session_guide.Genotype
+        except AttributeError:
+            self.genotype = session_guide.notes
+
+        #TODO: find a more elegant way of writing/handling session_guide.drug_and_dose_1.endswith('mg/kg')
+        drug_info_list = session_guide.drug_and_dose_1.split()
+        if len(drug_info_list) == 3 and session_guide.drug_and_dose_1.endswith('mg/kg'):
+            self.drug_info = dict(zip(['name', 'dose', 'metric'], drug_info_list))
+        else:
+            self.drug_info = {'name': session_guide.drug_and_dose_1, 'dose': None, 'metric': None}
         
         self.mouse_id = session_guide.mouse_id
         self.fiber_to_region = self.create_fiber_to_region_dict()
@@ -68,7 +83,7 @@ class Session:
         # Load and store DataFrames in the df_container
         self.df_container.add_data('raw', self.load_data(f'RAW_{self.chamber_id}*.csv', skip_rows=18))
         self.df_container.add_data('ttl', self.load_data(f'DigInput_{self.chamber_id}*.csv'))
-
+        
         # Load bonsai and photwrit data
         for freq in ["415", "470", "560"]:
             bonsai_df = self.load_data(f'c{freq}_bonsai*Setup{self.setup_id}*.csv', use_cols=self.filter_columns)
@@ -80,19 +95,18 @@ class Session:
     def create_fiber_to_region_dict(self, fiber_pattern=re.compile(r'fiber(\d+)')):
         # Initialize an empty dictionary
         fiber_to_region_dict = {}
-        
-        # Iterate over the DataFrame index with enumeration for index and column label
+
         for idx, col in enumerate(self.session_guide.index):
-            # Check if the column matches the fiber pattern and the value is not NaN
-            if fiber_pattern.match(col) and pd.notna(self.session_guide[col]):
-                # Ensure we don't access an index out of range
-                if idx + 1 < len(self.session_guide.index):
-                    # Check if the next item is NaN using iloc for safe access
-                    if pd.isna(self.session_guide.iloc[idx + 1]):
-                        # Extract the fiber number and add it to the dictionary
-                        fiber_number = fiber_pattern.match(col).group(1)
-                        fiber_to_region_dict[fiber_number] = self.session_guide[col]
+            if (fiber_pattern.match(col) 
+                and pd.notna(self.session_guide[col])
+                #and idx + 1 < len(self.session_guide.index) this should happen, so commented out
+                and pd.isna(self.session_guide.iloc[idx + 1])):
+                
+                fiber_number = fiber_pattern.match(col).group(1)
+                fiber_to_region_dict[fiber_number] = self.session_guide[col]
+
         return fiber_to_region_dict
+
 
 
     # to save memory, all of the columns that contain data from unused fibers, are filtered out pre-loading

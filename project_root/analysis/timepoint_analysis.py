@@ -79,7 +79,7 @@ def sample_low_and_high_signals(weight_method, performance_metric, brain_region,
     returns low_signals, high_signals, low_resp_metrics, high_resp_metrics, resp_metric_names'''
     low_sessions, high_sessions = \
         mouse_analyser.sample_high_and_low_sessions(performance_metric, brain_region, event)
-
+    
     if weight_method == 'mice_events':
         mouse_ids = {session.mouse_id for session in (low_sessions + high_sessions)}
         n = min(mouse_br_events_count(mouse_analyser.mice_dict[mouse_id], brain_region, event) for mouse_id in mouse_ids)

@@ -19,6 +19,8 @@ venv/
 *.sqlite
 .DS_Store
 *.zip
+*.pkl
+*.pickle
 
 # Remember to remove this at some point
 *.csv

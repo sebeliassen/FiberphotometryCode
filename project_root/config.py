@@ -9,6 +9,15 @@ PLOTTING_CONFIG = {
     'fit_window_end': 1       # in minutes before trial start
 }
 
+# PLOTTING_CONFIG = {
+#     'baseline_duration': 30,  # in minutes
+#     'trial_length': 30,       # in minutes
+#     'fps': 20,                # frames per second
+#     'fit_window_start': 11,   # in minutes before trial start
+#     'fit_window_end': 1       # in minutes before trial start
+# }
+
+
 RENAME_PATTERNS = [
     ('bonsai', {"pattern": "(CombiTimestamps)?_\\d+_?[AB].?", "replacement": ""}),
     ('bonsai', {"pattern": "FP3002_Timestamp", "replacement": "Timestamp_FP3002"}),
@@ -49,5 +58,6 @@ attr_interval_dict = {'hit': (-2.5, 5),
                       'iti_touch': (-2.5, 5),}
 
 all_brain_regions = ['VS', 'DMS', 'DLS']
-all_event_types = ['hit', 'mistake', 'miss', 'cor_reject', 'reward_collect']
+# all_brain_regions = ['LH', 'mPFC']
+all_event_types = ['hit', 'mistake', 'miss', 'cor_reject', 'reward_collect', 'before_dispimg_mistake', 'before_dispimg_hit']
 all_metrics = ['c_score', 'd_prime', 'participation', 'disp_to_hit_time', 'hit_to_reward_time', 'num_center_touches']
