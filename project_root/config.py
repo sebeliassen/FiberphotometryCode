@@ -20,14 +20,16 @@ PLOTTING_CONFIG = {
 
 RENAME_PATTERNS = [
     ('bonsai', {"pattern": "(CombiTimestamps)?_\\d+_?[AB].?", "replacement": ""}),
-    ('bonsai', {"pattern": "FP3002_Timestamp", "replacement": "Timestamp_FP3002"}),
-    ('bonsai', {"pattern": "TimestampBonsai", "replacement": "Timestamp_Bonsai"}),
-    ('ttl', {"pattern": r'_DigInput[01]', "replacement": ""}),
+    ('bonsai', {"pattern": "FP3002_Timestamp?(_\\d+)?", "replacement": "Timestamp_FP3002"}),
+    ('bonsai', {"pattern": "TimestampBonsai?(_\\d+)?", "replacement": "Timestamp_Bonsai"}),
+    ('bonsai', {"pattern": r"FrameCount_\d\d\d", "replacement": "FrameCount"}),
+    ('ttl', {"pattern": "_Timestamp_AND_Seconds_", "replacement": "_"}),
+    ('ttl', {"pattern": r'_DigInput[012]', "replacement": ""}),
     ('ttl', {"pattern": 'FP3002.(Seconds|Value)', "replacement": r"\1_FP3002"}),
     ('ttl', {"pattern": 'BonsaiTimestamp', "replacement": "Timestamp_Bonsai"})
 ]
-
-RENAME_FREQS = ['415', '470', '560']
+# TimestampBonsai_415
+RENAME_FREQS = ['415', '470']
 
 peak_interval_config = {
     'interval_start': 10 * 20,
@@ -57,7 +59,7 @@ attr_interval_dict = {'hit': (-2.5, 5),
                       'before_dispimg_hit': (-2.5, 2.5),
                       'iti_touch': (-2.5, 5),}
 
-all_brain_regions = ['VS', 'DMS', 'DLS']
-# all_brain_regions = ['LH', 'mPFC']
+# all_brain_regions = ['VS', 'DMS', 'DLS']
+all_brain_regions = ['LH', 'mPFC']
 all_event_types = ['hit', 'mistake', 'miss', 'cor_reject', 'reward_collect', 'before_dispimg_mistake', 'before_dispimg_hit']
 all_metrics = ['c_score', 'd_prime', 'participation', 'disp_to_hit_time', 'hit_to_reward_time', 'num_center_touches']
