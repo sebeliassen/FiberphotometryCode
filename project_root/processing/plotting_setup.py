@@ -42,6 +42,7 @@ class PlottingSetup:
         region_phot_minus_iso = phot_signal - iso_signal + mean_diff
 
         # Adjust delta F/F to only include positive values
+
         min_positive_dFF = abs(region_phot_minus_iso[plot_range].min())
         region_phot_dF_onlypositive = region_phot_minus_iso + min_positive_dFF
 
@@ -54,7 +55,6 @@ class PlottingSetup:
     def apply_plotting_setup_to_sessions(self, sessions):
         for session in sessions:
             self.setup_plotting_attributes(session)
-
             phot_df = session.df_container.get_data("photwrit_470")
             iso_df = session.df_container.get_data("photwrit_415")
             self.apply_phot_iso_calculation(session, self.calculate_dff, phot_df, iso_df)

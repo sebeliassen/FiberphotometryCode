@@ -97,3 +97,41 @@ def sample_low_and_high_signals(weight_method, performance_metric, brain_region,
         high_signals = high_signals[sample_idxs]
 
     return low_signals, high_signals, low_resp_metrics, high_resp_metrics, resp_metric_names
+
+
+def get_injection_peak(signal, phot_times, blank_image_time):
+    window = np.ones(100) / 100
+    smoothed_signal = np.convolve(signal, window, mode='same')
+
+    peak_idx_start = np.searchsorted(phot_times, blank_image_time - 10 * 60, side='left')
+    peak_idx_end = np.searchsorted(phot_times, blank_image_time - 2.5 * 60, side='left')
+    peak_x = np.argmax(smoothed_signal[peak_idx_start:peak_idx_end]) + peak_idx_start
+    peak_y = smoothed_signal[peak_x]
+
+    return peak_x, peak_y
+
+
+def split_signal_by_injection_threshold(signal, peak_y):    
+    window = np.ones(1000) / 1000
+    smoothed_signal = np.convolve(signal, window, mode='same')
+    above_peak_mask = smoothed_signal > peak_y
+
+    if np.sum(above_peak_mask) == 0:
+        return above_peak_mask.shape[0] - 1
+    else:
+        return np.argmax(above_peak_mask)
+
+
+# TODO: better name of function
+def find_drug_split_x(session, brain_reg):
+    phot_df = session.df_container.data['photwrit_470']
+    raw_df = session.df_container.data['raw']
+
+    signal = phot_df[f'{brain_reg}_phot_zF']
+    phot_times = phot_df['SecFromZero_FP3002'].values
+    blank_image_time = raw_df.iloc[session.cpt]['SecFromZero_FP3002']
+
+    _, peak_y = get_injection_peak(signal, phot_times, blank_image_time)
+    threshold_x = split_signal_by_injection_threshold(signal, peak_y)
+
+    return threshold_x

@@ -11,7 +11,7 @@ class Renamer:
             df_keys = session.df_container.fetch_all_data_names()
             for df_type, pattern_info in patterns:
                 target_df_keys = [key for key in df_keys if df_type in key]
-                for df_key in target_df_keys:
+                for df_key in target_df_keys:            
                     df = session.df_container.get_data(df_key)
                     Renamer.rename_df_columns(df, 
                                               pattern_info.get("pattern", ""), 

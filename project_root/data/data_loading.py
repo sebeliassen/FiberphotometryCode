@@ -3,7 +3,7 @@ import fnmatch
 import re
 import pandas as pd
 from tqdm import tqdm
-
+import config
 
 class DataContainer:
     def __init__(self, data_type=None):
@@ -46,17 +46,27 @@ class Session:
         self.task = session_guide.task
         
         #TODO: In the future this should be possible without a try/except clause
+        # try:
+        #     self.genotype = session_guide.Genotype
+        # except AttributeError:
+        #     self.genotype = session_guide.notes
         try:
-            self.genotype = session_guide.Genotype
+            self.genotype = session_guide.genotype
         except AttributeError:
-            self.genotype = session_guide.notes
+            self.genotype = None
 
         #TODO: find a more elegant way of writing/handling session_guide.drug_and_dose_1.endswith('mg/kg')
+        #drug_info_list = session_guide.drug_and_dose_1.split()
+        #if len(drug_info_list) == 3 and session_guide.drug_and_dose_1.endswith('mg/kg'):
+        #    self.drug_info = dict(zip(['name', 'dose', 'metric'], drug_info_list))
+        #else:
+        #    self.drug_info = {'name': session_guide.drug_and_dose_1, 'dose': None, 'metric': None}
         drug_info_list = session_guide.drug_and_dose_1.split()
-        if len(drug_info_list) == 3 and session_guide.drug_and_dose_1.endswith('mg/kg'):
-            self.drug_info = dict(zip(['name', 'dose', 'metric'], drug_info_list))
+        if len(drug_info_list) == 2 and re.match(r'^\d+(\.\d+)?$', drug_info_list[1]):
+
+            self.drug_info = dict(zip(['name', 'dose'], drug_info_list))
         else:
-            self.drug_info = {'name': session_guide.drug_and_dose_1, 'dose': None, 'metric': None}
+            self.drug_info = {'name': session_guide.drug_and_dose_1, 'dose': None}
         
         self.mouse_id = session_guide.mouse_id
         self.fiber_to_region = self.create_fiber_to_region_dict()
@@ -85,7 +95,7 @@ class Session:
         self.df_container.add_data('ttl', self.load_data(f'DigInput_{self.chamber_id}*.csv'))
         
         # Load bonsai and photwrit data
-        for freq in ["415", "470", "560"]:
+        for freq in config.RENAME_FREQS:
             bonsai_df = self.load_data(f'c{freq}_bonsai*Setup{self.setup_id}*.csv', use_cols=self.filter_columns)
             photwrit_df = self.load_data(f'channel{freq}photwrit_Setup{self.setup_id}*.csv', use_cols=self.filter_columns)
             self.df_container.add_data(f'bonsai_{freq}', bonsai_df)
