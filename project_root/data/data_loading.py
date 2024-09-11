@@ -164,12 +164,12 @@ def load_all_sessions(baseline_dir, first_n_dirs=None, remove_bad_signal_session
                 current_trial_guide_df = pd.read_excel(os.path.join(trial_dir, file), nrows=4,
                                                     dtype={"mouse_id": str}, index_col=0)
         for segment, chamber_id in zip(segments, "abcd"):
-            session_guide = current_trial_guide_df.loc[chamber_id]
             if segment == 'e':
                 continue  # Skip this session as it's marked as empty
+            session_guide = current_trial_guide_df.loc[chamber_id]
 
             if session_guide.mouse_id != segment:
-                raise Exception("The mouse id from the folder names and trial guide do not match")
+                raise Exception(f"The mouse id '{segment}' from the folder names and trial guide '{session_guide.mouse_id}' do not match")
             
             new_session = Session(chamber_id, trial_dir, session_guide)
             if len(new_session.brain_regions) > 0 or (remove_bad_signal_sessions == False):

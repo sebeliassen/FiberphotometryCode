@@ -50,9 +50,9 @@ def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=
     assign_sessions_signal_info(sessions)
     return sessions
 
-# sessions = load_and_prepare_sessions("../trial_cohort2", load_from_pickle=False, remove_bad_signal_sessions=True)
+# sessions = load_and_prepare_sessions("../Gq-DREADD-Projection-Spec_CPT", load_from_pickle=False, remove_bad_signal_sessions=True)
 # # save sessions to pickle
-# with open("../trial_cohort2/sessions.pickle", "wb") as f:
+# with open("../Gq-DREADD-Projection-Spec_CPT/sessions.pickle", "wb") as f:
 #     pickle.dump(sessions, f)
 
 # import plotly.graph_objects as go

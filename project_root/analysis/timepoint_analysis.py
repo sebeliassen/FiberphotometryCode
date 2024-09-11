@@ -122,8 +122,7 @@ def split_signal_by_injection_threshold(signal, peak_y):
         return np.argmax(above_peak_mask)
 
 
-# TODO: better name of function
-def find_drug_split_x(session, brain_reg):
+def find_drug_split_x(session, brain_reg, find_relative_peak=False):
     phot_df = session.df_container.data['photwrit_470']
     raw_df = session.df_container.data['raw']
 
@@ -131,7 +130,10 @@ def find_drug_split_x(session, brain_reg):
     phot_times = phot_df['SecFromZero_FP3002'].values
     blank_image_time = raw_df.iloc[session.cpt]['SecFromZero_FP3002']
 
-    _, peak_y = get_injection_peak(signal, phot_times, blank_image_time)
+    peak_x, peak_y = get_injection_peak(signal, phot_times, blank_image_time)
     threshold_x = split_signal_by_injection_threshold(signal, peak_y)
 
-    return threshold_x
+    if find_relative_peak:
+        return (phot_times[peak_x] - blank_image_time)/60, peak_y
+    else:
+        return threshold_x

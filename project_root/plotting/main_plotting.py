@@ -32,26 +32,26 @@ def plot_session_events_and_signal(session, brain_reg, fig, row, col, title_suff
     fig.add_trace(go.Scatter(x=phot_times, y=signal, mode='lines', line=dict(color='black'), showlegend=False), 
                   row=row, col=col)
 
-    # event_traces = {}
-    # for time, name in zip(event_times, event_names):
-    #     color = event_color_map.get(name, 'gray')
-    #     if name not in event_traces:
-    #         event_traces[name] = {
-    #             'x': [],
-    #             'y': [],
-    #             'color': color,
-    #         }
-    #     event_traces[name]['x'].append(time)
-    #     event_traces[name]['y'].append(signal[np.searchsorted(phot_times, time, side='left')])
+    event_traces = {}
+    for time, name in zip(event_times, event_names):
+        color = event_color_map.get(name, 'gray')
+        if name not in event_traces:
+            event_traces[name] = {
+                'x': [],
+                'y': [],
+                'color': color,
+            }
+        event_traces[name]['x'].append(time)
+        event_traces[name]['y'].append(signal[np.searchsorted(phot_times, time, side='left')])
 
-    # for name, data in event_traces.items():
-    #     fig.add_trace(go.Scatter(
-    #         x=data['x'], y=data['y'],
-    #         mode='markers',
-    #         marker=dict(color=data['color']),
-    #         name=name,
-    #         showlegend=True
-    #     ), row=row, col=col)
+    for name, data in event_traces.items():
+        fig.add_trace(go.Scatter(
+            x=data['x'], y=data['y'],
+            mode='markers',
+            marker=dict(color=data['color']),
+            name=name,
+            showlegend=True
+        ), row=row, col=col)
 
     # Add a dark grey dashed vertical line at blank image time
     fig.add_vline(
