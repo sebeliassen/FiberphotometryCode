@@ -119,14 +119,29 @@ def preprocess_signals(all_signals, smoothing_len):
     
     return xs, all_ys, all_lbs, all_ubs, global_ylim
 
+
+def adjust_and_plot(ax, xs, ys, lb, ub, title, ylim, color='blue', label='Mean Signal', shading_boundaries=None, line_style='-'):
+    """Adjusts the y-limits based on provided bounds, plots the data with specified line style, shades areas outside specified boundaries, and optionally adds vertical lines on the x-axis."""
+    ax.plot(xs, ys, label=label, color=color, linestyle=line_style)
+    ax.fill_between(xs, lb, ub, color=color, alpha=0.2)
+    ax.set_title(title)
+    ax.set_xlabel("Time from event (s)")
+    ax.set_ylabel("Z-score")
+    # ax.legend()
+    ax.set_ylim(ylim)
+    ax.set_xlim(xs.min(), xs.max())
+    ax.grid()
+
+    if shading_boundaries is not None:
+        ax.axvspan(xs.min(), shading_boundaries[0], color='grey', alpha=0.2)
+        ax.axvspan(shading_boundaries[1], xs.max(), color='grey', alpha=0.2)
+
+
 def plot_signals(all_signals, subtitles, suptitle, color, smoothing_len, shading_boundaries, scatters=None, plot_all=False, fname=None):
     xs, all_ys, all_lbs, all_ubs, global_ylim = preprocess_signals(all_signals, smoothing_len)
-    _, axs = plt.subplots(figsize=(10, 10), ncols=len(all_signals), nrows=2, dpi=300)
+    _, axs = plt.subplots(figsize=(10, 5), ncols=len(all_signals), nrows=1, dpi=300)
 
-    scatter_min_y = min(scatter[1].min() for scatter in scatters)
-    scatter_max_y = min(scatter[1].max() for scatter in scatters)
-
-    for ax_main, ax_scatter, ys, lb, ub, subtitle, scatter_data in zip(axs[0], axs[1], all_ys, all_lbs, all_ubs, subtitles, scatters):
+    for ax_main, ys, lb, ub, subtitle in zip(axs, all_ys, all_lbs, all_ubs, subtitles):
         adjust_and_plot(ax_main, xs, ys, lb, ub, title=subtitle, ylim=global_ylim, color=color, shading_boundaries=shading_boundaries)
 
         # If scatter data is provided, plot it
@@ -140,15 +155,6 @@ def plot_signals(all_signals, subtitles, suptitle, color, smoothing_len, shading
         #     ymin = min(ymin, -1)  # Ensure ymin is at least -1
         #     ymax = max(ymax, 1)   # Ensure ymax is at least 1
         #     ax_scatter.set_ylim(ymin, ymax)  # Set the adjusted y-axis limits
-
-        # else:
-        if scatter_data is not None:
-            ax_scatter.plot(xs, ys, color=color)
-            ax_scatter.scatter(scatter_data[0], scatter_data[1], color=color, s=10, alpha=0.6)
-            ax_scatter.set_xlim(xs.min(), xs.max())
-            ax_scatter.set_ylim(min(scatter_min_y, global_ylim[0]), max(scatter_max_y, global_ylim[1]) + 0.5)  # Set y-limits for scatter plot if needed
-            # ax_scatter.axis('off')  # Hide the axis for the scatter plot
-            ax_scatter.grid()
 
     plt.suptitle(suptitle)
     plt.tight_layout()

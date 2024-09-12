@@ -19,6 +19,7 @@ def calculate_signal_response_metrics(signal, interval):
     slope_down = ((maxima - right_minima) / (len(adjusted_signal) - peak_idx) if
                   peak_idx != len(adjusted_signal) else float('inf'))  # Adjust for index
 
+
     response_metrics = {
         'slope_up': slope_up,
         'slope_down': slope_down,
@@ -51,7 +52,8 @@ def calculate_signal_response_metrics_matrix(signals, interval):
     
     result_matrix = np.vstack((slope_up, slope_down, maxima, peak_indices, auc)).T
     
-    # Define metric names dictionary
+    #TODO: remember that you know have saved the response metric - index 
+    # correspondance in the config
     metric_names = {
         0: 'slope_up',
         1: 'slope_down',

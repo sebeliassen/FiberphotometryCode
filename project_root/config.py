@@ -57,9 +57,16 @@ attr_interval_dict = {'hit': (-2.5, 5),
                       'reward_collect': (-3, 4.5),
                       'before_dispimg_mistake': (-2.5, 2.5),
                       'before_dispimg_hit': (-2.5, 2.5),
-                      'iti_touch': (-2.5, 5),}
+                      'iti_touch': (-2.5, 5),
+                      'dispimg': (-2.5, 2.5)}
 
-# all_brain_regions = ['VS', 'DMS', 'DLS']
-all_brain_regions = ['LH', 'mPFC']
-all_event_types = ['hit', 'mistake', 'miss', 'cor_reject', 'reward_collect', 'before_dispimg_mistake', 'before_dispimg_hit']
+all_brain_regions = ['VS', 'DMS', 'DLS']
+# all_brain_regions = ['LH', 'mPFC']
+all_event_types = ['hit', 'mistake', 'miss', 'cor_reject', 'reward_collect', 'before_dispimg_mistake', 'before_dispimg_hit', 'dispimg']
 all_metrics = ['c_score', 'd_prime', 'participation', 'disp_to_hit_time', 'hit_to_reward_time', 'num_center_touches']
+
+response_metric_idxs = {0: 'slope_up',
+                        1: 'slope_down',
+                        2: 'maximal_value',
+                        3: 'peak_timing',
+                        4: 'auc'}

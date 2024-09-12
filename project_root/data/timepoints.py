@@ -50,8 +50,12 @@ def add_event_idxs_to_session(session, actions_attr_dict, reward_attr_dict):
         session.event_idxs_container.add_data(f'before_dispimg_{attr}', event_idxs)
     for attr, event_idxs in after_dispimg_event_idxs_dict.items():
         session.event_idxs_container.add_data(f'after_dispimg_{attr}', event_idxs)
+    
     iti_touch_idxs = list(item_df[item_df["Item_Name"] == "Centre_Touches_during_ITI"].index)
     session.event_idxs_container.add_data('iti_touch', iti_touch_idxs)
+
+    display_img_idxs = list(item_df[item_df["Item_Name"] == "Display Image"].index)
+    session.event_idxs_container.add_data('dispimg', display_img_idxs)
 
 def create_event_idxs_container_for_sessions(sessions, actions_attr_dict, reward_attr_dict):
     for session in sessions:

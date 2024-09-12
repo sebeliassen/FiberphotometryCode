@@ -22,7 +22,8 @@ def collect_sessions_data(sessions, event_type, regions_to_aggregate):
             all_resp_metrics.append(curr_signal_info['response_metrics'][0])
             mouse_ids.append(session.mouse_id)
 
-    return all_signals, all_resp_metrics, mouse_ids, curr_signal_info['response_metrics'][1]
+    return all_signals, all_resp_metrics, mouse_ids
+    
 
 def sample_signals_and_metrics(sessions, event_type, brain_regions, n=None, weight_method='events'):
     '''weight_method: 'mice', 'mice_events', 'events' \n
@@ -30,7 +31,12 @@ def sample_signals_and_metrics(sessions, event_type, brain_regions, n=None, weig
     if weight_method == 'mice_events' and n is None:
         raise ValueError("n must be set when using weight_method='mice_events'")
 
-    all_signals, all_resp_metrics, mouse_ids, curr_signal_info = collect_sessions_data(sessions, event_type, brain_regions)
+    # res = collect_sessions_data(sessions, event_type, brain_regions)
+    # if res:
+    #     all_signals, all_resp_metrics, mouse_ids, curr_signal_info = res
+    # else:
+    #     return None
+    all_signals, all_resp_metrics, mouse_ids = collect_sessions_data(sessions, event_type, brain_regions)
     
     if weight_method == 'mice':
         all_signals_by_mouse = defaultdict(list)
@@ -64,14 +70,14 @@ def sample_signals_and_metrics(sessions, event_type, brain_regions, n=None, weig
         all_signals = np.vstack(all_signals)
         all_resp_metrics = np.vstack(all_resp_metrics)
 
-    elif weight_method == 'events':
+    elif weight_method == 'events':    
         all_signals = np.vstack(all_signals)
         all_resp_metrics = np.vstack(all_resp_metrics)
 
     else:
         raise ValueError(f"Invalid weight method: {weight_method}")
     
-    return all_signals, all_resp_metrics, curr_signal_info
+    return all_signals, all_resp_metrics
 
 
 def sample_low_and_high_signals(weight_method, performance_metric, brain_region, event, mouse_analyser, n=None):
@@ -84,9 +90,9 @@ def sample_low_and_high_signals(weight_method, performance_metric, brain_region,
         mouse_ids = {session.mouse_id for session in (low_sessions + high_sessions)}
         n = min(mouse_br_events_count(mouse_analyser.mice_dict[mouse_id], brain_region, event) for mouse_id in mouse_ids)
 
-    low_signals, low_resp_metrics, resp_metric_names = sample_signals_and_metrics(low_sessions, event, brain_region, 
+    low_signals, low_resp_metrics = sample_signals_and_metrics(low_sessions, event, brain_region, 
                                                                                   weight_method=weight_method, n=n)
-    high_signals, high_resp_metrics, _ = sample_signals_and_metrics(high_sessions, event, brain_region, 
+    high_signals, high_resp_metrics = sample_signals_and_metrics(high_sessions, event, brain_region, 
                                                                     weight_method=weight_method, n=n)
 
     if weight_method == 'events' and n is not None:
@@ -96,7 +102,7 @@ def sample_low_and_high_signals(weight_method, performance_metric, brain_region,
         low_signals = low_signals[sample_idxs]
         high_signals = high_signals[sample_idxs]
 
-    return low_signals, high_signals, low_resp_metrics, high_resp_metrics, resp_metric_names
+    return low_signals, high_signals, low_resp_metrics, high_resp_metrics
 
 
 def get_injection_peak(signal, phot_times, blank_image_time):
