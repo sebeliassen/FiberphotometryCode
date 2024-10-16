@@ -28,8 +28,6 @@ def collect_sessions_data(sessions, event_type, regions_to_aggregate):
 def sample_signals_and_metrics(sessions, event_type, brain_regions, n=None, weight_method='events'):
     '''weight_method: 'mice', 'mice_events', 'events' \n
     returns all_signals, all_resp_metrics, curr_signal_info'''
-    if weight_method == 'mice_events' and n is None:
-        raise ValueError("n must be set when using weight_method='mice_events'")
 
     # res = collect_sessions_data(sessions, event_type, brain_regions)
     # if res:
@@ -37,6 +35,8 @@ def sample_signals_and_metrics(sessions, event_type, brain_regions, n=None, weig
     # else:
     #     return None
     all_signals, all_resp_metrics, mouse_ids = collect_sessions_data(sessions, event_type, brain_regions)
+    if len(all_signals) == 0:
+        return None
     
     if weight_method == 'mice':
         all_signals_by_mouse = defaultdict(list)
@@ -61,7 +61,11 @@ def sample_signals_and_metrics(sessions, event_type, brain_regions, n=None, weig
         all_signals = [np.vstack(signals) for signals in all_signals_by_mouse.values()]
         all_resp_metrics = [np.vstack(signals) for signals in all_resp_metrics_by_mouse.values()]
 
-        min_len = n
+        if n is None:
+            print(len([signals.shape[0] for signals in all_signals]))
+            min_len = min([signals.shape[0] for signals in all_signals])
+        else:
+            min_len = n
 
         for i in range(len(all_signals)):
             sample_idxs = np.random.choice(all_signals[i].shape[0], size=min_len, replace=False)

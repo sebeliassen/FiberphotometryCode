@@ -68,13 +68,14 @@ class Syncer:
         ttl_df = session.df_container.get_data('ttl')
         bonsai_470_df = session.df_container.get_data('bonsai_470')
         raw_df = session.df_container.get_data('raw')
-    
+        if len(ttl_df) == 0:
+            raise IndexError('No sync data loaded, data might be missing')
+
         ttl_df['SecFromZero_Bonsai'] = ttl_df['Timestamp_Bonsai'] - bonsai_470_df['Timestamp_Bonsai'].iloc[0]
         ttl_df['SecFromZero_FP3002'] = ttl_df['Seconds_FP3002'] - bonsai_470_df['Timestamp_FP3002'].iloc[0]
 
         session.set_blank_images_timepoint_bonsai = ttl_df['SecFromZero_Bonsai'].iloc[0] - session.sync_time
         session.set_blank_images_timepoint_fp3002 = ttl_df['SecFromZero_FP3002'].iloc[0] - session.sync_time
-        
         raw_df['SecFromZero_Bonsai'] = raw_df['Evnt_Time'] + session.set_blank_images_timepoint_bonsai
         raw_df['SecFromZero_FP3002'] = raw_df['Evnt_Time'] + session.set_blank_images_timepoint_fp3002
 

@@ -25,9 +25,13 @@ from config import *
 
 
 def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=False, 
-                              remove_bad_signal_sessions=False):
+                              remove_bad_signal_sessions=False, pickle_name=None):
+    if pickle_name is None:
+        pickle_name = '/sessions.pickle'
+    else:
+        pickle_name = f'/{pickle_name}.pickle'
     if load_from_pickle:
-        with open(baseline_dir + '/sessions.pickle', 'rb') as f:
+        with open(baseline_dir + pickle_name, 'rb') as f:
             sessions = pickle.load(f)
         return sessions
 
@@ -50,10 +54,11 @@ def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=
     assign_sessions_signal_info(sessions)
     return sessions
 
-# sessions = load_and_prepare_sessions("../Gq-DREADD-Projection-Spec_CPT", load_from_pickle=False, remove_bad_signal_sessions=True)
-# # save sessions to pickle
-# with open("../Gq-DREADD-Projection-Spec_CPT/sessions.pickle", "wb") as f:
-#     pickle.dump(sessions, f)
+
+sessions = load_and_prepare_sessions(f"../Dual_Sensor_CPT/Males", load_from_pickle=False, remove_bad_signal_sessions=True)
+# save sessions to pickle
+with open(f"../Dual_Sensor_CPT_males.pickle", "wb") as f:
+    pickle.dump(sessions, f)
 
 # import plotly.graph_objects as go
 # from plotly.subplots import make_subplots

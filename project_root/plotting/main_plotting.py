@@ -144,18 +144,6 @@ def plot_signals(all_signals, subtitles, suptitle, color, smoothing_len, shading
     for ax_main, ys, lb, ub, subtitle in zip(axs, all_ys, all_lbs, all_ubs, subtitles):
         adjust_and_plot(ax_main, xs, ys, lb, ub, title=subtitle, ylim=global_ylim, color=color, shading_boundaries=shading_boundaries)
 
-        # If scatter data is provided, plot it
-        # if plot_all:
-        #     for signal in all:
-        #         smoothed_signal = np.convolve(signal, np.ones(5)/5, mode='same')
-        #         ax_scatter.plot(xs, smoothed_signal)
-        #     ax_scatter.grid()
-
-        #     ymin, ymax = min(signals.min() for signals in all_signals), max(signals.max() for signals in all_signals)
-        #     ymin = min(ymin, -1)  # Ensure ymin is at least -1
-        #     ymax = max(ymax, 1)   # Ensure ymax is at least 1
-        #     ax_scatter.set_ylim(ymin, ymax)  # Set the adjusted y-axis limits
-
     plt.suptitle(suptitle)
     plt.tight_layout()
     if fname:

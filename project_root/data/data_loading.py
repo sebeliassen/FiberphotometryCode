@@ -118,7 +118,6 @@ class Session:
         return fiber_to_region_dict
 
 
-
     # to save memory, all of the columns that contain data from unused fibers, are filtered out pre-loading
     def filter_columns(self, col):
         pattern = re.compile(r"Region(\d+)[\w]*")

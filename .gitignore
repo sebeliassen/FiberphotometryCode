@@ -26,6 +26,8 @@ venv/
 *.csv
 *.png
 *.PNG
+*.html
+*.xlsx
 
 # IDE-specific directories
 .vscode/
