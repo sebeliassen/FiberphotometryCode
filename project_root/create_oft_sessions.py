@@ -16,12 +16,10 @@ This will of course need to change if we don't have any raw_df for instance.
 """
 
 import pickle
-from data.data_loading import load_all_sessions
-from data.setup_utils import Renamer, Syncer
-from data.timepoints import create_event_idxs_container_for_sessions
+from data.data_loading import load_all_sessions 
+from data.setup_utils import Renamer
+from oft_config import *
 from processing.plotting_setup import PlottingSetup
-from processing.signal_info_setup import assign_sessions_signal_info
-from config import *
 
 
 def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=False, 
@@ -39,43 +37,16 @@ def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=
     sessions = load_all_sessions(baseline_dir, first_n_dirs, remove_bad_signal_sessions=remove_bad_signal_sessions)
 
     # rename columns of dfs
-    Renamer.rename_sessions_data(sessions, RENAME_PATTERNS)
     Renamer.rename_sessions_fiber_to_brain_region(sessions, LETTER_TO_FREQS)
 
-    # add sync columns to dfs
-    Syncer.apply_sync_to_all_sessions(sessions)
-
     # apply attributes used for plotting
-    plotting_setup = PlottingSetup(**PLOTTING_CONFIG)
-    plotting_setup.apply_plotting_setup_to_sessions(sessions)
+    # plotting_setup = PlottingSetup(**PLOTTING_CONFIG)
+    # plotting_setup.apply_plotting_setup_to_sessions(sessions)
+    # replace with an openfield implementation of zdff
 
-    # add event_idxs
-    create_event_idxs_container_for_sessions(sessions, actions_attr_dict, reward_attr_dict)
-    assign_sessions_signal_info(sessions)
     return sessions
 
-
-# sessions = load_and_prepare_sessions(f"../Dual_Sensor_CPT/Males_redo", load_from_pickle=False, remove_bad_signal_sessions=True)
-# # save sessions to pickle
-# with open(f"../Dual_Sensor_CPT/Males_redo/sessions.pickle", "wb") as f:
-#     pickle.dump(sessions, f)
-
-
-# import plotly.graph_objects as go
-# from plotly.subplots import make_subplots
-# from scipy.signal import savgol_filter
-# import numpy as np
-
-# # Your session and brain_reg objects should be defined here
-# session = find_session_by_trial_mouse_id(sessions, 20, 45)  # Your session object
-# brain_reg = session.brain_regions[-1]  # Your brain region object
-
-# # Step 3: Create a Plotly figure object for subplots
-# # Adjust rows and cols based on your layout needs
-# fig = make_subplots(rows=1, cols=1)
-
-# # Step 4: Call the function with your specific parameters
-# plot_session_events_and_signal(session, brain_reg, fig, row=1, col=1, title_suffix="Your Title Suffix Here")
-
-# # Finally, show the figure
-# fig.show()
+sessions = load_and_prepare_sessions(f"../GqCoh1And2_OFT/First Test Round", load_from_pickle=False, remove_bad_signal_sessions=True)
+# save sessions to pickle
+with open(f"../GqCoh1And2_OFT/First Test Round/sessions.pickle", "wb") as f:
+    pickle.dump(sessions, f)

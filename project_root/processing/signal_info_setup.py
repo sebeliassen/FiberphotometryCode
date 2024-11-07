@@ -23,8 +23,11 @@ def get_brain_region_event_signal_info(session, event_type, brain_region):
     if len(session.event_idxs_container.data.get(event_type, [])) == 0:
         raise ValueError(f"No event_type_idxs found for {event_type}")
 
+    fiber_color = brain_region[-1]
+    curr_phot_freq = config.LETTER_TO_FREQS[fiber_color]
+
     raw_df = session.df_container.get_data("raw")
-    phot_df = session.df_container.get_data("photwrit_470")
+    phot_df = session.df_container.get_data(f"photwrit_{curr_phot_freq}")
     phot_times = phot_df['SecFromZero_FP3002'].values
     
     signal_matrix = np.zeros((len(event_type_idxs), interval_start + interval_end))
@@ -72,7 +75,8 @@ def get_session_signal_info(session):
                 continue
             
             brain_region_event_signal_info = get_brain_region_event_signal_info(session, event_type, brain_region)
-            signal_info[(brain_region.split('_')[0], event_type)] = brain_region_event_signal_info
+            br, side, color = brain_region.split('_')
+            signal_info[(br, color, event_type)] = brain_region_event_signal_info
     return signal_info
 
 def assign_sessions_signal_info(sessions):

@@ -30,6 +30,7 @@ RENAME_PATTERNS = [
 ]
 # TimestampBonsai_415
 RENAME_FREQS = ['415', '470', '560']
+LETTER_TO_FREQS = {'iso': '415', 'G': '470', 'R': '560'}
 
 peak_interval_config = {
     'interval_start': 10 * 20,

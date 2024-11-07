@@ -18,22 +18,35 @@ class Renamer:
                                               pattern_info.get("replacement", ""))
     
     @staticmethod
-    def extract_region_number(column_name):
-        match = re.search(r'Region(\d+)', column_name)
+    def extract_region_number(column_name, letter):
+        if letter == 'iso':
+            letter = ''
+        match = re.search(r'Region(\d+)' + letter, column_name)
         return match.group(1) if match else None
 
     @staticmethod
+    # def rename_sessions_fiber_to_brain_region(sessions, frequencies):
+    #     for session in sessions:
+    #         for letter, freq in frequencies.items():
+    #             photwrit_df_key = f'photwrit_{freq}'
+    #             bonsai_df_key = f'bonsai_{freq}'
+    #             for df_key in [photwrit_df_key, bonsai_df_key]:
+    #                 df = session.df_container.get_data(df_key)
+    #                 df.rename(columns=lambda x: 
+    #                           session.fiber_to_region.get(Renamer.extract_region_number(x, letter), x),
+    #                           inplace=True)
+
+    # To accomodate the openfield-cpt merge, we have changed the functino below to only use the photwrit df
     def rename_sessions_fiber_to_brain_region(sessions, frequencies):
         for session in sessions:
-            for freq in frequencies:
-                photwrit_df_key = f'photwrit_{freq}'
-                bonsai_df_key = f'bonsai_{freq}'
-
-                for df_key in [photwrit_df_key, bonsai_df_key]:
-                    df = session.df_container.get_data(df_key)
-                    df.rename(columns=lambda x: 
-                              session.fiber_to_region.get(Renamer.extract_region_number(x), x),
-                              inplace=True)
+            for letter, freq in frequencies.items():
+                phot_df_key = f'phot_{freq}'
+                df = session.dfs.get_data(phot_df_key)
+                if df is None:
+                    continue
+                df.rename(columns=lambda x: 
+                            session.fiber_to_region.get(Renamer.extract_region_number(x, letter), x),
+                            inplace=True)
                     
     @staticmethod
     def debug_df_renames(session):
@@ -80,25 +93,39 @@ class Syncer:
         raw_df['SecFromZero_FP3002'] = raw_df['Evnt_Time'] + session.set_blank_images_timepoint_fp3002
 
         bonsai_470_df['SecFromZero'] = bonsai_470_df['Timestamp_Bonsai'] - bonsai_470_df['Timestamp_Bonsai'].iloc[0]
+        
         bonsai_415_df = session.df_container.get_data('bonsai_415')
         bonsai_415_df['SecFromZero'] = bonsai_415_df['Timestamp_Bonsai'] - bonsai_470_df['Timestamp_Bonsai'].iloc[0]
 
-        for freq in [470, 415]:
+        bonsai_560_df = session.df_container.get_data('bonsai_560')
+        bonsai_560_df['SecFromZero'] = bonsai_560_df['Timestamp_Bonsai'] - bonsai_470_df['Timestamp_Bonsai'].iloc[0]
+
+        # Initialize min_length with a large number
+        min_length = float('inf')
+
+        # Loop through each frequency and compute required fields while finding min_length
+        for freq in [470, 415, 560]:
             photwrit_df = session.df_container.get_data(f'photwrit_{freq}')
             bonsai_df = session.df_container.get_data(f'bonsai_{freq}')
             
             photwrit_df['Timestamp_Bonsai'] = bonsai_df['Timestamp_Bonsai']
-            
             photwrit_df['SecFromZero_Bonsai'] = bonsai_df['SecFromZero']
             photwrit_df['SecFromZero_FP3002'] = photwrit_df['Timestamp'] - photwrit_df['Timestamp'].iloc[0]
-            
             photwrit_df['SecFromTrialStart_Bonsai'] = photwrit_df['SecFromZero_Bonsai'] - session.set_blank_images_timepoint_bonsai
             photwrit_df['SecFromTrialStart_FP3002'] = photwrit_df['SecFromZero_FP3002'] - session.set_blank_images_timepoint_fp3002
 
-        if len(bonsai_470_df) > len(bonsai_415_df):
-            bonsai_470_df = bonsai_470_df.iloc[:len(bonsai_415_df)]
-        if len(photwrit_df) > len(bonsai_415_df):
-            photwrit_df = photwrit_df.iloc[:len(bonsai_415_df)]
+            # Update min_length based on current DataFrame lengths
+            min_length = min(min_length, len(photwrit_df), len(bonsai_df))
+
+        # Truncate all DataFrames to the minimum length found
+        for freq in [470, 415, 560]:
+            truncated_bonsai_df = session.df_container.get_data(f'bonsai_{freq}').iloc[:min_length]
+            truncated_photwrit_df = session.df_container.get_data(f'photwrit_{freq}').iloc[:min_length]
+            
+            # Reassign the truncated DataFrames directly back to df_container
+            session.df_container.data[f'bonsai_{freq}'] = truncated_bonsai_df
+            session.df_container.data[f'photwrit_{freq}'] = truncated_photwrit_df
+
 
     @staticmethod
     def apply_sync_to_all_sessions(sessions):

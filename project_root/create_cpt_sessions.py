@@ -55,27 +55,12 @@ def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=
     return sessions
 
 
-# sessions = load_and_prepare_sessions(f"../Dual_Sensor_CPT/Males_redo", load_from_pickle=False, remove_bad_signal_sessions=True)
-# # save sessions to pickle
-# with open(f"../Dual_Sensor_CPT/Males_redo/sessions.pickle", "wb") as f:
-#     pickle.dump(sessions, f)
-
-
-# import plotly.graph_objects as go
-# from plotly.subplots import make_subplots
-# from scipy.signal import savgol_filter
-# import numpy as np
-
-# # Your session and brain_reg objects should be defined here
-# session = find_session_by_trial_mouse_id(sessions, 20, 45)  # Your session object
-# brain_reg = session.brain_regions[-1]  # Your brain region object
-
-# # Step 3: Create a Plotly figure object for subplots
-# # Adjust rows and cols based on your layout needs
-# fig = make_subplots(rows=1, cols=1)
-
-# # Step 4: Call the function with your specific parameters
-# plot_session_events_and_signal(session, brain_reg, fig, row=1, col=1, title_suffix="Your Title Suffix Here")
-
-# # Finally, show the figure
-# fig.show()
+def create_pickle(src, dst):
+    sessions = load_and_prepare_sessions(src, load_from_pickle=False, remove_bad_signal_sessions=True)
+    # save sessions to pickle
+    with open(dst, "wb") as f:
+        pickle.dump(sessions, f)
+    # sessions = load_and_prepare_sessions(f"../Dual_Sensor_CPT/Males_redo", load_from_pickle=False, remove_bad_signal_sessions=True)
+    # # save sessions to pickle
+    # with open(f"../Dual_Sensor_CPT/Males_redo/sessions.pickle", "wb") as f:
+    #     pickle.dump(sessions, f)

@@ -4,6 +4,7 @@ import re
 import pandas as pd
 from tqdm import tqdm
 import config
+import numpy as np
 
 class DataContainer:
     def __init__(self, data_type=None):
@@ -45,32 +46,27 @@ class Session:
 
         self.task = session_guide.task
         
-        #TODO: In the future this should be possible without a try/except clause
-        # try:
-        #     self.genotype = session_guide.Genotype
-        # except AttributeError:
-        #     self.genotype = session_guide.notes
         try:
             self.genotype = session_guide.genotype
         except AttributeError:
             self.genotype = None
 
-        #TODO: find a more elegant way of writing/handling session_guide.drug_and_dose_1.endswith('mg/kg')
-        #drug_info_list = session_guide.drug_and_dose_1.split()
-        #if len(drug_info_list) == 3 and session_guide.drug_and_dose_1.endswith('mg/kg'):
-        #    self.drug_info = dict(zip(['name', 'dose', 'metric'], drug_info_list))
-        #else:
-        #    self.drug_info = {'name': session_guide.drug_and_dose_1, 'dose': None, 'metric': None}
-        drug_info_list = session_guide.drug_and_dose_1.split()
-        if len(drug_info_list) == 2 and re.match(r'^\d+(\.\d+)?$', drug_info_list[1]):
-
-            self.drug_info = dict(zip(['name', 'dose'], drug_info_list))
-        else:
+        if np.isnan(session_guide.drug_and_dose_1):
             self.drug_info = {'name': session_guide.drug_and_dose_1, 'dose': None}
+        else:
+            drug_info_list = session_guide.drug_and_dose_1.split()
+            if len(drug_info_list) == 2 and re.match(r'^\d+(\.\d+)?$', drug_info_list[1]):
+
+                self.drug_info = dict(zip(['name', 'dose'], drug_info_list))
+            else:
+                self.drug_info = {'name': session_guide.drug_and_dose_1, 'dose': None}
+
         
         self.mouse_id = session_guide.mouse_id
         self.fiber_to_region = self.create_fiber_to_region_dict()
+        # TODO make into a set
         self.brain_regions = sorted(list(self.fiber_to_region.values()))
+        
         
         # Initialize DataContainer for DataFrame storage
         self.df_container = DataContainer()
@@ -102,7 +98,7 @@ class Session:
             self.df_container.add_data(f'photwrit_{freq}', photwrit_df)
 
     # create_fiber_dict creates dictionary of all fibers used and their corresponding brainregion
-    def create_fiber_to_region_dict(self, fiber_pattern=re.compile(r'fiber(\d+)')):
+    def create_fiber_to_region_dict(self, fiber_pattern=re.compile(r'([GR])(\d+)')):
         # Initialize an empty dictionary
         fiber_to_region_dict = {}
 
@@ -112,8 +108,9 @@ class Session:
                 #and idx + 1 < len(self.session_guide.index) this should happen, so commented out
                 and pd.isna(self.session_guide.iloc[idx + 1])):
                 
-                fiber_number = fiber_pattern.match(col).group(1)
-                fiber_to_region_dict[fiber_number] = self.session_guide[col]
+                fiber_color = fiber_pattern.match(col).group(1)
+                fiber_number = fiber_pattern.match(col).group(2)
+                fiber_to_region_dict[fiber_number] = f'{self.session_guide[col]}_{fiber_color}'
 
         return fiber_to_region_dict
 

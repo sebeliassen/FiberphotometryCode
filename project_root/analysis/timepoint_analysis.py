@@ -3,7 +3,7 @@ from collections import defaultdict
 from itertools import chain
 from utils import mouse_br_events_count
 
-def collect_sessions_data(sessions, event_type, regions_to_aggregate):
+def collect_sessions_data(sessions, event_type, color, regions_to_aggregate):
     if not isinstance(regions_to_aggregate, list):
         regions_to_aggregate = [regions_to_aggregate]
     all_signals = []
@@ -14,10 +14,10 @@ def collect_sessions_data(sessions, event_type, regions_to_aggregate):
         if len(session.event_idxs_container.data.get(event_type, [])) == 0:
             continue
         for brain_region in session.brain_regions:
-            brain_region = brain_region.split('_')[0]
-            if brain_region not in regions_to_aggregate:
+            brain_region, _, curr_color = brain_region.split('_')
+            if brain_region not in regions_to_aggregate or curr_color != color:
                 continue
-            curr_signal_info = session.signal_info[(brain_region, event_type)]
+            curr_signal_info = session.signal_info[(brain_region, color, event_type)]
             all_signals.append(curr_signal_info['signal_matrix'])
             all_resp_metrics.append(curr_signal_info['response_metrics'][0])
             mouse_ids.append(session.mouse_id)
@@ -25,7 +25,7 @@ def collect_sessions_data(sessions, event_type, regions_to_aggregate):
     return all_signals, all_resp_metrics, mouse_ids
     
 
-def sample_signals_and_metrics(sessions, event_type, brain_regions, n=None, weight_method='events'):
+def sample_signals_and_metrics(sessions, brain_regions, color, event_type, n=None, weight_method='events'):
     '''weight_method: 'mice', 'mice_events', 'events' \n
     returns all_signals, all_resp_metrics, curr_signal_info'''
 
@@ -34,7 +34,7 @@ def sample_signals_and_metrics(sessions, event_type, brain_regions, n=None, weig
     #     all_signals, all_resp_metrics, mouse_ids, curr_signal_info = res
     # else:
     #     return None
-    all_signals, all_resp_metrics, mouse_ids = collect_sessions_data(sessions, event_type, brain_regions)
+    all_signals, all_resp_metrics, mouse_ids = collect_sessions_data(sessions, event_type, color, brain_regions)
     if len(all_signals) == 0:
         return None
     

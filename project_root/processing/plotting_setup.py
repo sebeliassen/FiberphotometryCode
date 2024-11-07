@@ -1,4 +1,5 @@
 import numpy as np
+from config import LETTER_TO_FREQS
 
 class PlottingSetup:
     def __init__(self, baseline_duration, trial_length, fps, fit_window_start, fit_window_end):
@@ -10,9 +11,9 @@ class PlottingSetup:
         self.fit_window_end = fit_window_end
 
 
-    def setup_plotting_attributes(self, session):
-        photwrit_470_df = session.df_container.get_data("photwrit_470")
-        session.trial_start_sync_FP3002 = photwrit_470_df["SecFromZero_FP3002"] - session.set_blank_images_timepoint_fp3002
+    def setup_plotting_attributes(self, session, freq):
+        photwrit_df = session.df_container.get_data(f"photwrit_{freq}")
+        session.trial_start_sync_FP3002 = photwrit_df["SecFromZero_FP3002"] - session.set_blank_images_timepoint_fp3002
         session.trial_start_idx = np.argmax(session.trial_start_sync_FP3002 > 0)
     
         # Calculate the start and end points for the full plot
@@ -27,7 +28,9 @@ class PlottingSetup:
         session.fit_end = session.trial_start_idx - self.fit_window_end * mins_to_frames_coeff
         
     def apply_phot_iso_calculation(self, session, func, phot, iso):
-        for brain_region in session.fiber_to_region.values():
+        for brain_region in session.brain_regions:
+            if brain_region not in phot.columns:
+                continue
             func(phot, iso, brain_region,
                  range(session.fit_start, session.fit_end), 
                  range(session.plot_start_full, session.plot_end_full))
@@ -53,7 +56,10 @@ class PlottingSetup:
         
     def apply_plotting_setup_to_sessions(self, sessions):
         for session in sessions:
-            self.setup_plotting_attributes(session)
-            phot_df = session.df_container.get_data("photwrit_470")
-            iso_df = session.df_container.get_data("photwrit_415")
-            self.apply_phot_iso_calculation(session, self.calculate_dff, phot_df, iso_df)
+            for letter, freq in LETTER_TO_FREQS.items():
+                if letter == 'iso':
+                    continue
+                self.setup_plotting_attributes(session, freq)
+                phot_df = session.df_container.get_data(f"photwrit_{freq}")
+                iso_df = session.df_container.get_data(f"photwrit_{LETTER_TO_FREQS['iso']}")
+                self.apply_phot_iso_calculation(session, self.calculate_dff, phot_df, iso_df)
