@@ -5,9 +5,7 @@ from config import *
 interval_start = peak_interval_config["interval_start"]
 interval_end = peak_interval_config["interval_end"]
 
-def find_start_end_idxs(event_type):
-    fps = PLOTTING_CONFIG['fps']
-
+def find_start_end_idxs(event_type, fps):
     start_time, end_time = attr_interval_dict[event_type]
     start_event_idx = int(start_time * fps + interval_start)
     end_event_idx = int(end_time * fps + interval_start)

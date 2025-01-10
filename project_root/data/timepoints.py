@@ -12,7 +12,7 @@ def add_event_idxs_to_session(session, actions_attr_dict, reward_attr_dict):
     events_of_interest = ['Display Image'] + list(actions_attr_dict.keys())
 
     # Get raw data and filter for events of interest
-    item_df = session.df_container.get_data("raw")[["Item_Name"]]
+    item_df = session.dfs.get_data("raw")[["Item_Name"]]
     for reward_item, reward_attr in reward_attr_dict.items():
         event_idxs_lists_dict[reward_attr] = list(item_df[item_df["Item_Name"] == reward_item].index)
     filtered_df = item_df[item_df["Item_Name"].isin(events_of_interest)].reset_index()

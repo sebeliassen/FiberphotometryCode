@@ -24,7 +24,7 @@ from processing.signal_info_setup import assign_sessions_signal_info
 from config import *
 
 
-def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=False, 
+def load_and_prepare_sessions(baseline_dir, session_type, first_n_dirs=None, load_from_pickle=False, 
                               remove_bad_signal_sessions=False, pickle_name=None):
     if pickle_name is None:
         pickle_name = '/sessions.pickle'
@@ -36,7 +36,7 @@ def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=
         return sessions
 
     # load in sessions
-    sessions = load_all_sessions(baseline_dir, first_n_dirs, remove_bad_signal_sessions=remove_bad_signal_sessions)
+    sessions = load_all_sessions(baseline_dir, session_type, first_n_dirs, remove_bad_signal_sessions=remove_bad_signal_sessions)
 
     # rename columns of dfs
     Renamer.rename_sessions_data(sessions, RENAME_PATTERNS)
@@ -46,7 +46,7 @@ def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=
     Syncer.apply_sync_to_all_sessions(sessions)
 
     # apply attributes used for plotting
-    plotting_setup = PlottingSetup(**PLOTTING_CONFIG)
+    plotting_setup = PlottingSetup(**PLOTTING_CONFIG['cpt'])
     plotting_setup.apply_plotting_setup_to_sessions(sessions)
 
     # add event_idxs
@@ -56,10 +56,11 @@ def load_and_prepare_sessions(baseline_dir, first_n_dirs=None, load_from_pickle=
 
 
 def create_pickle(src, dst):
-    sessions = load_and_prepare_sessions(src, load_from_pickle=False, remove_bad_signal_sessions=True)
+    sessions = load_and_prepare_sessions(src, 'cpt', load_from_pickle=False, remove_bad_signal_sessions=True)
     # save sessions to pickle
-    with open(dst, "wb") as f:
-        pickle.dump(sessions, f)
+    return sessions
+    # with open(dst, "wb") as f:
+    #     pickle.dump(sessions, f)
     # sessions = load_and_prepare_sessions(f"../Dual_Sensor_CPT/Males_redo", load_from_pickle=False, remove_bad_signal_sessions=True)
     # # save sessions to pickle
     # with open(f"../Dual_Sensor_CPT/Males_redo/sessions.pickle", "wb") as f:

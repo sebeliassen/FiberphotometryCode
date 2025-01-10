@@ -9,7 +9,8 @@ interval_end = config.peak_interval_config["interval_end"]
 
 
 def get_brain_region_event_signal_info(session, event_type, brain_region):
-    response_interval = find_start_end_idxs(event_type)
+    fps = config.PLOTTING_CONFIG[session.session_type]['fps']
+    response_interval = find_start_end_idxs(event_type, fps)
 
     if not hasattr(session, 'response_metrics'):
         session.response_metrics = defaultdict(list)            
@@ -26,8 +27,8 @@ def get_brain_region_event_signal_info(session, event_type, brain_region):
     fiber_color = brain_region[-1]
     curr_phot_freq = config.LETTER_TO_FREQS[fiber_color]
 
-    raw_df = session.df_container.get_data("raw")
-    phot_df = session.df_container.get_data(f"photwrit_{curr_phot_freq}")
+    raw_df = session.dfs.get_data("raw")
+    phot_df = session.dfs.get_data(f"phot_{curr_phot_freq}")
     phot_times = phot_df['SecFromZero_FP3002'].values
     
     signal_matrix = np.zeros((len(event_type_idxs), interval_start + interval_end))
@@ -48,7 +49,7 @@ def get_brain_region_event_signal_info(session, event_type, brain_region):
         start_signal_idx = max(0, event_idx - interval_start)  
         end_signal_idx = event_idx + interval_end  
         
-        signal = phot_df[f'{brain_region}_phot_zF'].iloc[start_signal_idx:end_signal_idx].values.copy()
+        signal = phot_df[brain_region + ('phot_zF',)].iloc[start_signal_idx:end_signal_idx].values.copy()
         signal_idx_ranges.append((start_signal_idx, end_signal_idx))
 
         start_event_idx = response_interval[0]
@@ -56,13 +57,13 @@ def get_brain_region_event_signal_info(session, event_type, brain_region):
 
         signal_matrix[i] = normalized_signal
 
-    response_interval = find_start_end_idxs(event_type)
-    response_metrics = calculate_signal_response_metrics_matrix(signal_matrix, response_interval)
+    #response_interval = find_start_end_idxs(event_type, fps)
+    response_metrics = calculate_signal_response_metrics_matrix(signal_matrix, response_interval, fps)
     brain_region_event_signal_info = {
         'signal_matrix': signal_matrix, 
         'signal_idx_ranges': signal_idx_ranges, 
         'response_metrics': response_metrics,
-        'phot_pointer': phot_df[f'{brain_region}_phot_zF']}
+        'phot_pointer': phot_df[brain_region + ('phot_zF',)]}
     
     return brain_region_event_signal_info
 

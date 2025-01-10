@@ -14,10 +14,22 @@ def collect_sessions_data(sessions, event_type, color, regions_to_aggregate):
         if len(session.event_idxs_container.data.get(event_type, [])) == 0:
             continue
         for brain_region in session.brain_regions:
-            brain_region, _, curr_color = brain_region.split('_')
-            if brain_region not in regions_to_aggregate or curr_color != color:
+            br_split = brain_region.split('_')
+
+            if br_split[0] not in regions_to_aggregate:
                 continue
-            curr_signal_info = session.signal_info[(brain_region, color, event_type)]
+
+            if len(br_split) == 3:
+                brain_region, _, curr_color = br_split
+                if curr_color != color:
+                    continue
+                curr_signal_info = session.signal_info[(brain_region, color, event_type)]
+            elif len(br_split) == 2:
+                brain_region, _ = br_split
+                curr_signal_info = session.signal_info[(brain_region, event_type)]
+            else:
+                continue  # Skip invalid brain_region formats
+
             all_signals.append(curr_signal_info['signal_matrix'])
             all_resp_metrics.append(curr_signal_info['response_metrics'][0])
             mouse_ids.append(session.mouse_id)
@@ -135,8 +147,11 @@ def split_signal_by_injection_threshold(signal, peak_y):
 def find_drug_split_x(session, brain_reg, find_relative_peak=False):
     phot_df = session.df_container.data['photwrit_470']
     raw_df = session.df_container.data['raw']
-
+    
+    # TODO: remove this line, it's only temporary
     signal = phot_df[f'{brain_reg}_phot_zF']
+
+    #signal = phot_df[brain_reg + ('phot_zF',)]
     phot_times = phot_df['SecFromZero_FP3002'].values
     blank_image_time = raw_df.iloc[session.cpt]['SecFromZero_FP3002']
 

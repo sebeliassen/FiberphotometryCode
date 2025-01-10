@@ -2,20 +2,21 @@
 
 # Plotting configuration parameters
 PLOTTING_CONFIG = {
-    'baseline_duration': 20,  # in minutes
-    'trial_length': 30,       # in minutes
-    'fps': 20,                # frames per second
-    'fit_window_start': 11,   # in minutes before trial start
-    'fit_window_end': 1       # in minutes before trial start
+    'cpt': {
+        'baseline_duration': 20,    # in minutes before trial start
+        'trial_length': 30,         # in minutes after trial start
+        'fps': 20,                  # frames per second
+        'fit_window_start': 11,     # in minutes before trial start
+        'fit_window_end': 1         # in minutes before trial start
+    },
+    'oft': {
+        'baseline_duration': 20,             # in minutes before injection starts
+        'trial_length': 20,       # in minutes after injection ends
+        'fps': 20,                           # frames per second
+        'fit_window_start': 11,              # in minutes before injection start
+        'fit_window_end': 1                  # in minutes before injection start
+    }
 }
-
-# PLOTTING_CONFIG = {
-#     'baseline_duration': 30,  # in minutes
-#     'trial_length': 30,       # in minutes
-#     'fps': 20,                # frames per second
-#     'fit_window_start': 11,   # in minutes before trial start
-#     'fit_window_end': 1       # in minutes before trial start
-# }
 
 
 RENAME_PATTERNS = [
@@ -30,7 +31,20 @@ RENAME_PATTERNS = [
 ]
 # TimestampBonsai_415
 RENAME_FREQS = ['415', '470', '560']
-LETTER_TO_FREQS = {'iso': '415', 'G': '470', 'R': '560'}
+#LETTER_TO_FREQS = {'iso': '415', 'G': '470', 'R': '560'}
+LETTER_TO_FREQS = {'iso': '415', 'G': '470'}
+
+
+PHOT_DF_PATTERNS = {
+    'phot_415': 'channel415*.csv',
+    'phot_470': 'channel470*.csv',
+}
+
+TIMESTAMP_DF_PATTERNS = {
+    'cam': 'BaslerTrack*.csv',
+    'bonsai_415': 'c415_bonsaiTS*.csv',
+    'bonsai_470': 'c470_bonsaiTS*.csv'
+}
 
 peak_interval_config = {
     'interval_start': 10 * 20,

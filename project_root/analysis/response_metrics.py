@@ -31,11 +31,10 @@ def calculate_signal_response_metrics(signal, interval):
     return response_metrics
 
 
-def calculate_signal_response_metrics_matrix(signals, interval):
+def calculate_signal_response_metrics_matrix(signals, interval, fps):
     # Adjust signals according to interval
     if isinstance(interval, (list, tuple, range)):
         signals = signals[:, interval[0]:interval[1]+1]
-    fps = config.PLOTTING_CONFIG['fps']
     
     maxima = np.max(signals, axis=1)
     left_minima = signals[:, 0]

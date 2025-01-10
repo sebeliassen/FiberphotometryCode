@@ -8,11 +8,11 @@ class Renamer:
     @staticmethod
     def rename_sessions_data(sessions, patterns):
         for session in sessions:
-            df_keys = session.df_container.fetch_all_data_names()
+            df_keys = session.dfs.fetch_all_data_names()
             for df_type, pattern_info in patterns:
                 target_df_keys = [key for key in df_keys if df_type in key]
                 for df_key in target_df_keys:            
-                    df = session.df_container.get_data(df_key)
+                    df = session.dfs.get_data(df_key)
                     Renamer.rename_df_columns(df, 
                                               pattern_info.get("pattern", ""), 
                                               pattern_info.get("replacement", ""))
@@ -31,7 +31,7 @@ class Renamer:
     #             photwrit_df_key = f'photwrit_{freq}'
     #             bonsai_df_key = f'bonsai_{freq}'
     #             for df_key in [photwrit_df_key, bonsai_df_key]:
-    #                 df = session.df_container.get_data(df_key)
+    #                 df = session.dfs.get_data(df_key)
     #                 df.rename(columns=lambda x: 
     #                           session.fiber_to_region.get(Renamer.extract_region_number(x, letter), x),
     #                           inplace=True)
@@ -50,10 +50,10 @@ class Renamer:
                     
     @staticmethod
     def debug_df_renames(session):
-        df_names = session.df_container.fetch_all_data_names()
+        df_names = session.dfs.fetch_all_data_names()
         print(f"Debugging session: {session.trial_id}")
         for df_name in df_names:
-            df = session.df_container.get_data(df_name)
+            df = session.dfs.get_data(df_name)
             if df is not None:
                 print(f"Columns in {df_name}: {list(df.columns)}")
             else:
@@ -70,7 +70,7 @@ class Syncer:
 
     @staticmethod
     def sync_session(session):
-        raw_df = session.df_container.get_data('raw')
+        raw_df = session.dfs.get_data('raw')
         session.cpt = Syncer.calculate_cpt(raw_df)
         session.sync_time = raw_df.iloc[session.cpt]['Evnt_Time']
 
@@ -78,9 +78,9 @@ class Syncer:
 
     @staticmethod
     def sync_dataframes(session):
-        ttl_df = session.df_container.get_data('ttl')
-        bonsai_470_df = session.df_container.get_data('bonsai_470')
-        raw_df = session.df_container.get_data('raw')
+        ttl_df = session.dfs.get_data('ttl')
+        bonsai_470_df = session.dfs.get_data('bonsai_470')
+        raw_df = session.dfs.get_data('raw')
         if len(ttl_df) == 0:
             raise IndexError('No sync data loaded, data might be missing')
 
@@ -94,10 +94,10 @@ class Syncer:
 
         bonsai_470_df['SecFromZero'] = bonsai_470_df['Timestamp_Bonsai'] - bonsai_470_df['Timestamp_Bonsai'].iloc[0]
         
-        bonsai_415_df = session.df_container.get_data('bonsai_415')
+        bonsai_415_df = session.dfs.get_data('bonsai_415')
         bonsai_415_df['SecFromZero'] = bonsai_415_df['Timestamp_Bonsai'] - bonsai_470_df['Timestamp_Bonsai'].iloc[0]
 
-        bonsai_560_df = session.df_container.get_data('bonsai_560')
+        bonsai_560_df = session.dfs.get_data('bonsai_560')
         bonsai_560_df['SecFromZero'] = bonsai_560_df['Timestamp_Bonsai'] - bonsai_470_df['Timestamp_Bonsai'].iloc[0]
 
         # Initialize min_length with a large number
@@ -105,26 +105,26 @@ class Syncer:
 
         # Loop through each frequency and compute required fields while finding min_length
         for freq in [470, 415, 560]:
-            photwrit_df = session.df_container.get_data(f'photwrit_{freq}')
-            bonsai_df = session.df_container.get_data(f'bonsai_{freq}')
+            phot_df = session.dfs.get_data(f'phot_{freq}')
+            bonsai_df = session.dfs.get_data(f'bonsai_{freq}')
             
-            photwrit_df['Timestamp_Bonsai'] = bonsai_df['Timestamp_Bonsai']
-            photwrit_df['SecFromZero_Bonsai'] = bonsai_df['SecFromZero']
-            photwrit_df['SecFromZero_FP3002'] = photwrit_df['Timestamp'] - photwrit_df['Timestamp'].iloc[0]
-            photwrit_df['SecFromTrialStart_Bonsai'] = photwrit_df['SecFromZero_Bonsai'] - session.set_blank_images_timepoint_bonsai
-            photwrit_df['SecFromTrialStart_FP3002'] = photwrit_df['SecFromZero_FP3002'] - session.set_blank_images_timepoint_fp3002
+            phot_df['Timestamp_Bonsai'] = bonsai_df['Timestamp_Bonsai']
+            phot_df['SecFromZero_Bonsai'] = bonsai_df['SecFromZero']
+            phot_df['SecFromZero_FP3002'] = phot_df['Timestamp'] - phot_df['Timestamp'].iloc[0]
+            phot_df['SecFromTrialStart_Bonsai'] = phot_df['SecFromZero_Bonsai'] - session.set_blank_images_timepoint_bonsai
+            phot_df['SecFromTrialStart_FP3002'] = phot_df['SecFromZero_FP3002'] - session.set_blank_images_timepoint_fp3002
 
             # Update min_length based on current DataFrame lengths
-            min_length = min(min_length, len(photwrit_df), len(bonsai_df))
+            min_length = min(min_length, len(phot_df), len(bonsai_df))
 
         # Truncate all DataFrames to the minimum length found
         for freq in [470, 415, 560]:
-            truncated_bonsai_df = session.df_container.get_data(f'bonsai_{freq}').iloc[:min_length]
-            truncated_photwrit_df = session.df_container.get_data(f'photwrit_{freq}').iloc[:min_length]
+            truncated_bonsai_df = session.dfs.get_data(f'bonsai_{freq}').iloc[:min_length]
+            truncated_phot_df = session.dfs.get_data(f'phot_{freq}').iloc[:min_length]
             
-            # Reassign the truncated DataFrames directly back to df_container
-            session.df_container.data[f'bonsai_{freq}'] = truncated_bonsai_df
-            session.df_container.data[f'photwrit_{freq}'] = truncated_photwrit_df
+            # Reassign the truncated DataFrames directly back to dfs
+            session.dfs.data[f'bonsai_{freq}'] = truncated_bonsai_df
+            session.dfs.data[f'phot_{freq}'] = truncated_phot_df
 
 
     @staticmethod
