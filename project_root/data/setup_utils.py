@@ -1,4 +1,5 @@
 import re
+from config import RENAME_FREQS
 
 class Renamer:
     @staticmethod
@@ -98,13 +99,14 @@ class Syncer:
         bonsai_415_df['SecFromZero'] = bonsai_415_df['Timestamp_Bonsai'] - bonsai_470_df['Timestamp_Bonsai'].iloc[0]
 
         bonsai_560_df = session.dfs.get_data('bonsai_560')
-        bonsai_560_df['SecFromZero'] = bonsai_560_df['Timestamp_Bonsai'] - bonsai_470_df['Timestamp_Bonsai'].iloc[0]
+        if bonsai_560_df:
+            bonsai_560_df['SecFromZero'] = bonsai_560_df['Timestamp_Bonsai'] - bonsai_470_df['Timestamp_Bonsai'].iloc[0]
 
         # Initialize min_length with a large number
         min_length = float('inf')
 
         # Loop through each frequency and compute required fields while finding min_length
-        for freq in [470, 415, 560]:
+        for freq in RENAME_FREQS:
             phot_df = session.dfs.get_data(f'phot_{freq}')
             bonsai_df = session.dfs.get_data(f'bonsai_{freq}')
             
@@ -118,7 +120,7 @@ class Syncer:
             min_length = min(min_length, len(phot_df), len(bonsai_df))
 
         # Truncate all DataFrames to the minimum length found
-        for freq in [470, 415, 560]:
+        for freq in RENAME_FREQS:
             truncated_bonsai_df = session.dfs.get_data(f'bonsai_{freq}').iloc[:min_length]
             truncated_phot_df = session.dfs.get_data(f'phot_{freq}').iloc[:min_length]
             

@@ -141,9 +141,13 @@ class Session:
                     fiber_color = match.group(1)
                     fiber_number = match.group(2)
                     fiber_to_region_dict[fiber_number] = (region, side, fiber_color)
+                # We assume only one non-iso channel if nothing else is mentioned
                 elif match.group(3):  # Only number match
+                    LETTER_TO_FREQS = config.LETTER_TO_FREQS
+                    probable_letter = [channel for channel in LETTER_TO_FREQS.keys() if channel != 'iso'][0]
+
                     fiber_number = match.group(3)
-                    fiber_to_region_dict[fiber_number] = (region, side, None)
+                    fiber_to_region_dict[fiber_number] = (region, side, probable_letter)
                     
         return fiber_to_region_dict
 
@@ -205,4 +209,55 @@ def load_all_sessions(baseline_dir, session_type, first_n_dirs=None, remove_bad_
             new_session = Session(chamber_id, trial_dir, session_guide, session_type)
             if len(new_session.brain_regions) > 0 or (remove_bad_signal_sessions == False):
                 all_sessions.append(new_session)
+    return all_sessions
+
+# data_loading.py
+def load_all_sessions(
+    baseline_dir, 
+    session_type, 
+    first_n_dirs=None, 
+    remove_bad_signal_sessions=False
+):
+    subdirs = [
+        d for d in os.listdir(baseline_dir) 
+        if os.path.isdir(os.path.join(baseline_dir, d))
+    ]
+    sorted_subdirs = sorted(subdirs, key=sort_key_func)
+    trial_dirs = [os.path.join(baseline_dir, sd) for sd in sorted_subdirs]
+
+    if first_n_dirs is None:
+        first_n_dirs = len(trial_dirs)
+
+    all_sessions = []
+    for trial_dir in tqdm(trial_dirs[:first_n_dirs]):
+        trial_id = os.path.basename(trial_dir)
+        segments = trial_id.split('_')[1].split('.')  # e.g. "T1_23.25.29.e"
+        
+        # Find and load a 'trial_guide.xlsx'
+        for file in os.listdir(trial_dir):
+            if fnmatch.fnmatch(file, 'T*trial_guide.xlsx'):
+                current_trial_guide_df = pd.read_excel(
+                    os.path.join(trial_dir, file),
+                    nrows=4,
+                    dtype={"mouse_id": str},
+                    index_col=0,
+                    engine='openpyxl'
+                )
+        
+        for segment, chamber_id in zip(segments, "abcd"):
+            if segment == 'e':
+                # Skip sessions marked empty
+                continue
+            
+            session_guide = current_trial_guide_df.loc[chamber_id]
+            if session_guide.mouse_id != segment:
+                raise Exception(
+                    f"The mouse id '{segment}' from the folder name and "
+                    f"'{session_guide.mouse_id}' in trial guide do not match."
+                )
+            
+            new_session = Session(chamber_id, trial_dir, session_guide, session_type)
+            if len(new_session.brain_regions) > 0 or not remove_bad_signal_sessions:
+                all_sessions.append(new_session)
+
     return all_sessions

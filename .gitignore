@@ -25,6 +25,7 @@ venv/
 # Remember to remove this at some point
 *.csv
 *.png
+*.pdf
 *.PNG
 *.html
 *.xlsx

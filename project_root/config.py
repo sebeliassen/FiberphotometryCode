@@ -6,14 +6,14 @@ PLOTTING_CONFIG = {
         'baseline_duration': 20,    # in minutes before trial start
         'trial_length': 30,         # in minutes after trial start
         'fps': 20,                  # frames per second
-        'fit_window_start': 11,     # in minutes before trial start
+        'fit_window_start': 16,     # in minutes before trial start
         'fit_window_end': 1         # in minutes before trial start
     },
     'oft': {
         'baseline_duration': 20,             # in minutes before injection starts
         'trial_length': 20,       # in minutes after injection ends
         'fps': 20,                           # frames per second
-        'fit_window_start': 11,              # in minutes before injection start
+        'fit_window_start': 16,              # in minutes before injection start
         'fit_window_end': 1                  # in minutes before injection start
     }
 }
@@ -30,7 +30,8 @@ RENAME_PATTERNS = [
     ('ttl', {"pattern": 'BonsaiTimestamp', "replacement": "Timestamp_Bonsai"})
 ]
 # TimestampBonsai_415
-RENAME_FREQS = ['415', '470', '560']
+#RENAME_FREQS = ['415', '470', '560']
+RENAME_FREQS = ['415', '470']
 #LETTER_TO_FREQS = {'iso': '415', 'G': '470', 'R': '560'}
 LETTER_TO_FREQS = {'iso': '415', 'G': '470'}
 

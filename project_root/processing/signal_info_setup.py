@@ -76,7 +76,13 @@ def get_session_signal_info(session):
                 continue
             
             brain_region_event_signal_info = get_brain_region_event_signal_info(session, event_type, brain_region)
-            br, side, color = brain_region.split('_')
+            
+            # You probably need this for old sessions
+            #br, side, color = brain_region.split('_')
+            try:
+                br, side, color = brain_region.split('_')
+            except AttributeError:
+                br, side, color = brain_region
             signal_info[(br, color, event_type)] = brain_region_event_signal_info
     return signal_info
 
