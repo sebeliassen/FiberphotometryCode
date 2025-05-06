@@ -1,35 +1,36 @@
-# Ignore everything
+#############################################
+# Positive gitignore: include only specified files
+#############################################
+# Ignore all files by default
 *
 
-# But not these files...
-!.gitignore
-!LICENSE
-!README.md
-!project_root/
-!project_root/**/*
+# Unignore directories for recursion
+!*/
 
-# Within project_root/, ignore:
-project_root/**/__pycache__/
-project_root/**/.ipynb_checkpoints/
+# Allow top-level boilerplate files
+!/.gitignore
+!/LICENSE
+!/README.md
 
-# Additional common directories/files to ignore
-.env
-venv/
-*.log
-*.sqlite
-.DS_Store
-*.zip
-*.pkl
-*.pickle
+# Allow code directories
+!/fiberphotometry/
+!/scripts/
+!/tests/
 
-# Remember to remove this at some point
-*.csv
-*.png
-*.pdf
-*.PNG
-*.html
-*.xlsx
+# Unignore subdirectories for recursion
+!/fiberphotometry/**/
+!/scripts/**/
+!/tests/**/
 
-# IDE-specific directories
-.vscode/
-.idea/
+# Only include Python and Notebook files in code directories
+!/fiberphotometry/**/*.py
+!/fiberphotometry/**/*.ipynb
+!/scripts/**/*.py
+!/scripts/**/*.ipynb
+!/tests/**/*.py
+!/tests/**/*.ipynb
+
+# Ignore caches and checkpoints everywhere
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
