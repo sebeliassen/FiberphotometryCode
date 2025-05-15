@@ -19,5 +19,14 @@ STANDARD_BASE_COLS = [
 # match legacy Region<N><G/R>
 REGION_COL_RE = r'^Region(\d+)([GR])$'
 
-# glob to find your per-channel photometry files
+# glob pattern for raw photometry fragments
 PHOTOWRIT_GLOB = 'channel*photwrit*.csv'
+
+# Regex to pull out an optional “Setup<id>” and then the timestamp.
+#  - Group “setup_id” will be the letter(s) after “_Setup” (if present)
+#  - Group “timestamp” is your ISO‐style TS
+PHOTOWRIT_SETUP_RE = (
+    r'channel\d+photwrit'                 # prefix
+    r'(?:_Setup(?P<setup_id>[^_]+))?'     # optional “_SetupX”
+    r'(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2})'  # the TS
+)
