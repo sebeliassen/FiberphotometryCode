@@ -30,3 +30,6 @@ PHOTOWRIT_SETUP_RE = (
     r'(?:_Setup(?P<setup_id>[^_]+))?'     # optional “_SetupX”
     r'(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2})'  # the TS
 )
+
+# regex to catch RAW_{chamber}_*.csv files (case-insensitive, chamber A–D)
+RAW_CSV_RE = r'(?i)^raw_([A-D])_.+\.csv$'
