@@ -3,8 +3,8 @@
 # how to pick off your TTL columns
 RENAME_RULES = {
     'ttl': [
-        (['FP3002.*Seconds', 'FP3002_Timestamp'], 'SystemTimestamp'),
         (['FP3002.*Value'],                  'DigitalIOState'),
+        (['FP3002.*Seconds', 'FP3002_Timestamp'], 'SystemTimestamp'),
     ]
 }
 
