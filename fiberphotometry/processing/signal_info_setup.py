@@ -53,11 +53,13 @@ def get_brain_region_event_signal_info(session, event_type, brain_region):
         signal_idx_ranges.append((start_idx, end_idx))
 
         # 4) pull out the data and normalize around the event
-        raw_trace = phot_df[brain_region + ('phot_zF',)].iloc[start_idx:end_idx].values.copy()
+        # raw_trace = phot_df[brain_region + ('phot_zF',)].iloc[start_idx:end_idx].values.copy()
+        raw_trace = phot_df[brain_region].iloc[start_idx:end_idx].values.copy()
 
         fit_start, fit_end = response_interval
         # center around the mean in a small window around the event
-        pre_mean = raw_trace[fit_start-7:fit_start+7].mean()
+        # pre_mean = raw_trace[fit_start-7:fit_start+7].mean()
+        pre_mean = 0
         signal_matrix[i] = raw_trace - pre_mean
 
     # 5) compute your metrics on the completed matrix
@@ -69,7 +71,8 @@ def get_brain_region_event_signal_info(session, event_type, brain_region):
         'signal_matrix':     signal_matrix,
         'signal_idx_ranges': signal_idx_ranges,
         'response_metrics':  response_metrics,
-        'phot_pointer':      phot_df[brain_region + ('phot_zF',)]
+        'phot_pointer':      phot_df[brain_region]
+        # 'phot_pointer':      phot_df[brain_region + ('phot_zF',)]
     }
 
 def get_session_signal_info(session):

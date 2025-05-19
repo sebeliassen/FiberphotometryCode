@@ -78,6 +78,7 @@ class Session:
                                    setup=self.chamber_id if self.session_type=='cpt' else None )
         self.load_all_data()
     
+    # TODO: this logic should be moved elsewhere, or made unnecassary using parsing logic
     def _normalise_photometry_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Rename any G0/R1/G2… columns into Region0G/Region1R/Region2G… so that
@@ -219,7 +220,6 @@ def detect_freqs(trial_path: Path, setup: Optional[str] = None) -> List[str]:
             if m:
                 freqs.add(m.group(1))
     return sorted(freqs)
-
 
 
 # data_loading.py

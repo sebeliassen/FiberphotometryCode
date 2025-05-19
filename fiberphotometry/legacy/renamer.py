@@ -122,6 +122,14 @@ def process_trial_folder(input_folder: str, output_folder: str, head: int = None
             shutil.copy(path, dest)
             print(f"wrote {dest}")
 
+    # 0.5) copy trial‐guide files (T<digits>_trial_guide.csv or .xlsx)
+    for ext in ('csv', 'xlsx'):
+        for path in glob.glob(os.path.join(input_folder, 'T[0-9]*_trial_guide.' + ext)):
+            fn   = os.path.basename(path)
+            dest = os.path.join(output_folder, fn)
+            shutil.copy(path, dest)
+            print(f"wrote {dest}")
+
     # 1) TTLs
     for ttl_path in sorted(glob.glob(os.path.join(input_folder, 'DigInput_*.csv'))):
         df_ttl = rename_ttl(ttl_path)

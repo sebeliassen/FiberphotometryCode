@@ -100,4 +100,3 @@ class Syncer:
                 df = session.dfs.get_data(key)
                 if df is not None:
                     session.dfs.data[key] = df.iloc[:n_min]
-

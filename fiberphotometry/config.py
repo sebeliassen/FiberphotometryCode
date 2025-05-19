@@ -4,6 +4,7 @@ DATA_PATTERNS = {
         'raw': {
             'parser': 'raw',
             'pattern': '[Rr][Aa][Ww]_{setup}*.csv',
+            # 'kwargs': {'skiprows': 19, 'sep': ';'},
             'kwargs': {'skiprows': 18},
         },
         'ttl': {
@@ -88,9 +89,12 @@ peak_interval_config = {
 
 item_attr_dict = {}
 
+# actions_attr_dict = {
+#     'Correct_Counter':      'global_correct_hit',      # maps Correct_Counter_<n> → global_correct_hit
+#     'FIXED_RATIO_COUNTER':  'fixed_ratio_touch'        # maps FIXED_RATIO_COUNTER_<m> → fixed_ratio_touch
+# }
+
 actions_attr_dict = {
-    'Correct_Counter':      'global_correct_hit',      # maps Correct_Counter_<n> → global_correct_hit
-    'FIXED_RATIO_COUNTER':  'fixed_ratio_touch'        # maps FIXED_RATIO_COUNTER_<m> → fixed_ratio_touch
 }
 
 reward_attr_dict = {}

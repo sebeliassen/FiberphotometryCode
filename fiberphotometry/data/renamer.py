@@ -43,8 +43,6 @@ class Renamer:
                          # Note: This simple check might not catch complex regex patterns perfectly
                          # if any(re.search(pattern, str(col)) for col in df.columns):
                          Renamer.rename_df_columns(df, pattern, replacement)
-                         # else:
-                         #    pass # Pattern not found in columns, skip rename for this df/pattern
 
     @staticmethod
     def finalize_ttl_for_session(session):
