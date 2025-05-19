@@ -1,31 +1,39 @@
 # Patterns for loading session data files by session type.
 DATA_PATTERNS = {
     'cpt': {
-        'raw': {
-            'parser': 'raw',
-            'pattern': '[Rr][Aa][Ww]_{setup}*.csv',
-            # 'kwargs': {'skiprows': 19, 'sep': ';'},
-            'kwargs': {'skiprows': 18},
-        },
-        'ttl': {
-            'parser': 'ttl',
-            'pattern': 'DigInput_{setup}*.csv',
-        },
-        'phot': {
-            'parser':        'phot',
-            'pattern':       'channel{freq}photwrit_Setup{setup}*.csv',
-            'combined_glob': 'photometry_data_combined*.csv',
-            'split_map':     {1: '415', 2: '470'},
-        }
+        'raw':  { 'parser': 'csv', 'pattern': 'RAW_{chamber_id}*.csv' },
+        'ttl':  { 'parser': 'csv', 'pattern': 'DigInput_{chamber_id}*.csv' },
+        'phot': { 'parser': 'csv', 'pattern': 'photometry_data_combined_Setup{setup_id}*.csv' },
     },
-    # TODO: change oft to adhere to new parser strategy
-    'oft': {
-        'cam1':  {'glob': 'BaslerTrack*.csv',        'kwargs': {'sep': r'\\s+'}},
-        'cam2':  {'glob': 'TopCamTracking*.csv',     'kwargs': {'sep': r'\\s+'}},
-        'bonsai':{'glob': 'c{freq}_bonsaiTS*.csv',    'kwargs': {}},
-        'phot':  {'glob': 'channel{freq}photwrit*.csv','kwargs': {}},
-    }
 }
+
+# DATA_PATTERNS = {
+#     'cpt': {
+#         'raw': {
+#             'parser': 'raw',
+#             'pattern': '[Rr][Aa][Ww]_{setup}*.csv',
+#             # 'kwargs': {'skiprows': 19, 'sep': ';'},
+#             'kwargs': {'skiprows': 18},
+#         },
+#         'ttl': {
+#             'parser': 'ttl',
+#             'pattern': 'DigInput_{setup}*.csv',
+#         },
+#         'phot': {
+#             'parser':        'phot',
+#             'pattern':       'channel{freq}photwrit_Setup{setup}*.csv',
+#             'combined_glob': 'photometry_data_combined*.csv',
+#             'split_map':     {1: '415', 2: '470'},
+#         }
+#     },
+#     # TODO: change oft to adhere to new parser strategy
+#     'oft': {
+#         'cam1':  {'glob': 'BaslerTrack*.csv',        'kwargs': {'sep': r'\\s+'}},
+#         'cam2':  {'glob': 'TopCamTracking*.csv',     'kwargs': {'sep': r'\\s+'}},
+#         'bonsai':{'glob': 'c{freq}_bonsaiTS*.csv',    'kwargs': {}},
+#         'phot':  {'glob': 'channel{freq}photwrit*.csv','kwargs': {}},
+#     }
+# }
 # config.py
 
 # Plotting configuration parameters

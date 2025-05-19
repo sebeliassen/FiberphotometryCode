@@ -8,8 +8,6 @@ import numpy as np
 import warnings
 from pathlib import Path
 from typing import Any, Optional, List, Dict, Tuple, Pattern, Union
-from fiberphotometry.data.parsers import PARSER_REGISTRY
-
 
 class DataContainer:
     """Container for storing and retrieving named data items of a uniform type."""
@@ -47,82 +45,78 @@ class DataContainer:
 
 
 class Session:
-    """Representation of a session, with metadata and loaded data container."""
-    def __init__(self, chamber_id: str, trial_dir: str, session_guide: pd.Series, session_type: str) -> None:
-        """Initialize session with metadata and load data based on session type."""
-        self.trial_dir = trial_dir
-        self.trial_id = os.path.basename(trial_dir)
+    def __init__(
+        self,
+        chamber_id: str,
+        trial_dir: str,
+        session_guide: pd.Series,
+        session_type: str
+    ) -> None:
+        # ─── your existing setup ───────────────────────────────────────────
+        self.trial_dir     = trial_dir
+        self.trial_id      = os.path.basename(trial_dir)
         self.session_guide = session_guide
-        self.session_type = session_type
-        
-        self.chamber_id = chamber_id.upper()  # Ensure chamber_id is uppercase
-        self.setup_id = session_guide.setup_id
-        self.dig_input = "0" if chamber_id in "ac" else "1"
+        self.session_type  = session_type
 
-        self.task = session_guide.task
-        self.genotype = getattr(session_guide, 'genotype', None)
+        # ─── MANDATORY fields ──────────────────────────────────────────────
+        self.chamber_id = chamber_id.upper()
+        self.setup_id   = session_guide.setup_id
+        self.dig_input  = "0" if chamber_id in "ac" else "1"
+        self.mouse_id   = session_guide.mouse_id
 
-        # Set up drug information if it exists
-        self.drug_info = self._parse_drug_info(session_guide)
-        
-        self.mouse_id = session_guide.mouse_id
+        # ─── 1) parse all drug_and_dose* columns ───────────────────────────
+        drug_cols = [c for c in session_guide.index if c.startswith("drug_and_dose")]
+        self.drug_infos = []
+        for dc in drug_cols:
+            raw = session_guide[dc]
+            if isinstance(raw, str) and raw.strip():
+                self.drug_infos.append(self._parse_drug_info(raw))
+        # if you really only want one dict, you can do:
+        # self.drug_info = self.drug_infos[0] if self.drug_infos else {}
+
+        # ─── 2) discover fiber/exclude columns ─────────────────────────────
+        fiber_cols   = [c for c in session_guide.index if re.match(r"^fiber\d+$", c)]
+        exclude_cols = [c for c in session_guide.index if c.lower().startswith("exclude")]
+
+        # ─── 3) everything else is “optional” metadata ─────────────────────
+        reserved = {"setup_id", "mouse_id"} | set(drug_cols) | set(fiber_cols) | set(exclude_cols)
+        optional_cols = [c for c in session_guide.index if c not in reserved]
+        for col in optional_cols:
+            setattr(self, col, session_guide[col])
+        # now you’ve got self.task, self.genotype, self.notes, etc., automatically
+
+        # ─── 4) build fiber→region & downstream as before ─────────────────
         self.fiber_to_region = self.create_fiber_to_region_dict()
-        self.brain_regions = sorted(list(self.fiber_to_region.values()))
+        self.brain_regions   = sorted(self.fiber_to_region.values())
 
-        # Initialize DataContainer for DataFrame storage
-        self.dfs = DataContainer()
+        self.dfs     = DataContainer()
         self.parsers = []
-        self._build_parsers()
+        #self._build_parsers()
 
-        self.freqs = detect_freqs( Path(self.trial_dir),
-                                   setup=self.chamber_id if self.session_type=='cpt' else None )
         self.load_all_data()
-    
-    # TODO: this logic should be moved elsewhere, or made unnecassary using parsing logic
-    def _normalise_photometry_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+
+    def _parse_drug_info(self, raw: Any) -> Dict[str, Optional[str]]:
         """
-        Rename any G0/R1/G2… columns into Region0G/Region1R/Region2G… so that
-        both old Bonsai CSVs (Region<N><G/R>) and new combined CSVs (G<N>/R<N>)
-        end up unified.
+        Take a raw cell value (e.g. "CPT 3.0 mg") and return
+        {'name': str, 'dose': str|None, 'metric': str|None}.
         """
-        def rename(col):
-            m = re.fullmatch(r'([GR])(\d+)', col)
-            if m:
-                # turn G0  → Region0G,   R1 → Region1R, etc.
-                return f"Region{m.group(2)}{m.group(1)}"
-            return col
-        return df.rename(columns=rename)
+        if not isinstance(raw, str) or not raw.strip():
+            return {'name': None, 'dose': None, 'metric': None}
 
-    def _build_parsers(self):
-        """Instantiate one parser per DATA_PATTERNS entry."""
-        cfg = config.DATA_PATTERNS[self.session_type]
-        self.parsers = []
-        for name, spec in cfg.items():
-            ptype = spec['parser']               # e.g. 'raw'
-            cls   = PARSER_REGISTRY[ptype]       # e.g. RawParser
-            self.parsers.append(cls(name, spec))
+        parts = raw.strip().split()
+        name = parts[0]
+        dose = None
+        metric = None
 
-    def _parse_drug_info(self, session_guide):
-        # Retrieve drug and dose information
-        drug_and_dose = getattr(session_guide, 'drug_and_dose_1', None)
-        
-        # Check if drug_and_dose is a non-empty string
-        if isinstance(drug_and_dose, str) and drug_and_dose.strip():
-            drug_info_list = drug_and_dose.split()
-            
-            # Verify we have at least name and dose, and optionally a metric
-            if len(drug_info_list) >= 2 and re.match(r'^\d+(\.\d+)?$', drug_info_list[1]):
-                # If there’s a third element, assume it’s the metric
-                drug_info = {'name': drug_info_list[0], 'dose': drug_info_list[1]}
-                if len(drug_info_list) == 3:
-                    drug_info['metric'] = drug_info_list[2]  # Add metric if provided
-                else:
-                    drug_info['metric'] = None  # No metric provided
-                return drug_info
+        # if second token is numeric, it's the dose
+        if len(parts) >= 2 and re.match(r'^\d+(\.\d+)?$', parts[1]):
+            dose = parts[1]
+            # optional third token is the metric
+            if len(parts) >= 3:
+                metric = parts[2]
+        # otherwise we just leave dose/metric as None
 
-        # Default if drug information is missing or invalid
-        return {'name': drug_and_dose, 'dose': None, 'metric': None}
-
+        return {'name': name, 'dose': dose, 'metric': metric}
 
     def load_data(
         self,
@@ -201,26 +195,6 @@ def sort_key_func(dir_name: str) -> Tuple[int, ...]:
     # Find all numbers following 'T' or before a period '.' and return them as a tuple of integers
     numbers = tuple(map(int, re.findall(r'T(\d+)', dir_name)))
     return numbers
-
-def detect_freqs(trial_path: Path, setup: Optional[str] = None) -> List[str]:
-    """
-    Detect photometry channel frequencies in a trial directory.
-    Scans for 'channel{freq}photwrit' or 'c{freq}_bonsaiTS' files.
-    """
-    freqs = set()
-    # match full photometry writes
-    for f in trial_path.iterdir():
-        m = re.match(r'channel(\d+)photwrit', f.name)
-        if m:
-            freqs.add(m.group(1))
-    # fallback to bonsai TS files if none found
-    if not freqs:
-        for f in trial_path.iterdir():
-            m = re.match(r'c(\d+)_bonsaiTS', f.name)
-            if m:
-                freqs.add(m.group(1))
-    return sorted(freqs)
-
 
 # data_loading.py
 def load_all_sessions(
