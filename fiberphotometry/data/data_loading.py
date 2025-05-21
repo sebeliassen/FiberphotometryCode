@@ -50,13 +50,15 @@ class Session:
         chamber_id: str,
         trial_dir: str,
         session_guide: pd.Series,
-        session_type: str
+        session_type: str,
+        remove_bad_signal_sessions: bool = False
     ) -> None:
         # ─── your existing setup ───────────────────────────────────────────
         self.trial_dir     = trial_dir
         self.trial_id      = os.path.basename(trial_dir)
         self.session_guide = session_guide
         self.session_type  = session_type
+        self.remove_bad_signal_sessions = remove_bad_signal_sessions
 
         # ─── MANDATORY fields ──────────────────────────────────────────────
         self.chamber_id = chamber_id.upper()
@@ -159,7 +161,9 @@ class Session:
             if (match 
                 and pd.notna(self.session_guide[col])
                 #and idx + 1 < len(self.session_guide.index) this should happen, so commented out
-                and pd.isna(self.session_guide.iloc[idx + 1])):
+                and (pd.isna(self.session_guide.iloc[idx + 1])
+                     or not self.remove_bad_signal_sessions)
+                ):
                     
                 # Extract region and side information
                 region, side = self.session_guide[col].split("_")
