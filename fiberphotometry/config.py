@@ -132,6 +132,7 @@ response_metric_idxs = {0: 'slope_up',
                         4: 'auc'}
   
 # Patterns for fiber column matching and column filtering moved from code into config
+# TODO: we need to find a standardization of the pattern below
 FIBER_PATTERN = r'([GR])(\d+)|fiber(\d+)'
 FILTER_COLUMNS_PATTERN = r'[GR](\d+)|Region(\d+)[\w]*'
   # Combined photometry CSV patterns by session type (single-file per-session dumps)
