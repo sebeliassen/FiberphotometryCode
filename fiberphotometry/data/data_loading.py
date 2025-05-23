@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Optional, List, Dict, Tuple, Pattern, Union
 import glob
 
+
 class DataContainer:
     """Container for storing and retrieving named data items of a uniform type."""
     def __init__(self, data_type: Optional[type] = None) -> None:
@@ -17,32 +18,50 @@ class DataContainer:
         self.data = {}
         self.data_type = data_type
 
+    def _validate_name(self, name: Any) -> str:
+        if not isinstance(name, str) or not name.strip():
+            raise TypeError(f"Data name must be a non‐empty string; got {name!r}")
+        return name
+
     def add_data(self, name: str, data: Any) -> None:
         """Add a data item with a given name."""
+        name = self._validate_name(name)
+
+        if name in self.data:
+            warnings.warn(f"Data under name {name!r} already exists; it will be overwritten")
         # Set the data type if not already set
         if self.data_type is None:
             self.data_type = type(data)
         elif not isinstance(data, self.data_type):
-            raise TypeError(f"Data must be of type {self.data_type.__name__}, but is of type {type(data)}")
+            raise TypeError(
+                f"Data must be of type {self.data_type.__name__}, "
+                f"but got {type(data).__name__}"
+            )
 
         self.data[name] = data
 
     def get_data(self, name: str) -> Optional[Any]:
         """Retrieve a data item by name, or None if not present."""
+        # No change to silent miss behavior
         return self.data.get(name)
 
     def remove_data(self, name: str) -> None:
-        """Remove a data item by name if it exists."""
-        if name in self.data:
-            del self.data[name]
+        """Remove a data item by name if it exists, else warn."""
+        try:
+            name = self._validate_name(name)
+        except TypeError as e:
+            warnings.warn(str(e))
+            return
+
+        if name not in self.data:
+            warnings.warn(f"Cannot remove; no data under name {name!r}")
+            return
+
+        del self.data[name]
 
     def fetch_all_data_names(self) -> List[str]:
         """Return a list of all data item names."""
         return list(self.data.keys())
-
-    def clear_data(self) -> None:
-        """Remove all data items."""
-        self.data.clear()
 
 
 class Session:
@@ -221,6 +240,7 @@ class Session:
             fiber_to_region[fiber_number] = (region, side, fiber_color)
 
         return fiber_to_region
+   
         
 # data_loading.py
 def load_all_sessions(
