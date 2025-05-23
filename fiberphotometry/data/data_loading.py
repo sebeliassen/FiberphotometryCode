@@ -83,20 +83,27 @@ class Session:
 
         # ─── 3) everything else is “optional” metadata ─────────────────────
         reserved = {"setup_id", "mouse_id"} | set(drug_cols) | set(fiber_cols) | set(exclude_cols)
-        optional_cols = [c for c in session_guide.index if c not in reserved]
-        for col in optional_cols:
-            setattr(self, col, session_guide[col])
-        # now you’ve got self.task, self.genotype, self.notes, etc., automatically
+        existing = set(dir(self))
+        all_meta  = set(session_guide.index) - reserved
+
+        # Warn about conflicts
+        ignored = all_meta & existing
+        if ignored:
+            warnings.warn(
+                f"Ignoring session-guide columns {sorted(ignored)!r} "
+                "because they conflict with Session attributes/methods."
+            )
+
+        # Preserve original index order when setting
+        for col in session_guide.index:
+            if col in all_meta and col not in existing:
+                setattr(self, col, session_guide[col])
 
         # ─── 4) build fiber→region & downstream as before ─────────────────
         self.fiber_to_region = self.create_fiber_to_region_dict()
         self.brain_regions   = sorted(self.fiber_to_region.values())
 
         self.dfs     = DataContainer()
-        self.parsers = []
-        #self._build_parsers()
-
-        self.load_all_data()
 
     def _parse_drug_info(self, raw: Any) -> Dict[str, Optional[str]]:
         """
@@ -121,79 +128,70 @@ class Session:
 
         return {'name': name, 'dose': dose, 'metric': metric}
 
-    def load_data(
-        self,
-        file_pattern: str,
-        skip_rows: Optional[int] = None,
-        use_cols: Optional[List[str]] = None,
-        only_header: bool = False,
-        sep: str = ',',
-    ) -> Optional[Union[pd.DataFrame, List[str]]]:
-        """Load a file matching pattern into a DataFrame or return its header."""
-        file_name = next((f for f in os.listdir(self.trial_dir) if fnmatch.fnmatch(f, file_pattern)), None)
-        if file_name:
-            file_path = os.path.join(self.trial_dir, file_name)
-            if only_header:
-                df = pd.read_csv(file_path, nrows=0)
-                return df.columns.tolist()
-            else:
-                return pd.read_csv(file_path, skiprows=skip_rows, usecols=use_cols, sep=sep)
-        else:
-            return None
-    
-    def load_all_data(self) -> None:
-        """Loop through each parser and stash its outputs in self.dfs."""
-        p = Path(self.trial_dir)
-        for parser in self.parsers:
-            for key, df in parser.find_and_parse(p, self).items():
-                self.dfs.add_data(key, df)
-
     # create_fiber_dict creates dictionary of all fibers used and their corresponding brainregion
     def create_fiber_to_region_dict(self, fiber_pattern: Optional[Pattern[str]] = None) -> Dict[str, Tuple[str, str, str]]:
-        """Build a mapping from fiber number to (region, side, fiber_color) based on the fiber pattern."""
-        # Compile fiber_pattern if not provided
-        pattern = fiber_pattern if fiber_pattern is not None else re.compile(config.FIBER_PATTERN)
-        fiber_to_region_dict = {}
+        """Build a mapping from fiber number to (region, side, fiber_color)."""
+        pattern    = fiber_pattern or re.compile(config.FIBER_PATTERN)
+        exclude_re = re.compile(r"(?i)^exclude\??$")
+        fiber_to_region = {}
+        cols = list(self.session_guide.index)
 
-        # Iterate over the DataFrame index with enumeration for index and column label
-        for idx, col in enumerate(self.session_guide.index):
-            match = pattern.match(col)
-            # Check if the column matches the fiber pattern and the value is not NaN
-            if (match 
-                and pd.notna(self.session_guide[col])
-                #and idx + 1 < len(self.session_guide.index) this should happen, so commented out
-                and (pd.isna(self.session_guide.iloc[idx + 1])
-                     or not self.remove_bad_signal_sessions)
-                ):
-                    
-                # Extract region and side information
-                region, side = self.session_guide[col].split("_")
-                
-                if match.group(1) and match.group(2):  # Color and number match
-                    fiber_color = match.group(1)
-                    fiber_number = match.group(2)
-                    fiber_to_region_dict[fiber_number] = (region, side, fiber_color)
-                # We assume only one non-iso channel if nothing else is mentioned
-                elif match.group(3):  # Only number match
-                    LETTER_TO_FREQS = config.LETTER_TO_FREQS
-                    probable_letter = [channel for channel in LETTER_TO_FREQS.keys() if channel != 'iso'][0]
+        for idx, col in enumerate(cols):
+            m = pattern.match(col)
+            if not m:
+                continue
 
-                    fiber_number = match.group(3)
-                    fiber_to_region_dict[fiber_number] = (region, side, probable_letter)
-                    
-        return fiber_to_region_dict
+            # ensure an 'exclude?' column follows
+            if idx + 1 >= len(cols) or not exclude_re.match(cols[idx+1]):
+                raise KeyError(
+                    f"{self.trial_id}: fiber column '{col}' not followed by an 'exclude?' column."
+                )
 
+            val = self.session_guide[col]
+            is_excluded = pd.notna(self.session_guide[cols[idx+1]]) and self.remove_bad_signal_sessions
+            if pd.isna(val) or is_excluded:
+                continue
 
-    def filter_columns(self, col: str) -> bool:
-        """Filter columns based on the configured pattern and fiber mapping."""
-        pattern = re.compile(config.FILTER_COLUMNS_PATTERN)
-        match = pattern.match(col)
-        if match:
-            captured_number = match.group(1) or match.group(2)
-            return captured_number in self.fiber_to_region
-        return True
+            # parse region/side
+            try:
+                region, side = val.split("_", 1)
+            except Exception:
+                raise ValueError(
+                    f"{self.trial_id}: brain-region value {val!r} in column '{col}' "
+                    "is not in 'region_side' format (e.g. 'DMS_left', 'mPFC_right')."
+                )
+
+            # extract fiber number
+            fiber_number = m.group(2) or m.group(3)
+            if not fiber_number:
+                raise ValueError(
+                    f"{self.trial_id}: could not extract fiber number from regex match on column '{col}'."
+                )
+
+            # pick color if supplied, else find a fallback _only now_
+            if m.group(1):
+                fiber_color = m.group(1)
+            else:
+                try:
+                    fiber_color = next(ch for ch in config.LETTER_TO_FREQS if ch != 'iso')
+                except StopIteration:
+                    raise RuntimeError(
+                        f"{self.trial_id}: no non-'iso' entries in config.LETTER_TO_FREQS; "
+                        "cannot determine a fallback fiber color for column '{col}'."
+                    )
+
+            # guard duplicates
+            if fiber_number in fiber_to_region:
+                prev = [c for c, v in fiber_to_region.items() if c == fiber_number][0]
+                raise ValueError(
+                    f"{self.trial_id}: duplicate fiber number '{fiber_number}' in column '{col}'; "
+                    f"already defined by column '{prev}'."
+                )
+
+            fiber_to_region[fiber_number] = (region, side, fiber_color)
+
+        return fiber_to_region
         
-
 # data_loading.py
 def load_all_sessions(
     baseline_dir: str,
@@ -334,6 +332,14 @@ def load_all_sessions(
         except Exception as e:
             raise RuntimeError(f"Failed to read trial guide '{guide_path}': {e}")
 
+        # check for mandatory columns
+        required_cols = {"setup_id", "mouse_id"}
+        missing_cols  = required_cols - set(current_trial_guide_df.columns)
+        if missing_cols:
+            raise KeyError(
+                f"{trial_id}: trial guide at '{guide_path}' is missing required column(s): {missing_cols}"
+            )
+        
         # Get segments directly from the stored match object's group
         # Group 1 is T<num>, Group 2 is the segments string, Group 3 is optional suffix
         segments = match_obj.group(2).split('.')
@@ -356,13 +362,7 @@ def load_all_sessions(
                     f"{trial_id}: expected chamber '{chamber_id}' not found in trial guide at '{guide_path}'."
                 )
             
-            # 2) verify the column we need is there
-            if 'mouse_id' not in current_trial_guide_df.columns:
-                raise KeyError(
-                    f"{trial_id}: 'mouse_id' column missing from trial guide at '{guide_path}'."
-                )
-            
-            # 3) compare IDs
+            # 2) compare IDs
             if session_guide['mouse_id'] != segment:
                 raise ValueError(
                     f"{trial_id}/{chamber_id}: mouse_id mismatch—"
@@ -374,38 +374,3 @@ def load_all_sessions(
                 all_sessions.append(new_session)
 
     return all_sessions
-
-
-    # all_sessions = []
-    # for trial_dir in tqdm(trial_dirs[:first_n_dirs]):
-    #     trial_id = os.path.basename(trial_dir)
-    #     segments = trial_id.split('_')[1].split('.')  # e.g. "T1_23.25.29.e"
-        
-    #     # Find and load a 'trial_guide.xlsx'
-    #     for file in os.listdir(trial_dir):
-    #         if fnmatch.fnmatch(file, 'T*trial_guide.xlsx'):
-    #             current_trial_guide_df = pd.read_excel(
-    #                 os.path.join(trial_dir, file),
-    #                 nrows=4,
-    #                 dtype={"mouse_id": str},
-    #                 index_col=0,
-    #                 engine='openpyxl'
-    #             )
-        
-    #     for segment, chamber_id in zip(segments, "abcd"):
-    #         if segment == 'e':
-    #             # Skip sessions marked empty
-    #             continue
-            
-    #         session_guide = current_trial_guide_df.loc[chamber_id]
-    #         if session_guide.mouse_id != segment:
-    #             raise Exception(
-    #                 f"The mouse id '{segment}' from the folder name and "
-    #                 f"'{session_guide.mouse_id}' in trial guide do not match."
-    #             )
-            
-    #         new_session = Session(chamber_id, trial_dir, session_guide, session_type)
-    #         if len(new_session.brain_regions) > 0 or not remove_bad_signal_sessions:
-    #             all_sessions.append(new_session)
-
-    # return all_sessions
