@@ -97,7 +97,12 @@ class Session:
         # Preserve original index order when setting
         for col in session_guide.index:
             if col in all_meta and col not in existing:
-                setattr(self, col, session_guide[col])
+                meta_col = session_guide[col]
+                if pd.notna(meta_col) and not isinstance(meta_col, str):
+                    raise TypeError(
+                        f"Metadata column {col!r} must be a string (or NaN); got {type(meta_col).__name__}"
+                    )
+                setattr(self, col, meta_col)
 
         # ─── 4) build fiber→region & downstream as before ─────────────────
         self.fiber_to_region = self.create_fiber_to_region_dict()
@@ -107,26 +112,51 @@ class Session:
 
     def _parse_drug_info(self, raw: Any) -> Dict[str, Optional[str]]:
         """
-        Take a raw cell value (e.g. "CPT 3.0 mg") and return
+        Take a raw cell value (e.g. "CPT 3.0 mg" or NaN) and return
         {'name': str, 'dose': str|None, 'metric': str|None}.
+        Special-case "No Drug" and "Vehicle" (case-insensitive).
         """
-        if not isinstance(raw, str) or not raw.strip():
-            return {'name': None, 'dose': None, 'metric': None}
+        SPECIAL_CASES = (
+            "no drug",
+            "vehicle",
+            "none",
+            "control",
+            "placebo",
+            "saline",
+            "baseline",
+        )
+        
 
-        parts = raw.strip().split()
-        name = parts[0]
-        dose = None
-        metric = None
+        # Combine NaN‐check and empty‐string check with a walrus:
+        if pd.isna(raw) or not (raw_str := str(raw).strip()):
+            return {"name": "No Drug", "dose": None, "metric": None}
 
-        # if second token is numeric, it's the dose
-        if len(parts) >= 2 and re.match(r'^\d+(\.\d+)?$', parts[1]):
-            dose = parts[1]
-            # optional third token is the metric
-            if len(parts) >= 3:
-                metric = parts[2]
-        # otherwise we just leave dose/metric as None
+        lower = raw_str.lower()
+        if lower in SPECIAL_CASES:
+            return {"name": raw_str, "dose": None, "metric": None}
 
-        return {'name': name, 'dose': dose, 'metric': metric}
+        # 3) Split into tokens and enforce exactly three
+        parts = raw_str.split()
+        if len(parts) < 3:
+            raise ValueError(
+                f"Drug info {raw_str!r} must have three parts ('NAME DOSE METRIC'); "
+                f"only {len(parts)} token(s) found."
+            )
+        if len(parts) > 3:
+            raise ValueError(
+                f"Drug info {raw_str!r} must have exactly three tokens; "
+                f"{len(parts)} found (extras: {parts[3:]!r})."
+            )
+
+        name, dose, metric = parts
+
+        # 4) Enforce numeric dose
+        if not re.match(r'^\d+(\.\d+)?$', dose):
+            raise ValueError(
+                f"Dose token {dose!r} in drug info {raw_str!r} is not a valid number."
+            )
+
+        return {"name": name, "dose": dose, "metric": metric}
 
     # create_fiber_dict creates dictionary of all fibers used and their corresponding brainregion
     def create_fiber_to_region_dict(self, fiber_pattern: Optional[Pattern[str]] = None) -> Dict[str, Tuple[str, str, str]]:
