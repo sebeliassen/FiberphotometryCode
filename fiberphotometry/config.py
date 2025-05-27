@@ -7,35 +7,6 @@ DATA_PATTERNS = {
     },
 }
 
-# DATA_PATTERNS = {
-#     'cpt': {
-#         'raw': {
-#             'parser': 'raw',
-#             'pattern': '[Rr][Aa][Ww]_{setup}*.csv',
-#             # 'kwargs': {'skiprows': 19, 'sep': ';'},
-#             'kwargs': {'skiprows': 18},
-#         },
-#         'ttl': {
-#             'parser': 'ttl',
-#             'pattern': 'DigInput_{setup}*.csv',
-#         },
-#         'phot': {
-#             'parser':        'phot',
-#             'pattern':       'channel{freq}photwrit_Setup{setup}*.csv',
-#             'combined_glob': 'photometry_data_combined*.csv',
-#             'split_map':     {1: '415', 2: '470'},
-#         }
-#     },
-#     # TODO: change oft to adhere to new parser strategy
-#     'oft': {
-#         'cam1':  {'glob': 'BaslerTrack*.csv',        'kwargs': {'sep': r'\\s+'}},
-#         'cam2':  {'glob': 'TopCamTracking*.csv',     'kwargs': {'sep': r'\\s+'}},
-#         'bonsai':{'glob': 'c{freq}_bonsaiTS*.csv',    'kwargs': {}},
-#         'phot':  {'glob': 'channel{freq}photwrit*.csv','kwargs': {}},
-#     }
-# }
-# config.py
-
 # Plotting configuration parameters
 PLOTTING_CONFIG = {
     # cno 5 minutes, stages 10 minutes
@@ -59,12 +30,15 @@ SESSION_CONFIG = {
 'skip_sequence_check': True
 }
 
-# TimestampBonsai_415
-#RENAME_FREQS = ['415', '470', '560']
-RENAME_FREQS = ['415', '470']
-#LETTER_TO_FREQS = {'iso': '415', 'G': '470', 'R': '560'}
+# Frequency settings
+COMBINED_SPLIT = {
+    'cpt': {
+        1: '415',   # Bonsai LedState==1 → 415 Hz channel
+        2: '470',   # Bonsai LedState==2 → 470 Hz channel
+    }
+}
 LETTER_TO_FREQS = {'iso': '415', 'G': '470'}
-
+FREQS_USED = ['415', '470']
 
 PHOT_DF_PATTERNS = {
     'phot_415': 'channel415*.csv',
@@ -140,35 +114,6 @@ COMBINED_PATTERNS = {
     'cpt': 'photometry_data_combined*.csv'
 }
 
-# Map Bonsai LED‐states to your frequency labels
-COMBINED_SPLIT = {
-    'cpt': {
-        1: '415',   # Bonsai LedState==1 → 415 Hz channel
-        2: '470',   # Bonsai LedState==2 → 470 Hz channel
-    }
-}
-
-# -------------------------------------------------------------------
-# TTL and Synchronization settings
-# -------------------------------------------------------------------
-TTL_STRIPPING_PATTERNS = [
-    ('ttl', {"pattern": r"_Timestamp_AND_Seconds_",    "replacement": "_"}),
-    ('ttl', {"pattern": r"_DigInput[0-2](?=\.|$)",     "replacement": ""}),
-]
-
-TTL_PRIORITY_PATTERNS = [
-    # Priority 1: hardware FP3002 seconds
-    ('ttl', {"pattern": r"^FP3002(?:_DigInput\d+)?\.Seconds$",
-             "replacement": "__TTL_P1__"}),
-    # Priority 2: system/computer fallback
-    ('ttl', {"pattern": r"^SystemTimestamp$",
-             "replacement": "__TTL_P2__"}),
-    # Priority 3: bonsai fallback
-    ('ttl', {"pattern": r"^BonsaiTimestamp.*$",
-             "replacement": "__TTL_P3__"}),
-]
-
-TTL_FINAL_NAME = "TTL_ts"
 
 SYNC = {
     # --- Column Name Identification ---
@@ -188,8 +133,6 @@ SYNC = {
     'phot_time_cols':  ['Timestamp', 'SystemTimestamp', 'ComputerTimestamp'],
 
     # --- Processing Parameters ---
-    # Frequencies corresponding to phot_{freq} DataFrames to process. Adjust as needed.
-    'frequencies':     ['415', '470'], # Example: Removed 560 if not used
 
     # Truncate all processed photometry streams to the length of the shortest one?
     'truncate_streams': True,
@@ -198,18 +141,4 @@ SYNC = {
     # Which photometry frequency stream's start time is used as the reference point
     # for calculating the offset? Typically the main signal channel (e.g., '470').
     'reference_phot_freq': '470',
-
-    # --- Output Column Names ---
-    # Name for the 'seconds from zero' column added relative to each stream's start.
-    'sec_zero_col':    'SecFromZero',
-    # Name for the 'seconds from trial start' column added (primarily to Photometry DFs).
-    'sec_trial_col':   'SecFromTrialStart',
-
-    # --- NOTE on Sync Logic ---
-    # This configuration assumes a specific synchronization logic:
-    # Offset = (ttl_start_time - reference_phot_start_time) - sync_event_time
-    # This aligns data based on the difference between the start of the TTL clock
-    # and the start of the reference photometry clock, adjusted by the sync event.
-    # If a different fundamental logic is ever needed, the syncer.py code
-    # (specifically Syncer._calculate_offset) will need modification.
 }

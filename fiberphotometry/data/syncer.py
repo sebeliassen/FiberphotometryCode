@@ -1,14 +1,26 @@
 # fiberphotometry/data/syncer.py
 
+import warnings
 import pandas as pd
 from fiberphotometry import config
+
+class SyncError(Exception):
+    """Raised when synchronization cannot proceed due to invalid or missing data."""
+    pass
 
 class Syncer:
     @staticmethod
     def calculate_cpt_index(raw_df: pd.DataFrame) -> int:
-        """Find the row index of the ‘Set Blank Images’ event."""
-        hits = raw_df.index[raw_df["Item_Name"] == "Set Blank Images"]
-        return int(hits[0]) if len(hits) > 0 else -1
+        """Find the index label of the first ‘Set Blank Images’ event, or -1 if none."""
+        if raw_df is None:
+            raise SyncError("Raw DataFrame is None in calculate_cpt_index")
+        if "Item_Name" not in raw_df.columns:
+            raise SyncError("Column 'Item_Name' missing in raw DataFrame")
+        return next(
+            (idx for idx, item in raw_df["Item_Name"].items()
+            if item == "Set Blank Images"),
+            -1
+        )
 
     @staticmethod
     def sync_session(session) -> None:
@@ -17,86 +29,104 @@ class Syncer:
         cpt_idx = Syncer.calculate_cpt_index(raw_df)
         if cpt_idx < 0:
             return  # no sync event found
+        
+        # validate raw time column
+        RAW_TIME = config.SYNC["raw_time_col"]
+        if RAW_TIME not in raw_df.columns:
+            raise SyncError(f"Raw time column '{RAW_TIME}' not found")
 
         session.cpt = cpt_idx
-        session.sync_time = float(raw_df.at[cpt_idx, config.SYNC["raw_time_col"]])
+        session.sync_time = float(raw_df.at[cpt_idx, RAW_TIME])
         Syncer.sync_all_streams(session)
 
     @staticmethod
     def sync_all_streams(session) -> None:
         """Perform the single‐logic synchronization across TTL, raw, and photometry."""
-        cfg               = config.SYNC
-        raw_time_col      = cfg["raw_time_col"]
-        ttl_df            = session.dfs.get_data("ttl")
-        raw_df            = session.dfs.get_data("raw")
-        frequencies       = cfg["frequencies"]
-        sec_zero_name     = cfg["sec_zero_col"]
-        sec_trial_name    = cfg["sec_trial_col"]
-        reference_freq    = cfg["reference_phot_freq"]
-        reference_key     = f"phot_{reference_freq}"
+        cfg      = config.SYNC
+        raw_df   = session.dfs.get_data("raw")
+        ttl_df   = session.dfs.get_data("ttl")
+        ref_key  = f"phot_{cfg['reference_phot_freq']}"
+        ref_df   = session.dfs.get_data(ref_key)
 
-        # 1) Pick TTL column and compute TTL zero
-        for candidate in cfg["ttl_time_cols"]:
-            if candidate in ttl_df.columns:
-                ttl_time_col = candidate
-                break
-        else:
-            raise KeyError(f"No TTL column in {cfg['ttl_time_cols']}")
+        sec_zero_col  = "sec_from_zero"
+        sec_trial_col = "sec_from_trial_start"
 
-        ttl_start_time = float(ttl_df[ttl_time_col].iloc[0])
-        ttl_df[sec_zero_name] = pd.to_numeric(ttl_df[ttl_time_col], errors="coerce") - ttl_start_time
+        # 1) Validate required DataFrames
+        for name, df in (("raw", raw_df), ("ttl", ttl_df), (ref_key, ref_df)):
+            if df is None:
+                raise ValueError(f"{name!r} DataFrame is missing")
+            if df.empty:
+                raise ValueError(f"{name!r} DataFrame is empty")
 
-        # 2) Pick reference photometry column and compute its zero
-        ref_photometry_df = session.dfs.get_data(reference_key)
-        for candidate in cfg["phot_time_cols"]:
-            if candidate in ref_photometry_df.columns:
-                phot_time_col = candidate
-                break
-        else:
-            raise KeyError(f"No photometry time col in {cfg['phot_time_cols']} for {reference_key}")
+        # 2) Column names
+        raw_time   = cfg["raw_time_col"]
+        ttl_time   = cfg["ttl_time_col"]
+        phot_time  = cfg["phot_time_col"]
 
-        phot_start_time = float(ref_photometry_df[phot_time_col].iloc[0])
+        # 3) Validate required columns
+        for col, name, df in (
+            (raw_time, "raw", raw_df),
+            (ttl_time, "ttl", ttl_df),
+            (phot_time, ref_key, ref_df)
+        ):
+            if col not in df.columns:
+                raise ValueError(f"Column '{col}' not found in {name} DataFrame")
 
-        # 3) Compute offset: align TTL clock to phot clock, adjusted by the raw sync event
-        offset = (ttl_start_time - phot_start_time) - session.sync_time
-        # 4) Stamp Raw data with SecFromZero
-        raw_df[sec_zero_name] = pd.to_numeric(raw_df[raw_time_col], errors="coerce") + offset
-        raw_df[sec_trial_name] = raw_df[raw_time_col] - session.sync_time
+        # 4) TTL: seconds from zero
+        try:
+            start_ttl = float(ttl_df[ttl_time].iloc[0])
+        except Exception as e:
+            raise ValueError(f"Invalid TTL start timestamp: {e}")
+        ttl_series = pd.to_numeric(ttl_df[ttl_time], errors="coerce")
+        if ttl_series.isna().all():
+            raise ValueError("All TTL timestamps failed to convert")
+        ttl_df[sec_zero_col] = ttl_series - start_ttl
 
-        # 5) Stamp every photometry stream
-        for freq in frequencies:
+        # 5) Offset via reference photometry
+        try:
+            start_phot = float(ref_df[phot_time].iloc[0])
+        except Exception as e:
+            raise ValueError(f"Invalid photometry start timestamp for {ref_key}: {e}")
+        offset = (start_ttl - start_phot) - session.sync_time
+
+        # 6) Stamp raw
+        raw_series = pd.to_numeric(raw_df[raw_time], errors="coerce")
+        if raw_series.isna().all():
+            raise ValueError("All raw timestamps failed to convert")
+        raw_df[sec_zero_col]        = raw_series + offset
+        raw_df[sec_trial_col] = raw_df[raw_time] - session.sync_time
+
+        # 7) Stamp each photometry stream (optional)
+        for freq in cfg["frequencies"]:
             key = f"phot_{freq}"
-            phot_df = session.dfs.get_data(key)
-            if phot_df is None or phot_df.empty:
+            df  = session.dfs.get_data(key)
+            if df is None or df.empty:
+                warnings.warn(f"Skipping {key!r}: no data", UserWarning)
+                continue
+            if phot_time not in df.columns:
+                warnings.warn(f"Skipping {key!r}: missing time column '{phot_time}'", UserWarning)
                 continue
 
-            # pick that stream’s time column
-            for candidate in cfg["phot_time_cols"]:
-                if candidate in phot_df.columns:
-                    stream_time_col = candidate
-                    break
-            else:
-                continue  # no time column → skip
+            try:
+                first = float(df[phot_time].iloc[0])
+            except Exception as e:
+                raise ValueError(f"Invalid start timestamp for {key}: {e}")
+            zero_series = pd.to_numeric(df[phot_time], errors="coerce")
+            if zero_series.isna().all():
+                raise ValueError(f"All timestamps failed to convert for {key}")
+            df["sec_from_zero"]        = zero_series - first
+            df["sec_from_trial_start"] = df["sec_from_zero"] - offset
 
-            first_time = float(phot_df[stream_time_col].iloc[0])
-            phot_df[sec_zero_name]   = pd.to_numeric(phot_df[stream_time_col], errors="coerce") - first_time
-            phot_df[sec_trial_name]  = phot_df[sec_zero_name] - offset
 
-        # 6) Optionally truncate all photometry series to the shortest
-        if cfg.get("truncate_streams", False):
-            lengths = []
-            for freq in cfg["frequencies"]:
-                key = f"phot_{freq}"
-                df = session.dfs.get_data(key)
-                if df is not None:
-                    lengths.append(len(df))
-            
-            if not lengths:
-                return
-            
-            n_min = min(lengths)
-            for freq in cfg["frequencies"]:
-                key = f"phot_{freq}"
-                df = session.dfs.get_data(key)
-                if df is not None:
-                    session.dfs.data[key] = df.iloc[:n_min]
+        # 8) Always truncate, warning how many rows were cut
+        lengths = {f"phot_{f}": len(session.dfs.get_data(f"phot_{f}") or []) 
+                   for f in cfg["frequencies"]}
+        if not lengths:
+            warnings.warn("No photometry streams to truncate", UserWarning)
+        else:
+            n_min = min(lengths.values())
+            for key, length in lengths.items():
+                if length > n_min:
+                    removed = length - n_min
+                    warnings.warn(f"Truncating {key!r}: removed {removed} rows", UserWarning)
+                session.dfs.data[key] = session.dfs.get_data(key).iloc[:n_min]
