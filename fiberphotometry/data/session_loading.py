@@ -23,36 +23,78 @@ def _process_raw(fpath: Path, kwargs: dict):
     """
     Parse the raw file into header attributes and a DataFrame.
     Returns (raw_attrs: dict, df: DataFrame).
-    """
 
+    We split on the '---' marker, then use pandas.read_csv (via
+    _safe_read_csv) with sep=None, engine='python' to auto-sniff delimiters
+    in both the header and the data blocks.
+    """
+    # 1) Read the file
     try:
         text = fpath.read_text()
     except Exception as e:
         raise IOError(f"Could not read raw file {fpath!r}: {e}")
-    
+
     lines = text.splitlines()
-    # find separator
-    idx = next((i for i, L in enumerate(lines) if L.strip().startswith('---')), None)
-    if idx is None:
-        warnings.warn(f"No header separator (`---`) found in {fpath.name}; treating entire file as data.")
-        idx = -1
+    sep_idx = next((i for i, L in enumerate(lines) if L.strip().startswith('---')), None)
+    if sep_idx is None:
+        warnings.warn(f"{fpath.name}: no header separator (`---`) found; treating entire file as data.")
+        sep_idx = -1
 
-    # parsing header
+    header_block = "\n".join(lines[:sep_idx])
+    data_block   = "\n".join(lines[sep_idx+1:])
+
+    # 2) Parse the header block
+    try:
+        header_df = _safe_read_csv(
+            StringIO(header_block),
+            sep=None,
+            engine='python',
+            header=None,
+            dtype=str
+        )
+    except ValueError as e:
+        raise ValueError(f"{fpath.name}: failed to parse header block: {e}")
+
+
+    # optional sanity warnings
+    if header_df.shape[0] == 0:
+        warnings.warn(f"{fpath.name}: header block yielded 0 rows (no metadata found)")
+    if header_df.shape[1] != 2:
+        warnings.warn(f"{fpath.name}: header block parsed into {header_df.shape[1]} columns; expected 2")
+
     raw_attrs = {}
-    for L in lines[:idx]:
-        if ',' not in L:
-            warnings.warn(f"Unrecognized header line in {fpath.name}: {L!r}")
+    for row in header_df.itertuples(index=False):
+        raw_key = row[0]
+        if raw_key is None or (isinstance(raw_key, float) and pd.isna(raw_key)):
             continue
-        k, v = L.split(',', 1)
-        raw_attrs[k.strip()] = v.strip()
+        key = str(raw_key).strip()
+        if not key:
+            continue
+        raw_val = row[1] if len(row) > 1 else ""
+        val = "" if raw_val is None or (isinstance(raw_val, float) and pd.isna(raw_val)) else str(raw_val).strip()
+        raw_attrs[key] = val
 
-    # csv data block
-    data_block = "\n".join(lines[idx+1:])
-    df = _safe_read_csv(StringIO(data_block), **kwargs)
-    
+
+    # 3) Parse the data block
+    data_kwargs = kwargs.copy()
+    data_kwargs.update({"sep": None, "engine": "python"})
+    try:
+        df = _safe_read_csv(StringIO(data_block), **data_kwargs)
+    except ValueError as e:
+        raise ValueError(f"{fpath.name}: failed to parse data block: {e}")
+
+
+    # optional sanity warnings
+    if df.empty:
+        warnings.warn(f"{fpath.name}: data block parsed into an empty DataFrame")
+    if df.shape[1] < 2:
+        warnings.warn(f"{fpath.name}: data block has only {df.shape[1]} columns; is that expected?")
+
     return raw_attrs, df
 
 
+
+#TODO: error-handling might not be strict enough for ensuring photometry.csv structures yet
 def _process_phot(fpath: Path, kwargs: dict, session):
     # discover columns
     all_cols = _safe_read_csv(fpath, nrows=0, **kwargs).columns

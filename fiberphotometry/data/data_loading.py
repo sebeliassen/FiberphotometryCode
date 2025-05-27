@@ -145,7 +145,6 @@ class Session:
             "baseline",
         )
         
-
         # Combine NaN‐check and empty‐string check with a walrus:
         if pd.isna(raw) or not (raw_str := str(raw).strip()):
             return {"name": "No Drug", "dose": None, "metric": None}
@@ -154,25 +153,33 @@ class Session:
         if lower in SPECIAL_CASES:
             return {"name": raw_str, "dose": None, "metric": None}
 
-        # 3) Split into tokens and enforce exactly three
         parts = raw_str.split()
-        if len(parts) < 3:
+
+        # 1) unpack into name, dose, and maybe metric
+        if len(parts) == 2:
+            name, dose = parts
+            metric = None
+        elif len(parts) == 3:
+            name, dose, metric = parts
+        else:
             raise ValueError(
                 f"Drug info {raw_str!r} must have three parts ('NAME DOSE METRIC'); "
-                f"only {len(parts)} token(s) found."
-            )
-        if len(parts) > 3:
-            raise ValueError(
-                f"Drug info {raw_str!r} must have exactly three tokens; "
-                f"{len(parts)} found (extras: {parts[3:]!r})."
+                f"{len(parts)} token(s) found."
             )
 
-        name, dose, metric = parts
-
-        # 4) Enforce numeric dose
+        # 2) validate that dose is a number
         if not re.match(r'^\d+(\.\d+)?$', dose):
             raise ValueError(
                 f"Dose token {dose!r} in drug info {raw_str!r} is not a valid number."
+            )
+
+        # 3) now if we only had two tokens, assume 'mg/kg'
+        if metric is None:
+            metric = "mg/kg"
+            warnings.warn(
+                f"Drug info {raw_str!r} has only two tokens; "
+                "assuming metric is 'mg/kg'.",
+                UserWarning
             )
 
         return {"name": name, "dose": dose, "metric": metric}
@@ -181,7 +188,7 @@ class Session:
     def create_fiber_to_region_dict(self, fiber_pattern: Optional[Pattern[str]] = None) -> Dict[str, Tuple[str, str, str]]:
         """Build a mapping from fiber number to (region, side, fiber_color)."""
         pattern    = fiber_pattern or re.compile(config.FIBER_PATTERN)
-        exclude_re = re.compile(r"(?i)^exclude\??$")
+        exclude_re = re.compile(r"(?i)^exclude\??(?:\.\d+)?$")
         fiber_to_region = {}
         cols = list(self.session_guide.index)
 
@@ -191,13 +198,23 @@ class Session:
                 continue
 
             # ensure an 'exclude?' column follows
-            if idx + 1 >= len(cols) or not exclude_re.match(cols[idx+1]):
+            if idx + 1 >= len(cols):
+                # “no next column” branch
                 raise KeyError(
-                    f"{self.trial_id}: fiber column '{col}' not followed by an 'exclude?' column."
+                    f"{self.trial_id}: fiber column '{col}' at index {idx} has no following column; "
+                    f"expected an 'Exclude?' column immediately after '{col}'."
+                )
+
+            next_col = cols[idx+1]
+            if not exclude_re.match(next_col):
+                # “wrong name” branch
+                raise KeyError(
+                    f"{self.trial_id}: column '{next_col}' (at index {idx+1}) follows fiber column '{col}', "
+                    "but it is not a valid 'Exclude?' column."
                 )
 
             val = self.session_guide[col]
-            is_excluded = pd.notna(self.session_guide[cols[idx+1]]) and self.remove_bad_signal_sessions
+            is_excluded = pd.notna(self.session_guide[next_col]) and self.remove_bad_signal_sessions
             if pd.isna(val) or is_excluded:
                 continue
 
@@ -240,8 +257,8 @@ class Session:
             fiber_to_region[fiber_number] = (region, side, fiber_color)
 
         return fiber_to_region
-   
-        
+
+
 # data_loading.py
 def load_all_sessions(
     baseline_dir: str,

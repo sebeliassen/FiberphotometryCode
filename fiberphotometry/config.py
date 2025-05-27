@@ -121,16 +121,16 @@ SYNC = {
     # The code will try these in order and use the first one found.
 
     # Column in the 'raw' DataFrame (from ABET II) holding the event time used for sync.
-    'raw_time_col':    'Evnt_Time',
+    'raw_time_col': 'Evnt_Time',
 
     # Columns to check for the primary timestamp in the TTL DataFrame (DigInput*.csv).
     # The Renamer's finalize_ttl_for_session should ideally produce 'TTL_ts'
     # from the highest priority source found (e.g., FP3002.Seconds, SystemTimestamp).
     # List potential raw names as fallbacks if renamer didn't run or target not found.
-    'ttl_time_cols':   ['TTL_ts', 'SystemTimestamp', 'ComputerTimestamp', 'FP3002.Seconds', 'BonsaiTimestamp'],
+    'ttl_time_col': 'SystemTimestamp',
 
     # Columns to check for the primary timestamp in Photometry DataFrames (channel* / photdata*).
-    'phot_time_cols':  ['Timestamp', 'SystemTimestamp', 'ComputerTimestamp'],
+    'phot_time_col': 'SystemTimestamp',
 
     # --- Processing Parameters ---
 

@@ -50,6 +50,8 @@ def sync_all_streams(session) -> None:
     sec_zero_col  = "sec_from_zero"
     sec_trial_col = "sec_from_trial_start"
 
+    FREQS_USED = config.FREQS_USED
+
     # 1) Validate required DataFrames
     for name, df in (("raw", raw_df), ("ttl", ttl_df), (ref_key, ref_df)):
         if df is None:
@@ -95,8 +97,10 @@ def sync_all_streams(session) -> None:
     raw_df[sec_zero_col]        = raw_series + offset
     raw_df[sec_trial_col] = raw_df[raw_time] - session.sync_time
 
+    
     # 7) Stamp each photometry stream (optional)
-    for freq in cfg["frequencies"]:
+    #for freq in cfg["frequencies"]:
+    for freq in FREQS_USED:
         key = f"phot_{freq}"
         df  = session.dfs.get_data(key)
         if df is None or df.empty:
@@ -118,8 +122,13 @@ def sync_all_streams(session) -> None:
 
 
     # 8) Always truncate, warning how many rows were cut
-    lengths = {f"phot_{f}": len(session.dfs.get_data(f"phot_{f}") or []) 
-                for f in cfg["frequencies"]}
+    lengths = {}
+    for freq in FREQS_USED:
+        key = f"phot_{freq}"
+        df  = session.dfs.get_data(key)
+        # if there's no DataFrame, treat its length as zero
+        lengths[key] = len(df) if df is not None else 0
+        
     if not lengths:
         warnings.warn("No photometry streams to truncate", UserWarning)
     else:
