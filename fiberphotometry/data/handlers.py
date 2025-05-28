@@ -302,14 +302,21 @@ SPECIAL_PROCESSORS["Fixed_Ratio_baseline"] = CompositeProcessor([
 
 # ─────── import-time validation of triggers ─────────
 for key, proc in SPECIAL_PROCESSORS.items():
-    base, code, num = split_event_suffix(proc.trigger)
-    if code is not None:
-        raise ValueError(
-            f"Configuration error in SPECIAL_PROCESSORS[{key!r}]: "
-            f"trigger {proc.trigger!r} was parsed as base={base!r}, "
-            f"code={code!r}, num={num!r}.  "
-            "Handler triggers must be pure base names (no _XX123 suffix)."
-        )
+    # Gather all trigger names for this processor
+    if hasattr(proc, 'trigger'):
+        triggers_to_check = [proc.trigger]
+    elif hasattr(proc, 'triggers'):
+        triggers_to_check = proc.triggers
+    
+    for trig in triggers_to_check:
+        base, code, num = split_event_suffix(trig)
+        if code is not None:
+            raise ValueError(
+                f"Configuration error in SPECIAL_PROCESSORS[{key!r}]: "
+                f"handler trigger {trig!r} was parsed as "
+                f"base={base!r}, code={code!r}, num={num!r}.  "
+                "Triggers must be pure base names (no _XX123 suffix)."
+            )
 
 def get_event_key(event_name: str, mapping: dict) -> Optional[str]:
     """

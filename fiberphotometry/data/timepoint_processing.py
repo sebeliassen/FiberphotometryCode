@@ -1,10 +1,10 @@
 from collections import defaultdict
 import warnings
 import pandas as pd
-from data.data_loading import DataContainer
+from fiberphotometry.data.data_loading import DataContainer
 from fiberphotometry.config import SESSION_CONFIG
 
-from handlers import (
+from fiberphotometry.data.handlers import (
     SPECIAL_PROCESSORS,
     split_event_suffix,
     get_event_key,
@@ -53,6 +53,16 @@ def add_event_idxs_to_session(session, actions_attr_dict: dict, reward_attr_dict
                          f"{[type(p).__name__ for p in matches]}")
     processor = matches[0] if matches else None
 
+    if processor is None and not actions_attr_dict and not reward_attr_dict:
+        # Create empty tables so downstream code still has something
+        session.events_table = pd.DataFrame(
+            columns=['raw_idx','Item_Name','event_base','suffix_code','suffix_num']
+        )
+        session.events_of_interest_df = pd.DataFrame(
+            columns=['Item_Name','is_reward']
+        )
+        return
+
     # 3) Load raw DataFrame and check columns
     raw = session.dfs.get_data('raw')
     if not isinstance(raw, pd.DataFrame):
@@ -65,12 +75,13 @@ def add_event_idxs_to_session(session, actions_attr_dict: dict, reward_attr_dict
         raise TypeError("actions_attr_dict and reward_attr_dict must be dicts")
     events = ['Display Image', *actions_attr_dict.keys(), *reward_attr_dict.keys()]
     if processor:
-        events.extend(getattr(processor, 'triggers', [processor.trigger]))
+        triggers = processor.triggers if hasattr(processor, 'triggers') else [processor.trigger]
+        events.extend(triggers)
 
     filtered = item_df[item_df['Item_Name'].isin(events)].reset_index()
     if filtered.empty:
         warnings.warn(
-            f"No rows in raw data matched expected events {events!r}",
+            f"No rows in raw data matched expected events {events!r}\nsession={session.trial_dir, session.mouse_id}",
             UserWarning, stacklevel=2
         )
 
@@ -78,7 +89,7 @@ def add_event_idxs_to_session(session, actions_attr_dict: dict, reward_attr_dict
     try:
         base, code, num = zip(*filtered['Item_Name'].map(split_event_suffix))
     except Exception as e:
-        raise RuntimeError("split_event_suffix failed on filtered Item_Names") from e
+        raise RuntimeError(f"split_event_suffix failed on filtered Item_Names,\nsession={session.trial_dir, session.mouse_id}") from e
     events_tbl = (
         filtered
         .assign(
