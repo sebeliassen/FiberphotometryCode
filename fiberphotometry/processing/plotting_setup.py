@@ -26,7 +26,7 @@ class PlottingSetup:
             raise ValueError(f"fps must be positive (got {fps})")
 
         # --- relational check ---
-        if fit_window_start >= fit_window_end:
+        if fit_window_start <= fit_window_end:
             raise ValueError(
                 f"fit_window_start ({fit_window_start}) must be < fit_window_end ({fit_window_end})"
             )
@@ -92,10 +92,10 @@ class PlottingSetup:
 
         # compute frame counts
         coeff = int(self.photometry_fps * 60)
-        baseline_frames = coeff * self.baseline_duration_in_mins
-        trial_frames   = coeff * self.trial_length_in_mins
-        fit_start_off  = coeff * self.fit_window_start
-        fit_end_off    = coeff * self.fit_window_end
+        baseline_frames = int(coeff * self.baseline_duration_in_mins)
+        trial_frames   = int(coeff * self.trial_length_in_mins)
+        fit_start_off  = int(coeff * self.fit_window_start)
+        fit_end_off    = int(coeff * self.fit_window_end)
 
         # raw indices
         tsi = session.trial_start_idx
@@ -106,6 +106,27 @@ class PlottingSetup:
         session.fitting_interval = [session.fit_start, session.fit_end]
 
         n = len(phot_df)
+        if session.plot_start_full < 0:
+            # how many whole minutes you can actually go back
+            max_baseline_mins = tsi / coeff
+            raise IndexError(
+                f"baseline_duration_in_mins={self.baseline_duration_in_mins} → "
+                f"{baseline_frames} frames exceeds trial_start_idx={tsi} frames "
+                f"({tsi/coeff:.2f} mins).\n"
+                f"To avoid a negative plot window, set baseline_duration ≤ "
+                f"{max_baseline_mins:.2f} minutes in your PLOTTING_CONFIG['cpt']."
+            )
+        
+        if session.plot_end_full > n:
+            max_trial_mins = (n - tsi) / coeff
+            raise IndexError(
+                f"trial_length_in_mins={self.trial_length_in_mins} → "
+                f"{trial_frames} frames extends beyond data length={n} frames "
+                f"({n/coeff:.2f} mins).\n"
+                f"To avoid an overflow, set trial_length ≤ "
+                f"{max_trial_mins:.2f} minutes in your PLOTTING_CONFIG['cpt']."
+            )
+
         for name, start, end in [
             ("full plot window start", session.plot_start_full, None),
             ("full plot window end",   None, session.plot_end_full),

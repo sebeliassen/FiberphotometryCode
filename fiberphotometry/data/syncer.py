@@ -128,7 +128,7 @@ def sync_all_streams(session) -> None:
         df  = session.dfs.get_data(key)
         # if there's no DataFrame, treat its length as zero
         lengths[key] = len(df) if df is not None else 0
-        
+
     if not lengths:
         warnings.warn("No photometry streams to truncate", UserWarning)
     else:
@@ -136,5 +136,5 @@ def sync_all_streams(session) -> None:
         for key, length in lengths.items():
             if length > n_min:
                 removed = length - n_min
-                warnings.warn(f"Truncating {key!r}: removed {removed} rows", UserWarning)
+                print(f"Truncating {key!r}: removed {removed} rows")
             session.dfs.data[key] = session.dfs.get_data(key).iloc[:n_min]

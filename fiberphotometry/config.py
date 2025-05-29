@@ -11,11 +11,11 @@ DATA_PATTERNS = {
 PLOTTING_CONFIG = {
     # cno 5 minutes, stages 10 minutes
     'cpt': {
-        'baseline_duration': 10,    # in minutes before trial start
+        'baseline_duration': 7.5,    # in minutes before trial start
         'trial_length': 30,         # in minutes after trial start
         'fps': 20,                  # frames per second
-        'fit_window_start': 16,     # in minutes before trial start
-        'fit_window_end': 1,         # in minutes before trial start
+        'fit_window_start': 5,     # in minutes before trial start
+        'fit_window_end': 2,         # in minutes before trial start
     },
     'oft': {
         'baseline_duration': 20,             # in minutes before injection starts
@@ -131,6 +131,9 @@ SYNC = {
 
     # Columns to check for the primary timestamp in Photometry DataFrames (channel* / photdata*).
     'phot_time_col': 'SystemTimestamp',
+
+    'sec_zero_col': 'sec_from_zero',
+    'sec_trial_col': 'sec_from_trial_start',
 
     # --- Processing Parameters ---
 
