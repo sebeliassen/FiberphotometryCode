@@ -47,7 +47,7 @@ def calculate_signal_response_metrics_matrix(signals, interval, fps):
     slope_down_dxs = signals.shape[1] / fps - peak_indices
     slope_down = np.divide(maxima - right_minima, slope_down_dxs, where=slope_down_dxs!=0)
 
-    auc = np.trapz(signals, dx=1, axis=1)
+    auc = np.trapezoid(signals, dx=1, axis=1)
     
     result_matrix = np.vstack((slope_up, slope_down, maxima, peak_indices, auc)).T
     
