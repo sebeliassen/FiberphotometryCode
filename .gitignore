@@ -1,6 +1,11 @@
 #############################################
 # Positive gitignore: include only specified files
 #############################################
+# explicitly include these three notebooks
+!/fiberphotometry/notebooks/julia/test.ipynb
+!/fiberphotometry/notebooks/marco/test.ipynb
+!/fiberphotometry/notebooks/sebastian/session_averages.ipynb
+
 # Ignore all files by default
 *
 
