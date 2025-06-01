@@ -129,7 +129,7 @@ class EventSignalExtractor:
             e = pidx + self.interval_end
             idx_ranges.append((s, e))
 
-            trace    = phot_df[brain_region].iloc[s:e].to_numpy()
+            trace    =     phot_df[f"{brain_region}_dff"].iloc[s:e].to_numpy()
             pre_mean = trace[self.interval_start-7 : self.interval_start+7].mean()
             matrix[i] = trace - pre_mean
 
