@@ -1,6 +1,7 @@
 from pathlib import Path
 from io import StringIO
 import re
+import traceback
 from typing import TextIO, Union
 import warnings
 import pandas as pd
@@ -206,5 +207,6 @@ def populate_containers(sessions):
         try:
             populate_session(session)
         except Exception as e:
+            traceback.print_exc()
             warnings.warn(f"Failed processing session {session.trial_id}/{session.chamber_id}: {e}")
             continue

@@ -95,12 +95,27 @@ class Session:
                 self.drug_infos.append(self._parse_drug_info(raw))
         # if you really only want one dict, you can do:
         # self.drug_info = self.drug_infos[0] if self.drug_infos else {}
+        # ─── 2) set chamber_positions for oft sessions ─────────────────────
+        if session_type == "oft":
+            try:
+                self.chamber_position = config.CHAMBER_POSITON[self.chamber_id]
+            except AttributeError:
+                warnings.warn(
+                    f"config.CHAMBER_POSITON is not defined; cannot set chamber_position for session_type='oft'"
+                )
+            except KeyError:
+                warnings.warn(
+                    f"No entry for chamber_id={self.chamber_id!r} in config.CHAMBER_POSITON; "
+                    "setting chamber_position=None"
+                )
+                self.chamber_position = None
 
-        # ─── 2) discover fiber/exclude columns ─────────────────────────────
+
+        # ─── 3) discover fiber/exclude columns ─────────────────────────────
         fiber_cols   = [c for c in session_guide.index if re.match(r"^fiber\d+$", c)]
         exclude_cols = [c for c in session_guide.index if c.lower().startswith("exclude")]
 
-        # ─── 3) everything else is “optional” metadata ─────────────────────
+        # ─── 4) everything else is “optional” metadata ─────────────────────
         reserved = {"setup_id", "mouse_id"} | set(drug_cols) | set(fiber_cols) | set(exclude_cols)
         existing = set(dir(self))
         all_meta  = set(session_guide.index) - reserved
@@ -123,7 +138,7 @@ class Session:
                     )
                 setattr(self, col, meta_col)
 
-        # ─── 4) build fiber→region & downstream as before ─────────────────
+        # ─── 5) build fiber→region & downstream as before ─────────────────
         self.fiber_to_region = self.create_fiber_to_region_dict()
         self.brain_regions   = sorted(self.fiber_to_region.values())
 
@@ -436,7 +451,8 @@ def load_all_sessions(
                     f"folder says '{segment}', guide says '{session_guide['mouse_id']}'."
                 )
             
-            new_session = Session(chamber_id, trial_dir_path, session_guide, session_type)
+            new_session = Session(chamber_id, trial_dir_path, session_guide, session_type, 
+                                  remove_bad_signal_sessions=remove_bad_signal_sessions)
             if len(new_session.brain_regions) > 0 or not remove_bad_signal_sessions:
                 all_sessions.append(new_session)
 

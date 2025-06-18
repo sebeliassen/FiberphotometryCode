@@ -1,7 +1,7 @@
 import numpy as np
 from collections import defaultdict
 from itertools import chain
-from utils import mouse_br_events_count
+from fiberphotometry.utils import mouse_br_events_count
 
 def collect_sessions_data(sessions, event_type, channel, regions_to_aggregate):
     if not isinstance(regions_to_aggregate, list):
@@ -166,9 +166,12 @@ def find_drug_split_x(session, brain_reg, find_relative_peak=False):
     # ('mPFC', 'left', 'G', 'phot_zF')
     #print(brain_reg)
     #signal = phot_df[f'{brain_reg}_phot_zF']
-    signal = phot_df[brain_reg + ('phot_zF', )]
-    phot_times = phot_df['SecFromZero_FP3002'].values
-    blank_image_time = raw_df.iloc[session.cpt]['SecFromZero_FP3002']
+    for signal_name, data in session.signal_meta.items():
+        if data[0] == brain_reg:
+            break
+    signal = phot_df[signal_name + '_dff']
+    phot_times = phot_df['sec_from_zero'].values
+    blank_image_time = raw_df.iloc[session.cpt]['sec_from_zero']
 
     # 1) Find the injection peak
     peak_x, peak_y = get_injection_peak(signal, phot_times, blank_image_time)
