@@ -41,7 +41,8 @@ class EventSignalExtractor:
             phot_df,
             raw_df[self.trial_time_col].values,
             phot_df[self.trial_time_col].values,
-            signal_col
+            signal_col,
+            response_interval
         )
 
         metrics = calculate_signal_response_metrics_matrix(matrix, response_interval, fps)
@@ -108,7 +109,7 @@ class EventSignalExtractor:
         return phot_df, raw_df, target_key
 
     def _build_signal_matrix(self, raw_event_idxs, phot_df, raw_times,
-                             phot_times, brain_region):
+                             phot_times, brain_region, response_interval):
 
         n_events   = len(raw_event_idxs)
         matrix     = np.zeros((n_events, self.window_len), float)
@@ -130,7 +131,9 @@ class EventSignalExtractor:
             idx_ranges.append((s, e))
 
             trace    =     phot_df[f"{brain_region}_dff"].iloc[s:e].to_numpy()
-            pre_mean = trace[self.interval_start-7 : self.interval_start+7].mean()
+            
+            rel_start = response_interval[0]
+            pre_mean = trace[rel_start-7 : rel_start+7].mean()
             matrix[i] = trace - pre_mean
 
         return matrix, idx_ranges
