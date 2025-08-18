@@ -2,7 +2,7 @@
 
 from pathlib import Path
 import re
-from typing import Callable
+from typing import Callable, Union
 import warnings
 import pandas as pd
 
@@ -115,7 +115,7 @@ def _process_media(
     updown_regex: str,
     prefix: str,
     column_name: str = "path",
-    load_fn: Callable[[Path], pd.DataFrame] | None = None,
+    load_fn: Union[Callable[[Path], pd.DataFrame], None] = None,
 ) -> dict[str, pd.DataFrame]:
     """
     Generic camera-timestamp -> file matcher.

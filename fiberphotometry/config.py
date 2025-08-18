@@ -213,14 +213,23 @@ OFT_H5_UPDOWN_REGEX      = r"_(upper|lower)DLC_"
 # -----------------------------------------------------------------------------
 # OFT video filename patterns
 # -----------------------------------------------------------------------------
-# Glob to find all mp4s under your video‐root
-OFT_VIDEO_GLOB = "*Vid_*_30fps_*.mp4"
+# # Glob to find all mp4s under your video‐root
+# OFT_VIDEO_GLOB = "*Vid_*_30fps_*.mp4"
 
-# Exact corner in videos appears like “…_top_left_30fps_…”
-OFT_VIDEO_EXACT_CORNER_REGEX = r"_(top_left|top_right|bottom_left|bottom_right)_"
+# # Exact corner in videos appears like “…_top_left_30fps_…”
+# OFT_VIDEO_EXACT_CORNER_REGEX = r"_(top_left|top_right|bottom_left|bottom_right)_"
 
-# Fallback upper/lower in videos appears like “…_upper_30fps_…” / “…_lower_30fps_…” 
-OFT_VIDEO_UPDOWN_REGEX      = r"_(upper|lower)_"
+# # Fallback upper/lower in videos appears like “…_upper_30fps_…” / “…_lower_30fps_…” 
+# OFT_VIDEO_UPDOWN_REGEX      = r"_(upper|lower)_"
+
+# Glob to find all .avi video files that contain "Vid_"
+OFT_VIDEO_GLOB = "*Vid_*.avi"
+
+# Regex for exact corners at the end of the filename (e.g., "_top_left.avi")
+OFT_VIDEO_EXACT_CORNER_REGEX = r"_(top_left|top_right|bottom_left|bottom_right)\.avi$"
+
+# Regex for upper/lower at the end of the filename (e.g., "_upper.avi")
+OFT_VIDEO_UPDOWN_REGEX = r"_(upper|lower)\.avi$"
 
 # camera → side lookup for the up/down rule
 CHAMBER_CAMERAS = {

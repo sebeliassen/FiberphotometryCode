@@ -39,112 +39,100 @@ class PlottingSetup:
         self.fit_window_start          = fit_window_start
         self.fit_window_end            = fit_window_end
 
-    def setup_plotting_attributes(self, session, freq):
-        if session.session_type != 'cpt':
-            raise NotImplementedError(
-                f"session_type='{session.session_type}' not supported—only 'cpt' is implemented"
-            )
-
-        ref_freq = config.SYNC.get("reference_phot_freq", freq)
-        phot_df = session.dfs.get_data(f"phot_{ref_freq}")
+    def _compute_plotting_attrs(self, session, freq):
+        """
+        Pure function: given a session and freq, return a dict with
+          trial_start_idx, plot_start_full, plot_end_full, fit_start, fit_end.
+        For non‑CPT, it returns the full‑trace defaults.
+        """
+        phot_df = session.dfs.get_data(f"phot_{freq}")
         if phot_df is None:
-            warnings.warn(
-                f"No photometry DataFrame found for reference freq '{ref_freq}'; "
-                f"falling back to phot_{freq}"
-            )
-            phot_df = session.dfs.get_data(f"phot_{freq}")
-        elif phot_df.empty:
-            warnings.warn(
-                f"Photometry DataFrame for reference freq '{ref_freq}' is empty; "
-                f"falling back to phot_{freq}"
-            )
-            phot_df = session.dfs.get_data(f"phot_{freq}")
-
-        # compute trial_start_idx
-        if session.session_type == 'cpt':
-            raw_df = session.dfs.get_data("raw")
-            if raw_df is None:
-                raise ValueError("No raw DataFrame available for CPT session")
-
-            sec_zero_col = config.SYNC.get('sec_zero_col')
-            if sec_zero_col not in raw_df.columns:
-                raise KeyError(f"Column '{sec_zero_col}' not found in raw DataFrame")
-            if sec_zero_col not in phot_df.columns:
-                raise KeyError(f"Column '{sec_zero_col}' not found in photometry DataFrame for '{ref_freq}'")
-
-            zero_times = phot_df[sec_zero_col].values
-            sync_time_aligned = raw_df.loc[session.cpt, sec_zero_col]
-            idx = np.searchsorted(zero_times, sync_time_aligned)
-            if idx >= len(zero_times):
-                raise ValueError(
-                    f"sync_time {sync_time_aligned} (row {session.cpt}) is beyond photometry timestamps; "
-                    f"insertion idx={idx} but max index is {len(zero_times)-1}"
-                )
-            session.trial_start_idx = int(idx)
-
-        elif session.session_type == 'oft':
-            cam_col = 'cam_frame_num'
-            indices = np.where(phot_df[cam_col] >= session.inj_start_time)[0]
-            session.trial_start_idx = indices[0]
-
-        else:
-            session.trial_start_idx = None
-
-        # compute frame counts
-        coeff = int(self.photometry_fps * 60)
-        baseline_frames = int(coeff * self.baseline_duration_in_mins)
-        trial_frames   = int(coeff * self.trial_length_in_mins)
-        fit_start_off  = int(coeff * self.fit_window_start)
-        fit_end_off    = int(coeff * self.fit_window_end)
-
-        # raw indices
-        tsi = session.trial_start_idx
-        session.plot_start_full = tsi - baseline_frames
-        session.plot_end_full   = tsi + trial_frames
-        session.fit_start       = tsi - fit_start_off
-        session.fit_end         = tsi - fit_end_off
-        session.fitting_interval = [session.fit_start, session.fit_end]
-
+            raise ValueError(f"No photometry for freq '{freq}'")
         n = len(phot_df)
-        if session.plot_start_full < 0:
-            max_baseline_mins = tsi / coeff
-            raise IndexError(
-                f"baseline_duration_in_mins={self.baseline_duration_in_mins} → "
-                f"{baseline_frames} frames exceeds trial_start_idx={tsi} frames "
-                f"({tsi/coeff:.2f} mins). "
-                f"Set baseline_duration ≤ {max_baseline_mins:.2f} minutes."
-            )
-        if session.plot_end_full > n:
-            max_trial_mins = (n - tsi) / coeff
-            raise IndexError(
-                f"trial_length_in_mins={self.trial_length_in_mins} → "
-                f"{trial_frames} frames extends beyond data length={n} frames "
-                f"({n/coeff:.2f} mins). Set trial_length ≤ {max_trial_mins:.2f} minutes."
-            )
 
-        for name, start, end in [
-            ("full plot window start", session.plot_start_full, None),
-            ("full plot window end",   None, session.plot_end_full),
-            ("fit window start",       session.fit_start, None),
-            ("fit window end",         None, session.fit_end),
-        ]:
-            if start is not None and (start < 0 or start >= n):
-                raise IndexError(f"{name} index {start} out of bounds for DataFrame length {n}")
-            if end   is not None and (end   < 0 or end   >  n):
-                raise IndexError(f"{name} index {end} out of bounds for DataFrame length {n}")
+        # Non‑CPT: whole trace
+        if session.session_type != 'cpt':
+            return {
+                "trial_start_idx": 0,
+                "plot_start_full": 0,
+                "plot_end_full":   n,
+                "fit_start":       0,
+                "fit_end":         n,
+            }
 
-    def apply_phot_iso_calculation(self, session, func, phot_df, iso_df):
-        """
-        Call `func` (e.g., calculate_dff_continous_iso) on every column
-        in phot_df whose name matches the regex r"^signal_\\d+$".
-        """
-        fit_range  = range(session.fit_start, session.fit_end)
-        plot_range = range(session.plot_start_full, session.plot_end_full)
+        # — CPT path: exactly your old code —
+        raw_df = session.dfs.get_data("raw")
+        if raw_df is None:
+            raise ValueError("No raw DataFrame for CPT session")
 
-        pattern = re.compile(r"^signal_\d+$")
+        sec_zero = config.SYNC['sec_zero_col']
+        if sec_zero not in raw_df.columns or sec_zero not in phot_df.columns:
+            raise KeyError(f"Missing '{sec_zero}' column in raw or photometry DF")
+
+        zero_times = phot_df[sec_zero].values
+        sync_time  = raw_df.loc[session.cpt, sec_zero]
+        idx = int(np.searchsorted(zero_times, sync_time))
+        if idx >= n:
+            raise ValueError(f"sync_time beyond photometry timestamps (idx={idx}, max={n-1})")
+
+        coeff           = int(self.photometry_fps * 60)
+        baseline_frames = int(coeff * self.baseline_duration_in_mins)
+        trial_frames    = int(coeff * self.trial_length_in_mins)
+        fit_start_off   = int(coeff * self.fit_window_start)
+        fit_end_off     = int(coeff * self.fit_window_end)
+
+        attrs = {
+            "trial_start_idx": idx,
+            "plot_start_full": idx - baseline_frames,
+            "plot_end_full":   idx + trial_frames,
+            "fit_start":       idx - fit_start_off,
+            "fit_end":         idx - fit_end_off,
+        }
+
+        # bounds checks (can raise IndexError if out of range)
+        if attrs["plot_start_full"] < 0:
+            max_b = idx / coeff
+            raise IndexError(f"baseline too long; max {max_b:.2f} mins")
+        if attrs["plot_end_full"] > n:
+            max_t = (n - idx) / coeff
+            raise IndexError(f"trial too long; max {max_t:.2f} mins")
+        for name in ("fit_start","fit_end"):
+            v = attrs[name]
+            if v < 0 or v > n:
+                raise IndexError(f"{name}={v} out of bounds [0,{n}]")
+
+        return attrs
+
+    def apply_phot_iso_calculation(self,
+                                session,
+                                func,
+                                phot_df,
+                                iso_df,
+                                fit_range=None,
+                                plot_range=None):
+        import re
+        pat = re.compile(r"^signal_\d+$")
+
+        # Non‑CPT → whole‑trace fallback
+        if session.session_type != 'cpt':
+            for col in phot_df.columns:
+                if pat.match(col):
+                    self.simple_dff_zscore(phot_df, iso_df, col,
+                                        fit_range, plot_range)
+            return
+
+        # CPT → fill in missing ranges
+        if fit_range  is None:
+            fit_range  = range(session.fit_start, session.fit_end)
+        if plot_range is None:
+            plot_range = range(session.plot_start_full,
+                            session.plot_end_full)
+
+        # and run the “full” routine
         for col in phot_df.columns:
-            if pattern.match(col):
-                func(phot_df, iso_df, col, fit_range, plot_range)
+            if not pat.match(col):
+                continue
+            func(phot_df, iso_df, col, fit_range, plot_range)
 
     def calculate_dff_continous_iso(self, phot_df, iso_df, signal_col, fit_range, plot_range):
         # Extract the two raw streams
@@ -250,8 +238,6 @@ class PlottingSetup:
         # 9) Save z-scored ΔF/F
         phot_df[f"{signal_col}_dff"] = (dff - z_baseline) / z_std
 
-
-
     def calculate_dff_exp2_iso(self, phot_df, iso_df, signal_col, fit_range, plot_range):
         phot_signal = phot_df[signal_col].iloc[plot_range]
         iso_signal  = iso_df[signal_col].iloc[plot_range]
@@ -283,22 +269,65 @@ class PlottingSetup:
 
         phot_df[f"{signal_col}_dff"] = zscore_dff
 
+    def simple_dff_zscore(self,
+                        phot_df,
+                        iso_df,
+                        signal_col,
+                        fit_range=None,
+                        plot_range=None):
+        """
+        Drop‑in for calculate_dff_and_zscore: takes two extra args that are ignored.
+        """
+        # 1) interpolate
+        raw = phot_df[signal_col].interpolate(method='linear',
+                                            limit_direction='both')
+        iso = iso_df[signal_col].interpolate(method='linear',
+                                            limit_direction='both')
+
+        # 2) subtract & baseline
+        corr = raw - iso
+        baseline = np.nanmedian(corr)
+        if not np.isfinite(baseline) or baseline == 0:
+            phot_df[f"{signal_col}_dff"]   = np.zeros_like(corr)
+            phot_df[f"{signal_col}_dff_z"] = np.zeros_like(corr)
+            return
+
+        # 3) ΔF/F
+        dff = (corr - baseline) / baseline
+        phot_df[f"{signal_col}_dff"] = dff
+
+        # 4) z‑score
+        mu    = np.nanmean(dff)
+        sigma = np.nanstd(dff, ddof=1)
+        if not np.isfinite(sigma) or sigma == 0:
+            phot_df[f"{signal_col}_dff_z"] = np.zeros_like(dff)
+        else:
+            phot_df[f"{signal_col}_dff_z"] = (dff - mu) / sigma
+
     def apply_plotting_setup_to_sessions(self, sessions):
         for session in sessions:
             for letter, freq in LETTER_TO_FREQS.items():
                 if letter == 'iso':
                     continue
 
-                # Compute trial start indexes and plotting/fitting windows
-                self.setup_plotting_attributes(session, freq)
-
                 phot_df = session.dfs.get_data(f"phot_{freq}")
                 iso_df  = session.dfs.get_data(f"phot_{LETTER_TO_FREQS['iso']}")
+                if phot_df is None or iso_df is None:
+                    continue
 
-                # For every column matching "signal_<number>", compute ΔF/F + z-score
+                # 1) compute attrs, then assign them
+                attrs = self._compute_plotting_attrs(session, freq)
+                for k, v in attrs.items():
+                    setattr(session, k, v)
+                # keep old downstream code happy:
+                session.fitting_interval = [attrs["fit_start"], attrs["fit_end"]]
+
+                # 2) dispatch into the correct ΔF/F + z‑score
                 self.apply_phot_iso_calculation(
                     session,
                     self.calculate_dff_and_zscore,
                     phot_df,
-                    iso_df
+                    iso_df,
+                    fit_range=range(session.fit_start, session.fit_end),
+                    plot_range=range(session.plot_start_full, session.plot_end_full)
                 )

@@ -20,24 +20,24 @@ def extract_and_append_results(
     model_name: str,
     video_frame_indexes: Dict,
     original_lengths: Dict,
+    metadata: tuple, # <-- ADD THIS ARGUMENT
     data_key_name: str = 'all_results'
 ):
     """
-    Loads the latest checkpoint of a trained model, finds all result "parts" for
-    each session, and attaches them as a dictionary to a new attribute on the
-    session object.
+    ... (docstring) ...
     """
     logging.info(f"--- Starting syllable extraction and alignment for model: {model_name} ---")
 
-    # 1. Load the latest checkpoint
+    kpms.reindex_syllables_in_checkpoint(project_dir, model_name)
+    # 1. Load ONLY the model object from the checkpoint
     try:
-        model, data, metadata, current_iter = kpms.load_checkpoint(project_dir, model_name)
+        model, _, _, current_iter = kpms.load_checkpoint(project_dir, model_name)
         logging.info(f"Successfully loaded model '{model_name}' from checkpoint {current_iter}.")
     except (FileNotFoundError, IndexError):
         logging.error(f"Could not find any checkpoints for model '{model_name}'. Aborting.")
         return
 
-    # 2. Extract results directly from the model
+    # 2. Extract results using the CORRECT metadata that was passed into this function
     results = kpms.extract_results(model, metadata, project_dir, model_name, save_results=False)
     logging.info(f"Successfully extracted results for {len(results)} video parts.")
 
