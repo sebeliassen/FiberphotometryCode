@@ -57,6 +57,23 @@ def subset_data_and_indexes(
     return subset_coords, subset_confs, subset_indexes
 
 
+def ensure_kpms_project(project_dir):
+    """
+    Ensure a valid keypoint-moseq project at `project_dir`.
+    - Creates the parent dir if needed.
+    - If config.yml is missing, force a (re)setup with overwrite=True.
+    - Always return a loaded config.
+    """
+    project_path = Path(project_dir)
+    project_path.parent.mkdir(parents=True, exist_ok=True)
+
+    cfg_path = project_path / "config.yml"
+    if not cfg_path.exists():
+        # Directory may exist but be empty — force creation of config.yml
+        kpms.setup_project(str(project_path), overwrite=True)
+
+    return kpms.load_config(str(project_path))
+
 # ==============================================================================
 # 2. UPDATED MAIN GENERATOR FUNCTION
 # (This replaces your old generate_syllable_models)
@@ -68,9 +85,9 @@ def generate_syllable_models(
     subset_fraction: float = 1.0,
     latent_dim: int = 4,
     num_models: int = 3,
-    ar_iters: int = 1,
+    ar_iters: int = 25,
     n_jax_batches: int = 1,
-    fitting_iters: int = 1,
+    fitting_iters: int = 100,
     test_mode: bool = False
 ) -> Tuple[List[str], Dict, Dict, tuple]: # Cleaner return signature
     """
@@ -78,9 +95,7 @@ def generate_syllable_models(
     """
     # --- Step 1 & 2: Setup and H5 Path finding (no changes needed) ---
     project_path = Path(project_dir)
-    if not project_path.exists():
-        kpms.setup_project(project_dir)
-    config = kpms.load_config(project_dir)
+    config = ensure_kpms_project(project_path)
 
     all_h5_paths = []
     for session in sessions:
@@ -140,8 +155,7 @@ def generate_syllable_models(
         model = kpms.update_hypparams(model, kappa=kappa)
         model, ar_model_name = kpms.fit_model(
             model, data, metadata, project_dir,
-            ar_only=True, num_iters=ar_iters,
-            generate_progress_plots=False
+            ar_only=True, num_iters=ar_iters
         )
         model, data, metadata, current_iter = kpms.load_checkpoint(
             project_dir, ar_model_name, iteration=ar_iters)
@@ -149,8 +163,7 @@ def generate_syllable_models(
         model_name = f'final_model_{kappa:.2e}_idx{model_idx}'
         model, _ = kpms.fit_model(
             model, data, metadata, project_dir, model_name,
-            ar_only=False, start_iter=current_iter, num_iters=current_iter + fitting_iters,
-            generate_progress_plots=False
+            ar_only=False, start_iter=current_iter, num_iters=current_iter + fitting_iters
         )
         final_model_names.append(model_name)
 
