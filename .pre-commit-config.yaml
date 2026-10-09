@@ -1,0 +1,17 @@
+# Pre-commit configuration for FiberphotometryCode
+# Enforces file size boundaries and syntax integrity
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-added-large-files
+        name: Block large binary files (>2MB)
+        args: ['--maxkb=2048']
+      - id: check-yaml
+        name: Validate YAML configurations
+        exclude: ^(\.agents/|archive/|tests/)
+      - id: check-json
+        name: Validate JSON documents
+        exclude: ^(tests/runs/|archive/)
+      - id: check-merge-conflict
+      - id: check-case-conflict

@@ -1,0 +1,90 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fiberphotometry-suite"
+version = "0.1.0"
+description = "Multi-camera posture tracking, Keypoint-MoSeq behavioral segmentation, and fiber photometry analysis suite"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "GPL-3.0-or-later" }
+authors = [
+    { name = "Gether Laboratory", email = "gether-lab@sund.ku.dk" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX :: Linux",
+]
+dependencies = [
+    "numpy>=1.22.0",
+    "scipy>=1.8.0",
+    "pandas>=1.4.0",
+    "h5py>=3.6.0",
+    "matplotlib>=3.5.0",
+    "pyyaml>=6.0",
+    "openpyxl>=3.0.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0",
+    "pytest-timeout",
+]
+lint = [
+    "ruff>=0.1.0",
+]
+dev = [
+    "pre-commit",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["core*", "fiberphotometry*"]
+exclude = ["tests*", "docs*", "archive*", "_backups*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+pythonpath = [
+    ".",
+    "syllable_generation/syllabizers/keypoint_moseq_syll",
+]
+addopts = "-ra --strict-markers --ignore=tests/test_oft_session_full_data.py"
+markers = [
+    "cpu: Fast CPU-only unit and synthetic regression tests (no GPU required)",
+    "gpu: GPU-accelerated modeling, JAX, and CUDA tests",
+    "slow: Long-running or heavy computational tests (> 5 seconds)",
+    "needs_data: Tests requiring full empirical datasets (checkpoints, videos, or HDF5 arrays)",
+]
+norecursedirs = [
+    "runs",
+    "syllable_figs",
+    "used_frames",
+    "__pycache__",
+    ".git",
+    "_backups",
+    "archive",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+exclude = [
+    ".git",
+    "__pycache__",
+    "_backups",
+    "archive",
+    "tests/runs",
+    "*.ipynb",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
