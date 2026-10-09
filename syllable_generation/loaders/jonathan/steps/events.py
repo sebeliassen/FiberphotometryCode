@@ -1,12 +1,22 @@
-from __future__ import annotations
+"""
+[DEPRECATED SHIM] syllable_generation/loaders/jonathan/steps/events.py
+==================================================
+Relocated to: studies/behavior/loaders/events.py
+"""
 
-from typing import List
+import importlib
+import sys
+import warnings
 
-from syllable_generation.datamodel import SessionRecord
+warnings.warn(
+    "syllable_generation.loaders.jonathan.steps.events is deprecated; import from studies.behavior.loaders.events instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
-from ..context import BuildContext
+_real = importlib.import_module("studies.behavior.loaders.events")
+sys.modules[__name__] = _real
 
-
-def attach_events(ctx: BuildContext, sessions: List[SessionRecord]) -> List[SessionRecord]:
-    # placeholder no-op
-    return sessions
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()
