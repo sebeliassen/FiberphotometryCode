@@ -7,7 +7,7 @@ PYTHON ?= python3
 PYTEST ?= $(PYTHON) -m pytest
 RUFF ?= $(PYTHON) -m ruff
 
-.PHONY: help test lint inventory backup verify-backup dry-run shims-report
+.PHONY: help test lint inventory backup verify-backup dry-run shims-report metrics
 
 help:
 	@echo "Available Makefile targets:"
@@ -48,4 +48,7 @@ dry-run:
 
 shims-report:
 	@$(PYTHON) ops/repo/shims_report.py
+
+metrics:
+	@$(PYTHON) ops/repo/metrics.py
 

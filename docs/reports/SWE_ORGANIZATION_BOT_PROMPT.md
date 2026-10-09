@@ -27,10 +27,10 @@ To allow full repository review without gigabytes of raw video, DLC tracking dat
   - Symlink details (if applicable)
 
 ### Summary Statistics of this Archive:
-- **Total Files Represented**: 27,149
-- **Verbatim Code & Config Files**: 4,729
-- **Stripped Jupyter Notebooks**: 121
-- **Lightweight Placeholders**: 22,299 (representing 3138.43 GB of raw data/binaries)
+- **Total Files Represented**: 26,996
+- **Verbatim Code & Config Files**: 4,739
+- **Stripped Jupyter Notebooks**: 119
+- **Lightweight Placeholders**: 22,138 (representing 3138.42 GB of raw data/binaries)
 
 ---
 

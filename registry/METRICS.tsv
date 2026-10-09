@@ -1,0 +1,8 @@
+metric	phase0_baseline	current_head	delta	pct_change
+python_files	1609	988	-621	-38.60%
+redundant_copies	767	200	-567	-73.92%
+files_with_home_path	841	428	-413	-49.11%
+sys_path_hacks	792	435	-357	-45.08%
+send_ntfy_defs	86	17	-69	-80.23%
+runners_not_forwarding	12	0	-12	-100.00%
+active_shims	0	28	28	100.00%
