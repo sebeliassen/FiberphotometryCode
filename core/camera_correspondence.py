@@ -14,5 +14,11 @@ warnings.warn(
     stacklevel=2,
 )
 
-_real = importlib.import_module("fpcode.tracking.clock_sync")
+_real = importlib.import_module("fpcode.tracking.camera_correspondence")
 sys.modules[__name__] = _real
+
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)

@@ -17,6 +17,12 @@ warnings.warn(
 _real = importlib.import_module("fpcode.kpms.runtime")
 sys.modules[__name__] = _real
 
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)
+
 BatchConfig = _real.BatchConfig
 CONFIG = _real.CONFIG
 precompute_optimal_batch_config = _real.precompute_optimal_batch_config

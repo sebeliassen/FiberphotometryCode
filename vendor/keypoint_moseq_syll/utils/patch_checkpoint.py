@@ -17,6 +17,12 @@ warnings.warn(
 _real = importlib.import_module("fpcode.kpms.checkpoints")
 sys.modules[__name__] = _real
 
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)
+
 is_checkpoint_packed = _real.is_checkpoint_packed
 patched_load_checkpoint = _real.patched_load_checkpoint
 apply_kpms_checkpoint_patch = _real.apply_kpms_checkpoint_patch

@@ -17,6 +17,12 @@ warnings.warn(
 _real = importlib.import_module("studies.behavior.multiview_experiments.01_data_and_fusion.test_4_golden_rules_fusion")
 sys.modules[__name__] = _real
 
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)
+
 if __name__ == "__main__":
     if hasattr(_real, "main"):
         _real.main()

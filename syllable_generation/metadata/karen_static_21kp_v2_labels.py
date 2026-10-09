@@ -17,6 +17,12 @@ warnings.warn(
 _real = importlib.import_module("studies.behavior.karen_studies.karen_static_21kp_v2_labels")
 sys.modules[__name__] = _real
 
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)
+
 if __name__ == "__main__":
     if hasattr(_real, "main"):
         _real.main()

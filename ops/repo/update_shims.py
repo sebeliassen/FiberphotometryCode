@@ -67,6 +67,12 @@ warnings.warn(
 
 _real = importlib.import_module("{target}")
 sys.modules[__name__] = _real
+
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)
 '''
         p.write_text(code)
         print(f"Updated shim: {rel_path} -> {target}")

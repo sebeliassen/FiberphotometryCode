@@ -17,6 +17,12 @@ warnings.warn(
 _real = importlib.import_module("fpcode.kpms.export")
 sys.modules[__name__] = _real
 
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)
+
 export_tandem_cohort_results = _real.export_tandem_cohort_results
 
 if __name__ == "__main__":

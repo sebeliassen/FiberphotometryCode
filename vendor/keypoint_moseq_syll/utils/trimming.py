@@ -17,6 +17,12 @@ warnings.warn(
 _real = importlib.import_module("fpcode.kpms.data")
 sys.modules[__name__] = _real
 
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)
+
 _clean_short_runs = _real._clean_short_runs
 presence_mask_from_conf = _real.presence_mask_from_conf
 filter_with_masks = _real.filter_with_masks
