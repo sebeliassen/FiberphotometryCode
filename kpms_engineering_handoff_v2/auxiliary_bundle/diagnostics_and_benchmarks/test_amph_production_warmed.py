@@ -13,8 +13,11 @@ Production acceptance benchmark on the FULL 30-session AMPH dataset:
   5. Checkpoint resume verification (resuming from checkpoint for 1 additional iteration).
 """
 
-import os, sys, time, json, shutil
 import multiprocessing
+import os
+import shutil
+import sys
+import time
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
@@ -33,13 +36,12 @@ if REPO_ROOT not in sys.path: sys.path.insert(0, REPO_ROOT)
 if KPMS_DIR not in sys.path: sys.path.insert(0, KPMS_DIR)
 
 import numpy as np
+
 if not hasattr(np, "bool8"): np.bool8 = np.bool_
-import psutil
-import pandas as pd
 import h5py
-import jax
 import keypoint_moseq as kpms
-import utils.resample_batching as rb
+import pandas as pd
+import psutil
 from kpms_pipeline import run_pipeline
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "amph_project")
@@ -96,14 +98,14 @@ def run_acceptance_benchmark():
         ar_only = resample_options.get("ar_only", False)
         phase = "AR" if ar_only else "SLDS"
         iter_num = len(iteration_telemetry) + 1
-        
+
         t0 = time.perf_counter()
         out_model = orig_wrapped_resample(resample_func, data, model, pbar=pbar, **resample_options)
         dt = time.perf_counter() - t0
-        
+
         ram_gb = get_process_ram_gb()
         vram_gb = get_gpu_vram_gb()
-        
+
         rec = {
             "iter_idx": iter_num,
             "phase": phase,
@@ -157,7 +159,7 @@ def run_acceptance_benchmark():
         saved_snapshots = sorted([int(k) for k in f["model_snapshots"].keys()])
     print(f"Checkpoint size: {ckpt_size_gb:.2f} GB")
     print(f"Saved snapshot iterations: {saved_snapshots}")
-    
+
     # Decoupling assertions:
     # Snapshots 1, 2, 4, 5 should NOT be saved because save_every_n_iters=50
     # Snapshot 3 (AR milestone) and Snapshot 6 (SLDS final) should be saved.
@@ -186,7 +188,7 @@ def run_acceptance_benchmark():
     print("\n" + "=" * 80)
     print("  PRODUCTION ACCEPTANCE BENCHMARK RESULTS")
     print("=" * 80)
-    print(f"  Total Dataset: 30 Sessions, 562 Sequences, 5,516,954 Active Frames\n")
+    print("  Total Dataset: 30 Sessions, 562 Sequences, 5,516,954 Active Frames\n")
     print(f"  {'Iteration':<12} | {'Phase':<6} | {'Duration':<12} | {'Host RAM (RSS)':<16} | {'GPU VRAM':<12}")
     print("  " + "-" * 70)
     for rec in iteration_telemetry:
@@ -196,12 +198,12 @@ def run_acceptance_benchmark():
         print(f"  Iter {rec['iter_idx']:<2} {status:<16} | {rec['phase']:<6} | {rec['duration_sec']:7.2f} s    | {rec['ram_gb']:6.2f} GB        | {rec['vram_gb']:6.2f} GB")
 
     print("  " + "-" * 70)
-    
+
     ar_warm = [r["duration_sec"] for r in iteration_telemetry if r["phase"] == "AR" and r["iter_idx"] > 1]
     slds_warm = [r["duration_sec"] for r in iteration_telemetry if r["phase"] == "SLDS" and r["iter_idx"] not in [4, 7]]
     resumed_iter = [r["duration_sec"] for r in iteration_telemetry if r["iter_idx"] == 7]
 
-    print(f"\n  [Summary Metrics]")
+    print("\n  [Summary Metrics]")
     print(f"  * AR Cold Iteration 1:           {iteration_telemetry[0]['duration_sec']:.2f} s")
     print(f"  * AR Warmed Steady-State:        {np.mean(ar_warm):.2f} s / iter")
     print(f"  * SLDS Cold Iteration 4:         {iteration_telemetry[3]['duration_sec']:.2f} s")
@@ -210,8 +212,8 @@ def run_acceptance_benchmark():
         print(f"  * Resumed Iteration 7:           {resumed_iter[0]:.2f} s")
     print(f"  * Peak Process Host RAM:         {max(r['ram_gb'] for r in iteration_telemetry):.2f} GB (System has 125 GB)")
     print(f"  * Peak GPU VRAM:                 {max(r['vram_gb'] for r in iteration_telemetry):.2f} GB (RTX 4090 has 24 GB)")
-    print(f"  * Checkpoint Decoupling:         VERIFIED (1,2,4,5 skipped; 3,6,7 persisted)")
-    print(f"  * Checkpoint Resume:             VERIFIED (Seamless recovery at iter 6)")
+    print("  * Checkpoint Decoupling:         VERIFIED (1,2,4,5 skipped; 3,6,7 persisted)")
+    print("  * Checkpoint Resume:             VERIFIED (Seamless recovery at iter 6)")
     print("=" * 80, flush=True)
 
 if __name__ == "__main__":

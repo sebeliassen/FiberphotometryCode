@@ -25,6 +25,7 @@ Architecture:
 """
 
 import time
+
 import numpy as np
 
 # JAX GPU

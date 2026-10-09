@@ -21,17 +21,18 @@ Analyses:
 """
 
 import os
+import pickle
 import sys
 import time
-import pickle
+
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GroupKFold
+from sklearn.preprocessing import StandardScaler
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
@@ -86,7 +87,7 @@ for sess_idx, bouts in enumerate(session_bouts):
     sp = np.zeros((N, 6), dtype=np.float32)
     oh_bout = np.zeros((N, NUM_ACTIVE_SYLLS), dtype=np.float32)
     next_bout_ptrs = np.full(N, N, dtype=np.int32)
-    
+
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = b["syllable"] - 1
@@ -96,18 +97,18 @@ for sess_idx, bouts in enumerate(session_bouts):
         vec = b.get("vector", None)
         if vec is not None and len(vec) >= 14:
             sp[sf:ef+1, :4] = vec[:4]; sp[sf:ef+1, 4] = vec[10]; sp[sf:ef+1, 5] = vec[12]
-            
+
     b_starts = np.array([b["start_frame"] for b in bouts])
     for t_idx, b_st in enumerate(b_starts):
         prev_st = b_starts[t_idx-1] if t_idx > 0 else 0
         next_bout_ptrs[prev_st:b_st] = b_st
     if len(b_starts) > 0:
         next_bout_ptrs[b_starts[-1]:] = N
-        
+
     cum_bout = np.vstack([np.zeros((1, NUM_ACTIVE_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
     cum_spatial = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp, axis=0)])
     cum_spatial_sq = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp**2, axis=0)])
-    
+
     sessions_data.append({
         "sess_idx": sess_idx, "N": N, "fs": fs, "cum_bout": cum_bout,
         "next_bout_ptrs": next_bout_ptrs, "cum_spatial": cum_spatial,
@@ -119,13 +120,13 @@ for s in sessions_data:
     N = s["N"]
     if N < W_FRAMES + H_FRAMES + 200: continue
     inj_f = s["inj_frame"]
-    
+
     t_anchors = np.arange(W_FRAMES, N - H_FRAMES, STRIDE_FRAMES)
     t_tgt_start = s["next_bout_ptrs"][t_anchors]
     valid = (t_tgt_start + H_FRAMES < N)
     t_anchors = t_anchors[valid]
     t_tgt_start = t_tgt_start[valid]
-    
+
     past_start = t_anchors - W_FRAMES
     future_end = t_tgt_start + H_FRAMES
     no_straddle = (future_end < inj_f) | (past_start > inj_f)
@@ -133,7 +134,7 @@ for s in sessions_data:
     t_tgt_start = t_tgt_start[no_straddle]
     M = len(t_anchors)
     if M == 0: continue
-    
+
     # 1. Spatial context (14-D)
     t_norm = t_anchors / float(N)
     p1 = np.column_stack([t_norm, t_norm**2]).astype(np.float32)
@@ -142,15 +143,15 @@ for s in sessions_data:
     sp_sq = s["cum_spatial_sq"][t_anchors] - s["cum_spatial_sq"][t_anchors - W_FRAMES]
     sp_var = np.maximum(sp_sq / float(W_FRAMES) - sp_mean**2, 1e-6)
     feat_space = np.hstack([p1, sp_mean, np.sqrt(sp_var)]).astype(np.float32)
-    
+
     # 2. Repertoire (99-D)
     b_cnt = s["cum_bout"][t_anchors] - s["cum_bout"][t_anchors - W_FRAMES]
     feat_rep = (b_cnt + 1e-4) / (np.sum(b_cnt, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     # 3. Target Future (99-D)
     f_cnt = s["cum_bout"][t_tgt_start + H_FRAMES] - s["cum_bout"][t_tgt_start]
     target = (f_cnt + 1e-4) / (np.sum(f_cnt, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     for i in range(M):
         raw_windows.append({
             "sess_idx": s["sess_idx"],
@@ -222,20 +223,20 @@ for b in range(0, N_PAIRS, BATCH_SIZE):
     b_end = min(b + BATCH_SIZE, N_PAIRS)
     b_i = idx_i[b:b_end]
     b_j = idx_j[b:b_end]
-    
+
     # Past distance
     diff_X = X_tensor[b_i] - X_tensor[b_j]
     d_X = torch.norm(diff_X, p=2, dim=1) # Euclidean in balanced hybrid space
-    
+
     # Future divergence (Actual)
     d_Y = js_divergence_pt(Y_tensor[b_i], Y_tensor[b_j])
-    
+
     # Future divergence (Model Predictions)
     d_Y_hat = js_divergence_pt(Y_hat_tensor[b_i], Y_hat_tensor[b_j])
-    
+
     # Future divergence (Shuffled Control)
     d_Y_shuff = js_divergence_pt(Y_shuffled[b_i], Y_shuffled[b_j])
-    
+
     d_X_list.append(d_X.cpu().numpy())
     d_Y_list.append(d_Y.cpu().numpy())
     d_Y_hat_list.append(d_Y_hat.cpu().numpy())

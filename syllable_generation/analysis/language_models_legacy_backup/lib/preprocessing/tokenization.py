@@ -1,4 +1,5 @@
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
+
 
 def get_stats(ids: List[int]) -> Dict[Tuple[int, int], int]:
     """Calculate frequencies of adjacent pairs."""
@@ -34,10 +35,10 @@ def train_bpe_tokenizer(sequences: List[List[int]], vocab_size: int = 100) -> Di
     for seq in sequences:
         flat_ids.extend(seq)
         flat_ids.append(-100)  # Separator token
-        
+
     num_merges = vocab_size - len(set(flat_ids))
     merges = {}
-    
+
     current_token_idx = max(flat_ids) + 1
     for i in range(num_merges):
         stats = get_stats(flat_ids)
@@ -49,7 +50,7 @@ def train_bpe_tokenizer(sequences: List[List[int]], vocab_size: int = 100) -> Di
         flat_ids = merge(flat_ids, best_pair, current_token_idx)
         merges[current_token_idx] = best_pair
         current_token_idx += 1
-        
+
     return merges
 
 def apply_bpe_merges(sequences: List[List[int]], merges: Dict[int, Tuple[int, int]]) -> List[List[int]]:

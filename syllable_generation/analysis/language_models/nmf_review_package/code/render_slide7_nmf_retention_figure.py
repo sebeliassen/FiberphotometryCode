@@ -8,8 +8,10 @@ Slide 7 Figure: Predictive Utility vs. Number of NMF Components
 
 import os
 import shutil
-import numpy as np
+
 import matplotlib
+import numpy as np
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 

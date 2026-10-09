@@ -1,19 +1,19 @@
 """Pure and source-block regressions; no production arrays or workstation calls."""
 from __future__ import annotations
+
 import ast
-import contextlib
 import copy
-import importlib.util
 import json
-from pathlib import Path
 import sys
 import tempfile
 import types
 import unittest
+from pathlib import Path
 
+import matplotlib
 import numpy as np
 from PIL import Image
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 

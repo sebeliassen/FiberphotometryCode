@@ -44,11 +44,11 @@ else:
 
 # --- COLUMNS & FEATURES ---
 SCALAR_COLS = [
-    "velocity_px_s", 
-    "angular_velocity", 
-    "acceleration", 
-    "jerk", 
-    "transition", 
+    "velocity_px_s",
+    "angular_velocity",
+    "acceleration",
+    "jerk",
+    "transition",
     "duration"
 ]
 

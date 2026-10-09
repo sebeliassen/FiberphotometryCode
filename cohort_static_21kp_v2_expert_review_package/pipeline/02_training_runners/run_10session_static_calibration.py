@@ -20,18 +20,17 @@ dorsal syllable instance grid movies:
      with verified 1:1 video frame mappings to karen_project/video_files/*.avi.
 """
 
+import json
 import os
+import shutil
+import subprocess
 import sys
 import time
-import json
-import shutil
-import pickle
-import argparse
-import subprocess
-from pathlib import Path
 from itertools import groupby
-import numpy as np
+from pathlib import Path
+
 import h5py
+import numpy as np
 
 # Live unbuffered stdout
 sys.stdout.reconfigure(line_buffering=True)
@@ -130,8 +129,8 @@ def main():
     print("🎯 STARTING 10-SESSION KAPPA CALIBRATION FOR 21KP_STATIC")
     print(f"  Target Dwell:     {TARGET_FRAMES:.1f} frames (400 ms @ 60fps) +/- {TOL_FRAMES:.1f} frames")
     print(f"  Acceptance Range: [{TARGET_FRAMES - TOL_FRAMES:.1f}, {TARGET_FRAMES + TOL_FRAMES:.1f}] frames ({ (TARGET_FRAMES - TOL_FRAMES)/60*1000:.1f} to { (TARGET_FRAMES + TOL_FRAMES)/60*1000:.1f} ms)")
-    print(f"  Regimen:          20 AR + 80 SLDS = 100 iterations on all 10 sessions (~1.74M frames)")
-    print(f"  Initial Kappa:    1.000e+15 (log10 = 15.000)")
+    print("  Regimen:          20 AR + 80 SLDS = 100 iterations on all 10 sessions (~1.74M frames)")
+    print("  Initial Kappa:    1.000e+15 (log10 = 15.000)")
     print(f"  Step Fraction:    {STEP_FRACTION:.2f}")
     print("=" * 80, flush=True)
 
@@ -144,10 +143,10 @@ def main():
 
     for step in range(1, MAX_STEPS + 1):
         kappa_val = float(10**log_curr)
-        print(f"\n================================================================================")
+        print("\n================================================================================")
         print(f"📍 SCAN STEP {step}/{MAX_STEPS}: Testing kappa = {kappa_val:.3e} (log10 = {log_curr:.3f})")
         print(f"   Active bounds: [10^{log_lo:.3f}, 10^{log_hi:.3f}]")
-        print(f"================================================================================", flush=True)
+        print("================================================================================", flush=True)
 
         res = run_probe_subprocess(kappa_val, step, seed=404)
         history.append(res)

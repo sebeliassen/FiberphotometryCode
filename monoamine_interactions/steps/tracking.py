@@ -1,19 +1,27 @@
 from __future__ import annotations
-import pandas as pd
-from pathlib import Path
-from syllable_generation.loaders.jonathan.utils.files import (
-    parse_video_path, parse_h5_path, group_by_session_id, sort_parsed_h5_key
-)
-from syllable_generation.datamodel import SessionRecord
+
 # Import LOCAL config overrides
 # We assume the project folder is 'monoamine_interactions/jonathan_oft_baseline'
 # and we are in 'monoamine_interactions/steps'
 import sys
+from pathlib import Path
+
+import pandas as pd
+
+from syllable_generation.datamodel import SessionRecord
+from syllable_generation.loaders.jonathan.utils.files import (
+    group_by_session_id,
+    parse_h5_path,
+    parse_video_path,
+    sort_parsed_h5_key,
+)
+
 # Ensure subproject is in path to import config
 subproj = Path(__file__).resolve().parents[1] / "jonathan_oft_baseline"
 if str(subproj) not in sys.path:
     sys.path.insert(0, str(subproj))
 from config import JCFG
+
 
 def parse_ids_from_filename(filename: str):
     import re
@@ -30,10 +38,10 @@ def discover_sessions_hybrid(ctx, sessions):
     2. Optional attachment of H5 tracking tracks if they exist in ctx.h5_dir.
     """
     print("[DEBUG] Running discover_sessions_hybrid...")
-    
+
     video_dir = ctx.video_dir
     h5_dir = ctx.h5_dir
-    
+
     # 1. Discover all Videos
     vids = []
     if video_dir and video_dir.exists():
@@ -43,7 +51,7 @@ def discover_sessions_hybrid(ctx, sessions):
             info = parse_video_path(p, JCFG)
             if info: vids.append(info)
             else: print(f"[DEBUG] Skipping unparsable video: {p.name}")
-    
+
     if not vids:
         print("[DEBUG] CRITICAL: No parsable videos found!")
         return []
@@ -68,11 +76,11 @@ def discover_sessions_hybrid(ctx, sessions):
         first_v = v_items[0]
         v_name = first_v["path"].name
         expected_ids = parse_ids_from_filename(v_name)
-        
+
         # Determine Chambers to Generate
         camset = (first_v["camset"] or "").lower()
         chambers_to_make = []
-        
+
         if camset in JCFG.camera_token_map:
             mapping = JCFG.camera_token_map[camset]
             chambers_to_make.extend(mapping.values())
@@ -80,7 +88,7 @@ def discover_sessions_hybrid(ctx, sessions):
              chambers_to_make.extend(JCFG.canon_chambers)
         else:
              # If we can't map the camera to a chamber, we used to use 'unknown_chamber'
-             # But this clutters the dataset with non-animal data. 
+             # But this clutters the dataset with non-animal data.
              # Only create it if there's ONLY one video and it mapped to a chamber in parse_video_path
              if first_v.get("chamber") and first_v["chamber"] != "unknown_chamber":
                  chambers_to_make.append(first_v["chamber"])
@@ -101,7 +109,7 @@ def discover_sessions_hybrid(ctx, sessions):
                         continue
 
             real_sid = f"{first_v['ts']}_{chamber}"
-            
+
             meta = {
                 "timestamp": first_v["ts"],
                 "chamber": chamber,
@@ -111,7 +119,7 @@ def discover_sessions_hybrid(ctx, sessions):
                 "chamber_index": JCFG.chamber_to_index.get(chamber),
                 "original_video_path": str(first_v["path"])
             }
-            
+
             tracking_refs_df = pd.DataFrame()
             h_items = h5_groups.get(real_sid, [])
             if h_items:
@@ -131,7 +139,7 @@ def discover_sessions_hybrid(ctx, sessions):
                         "chamber_index": JCFG.chamber_index(it["chamber"]),
                     })
                 tracking_refs_df = pd.DataFrame(rows)
-            
+
             sr = SessionRecord(
                 session_id=real_sid,
                 project=ctx.project,
@@ -140,6 +148,6 @@ def discover_sessions_hybrid(ctx, sessions):
                 tracking_refs_df=tracking_refs_df,
             )
             new_sessions.append(sr)
-        
+
     print(f"[DEBUG] Discovery complete. Created {len(new_sessions)} SessionRecord objects.")
     return new_sessions

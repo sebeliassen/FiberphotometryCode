@@ -14,15 +14,16 @@ run_proper_search_and_production.py
 4. Runs head-to-head evaluation and generates master scorecard.
 """
 
+import json
 import os
+import pickle
+import shutil
+import subprocess
 import sys
 import time
-import json
-import shutil
-import pickle
-import subprocess
-from pathlib import Path
 from itertools import groupby
+from pathlib import Path
+
 import numpy as np
 
 # Unbuffered live stdout/stderr
@@ -31,6 +32,7 @@ sys.stderr.reconfigure(line_buffering=True)
 
 os.environ["BROWSER"] = "/bin/true"
 import webbrowser
+
 webbrowser.get = lambda *args, **kwargs: None
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
@@ -44,9 +46,9 @@ if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import matplotlib
+
 matplotlib.use("Agg")
 
-import jax
 import keypoint_moseq as kpms
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
@@ -58,6 +60,7 @@ sys.path.insert(0, str(KPMS_UTILS_DIR))
 
 import utils.resample_batching as rb
 from utils.batch_init import batched_init_model_by_video
+
 from syllable_generation.syllabizers.keypoint_moseq_syll.utils.patch_checkpoint import apply_kpms_checkpoint_patch
 
 PYTHON_BIN = sys.executable
@@ -101,7 +104,7 @@ def run_extended_scan_21kp_static():
     """
     arm = "21kp_static"
     arm_dir = EXP_DIR / f"pilot_comparison_{arm}"
-    
+
     with open(arm_dir / "preprocessed_data.pkl", "rb") as f:
         full_data, full_meta = pickle.load(f)
     with open(arm_dir / "pca.p", "rb") as f:
@@ -114,7 +117,7 @@ def run_extended_scan_21kp_static():
     print(f"🎯 EXTENDED TARGETED KAPPA SCAN: {arm.upper()}")
     print(f"  Target Duration: {TARGET_FRAMES} frames (400ms @ 60fps) +/- {TOL_FRAMES} frames")
     print(f"  Acceptance Range: [{TARGET_FRAMES - TOL_FRAMES:.1f}, {TARGET_FRAMES + TOL_FRAMES:.1f}] frames")
-    print(f"  Search Range:     [10^15.0, 10^26.0]")
+    print("  Search Range:     [10^15.0, 10^26.0]")
     print(f"  Step Fraction:    {STEP_FRACTION:.2f}")
     print("=" * 80, flush=True)
 

@@ -16,12 +16,12 @@ Evaluated across horizons: H in {5s, 15s, 30s, 60s, 120s}.
 """
 
 import os
+import pickle
 import sys
 import time
-import pickle
+
 import numpy as np
 import pandas as pd
-import torch
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
@@ -90,7 +90,7 @@ for sess_idx, bouts in enumerate(session_bouts):
     if len(bouts) < 100:
         continue
     inj_f = session_meta[sess_idx]["inj_frame"]
-    
+
     # Filter bouts strictly belonging to the pre-injection baseline epoch (or full session if Saline/un-injected)
     baseline_bouts = []
     for b in bouts:
@@ -105,7 +105,7 @@ for sess_idx, bouts in enumerate(session_bouts):
                     "start_frame": sf,
                     "end_frame": ef
                 })
-                
+
     if len(baseline_bouts) >= 150:
         session_stationary_bouts.append({
             "sess_idx": sess_idx,
@@ -119,21 +119,21 @@ results = []
 
 for H_sec in HORIZONS_SEC:
     H_frames = int(H_sec * FPS)
-    log(f"\n=================================================================")
+    log("\n=================================================================")
     log(f"EVALUATING HORIZON H = {H_sec:5.1f} s ({H_frames:,} frames)")
-    log(f"=================================================================")
-    
+    log("=================================================================")
+
     sess_r_empirical_pairs = []
     sess_r_bout_bootstrap = []
     sess_r_naive_multinomial = []
-    
+
     np.random.seed(42 + int(H_sec))
-    
+
     for s_info in session_stationary_bouts:
         sess_idx = s_info["sess_idx"]
         bouts = s_info["bouts"]
         n_bouts = len(bouts)
-        
+
         # -------------------------------------------------------------
         # METHOD 1: Empirical Non-Overlapping Time-Window Pairs
         # -------------------------------------------------------------
@@ -141,7 +141,7 @@ for H_sec in HORIZONS_SEC:
         max_f = bouts[-1]["end_frame"]
         min_f = bouts[0]["start_frame"]
         total_span = max_f - min_f
-        
+
         empirical_js_list = []
         if total_span >= 2 * H_frames + 200:
             # Precompute cumulative syllable onsets
@@ -150,7 +150,7 @@ for H_sec in HORIZONS_SEC:
             for b in bouts:
                 oh_bout[b["start_frame"], b["syllable"]] = 1.0
             cum_bout = np.vstack([np.zeros((1, NUM_ACTIVE_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
-            
+
             valid_starts = np.arange(min_f, max_f - H_frames, int(5.0 * FPS))
             if len(valid_starts) >= 2:
                 for _ in range(N_BOOTSTRAP_PAIRS):
@@ -161,25 +161,25 @@ for H_sec in HORIZONS_SEC:
                     if len(non_overlap) == 0:
                         continue
                     idx2 = np.random.choice(non_overlap)
-                    
+
                     cnt1 = cum_bout[idx1 + H_frames] - cum_bout[idx1]
                     cnt2 = cum_bout[idx2 + H_frames] - cum_bout[idx2]
-                    
+
                     p1 = (cnt1 + 1e-4) / (np.sum(cnt1) + 1e-4 * NUM_ACTIVE_SYLLS)
                     p2 = (cnt2 + 1e-4) / (np.sum(cnt2) + 1e-4 * NUM_ACTIVE_SYLLS)
-                    
+
                     empirical_js_list.append(js_divergence_np(p1, p2))
-                    
+
         if len(empirical_js_list) > 10:
             sess_r_empirical_pairs.append(np.mean(empirical_js_list))
-        
+
         # -------------------------------------------------------------
         # METHOD 2: Bout-Aware Block Resampling (Preserving Dwells)
         # -------------------------------------------------------------
         # Pool all empirical bouts and their dwells from this session epoch
         bout_sylls = np.array([b["syllable"] for b in bouts], dtype=np.int32)
         bout_dwells = np.array([b["dwell_frames"] for b in bouts], dtype=np.float32)
-        
+
         bout_js_list = []
         for _ in range(N_BOOTSTRAP_PAIRS):
             # Sample realization 1
@@ -189,7 +189,7 @@ for H_sec in HORIZONS_SEC:
                 rand_idx = np.random.randint(0, n_bouts)
                 cnt_1[bout_sylls[rand_idx]] += 1.0
                 cum_frames_1 += bout_dwells[rand_idx]
-                
+
             # Sample realization 2 from identical distribution
             cum_frames_2 = 0
             cnt_2 = np.zeros(NUM_ACTIVE_SYLLS, dtype=np.float32)
@@ -197,13 +197,13 @@ for H_sec in HORIZONS_SEC:
                 rand_idx = np.random.randint(0, n_bouts)
                 cnt_2[bout_sylls[rand_idx]] += 1.0
                 cum_frames_2 += bout_dwells[rand_idx]
-                
+
             p1 = (cnt_1 + 1e-4) / (np.sum(cnt_1) + 1e-4 * NUM_ACTIVE_SYLLS)
             p2 = (cnt_2 + 1e-4) / (np.sum(cnt_2) + 1e-4 * NUM_ACTIVE_SYLLS)
             bout_js_list.append(js_divergence_np(p1, p2))
-            
+
         sess_r_bout_bootstrap.append(np.mean(bout_js_list))
-        
+
         # -------------------------------------------------------------
         # METHOD 3: Naive Multinomial Frame Draw (Ablation Baseline)
         # -------------------------------------------------------------
@@ -211,7 +211,7 @@ for H_sec in HORIZONS_SEC:
         syll_counts = np.bincount(bout_sylls, minlength=NUM_ACTIVE_SYLLS).astype(np.float64)
         p_true = syll_counts / np.sum(syll_counts)
         mean_bouts_in_H = int(H_frames / np.mean(bout_dwells))
-        
+
         multi_js_list = []
         for _ in range(N_BOOTSTRAP_PAIRS):
             draw1 = np.random.multinomial(mean_bouts_in_H, p_true)
@@ -219,7 +219,7 @@ for H_sec in HORIZONS_SEC:
             p1 = (draw1 + 1e-4) / (np.sum(draw1) + 1e-4 * NUM_ACTIVE_SYLLS)
             p2 = (draw2 + 1e-4) / (np.sum(draw2) + 1e-4 * NUM_ACTIVE_SYLLS)
             multi_js_list.append(js_divergence_np(p1, p2))
-            
+
         sess_r_naive_multinomial.append(np.mean(multi_js_list))
 
     # Aggregate session-level statistics (with 95% CIs)
@@ -232,7 +232,7 @@ for H_sec in HORIZONS_SEC:
     m_emp, ci_emp = get_summary(sess_r_empirical_pairs)
     m_bout, ci_bout = get_summary(sess_r_bout_bootstrap)
     m_naive, ci_naive = get_summary(sess_r_naive_multinomial)
-    
+
     log(f"  [Horizon H={H_sec:5.1f}s] Empirical Stationary Window Pairs: R_window = {m_emp:.5f} ± {ci_emp:.5f} bits")
     log(f"  [Horizon H={H_sec:5.1f}s] Bout-Aware Resampling (Dwells):      R_window = {m_bout:.5f} ± {ci_bout:.5f} bits")
     log(f"  [Horizon H={H_sec:5.1f}s] Naive Multinomial Draw (No Dwells):     R_naive  = {m_naive:.5f} ± {ci_naive:.5f} bits")

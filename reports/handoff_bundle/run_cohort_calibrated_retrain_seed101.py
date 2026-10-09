@@ -43,31 +43,31 @@ os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
 os.environ["USE_MEMORY_PATCH"] = "1"
 
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import copy
-import time
-import signal
-import shutil
+import gc
 import pickle
-import traceback
+import shutil
+import signal
+import time
 import urllib.request
 from datetime import datetime, timedelta
-from pathlib import Path
 from itertools import groupby
-import pandas as pd
-from scipy.ndimage import median_filter
+from pathlib import Path
 
-import jax
 import h5py
-import gc
-import psutil
+import jax
 import matplotlib
+import pandas as pd
+import psutil
+
 matplotlib.use("Agg")
-from keypoint_moseq.fitting import plot_progress
 import keypoint_moseq as kpms
 from jax_moseq.utils.debugging import convert_data_precision
+from keypoint_moseq.fitting import plot_progress
 
 # Setup repository paths
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
@@ -79,13 +79,12 @@ if str(KPMS_UTILS_DIR) not in sys.path:
 
 import utils.resample_batching as rb
 from utils.batch_init import batched_init_model_by_video
-from syllable_generation.syllabizers.keypoint_moseq_syll.utils.patch_checkpoint import apply_kpms_checkpoint_patch
-from syllable_generation.syllabizers.keypoint_moseq_syll.utils.compact_checkpoint import compact_checkpoint
 
 from syllable_generation.analysis.replications.datta_utils import combined_photometry_and_syllables
-from syllable_generation.datamodel import SessionRecord
 from syllable_generation.multiview_top_bot_experiments.audit_cohort_correlations import find_matched_pairs
 from syllable_generation.multiview_top_bot_experiments.core.camera_correspondence import get_session_mapping
+from syllable_generation.syllabizers.keypoint_moseq_syll.utils.compact_checkpoint import compact_checkpoint
+from syllable_generation.syllabizers.keypoint_moseq_syll.utils.patch_checkpoint import apply_kpms_checkpoint_patch
 
 # Configuration constants
 EXPERIMENT_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
@@ -346,7 +345,7 @@ def main():
     print(f"  Process PID:         {pid}", flush=True)
     print(f"  Model Name:          {model_name}", flush=True)
     print(f"  Random Seed:         {seed}", flush=True)
-    print(f"  Hardware:            RTX 4090 (24.5 GB VRAM) with Amdahl 27x Optimizations", flush=True)
+    print("  Hardware:            RTX 4090 (24.5 GB VRAM) with Amdahl 27x Optimizations", flush=True)
     print(f"  Init Kappa:          {init_kappa:.2e} -> SLDS Kappa: {slds_kappa:.2e}", flush=True)
     print(f"  Save Checkpoints:    Every {save_every_n_iters} iterations", flush=True)
     print(f"  Gap Threshold:       {MIN_GAP_FRAMES} frames ({MIN_GAP_FRAMES/TARGET_FPS:.1f}s)", flush=True)
@@ -704,7 +703,7 @@ def main():
 
     # TRANSITION: 10x Kappa reduction for SLDS
     print("\n" + "=" * 70, flush=True)
-    print(f"  TRANSITION: Applying 10x Kappa Reduction for Phase 2 SLDS", flush=True)
+    print("  TRANSITION: Applying 10x Kappa Reduction for Phase 2 SLDS", flush=True)
     model = kpms.update_hypparams(model, kappa=float(slds_kappa))
     print(f"  New Kappa: {slds_kappa:.2e}", flush=True)
     print("=" * 70, flush=True)
@@ -822,7 +821,7 @@ def main():
     for s in selected_sessions:
         sid = s.session_id
         cfg = pair_map[sid]
-        
+
         seg_keys = sorted([k for k in results.keys() if k.startswith(sid)])
         if not seg_keys:
             print(f"  [skip] No segments for {sid} in results.", flush=True)

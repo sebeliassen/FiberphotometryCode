@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+
 import numpy as np
 
 if not hasattr(np, "bool8"):
@@ -13,14 +14,14 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-from numba import njit, prange
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-from jax_moseq.utils.autoregression import get_lags
-from jax_moseq.utils import pad_affine, psd_inv
-from dynamax.hidden_markov_model.inference import hmm_posterior_sample
 import keypoint_moseq as kpms
+from dynamax.hidden_markov_model.inference import hmm_posterior_sample
+from jax_moseq.utils import pad_affine, psd_inv
+from jax_moseq.utils.autoregression import get_lags
+from numba import njit, prange
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "karen_project_2")
 TEST_MODEL_NAME = "test_2_sessions_model"
@@ -68,7 +69,7 @@ def _numba_ffbs_single_sequence(log_likes, pi, mask, random_uniforms, z_out, P_w
     for k in range(K):
         if log_likes[0, k] > max_ll:
             max_ll = log_likes[0, k]
-    
+
     sum_p = 0.0
     for k in range(K):
         if mask[0]:
@@ -77,7 +78,7 @@ def _numba_ffbs_single_sequence(log_likes, pi, mask, random_uniforms, z_out, P_w
             val = 1.0
         P_workspace[0, k] = val
         sum_p += val
-    
+
     inv_sum = 1.0 / sum_p
     for k in range(K):
         P_workspace[0, k] *= inv_sum
@@ -98,7 +99,7 @@ def _numba_ffbs_single_sequence(log_likes, pi, mask, random_uniforms, z_out, P_w
             for k in range(K):
                 if log_likes[t, k] > max_ll:
                     max_ll = log_likes[t, k]
-            
+
             sum_p = 0.0
             for k in range(K):
                 val = pred[k] * np.exp(log_likes[t, k] - max_ll)
@@ -130,11 +131,11 @@ def _numba_ffbs_single_sequence(log_likes, pi, mask, random_uniforms, z_out, P_w
             val = P_workspace[t, j] * pi[j, next_s]
             q[j] = val
             sum_q += val
-        
+
         inv_sum_q = 1.0 / (sum_q + 1e-300)
         for j in range(K):
             q[j] *= inv_sum_q
-        
+
         z_out[t] = _numba_sample_categorical(q, random_uniforms[t])
 
 @njit(fastmath=True, parallel=True)
@@ -299,7 +300,7 @@ def main():
     if speedup_e2e > 1.0:
         log(f"\nSUCCESS: Numba CPU FFBS delivers a {speedup_e2e:.2f}x end-to-end speedup over JAX GPU!\n")
     else:
-        log(f"\nRESULT: JAX GPU remains faster than CPU + PCIe transfer.\n")
+        log("\nRESULT: JAX GPU remains faster than CPU + PCIe transfer.\n")
 
 if __name__ == "__main__":
     main()

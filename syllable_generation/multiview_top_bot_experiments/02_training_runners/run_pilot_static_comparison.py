@@ -24,6 +24,7 @@ sys.stderr.reconfigure(line_buffering=True)
 # Headless environment guards: prevent plotly/webbrowser hangs
 os.environ["BROWSER"] = "/bin/true"
 import webbrowser
+
 webbrowser.get = lambda *args, **kwargs: None
 
 # Hardware environment flags
@@ -34,27 +35,26 @@ os.environ.setdefault("XLA_PYTHON_CLIENT_MEM_FRACTION", "0.75")
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
 os.environ["USE_MEMORY_PATCH"] = "1"
 
-import time
 import argparse
-import shutil
-import pickle
 import gc
-from pathlib import Path
+import pickle
+import shutil
+import time
 from itertools import groupby
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-import h5py
-import psutil
 
 # Patch numpy 2.x bool8 if needed before importing kpms
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import matplotlib
+
 matplotlib.use("Agg")
 
 import jax
-import jax.numpy as jnp
 import keypoint_moseq as kpms
 
 # Setup repository paths
@@ -71,12 +71,10 @@ if str(KPMS_UTILS_DIR) not in sys.path:
     sys.path.insert(0, str(KPMS_UTILS_DIR))
 
 import utils.resample_batching as rb
-from utils.batch_init import batched_init_model_by_video
-from syllable_generation.syllabizers.keypoint_moseq_syll.utils.patch_checkpoint import apply_kpms_checkpoint_patch
-from syllable_generation.syllabizers.keypoint_moseq_syll.utils.compact_checkpoint import compact_checkpoint
-
-from core.camera_correspondence import get_session_mapping
 from jax_moseq.models.keypoint_slds.alignment import center_embedding
+from utils.batch_init import batched_init_model_by_video
+
+from syllable_generation.syllabizers.keypoint_moseq_syll.utils.patch_checkpoint import apply_kpms_checkpoint_patch
 
 # Constants
 TARGET_FPS = 60

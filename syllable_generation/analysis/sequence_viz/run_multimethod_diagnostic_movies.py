@@ -31,6 +31,7 @@ import sys
 import time
 import urllib.request
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
@@ -42,10 +43,10 @@ REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
-    load_chain_movie_resources,
-    generate_chain_grid_movie,
+    filter_chain_outliers,
     generate_branch_grid_movie,
-    filter_chain_outliers
+    generate_chain_grid_movie,
+    load_chain_movie_resources,
 )
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/output_pilot_movies"
@@ -60,7 +61,7 @@ def log(msg, notify=False, ntfy_title=None):
     print(line, flush=True)
     with open(LOG_FILE, "a") as f:
         f.write(line + "\n")
-        
+
     if notify:
         try:
             req = urllib.request.Request(
@@ -96,7 +97,7 @@ def main():
         b_sylls = [sylls[0]] + sylls[c_idx].tolist()
         b_starts = [0] + c_idx.tolist()
         b_ends = c_idx.tolist() + [len(sylls)]
-        
+
         for i in range(len(b_sylls) - 3):
             if b_sylls[i] == 1 and b_sylls[i+1] == 11 and b_sylls[i+2] == 1:
                 a1_raw.append({
@@ -152,7 +153,7 @@ def main():
         b_sylls = [sylls[0]] + sylls[c_idx].tolist()
         b_starts = [0] + c_idx.tolist()
         b_ends = c_idx.tolist() + [len(sylls)]
-        
+
         for i in range(len(b_sylls) - 3):
             s0, s1, s2 = b_sylls[i], b_sylls[i+1], b_sylls[i+2]
             if s0 in c01_sylls and s1 in c04_sylls and s2 in c01_sylls:
@@ -299,7 +300,7 @@ def main():
         b_sylls = [sylls[0]] + sylls[c_idx].tolist()
         b_starts = [0] + c_idx.tolist()
         b_ends = c_idx.tolist() + [len(sylls)]
-        
+
         for i in range(len(b_sylls) - 4):
             if b_sylls[i] == 1 and b_sylls[i+1] == 11 and b_sylls[i+2] == 1 and b_sylls[i+3] == 30:
                 d_raw.append({
@@ -348,14 +349,14 @@ def main():
     log("Step 6/6: Gathering Method E (PST Branch-Centred Grid) candidates...")
     prefix = ["syll_014", "syll_007"]
     branch_candidates = {"syll_000": [], "syll_001": [], "syll_038": []}
-    
+
     for rk, data in results.items():
         sylls = data["syllable"]
         c_idx = np.where(sylls[1:] != sylls[:-1])[0] + 1
         b_sylls = [sylls[0]] + sylls[c_idx].tolist()
         b_starts = [0] + c_idx.tolist()
         b_ends = c_idx.tolist() + [len(sylls)]
-        
+
         for i in range(len(b_sylls) - 3):
             if b_sylls[i] == 14 and b_sylls[i+1] == 7:
                 # Check bout lengths (reject micro-flickers <5 and stuck bouts >65)
@@ -364,7 +365,7 @@ def main():
                 dur_b = b_ends[i+2] - b_starts[i+2]
                 if not (5 <= dur_14 <= 65 and 5 <= dur_7 <= 65 and 5 <= dur_b <= 65):
                     continue
-                    
+
                 b_next = f"syll_{b_sylls[i+2]:03d}"
                 if b_next in branch_candidates:
                     branch_candidates[b_next].append({

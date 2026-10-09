@@ -1,7 +1,8 @@
+import inspect
 import os
 import sys
-import inspect
 import time
+
 import h5py
 import numpy as np
 
@@ -20,11 +21,11 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import jax
 import jax.numpy as jnp
 import jax.random as jr
 import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 from utils.resample_batching import pure_numba_resample_continuous_stateseqs
+
 
 def run_bounded_experiment():
     print("=" * 80)
@@ -98,7 +99,7 @@ def run_bounded_experiment():
     total_count = N * T
     print(f"  * Frozen Slice: N={N}, T={T}, Keypoints={k}, Latent Dim D={D}, AR lags={nlags}")
     print(f"  * Production-valid frames: {valid_count} / {total_count} ({100.0 * valid_count / total_count:.2f}%)")
-    print(f"  * Artificial gaps injected: NONE (evaluating production-valid frames only)")
+    print("  * Artificial gaps injected: NONE (evaluating production-valid frames only)")
 
     # 3. Generate 3 Independent Pools of 100 Draws (Total budget: 300 draws)
     N_DRAWS = 100
@@ -237,7 +238,7 @@ def run_bounded_experiment():
     print(f"  * Control CI includes 1.0: {includes_1_ctrl}")
     print(f"  * Numba CI includes 1.0:   {includes_1_numba}")
 
-    print(f"\n[B] Per-Dimension Variance Ratios (Numba / Kalman A):")
+    print("\n[B] Per-Dimension Variance Ratios (Numba / Kalman A):")
     print(f"{'Dim':<5} | {'Var Kalman A':<14} | {'Var Numba':<14} | {'Ratio (N/A)':<12} | {'95% Bootstrap CI':<24}")
     print("-" * 75)
     for d_idx in range(D):

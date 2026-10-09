@@ -9,11 +9,9 @@ Target Folders:
   - L-dopa+Benserazide -fiber photometry -> /mnt/hdd/karen_project/L_dopa/
 """
 
-import sys
+import argparse
 import os
 import subprocess
-import argparse
-from pathlib import Path
 
 SRC_BASE = "/mnt/neuropharm/Common/Lab member folder/Jamila Lilja/Alpha-synuclein PFF mice/Behavior cohort 1/a-syn_Fiber photo"
 DST_BASE = "/mnt/hdd/karen_project"
@@ -27,13 +25,13 @@ TIMEPOINTS = [
 
 def run_rsync(dry_run=True, log_file=None):
     mode_str = "DRY RUN (no files will be transferred)" if dry_run else "REAL RUN (transferring files)"
-    print(f"==================================================")
+    print("==================================================")
     print(f" Starting BotCam Rsync: {mode_str}")
     print(f" Source: {SRC_BASE}")
     print(f" Destination: {DST_BASE}")
     if log_file:
         print(f" Logging to: {log_file}")
-    print(f"==================================================\n")
+    print("==================================================\n")
 
     total_files = 0
     total_bytes = 0
@@ -49,7 +47,7 @@ def run_rsync(dry_run=True, log_file=None):
         if not os.path.exists(src_path):
             print(f"    [ERROR] Source folder missing: {src_path}")
             continue
-        
+
         os.makedirs(dst_path, exist_ok=True)
 
         cmd = [
@@ -100,10 +98,10 @@ def run_rsync(dry_run=True, log_file=None):
     if log_handle:
         log_handle.close()
 
-    print(f"==================================================")
+    print("==================================================")
     print(f" Rsync {mode_str} Finished!")
     print(f" Total BotCam Videos Processed across 4 Timepoints: {total_files}")
-    print(f"==================================================")
+    print("==================================================")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Rsync Karen Project BotCam Videos")

@@ -9,19 +9,24 @@ Controlled comparison of Numba Banded Cholesky vs SciPy LAPACK dpbtrf/dtbsv:
 4. Numerical parity verification (max absolute difference < 1e-12, info == 0).
 """
 
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
-import scipy.linalg.lapack as lapack
-import scipy.linalg.blas as blas
-from threadpoolctl import threadpool_limits, threadpool_info
 import time
-from numba import njit, prange
+
+import scipy.linalg.blas as blas
+import scipy.linalg.lapack as lapack
 import utils.resample_batching as rb
+from numba import njit, prange
+from threadpoolctl import threadpool_info, threadpool_limits
+
 
 @njit(parallel=True, fastmath=True)
 def run_numba_parallel(abs_all, gs, etas, xs, bw, n):

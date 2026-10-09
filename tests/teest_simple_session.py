@@ -1,7 +1,6 @@
-import warnings
-import pytest
 from pathlib import Path
-from collections import defaultdict
+
+import pytest
 
 from fiberphotometry.config import PLOTTING_CONFIG
 from fiberphotometry.data.data_loading import DataContainer, load_all_sessions
@@ -19,7 +18,7 @@ def raw_sessions():
     """Discover & load up to 30 'cpt' sessions (but do NOT populate .dfs yet)."""
     all_dirs = [
         d for d in SRC.iterdir()
-        if d.is_dir() and any(c.is_dir() and c.name.startswith("T1_") 
+        if d.is_dir() and any(c.is_dir() and c.name.startswith("T1_")
                               for c in d.iterdir())
     ][:30]
 

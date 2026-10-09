@@ -26,20 +26,19 @@ Metrics Evaluated:
 =============================================================================
 """
 
-import os
-import sys
-import re
+import argparse
 import json
 import pickle
-import argparse
-from pathlib import Path
+import re
+import sys
 from itertools import groupby
+from pathlib import Path
 
 import h5py
 import numpy as np
 import pandas as pd
-from sklearn.metrics import adjusted_rand_score, adjusted_mutual_info_score
 from sklearn.cluster import MiniBatchKMeans
+from sklearn.metrics import adjusted_mutual_info_score, adjusted_rand_score
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
@@ -194,7 +193,7 @@ def load_raw_dorsal_trajectories():
             continue
         df = pd.read_hdf(fpath)
         sc = df.columns.levels[0][0]
-        
+
         P = (
             np.stack([df[(sc, b, "x")].to_numpy() for b in DORSAL_BPS], 1),
             np.stack([df[(sc, b, "y")].to_numpy() for b in DORSAL_BPS], 1)
@@ -202,7 +201,7 @@ def load_raw_dorsal_trajectories():
         L = np.stack([df[(sc, b, "likelihood")].to_numpy() for b in DORSAL_BPS], 1)
         XY = np.stack(P, -1).astype(np.float32)  # (N, 17, 2)
         ok = np.isfinite(XY).all((1, 2)) & (L >= CONF_THRESH).all(1)
-        
+
         c = XY.mean(1)
         v = XY[:, DORSAL_BPS.index("nose")] - XY[:, DORSAL_BPS.index("tail_base")]
         th = np.arctan2(v[:, 1], v[:, 0])
@@ -250,7 +249,7 @@ def compute_dorsal_snippet_r2(session_labels_dict, ego_dorsal_dict, rng_seed=404
             continue
         lab = session_labels_dict[sid]
         E = ego_dorsal_dict[sid]
-        
+
         # Segment contiguous runs of identical syllables
         ch = np.flatnonzero(np.diff(lab) != 0) + 1
         st = np.r_[0, ch]
@@ -357,10 +356,10 @@ def compute_pca_variance_metrics(arm_dir):
 def evaluate_arm(arm_name, model_dir, ego_dorsal_dict):
     """Evaluates a single model arm comprehensively."""
     m_path = Path(model_dir)
-    print(f"\n================================================================================")
+    print("\n================================================================================")
     print(f"📊 EVALUATING ARM: {arm_name.upper()} ({m_path.name})")
-    print(f"================================================================================")
-    
+    print("================================================================================")
+
     res_file = m_path / "results.h5"
     chk_file = m_path / "checkpoint.h5"
     arm_parent = m_path.parent
@@ -477,7 +476,7 @@ def main():
     out_json = Path(args.output_json)
     out_json.parent.mkdir(parents=True, exist_ok=True)
     out_json.write_text(json.dumps(evaluated_arms, indent=2))
-    
+
     out_csv = Path(args.output_csv)
     df_scorecard.to_csv(out_csv, index=False)
     print(f"\nSaved evaluation metrics to: {out_json}")

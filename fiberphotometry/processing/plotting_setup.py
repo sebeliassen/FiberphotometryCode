@@ -1,13 +1,14 @@
-import warnings
-import numpy as np
 import re
+
+import numpy as np
+import statsmodels.api as sm
 from scipy.optimize import curve_fit
 from scipy.special import logsumexp
-
-import statsmodels.api as sm
 from statsmodels.robust.norms import TukeyBiweight
-from fiberphotometry.config import LETTER_TO_FREQS
+
 import fiberphotometry.config as config
+from fiberphotometry.config import LETTER_TO_FREQS
+
 
 class PlottingSetup:
     def __init__(self, baseline_duration, trial_length, fps, fit_window_start, fit_window_end):
@@ -110,7 +111,6 @@ class PlottingSetup:
                                 iso_df,
                                 fit_range=None,
                                 plot_range=None):
-        import re
         pat = re.compile(r"^signal_\d+$")
 
         # Non‑CPT → whole‑trace fallback

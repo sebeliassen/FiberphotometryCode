@@ -12,10 +12,11 @@ existing production checkpoints or pickles.
 """
 
 import os
+import shutil
 import sys
 import time
-import shutil
 from pathlib import Path
+
 import numpy as np
 
 if not hasattr(np, "bool8"):
@@ -81,7 +82,7 @@ def main():
     data, metadata = kpms.format_data(coordinates, confidences, **config)
     data = convert_data_precision(data, np.float64)
     data["Y"] = np.asarray(data["Y"])
-    
+
     total_frames = sum(len(c) for c in coordinates.values())
     n_segs, seg_len, n_kps, d = data["Y"].shape
     print(f"  Total raw frames loaded: {total_frames:,}")
@@ -137,7 +138,7 @@ def main():
     print("=" * 80)
     # Transition kappa to SLDS kappa
     model = kpms.update_hypparams(model, kappa=float(slds_kappa))
-    
+
     t0_slds = time.time()
     model, _ = kpms.fit_model(
         model, data, metadata,

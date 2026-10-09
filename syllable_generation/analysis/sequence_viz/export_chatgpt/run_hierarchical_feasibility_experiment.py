@@ -22,20 +22,21 @@ Repairs & Enhancements:
 =============================================================================
 """
 
-import os
+import pickle
 import sys
 import time
-import json
-import pickle
 import urllib.request
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.hierarchical_pilot.hierarchical_subroutine_model import HierarchicalSubroutineModel
+from syllable_generation.analysis.sequence_viz.hierarchical_pilot.hierarchical_subroutine_model import (
+    HierarchicalSubroutineModel,
+)
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/hierarchical_pilot"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -577,7 +578,7 @@ def main():
     real_mean_macro_routs = float(real_clean_macros["routine_occurrences"].mean())
 
     log("\n=== CONTROL A (REPAIRED): REAL DATA vs. UNBIASED 1ST-ORDER NULL ===")
-    log(f"Metric                      | Real Data | Surrogates (Mean ± Std) | Direction / Effect")
+    log("Metric                      | Real Data | Surrogates (Mean ± Std) | Direction / Effect")
     log("-" * 80)
     surr_b_mean = df_surr_summary["mean_routine_bouts"].mean()
     surr_b_std = df_surr_summary["mean_routine_bouts"].std()

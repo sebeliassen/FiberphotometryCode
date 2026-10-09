@@ -8,8 +8,9 @@ plus the significant regulated syllables (6 and 72), yielding exactly 31 syllabl
 
 import os
 import sys
-from pathlib import Path
 import warnings
+from pathlib import Path
+
 warnings.simplefilter("ignore")
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -20,18 +21,20 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import matplotlib
+
 matplotlib.use("Agg", force=True)
 import matplotlib.pyplot as plt
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import jax.numpy as jnp
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
 import keypoint_moseq as kpms
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
+from scipy.cluster.hierarchy import dendrogram, linkage
 from scipy.spatial.distance import pdist, squareform
-from scipy.cluster.hierarchy import linkage, dendrogram
 
 PROJECT_DIR = REPO_ROOT / "syllable_generation" / "syllabizers" / "keypoint_moseq_syll" / "karen_project_2"
 MODEL_NAME = "final_karen_model_k240k"
@@ -48,7 +51,7 @@ assert len(TARGET_SYLLS) == 31, f"Expected 31 syllables, got {len(TARGET_SYLLS)}
 print("=" * 80)
 print("🌳 GENERATING 31-SYLLABLE SIMILARITY DENDROGRAM (Top-30 + Syllables 6 & 72)")
 print(f"   Target Syllables ({len(TARGET_SYLLS)}): {TARGET_SYLLS}")
-print(f"   Significant Phenotype Syllables: 6, 72")
+print("   Significant Phenotype Syllables: 6, 72")
 print("=" * 80)
 
 # Load checkpoint & config
@@ -96,7 +99,7 @@ for s in TARGET_SYLLS:
         selected_inst = [insts[i] for i in idx]
     else:
         selected_inst = insts
-    
+
     trajs = []
     for key, start, end in selected_inst:
         chunk = coordinates[key][start - pre_frames : start + post_frames]
@@ -115,7 +118,7 @@ Z = linkage(squareform(distances), method="complete")
 # 1. Generate Standard and Highlighted Dendrograms
 def render_dendrogram(highlight=False, filename_suffix=""):
     fig, ax = plt.subplots(figsize=(14, 5.5))
-    
+
     labels = []
     for s in syllable_ixs:
         if highlight and s in {6, 72}:
@@ -131,16 +134,16 @@ def render_dendrogram(highlight=False, filename_suffix=""):
         leaf_rotation=90,
         color_threshold=0.7 * max(Z[:, 2]),
     )
-    
+
     ax.set_yticks([])
     for spine in ax.spines.values():
         spine.set_color("lightgray")
-    
+
     title = "Syllable Similarity Dendrogram (Top 30 + Sig Syllables 6, 72 [N=31])"
     if highlight:
         title += " [★ Highlighted]"
     ax.set_title(title, fontsize=13, pad=12, fontweight="bold")
-    
+
     if highlight:
         for tick in ax.get_xticklabels():
             text = tick.get_text()
@@ -152,12 +155,12 @@ def render_dendrogram(highlight=False, filename_suffix=""):
                 tick.set_color("#2b2d42")
 
     plt.tight_layout()
-    
+
     pdf_path_1 = OUT_DIR / f"similarity_dendrogram_top30_and_sig{filename_suffix}.pdf"
     png_path_1 = OUT_DIR / f"similarity_dendrogram_top30_and_sig{filename_suffix}.png"
     pdf_path_2 = PLOTS_DIR / f"similarity_dendrogram_top30_and_sig{filename_suffix}.pdf"
     png_path_2 = PLOTS_DIR / f"similarity_dendrogram_top30_and_sig{filename_suffix}.png"
-    
+
     plt.savefig(pdf_path_1, dpi=300)
     plt.savefig(png_path_1, dpi=300)
     plt.savefig(pdf_path_2, dpi=300)
@@ -171,7 +174,7 @@ render_dendrogram(highlight=False, filename_suffix="_clean")
 
 print("\n" + "=" * 80)
 print("✅ 31-SYLLABLE DENDROGRAM GENERATION COMPLETE!")
-print(f"   Outputs located in:")
+print("   Outputs located in:")
 print(f"   - {OUT_DIR / 'similarity_dendrogram_top30_and_sig.pdf'}")
 print(f"   - {OUT_DIR / 'similarity_dendrogram_top30_and_sig.png'}")
 print("=" * 80)

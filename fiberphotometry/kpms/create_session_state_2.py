@@ -1,27 +1,23 @@
-import sys
-import os
-import re
 import pickle
+import re
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+
+from ..config import PLOTTING_CONFIG
 
 # fiberphotometry package
 # inside fiberphotometry/kpms/create_session_state_2.py
 from ..data.data_loading import load_all_sessions
-from ..data.session_loading import populate_containers
 from ..data.oft_session_loading import populate_oft_containers
+from ..data.session_loading import populate_containers
 from ..data.session_synchronization import synchronize_session_data
-from ..config import PLOTTING_CONFIG
 from ..processing.plotting_setup import PlottingSetup
-
-from .syllable_generator import generate_syllable_models
 from .syllable_appender import extract_and_append_results
-from .trimming import create_trimmed_coords_and_confs
+from .syllable_generator import generate_syllable_models
 
-import keypoint_moseq as kpms
 
 # ----------------------------
 # Filename details simplifier

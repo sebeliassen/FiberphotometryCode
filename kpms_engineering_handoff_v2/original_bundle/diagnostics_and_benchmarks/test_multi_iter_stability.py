@@ -1,10 +1,11 @@
 import os
 import sys
-import time
+
 import jax
 import jax.numpy as jnp
 import jax.random as jr
 import numpy as np
+
 np.bool8 = np.bool_
 import pandas as pd
 
@@ -19,14 +20,14 @@ KPMS_DIR = os.path.join(REPO_ROOT, "syllable_generation", "syllabizers", "keypoi
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import keypoint_moseq as kpms
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from jax_moseq.utils.autoregression import get_lags, get_nlags
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+import keypoint_moseq as kpms
 from jax_moseq.utils import pad_affine, psd_inv, psd_solve
-from utils.paths import ref_pairs_from_sessions
-from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg
+from jax_moseq.utils.autoregression import get_lags
 from utils.batch_init import batched_init_model_by_video
+from utils.paths import ref_pairs_from_sessions
+from utils.trimming import clamp_conf_nonneg, filter_with_masks, presence_mask_from_conf
 
 SCRATCH_DIR = os.path.join(KPMS_DIR, "scratch_profiling_project")
 DIRTY_PKL = os.path.join(REPO_ROOT, "syllable_generation/data/sessions_karen_project_dirty.pkl")
@@ -41,7 +42,7 @@ def custom_ar_sample(seed, mask, x, z, **ar_hypparams):
     z_flat = z.reshape(-1)
     x_in = pad_affine(get_lags(x, nlags)).reshape(-1, nlags * x.shape[-1] + 1)
     x_out = x[..., nlags:, :].reshape(-1, x.shape[-1])
-    
+
     K_0_inv = psd_inv(ar_hypparams["K_0"].astype(dtype))
     nu_0 = ar_hypparams["nu_0"]
     S_0 = ar_hypparams["S_0"].astype(dtype)
@@ -145,7 +146,7 @@ def test_multi_iter_drift(n_iters: int = 25):
     def run_chain(precision_mode: str):
         print(f"\n--- Running Chain [{precision_mode}] for {n_iters} Gibbs iterations ---")
         dtype = jnp.float32 if precision_mode == "FP32" else jnp.float64
-        
+
         def cast(tree):
             return jax.tree_util.tree_map(lambda x: x.astype(dtype) if hasattr(x, "dtype") and jnp.issubdtype(x.dtype, jnp.floating) else x, tree)
 

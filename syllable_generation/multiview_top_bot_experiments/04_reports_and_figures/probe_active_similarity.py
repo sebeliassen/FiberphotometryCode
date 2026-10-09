@@ -6,13 +6,15 @@ Pairwise comparisons use the same filtered ONSET pose and native onset time.
 Raw observations are masked by their original likelihood, never zero-filled.
 """
 from __future__ import annotations
+
 import argparse
-from functools import lru_cache
 import hashlib
 import json
 import os
-from pathlib import Path
 import sys
+from functools import lru_cache
+from pathlib import Path
+
 import numpy as np
 
 
@@ -67,12 +69,14 @@ def main():
     os.environ.setdefault("CUDA_VISIBLE_DEVICES","")
     source=Path(args.source_dir).resolve()
     sys.path.insert(0,str(source));sys.path.insert(0,str(source.parent))
-    import viz_v2_common as vc
+    import pickle
+
     import h5py
     import pandas as pd
-    import pickle
+    import viz_v2_common as vc
     import yaml
     from jax_moseq.utils import unbatch
+
     from core.camera_correspondence import get_session_mapping
     from core.pair_matching import find_matched_pairs
 

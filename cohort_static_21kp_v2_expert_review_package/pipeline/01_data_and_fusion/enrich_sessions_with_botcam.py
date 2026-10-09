@@ -11,12 +11,11 @@ Enriches SessionRecord objects with multi-camera metadata and video references:
 5. Verifies 100% backwards compatibility via assertion suite.
 """
 
-import os
-import sys
 import json
 import pickle
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 SESSIONS_IN = REPO_ROOT / "syllable_generation" / "data" / "sessions_karen_project_w_sylls.pkl"
@@ -74,7 +73,7 @@ def enrich_sessions():
     for s in sessions:
         sid = getattr(s, "session_id", "")
         rk = getattr(s, "results_dict_key", "")
-        
+
         # Match (timestamp, chamber)
         matched_bot = None
         for (ts, chamber), (vid_id, binfo) in botcam_index.items():
@@ -88,7 +87,7 @@ def enrich_sessions():
         if matched_bot:
             vid_id, binfo, arena, chamber = matched_bot
             enriched_count += 1
-            
+
             # --- 1. ENRICH s.video_refs_df ---
             bot_vid_row = {
                 "path": binfo.get("source_path") or binfo.get("resolved_path"),
@@ -164,7 +163,7 @@ def enrich_sessions():
             # Assertion 1: iloc[0] must ALWAYS be the primary video
             first_role = s.video_refs_df.iloc[0]["role"]
             assert first_role == "primary" or len(s.video_refs_df) == 1, f"Row 0 role was {first_role}, expected 'primary'!"
-            
+
             # Assertion 2: Filtering by role == 'primary' always returns exactly 1 row
             primary_rows = s.video_refs_df[s.video_refs_df["role"] == "primary"]
             if not primary_rows.empty:

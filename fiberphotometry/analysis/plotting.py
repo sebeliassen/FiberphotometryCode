@@ -1,7 +1,7 @@
+import config
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy import stats
-import config
+
 from .signal_processing import compute_mean_ci
 
 

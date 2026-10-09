@@ -1,17 +1,18 @@
 # fiberphotometry/kpms/syllable_generator.py
 
-import os
 import logging
-from pathlib import Path
-from typing import List, Any, Dict, Tuple
-import pandas as pd
-import numpy as np
-import keypoint_moseq as kpms
-import jax
-from jax_moseq.utils import set_mixed_map_iters
-from .trimming import create_trimmed_coords_and_confs
-from .batching import create_batches
+import os
 import random
+from pathlib import Path
+from typing import Dict, Tuple
+
+import jax
+import keypoint_moseq as kpms
+import numpy as np
+import pandas as pd
+from jax_moseq.utils import set_mixed_map_iters
+
+from .trimming import create_trimmed_coords_and_confs
 
 # --- SETUP LOGGING TO A FILE ---
 log_file_path = Path(os.getcwd()) / 'model_fitting.log'
@@ -275,6 +276,7 @@ def intersect_trimmed_with_windows(
 
 import re
 
+
 def _canon_crop_suffix(s: str) -> str:
     """
     Canonicalize '..._Crop' vs '..._Crop_' to exactly '..._Crop'.
@@ -377,7 +379,7 @@ def generate_syllable_models(
     # --- Step 4 & 5: PCA Fitting and Model Fitting Loop (no changes needed) ---
     # ... (This entire section of code remains exactly the same as yours) ...
     # It will correctly use the `data` and `metadata` from the subset.
-    
+
     # --- 4. PCA Fitting ---
     pca_path = project_path / 'pca.p'
     if pca_path.exists() and test_mode: # Only use existing in test mode

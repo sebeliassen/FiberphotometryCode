@@ -25,11 +25,11 @@ import os
 import sys
 import time
 from pathlib import Path
+
 import numpy as np
-import h5py
 import pandas as pd
-from sklearn.decomposition import PCA
 from scipy.interpolate import interp1d
+from sklearn.decomposition import PCA
 
 # Headless & platform safety
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -40,9 +40,9 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
-    load_chain_movie_resources,
     generate_chain_grid_movie,
-    standardize_chain_instances
+    load_chain_movie_resources,
+    standardize_chain_instances,
 )
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/screening_24_transition_exemplars"
@@ -216,7 +216,7 @@ def score_and_select_constituent_exemplars(raw_candidates, results, evaluator, t
         bounds = cand["stage_boundaries"]
         n_stages = len(bounds) - 1
         sylls = results[rk]["syllable"]
-        
+
         stage_ps = []
         for k in range(n_stages):
             sf = bounds[k]

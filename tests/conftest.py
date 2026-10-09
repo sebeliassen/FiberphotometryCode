@@ -4,9 +4,9 @@ Provides `require_artifact` fixture to gracefully skip tests when running on
 trimmed mirrors or placeholder-only environments.
 """
 
-import os
 import sys
 from pathlib import Path
+
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent

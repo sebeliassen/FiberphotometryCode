@@ -1,14 +1,14 @@
 import os
 import sys
-import time
+
 import jax
 import jax.numpy as jnp
 import jax.random as jr
 import numpy as np
+
 np.bool8 = np.bool_
+
 import pandas as pd
-from pathlib import Path
-import shutil
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
@@ -21,14 +21,13 @@ KPMS_DIR = os.path.join(REPO_ROOT, "syllable_generation", "syllabizers", "keypoi
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import keypoint_moseq as kpms
 import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
-import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from jax_moseq.utils.autoregression import get_lags, get_nlags
+import keypoint_moseq as kpms
 from jax_moseq.utils import pad_affine, psd_inv
-from utils.paths import ref_pairs_from_sessions
-from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg
+from jax_moseq.utils.autoregression import get_lags
 from utils.batch_init import batched_init_model_by_video
+from utils.paths import ref_pairs_from_sessions
+from utils.trimming import clamp_conf_nonneg, filter_with_masks, presence_mask_from_conf
 
 SCRATCH_DIR = os.path.join(KPMS_DIR, "scratch_profiling_project")
 DIRTY_PKL = os.path.join(REPO_ROOT, "syllable_generation/data/sessions_karen_project_dirty.pkl")
@@ -134,10 +133,10 @@ def evaluate_mixed_precision_drift():
 
     z64_arr, z32_arr = np.array(z_fp64), np.array(z_fp32)
     match_pct = (z64_arr == z32_arr).mean() * 100.0
-    print(f"  1. HMM Discrete Stateseqs (z):")
+    print("  1. HMM Discrete Stateseqs (z):")
     print(f"     * Frame-by-frame exact state match : {match_pct:5.2f}%")
     print(f"     * Active state count: FP64 = {len(np.unique(z64_arr))} | FP32 = {len(np.unique(z32_arr))}")
-    print(f"     * Verdict: FP32 HMM is 100% stable with zero semantic distortion.")
+    print("     * Verdict: FP32 HMM is 100% stable with zero semantic distortion.")
 
     # B. Test AR dynamics parameter resampling (Ab, Q)
     print("\n  2. AR Dynamics (Ab, Q):")
@@ -155,7 +154,7 @@ def evaluate_mixed_precision_drift():
 
     rel_diff_S = np.linalg.norm(np.array(S_in_in_f32, dtype=np.float64) - np.array(S_in_in_f64)) / np.linalg.norm(np.array(S_in_in_f64))
     print(f"     * Relative Sufficient Statistic Error (FP32 Tensor Reduction): {rel_diff_S:.2e}")
-    print(f"     * Verdict: FP32 Tensor contraction + FP64 matrix solve is 100% numerically exact.")
+    print("     * Verdict: FP32 Tensor contraction + FP64 matrix solve is 100% numerically exact.")
 
     # C. Test Kalman Latents (x) in FP32 vs FP64 across increasing sequence lengths
     print("\n[Phase 2] Tracking Kalman Latents (x) Stability & Runoff across Sequence Length T:")

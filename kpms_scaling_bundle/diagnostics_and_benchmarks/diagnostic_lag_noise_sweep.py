@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+
 import h5py
 import numpy as np
 
@@ -19,14 +20,15 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
+from functools import partial
+
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-from functools import partial
-from jax_moseq.utils.autoregression import get_nlags
-from jax_moseq.utils.utils import mixed_map
-from jax_moseq.utils.kalman import ar_to_lds_emissions, kalman_sample
 from jax_moseq.models.keypoint_slds.alignment import to_vanilla_slds
+from jax_moseq.utils.autoregression import get_nlags
+from jax_moseq.utils.kalman import ar_to_lds_emissions, kalman_sample
+from jax_moseq.utils.utils import mixed_map
 from utils.resample_batching import pure_numba_resample_continuous_stateseqs
 
 na = None
@@ -169,8 +171,8 @@ def run_diagnostic():
 
     print(f"Slice summary: N={N}, T={T}, Keypoints={k}, Latent D={D}")
     print(f"Valid frame count: {n_valid} / {N * T} (100% all-valid slice)")
-    print(f"Sampling budget: 50 draws x 4 conditions = 200 draws total.")
-    print(f"Sampling jitter: set to 0.0 strictly across all conditions.")
+    print("Sampling budget: 50 draws x 4 conditions = 200 draws total.")
+    print("Sampling jitter: set to 0.0 strictly across all conditions.")
 
     N_DRAWS = 50
 
@@ -192,7 +194,7 @@ def run_diagnostic():
     # =========================================================================
     # Condition 1: Unchanged Current Numba Sampler (jitter = 0.0)
     # =========================================================================
-    print(f"\n[Condition 1/4] Current Numba Sampler (jitter = 0.0, 50 draws)...", flush=True)
+    print("\n[Condition 1/4] Current Numba Sampler (jitter = 0.0, 50 draws)...", flush=True)
     numba_draws = np.zeros((N_DRAWS, N, T, D), dtype=np.float64)
     t0 = time.time()
     repairs_total = 0
@@ -209,7 +211,7 @@ def run_diagnostic():
     # =========================================================================
     # Condition 2: Upstream Kalman (lag_noise = 0.01, jitter = 0.0)
     # =========================================================================
-    print(f"\n[Condition 2/4] Upstream Kalman (lag_noise = 0.01 [default], jitter = 0.0, 50 draws)...", flush=True)
+    print("\n[Condition 2/4] Upstream Kalman (lag_noise = 0.01 [default], jitter = 0.0, 50 draws)...", flush=True)
     kalman_01_draws = np.zeros((N_DRAWS, N, T, D), dtype=np.float64)
     t0 = time.time()
     for i in range(N_DRAWS):
@@ -223,7 +225,7 @@ def run_diagnostic():
     # =========================================================================
     # Condition 3: Upstream Kalman (lag_noise = 0.001, jitter = 0.0)
     # =========================================================================
-    print(f"\n[Condition 3/4] Upstream Kalman (lag_noise = 0.001 [10x reduced], jitter = 0.0, 50 draws)...", flush=True)
+    print("\n[Condition 3/4] Upstream Kalman (lag_noise = 0.001 [10x reduced], jitter = 0.0, 50 draws)...", flush=True)
     kalman_001_draws = np.zeros((N_DRAWS, N, T, D), dtype=np.float64)
     t0 = time.time()
     for i in range(N_DRAWS):
@@ -237,7 +239,7 @@ def run_diagnostic():
     # =========================================================================
     # Condition 4: Upstream Kalman (lag_noise = 0.0, jitter = 0.0)
     # =========================================================================
-    print(f"\n[Condition 4/4] Upstream Kalman (lag_noise = 0.0 [exact noiseless lag copy], jitter = 0.0, 50 draws)...", flush=True)
+    print("\n[Condition 4/4] Upstream Kalman (lag_noise = 0.0 [exact noiseless lag copy], jitter = 0.0, 50 draws)...", flush=True)
     kalman_0_draws = np.zeros((N_DRAWS, N, T, D), dtype=np.float64)
     k0_failed = False
     k0_err = None
@@ -310,13 +312,13 @@ def run_diagnostic():
     print(f"  4. Upstream Kalman (lag_noise = 0.000 [exact]):           NUMERICAL FAILURE ({k0_err})")
 
     shift = ratio_001 - ratio_01
-    print(f"\n[B] SENSITIVITY SUMMARY:")
+    print("\n[B] SENSITIVITY SUMMARY:")
     print(f"  * Variance ratio shift when reducing lag noise (0.01 -> 0.001): {shift:+.4f}")
     print(f"  * Upstream variance change (0.01 -> 0.001): {pvar_k001 - pvar_k01:+.6f} ({((pvar_k001/pvar_k01)-1.0)*100:+.2f}%)")
     print(f"  * Posterior Mean MAE vs Numba (lag_noise=0.01):  {mae_mean_k01:.6f}")
     print(f"  * Posterior Mean MAE vs Numba (lag_noise=0.001): {mae_mean_k001:.6f}")
 
-    print(f"\n[C] PER-DIMENSION POSTERIOR VARIANCE COMPARISON:")
+    print("\n[C] PER-DIMENSION POSTERIOR VARIANCE COMPARISON:")
     header = f"{'Dim':<5} | {'Numba (0.0)':<13} | {'Kalman (0.01)':<14} | {'Ratio (0.01)':<12} | {'Kalman (0.001)':<14} | {'Ratio (0.001)':<12} | {'Shift':<8}"
     print(header)
     print("-" * 90)

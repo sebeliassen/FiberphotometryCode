@@ -22,17 +22,16 @@ Environment: kpms_gpu_cuml
 =============================================================================
 """
 
-import os
-import sys
 import argparse
-import time
 import re
+import sys
 from pathlib import Path
-import numpy as np
-import h5py
-import pandas as pd
+
 import cv2
+import h5py
 import imageio
+import numpy as np
+import pandas as pd
 from vidio.read import OpenCVReader
 
 # 2. Fast-seek monkeypatch to OpenCVReader supporting scalar ints, slices, and array-likes

@@ -12,7 +12,10 @@ Case E: fit_model() with checkpointing & progress plots
 All executed on the FULL 30-session AMPH dataset (562 sequences, 5.5M frames).
 """
 
-import sys, os, time
+import os
+import sys
+import time
+
 sys.path.insert(0, '/home/fsp585/Desktop/FiberphotometryCode')
 sys.path.insert(0, '/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll')
 
@@ -22,14 +25,13 @@ os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.75"
 
 import numpy as np
+
 if not hasattr(np, "bool8"): np.bool8 = np.bool_
 
-import jax
-import jax.numpy as jnp
 import keypoint_moseq as kpms
-from keypoint_moseq.fitting import _wrapped_resample, check_for_nans
 import utils.resample_batching as rb
 from jax_moseq.models import keypoint_slds
+from keypoint_moseq.fitting import _wrapped_resample, check_for_nans
 
 PROJECT_DIR = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll/amph_project"
 SOURCE_MODEL = "amph_prod_k150k_run_01"

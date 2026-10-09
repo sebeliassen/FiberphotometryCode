@@ -9,8 +9,8 @@ Single Source of Truth (SSOT) for:
 """
 
 from dataclasses import dataclass, field
-from typing import List, Dict, Optional
 from pathlib import Path
+from typing import Dict, List
 
 # -----------------------------------------------------------------------------
 # 1. Body Part Layouts & Schemas

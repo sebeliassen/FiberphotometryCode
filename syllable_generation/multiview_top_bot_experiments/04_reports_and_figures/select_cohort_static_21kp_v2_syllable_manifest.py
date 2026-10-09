@@ -25,21 +25,20 @@ with all repairs applied from the Codex audit:
 - Outputs written to versioned directory `visualizations_cohort_static_21kp_v2_seed101_v4`.
 """
 
-import os
-import sys
-import json
-import time
-import re
 import argparse
-from pathlib import Path
-from typing import Dict, Any, List, Tuple, Optional, Sequence, Set
-import numpy as np
-import h5py
+import os
 import pickle
+import sys
+import time
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+import h5py
+import numpy as np
 import yaml
 from sklearn.decomposition import PCA
-from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics import pairwise_distances
+from sklearn.neighbors import NearestNeighbors
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 EXP_DIR = SCRIPT_DIR.parent
@@ -51,8 +50,9 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 import viz_v2_common as vc
-from core.pair_matching import find_matched_pairs
 from jax_moseq.utils import unbatch
+
+from core.pair_matching import find_matched_pairs
 
 COHORT_DIR = EXP_DIR / "cohort_static_21kp_v2"
 MODEL_DIR = COHORT_DIR / "model_21kp_static_50ar_300slds_seed101"
@@ -347,7 +347,7 @@ def main():
             "clip_len_frames": clip_len
         },
         "tiers_definition": {
-            "tier_1": f"N_eligible > 50: Built-in KPMS density sampling (4D PCA, exemplar mode)",
+            "tier_1": "N_eligible > 50: Built-in KPMS density sampling (4D PCA, exemplar mode)",
             "tier_2": f"{G} < N_eligible <= 50: Compact-neighborhood selection (lowest mean pairwise distance)",
             "tier_3": f"N_eligible <= {G}: Complete bout enumeration (medoid first, remaining ordered, unused blank)"
         },

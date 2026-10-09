@@ -14,10 +14,19 @@ Training regimen:
     to quantify syllable landscape convergence / stability.
 """
 
-import os, sys, time, argparse, shutil, pickle, gc
-from pathlib import Path
+import argparse
+import json
+import os
+import pickle
+import shutil
+import sys
+import time
 from itertools import groupby
-import numpy as np, pandas as pd, h5py, yaml, json
+from pathlib import Path
+
+import h5py
+import numpy as np
+import pandas as pd
 
 # Unbuffered live stdout
 sys.stdout.reconfigure(line_buffering=True)
@@ -26,6 +35,7 @@ sys.stderr.reconfigure(line_buffering=True)
 # Headless & hardware flags
 os.environ["BROWSER"] = "/bin/true"
 import webbrowser
+
 webbrowser.get = lambda *args, **kwargs: None
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
@@ -39,12 +49,12 @@ if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import matplotlib
+
 matplotlib.use("Agg")
 
-import jax, jax.numpy as jnp
+import jax
 import keypoint_moseq as kpms
 from sklearn.metrics import adjusted_rand_score
-from sklearn.cluster import MiniBatchKMeans
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 if str(REPO_ROOT) not in sys.path:
@@ -60,8 +70,8 @@ if str(KPMS_UTILS_DIR) not in sys.path:
 
 import utils.resample_batching as rb
 from utils.batch_init import batched_init_model_by_video
+
 from syllable_generation.syllabizers.keypoint_moseq_syll.utils.patch_checkpoint import apply_kpms_checkpoint_patch
-from jax_moseq.models.keypoint_slds.alignment import center_embedding
 
 TARGET_FPS = 60
 MIN_SEGMENT_FRAMES = 180

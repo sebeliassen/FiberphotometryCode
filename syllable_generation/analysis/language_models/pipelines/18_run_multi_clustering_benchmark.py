@@ -1,32 +1,34 @@
 import os
+import pickle
 import sys
 import time
-import pickle
-import requests
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+import requests
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import wandb
-
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import StratifiedKFold
+
+import wandb
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 sys.path.insert(0, ROOT_DIR)
 sys.path.insert(0, os.path.join(ROOT_DIR, "syllable_generation/analysis/language_models"))
 
+from lib.evaluation.scalar_probes import run_scalar_probing_battery
 from lib.models.benchmark_models import (
+    AgglomerativeStrategyClusterer,
+    BERTopicStrategyClusterer,
     GMMStrategyClusterer,
     KMeansStrategyClusterer,
     SpectralStrategyClusterer,
-    AgglomerativeStrategyClusterer,
-    BERTopicStrategyClusterer
 )
 from lib.models.continuous import StrategyConditionedPoseModel
-from lib.evaluation.scalar_probes import run_scalar_probing_battery
 
 NTFY_URL = "https://ntfy.sh/woody_videos_seb"
 
@@ -171,7 +173,7 @@ def main():
     log(f"Assembled {len(configs)} candidate configurations for systematic benchmark.")
 
     results_table = []
-    
+
     # 4. Benchmark Loop
     for idx, cfg in enumerate(configs):
         t0 = time.time()
@@ -185,7 +187,7 @@ def main():
         try:
             strat_ids = clusterer.fit_predict(all_trans_inputs)
             inferred_K = len(set(strat_ids))
-            
+
             # Map window strategy IDs to continuous bouts
             bout_strat_ids = np.zeros(len(all_bouts_list), dtype=int)
             bout_idx = 0
@@ -288,7 +290,7 @@ def main():
 
     # Multi-panel Resolution Comparison Curves
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-    
+
     family_colors = {
         "GMM": "#ef4444",
         "KMeans": "#3b82f6",

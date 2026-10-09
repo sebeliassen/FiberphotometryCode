@@ -12,14 +12,17 @@ Outputs:
 import os
 import sys
 import warnings
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
+from collections import defaultdict
+
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from scipy import stats
-from collections import defaultdict
 
 warnings.filterwarnings('ignore')
 
@@ -28,13 +31,12 @@ if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
     sys.path.append(os.path.join(ROOT_DIR, "syllable_generation"))
 
-from analysis.ulrik_kinematics.lib import loader
 from analysis.language_models.lib.fusion.clustering import extract_bouts_from_session
-
+from analysis.ulrik_kinematics.lib import loader
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.metrics import silhouette_score
+from sklearn.preprocessing import StandardScaler
 
 # ---------------------------------------------------------------------------
 # Config
@@ -237,7 +239,7 @@ def main():
 
     df_comp = pd.DataFrame(rows)
     print(f"\nSyllables compared: {len(df_comp)}")
-    print(f"\n--- Aggregate Balance Metrics (mean ± std across syllables) ---")
+    print("\n--- Aggregate Balance Metrics (mean ± std across syllables) ---")
     for metric in ["min_frac", "ratio", "entropy", "gini", "silhouette"]:
         b_col = f"baseline_{metric}"
         l_col = f"log1p_{metric}"
@@ -250,7 +252,7 @@ def main():
     improved_gini = (df_comp["log1p_gini"] < df_comp["baseline_gini"]).sum()
     improved_min_frac = (df_comp["log1p_min_frac"] > df_comp["baseline_min_frac"]).sum()
     total = len(df_comp)
-    print(f"\n--- Improvement Counts ---")
+    print("\n--- Improvement Counts ---")
     print(f"  Entropy improved (higher=better):    {improved_entropy}/{total} ({100*improved_entropy/total:.1f}%)")
     print(f"  Gini improved (lower=better):        {improved_gini}/{total} ({100*improved_gini/total:.1f}%)")
     print(f"  Min-fraction improved (higher=better): {improved_min_frac}/{total} ({100*improved_min_frac/total:.1f}%)")
@@ -258,7 +260,7 @@ def main():
     # Severely imbalanced syllables (min_frac < 0.05)
     severe_base = (df_comp["baseline_min_frac"] < 0.05).sum()
     severe_log = (df_comp["log1p_min_frac"] < 0.05).sum()
-    print(f"\n  Severely imbalanced (min_frac < 5%):")
+    print("\n  Severely imbalanced (min_frac < 5%):")
     print(f"    Baseline: {severe_base}/{total}   |   log1p: {severe_log}/{total}")
 
     # --- Visual: scatter plot entropy and gini baseline vs log1p ---
@@ -359,7 +361,7 @@ def main():
             mask = labels_base == ci
             ax.scatter(pca_base[mask, 0], pca_base[mask, 1], s=10, alpha=0.5,
                        c=colors[ci], label=f"C{ci} ({mask.sum()})")
-        ax.set_title(f"Baseline (StandardScaler only)", fontsize=12, fontweight="bold")
+        ax.set_title("Baseline (StandardScaler only)", fontsize=12, fontweight="bold")
         ax.set_xlabel("PC 1")
         ax.set_ylabel("PC 2")
         ax.legend(fontsize=9, loc="upper right")
@@ -370,7 +372,7 @@ def main():
             mask = labels_log == ci
             ax.scatter(pca_log[mask, 0], pca_log[mask, 1], s=10, alpha=0.5,
                        c=colors[ci], label=f"C{ci} ({mask.sum()})")
-        ax.set_title(f"log1p + StandardScaler", fontsize=12, fontweight="bold")
+        ax.set_title("log1p + StandardScaler", fontsize=12, fontweight="bold")
         ax.set_xlabel("PC 1")
         ax.set_ylabel("PC 2")
         ax.legend(fontsize=9, loc="upper right")

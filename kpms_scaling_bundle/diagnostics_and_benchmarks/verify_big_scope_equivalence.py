@@ -1,12 +1,10 @@
+import copy
 import os
 import sys
-import copy
-import time
+
 import numpy as np
+
 np.bool8 = np.bool_
-import jax
-import jax.numpy as jnp
-import jax.random as jr
 from scipy.stats import entropy
 
 REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -16,14 +14,14 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import keypoint_moseq as kpms
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
 import jax_moseq.models.keypoint_slds as kp_slds_mod
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.slds as slds_mod
+import keypoint_moseq as kpms
+import utils.resample_batching as rb
 from jax_moseq.models.slds.gibbs import resample_continuous_stateseqs as slds_orig_resample_x
 from utils.resample_batching import apply_optimizations
-import utils.resample_batching as rb
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "karen_project_2")
 MODEL_NAME = "final_karen_model_k150k"
@@ -51,52 +49,52 @@ def compute_model_macro_metrics(model, data):
     states = model['states']
     params = model['params']
     nlags = model['hypparams']['ar_hypparams']['nlags']
-    
+
     Y = np.array(data['Y'])
     mask = np.array(data['mask'], dtype=bool)
     mask_z = mask[:, nlags:]
-    
+
     z = np.array(states['z'])
     x = np.array(states['x'])
     v = np.array(states['v'])
     h = np.array(states['h'])
-    
+
     N, T, k, d = Y.shape
     D = x.shape[-1]
-    
+
     # 1. Observation reconstruction MSE
     cos_h = np.cos(h)[:, :, None]
     sin_h = np.sin(h)[:, :, None]
     Cd = np.array(params['Cd'])
-    
+
     x_pad = np.concatenate([x, np.ones(x.shape[:-1] + (1,))], axis=-1)
     Y_aligned = (x_pad @ Cd.T).reshape(N, T, k-1, d)
-    
+
     Y_aligned_full = np.concatenate([np.zeros((N, T, 1, d)), Y_aligned], axis=-2)
     Y_rot = np.zeros_like(Y_aligned_full)
     Y_rot[..., 0] = cos_h * Y_aligned_full[..., 0] - sin_h * Y_aligned_full[..., 1]
     Y_rot[..., 1] = sin_h * Y_aligned_full[..., 0] + cos_h * Y_aligned_full[..., 1]
     Y_est = Y_rot + v[:, :, None, :]
-    
+
     obs_mse = float(np.mean((Y[mask] - Y_est[mask]) ** 2))
-    
+
     # 2. Syllable duration percentiles
     durs = get_all_durations(z, mask_z)
-    
+
     # 3. Syllable usage entropy & active counts
     valid_z = z[mask_z > 0]
     unq, counts = np.unique(valid_z, return_counts=True)
     probs = counts / len(valid_z)
     H_z = float(entropy(probs))
-    
+
     active_95 = int(np.sum(np.cumsum(np.sort(counts)[::-1]) / len(valid_z) < 0.95) + 1)
     active_99 = int(np.sum(np.cumsum(np.sort(counts)[::-1]) / len(valid_z) < 0.99) + 1)
-    
+
     # 4. Transition matrix self-transition mean
     pi = np.array(params['pi'])
     active_indices = unq
     mean_self_trans = float(np.mean(np.diag(pi)[active_indices]))
-    
+
     return {
         "obs_mse": obs_mse,
         "dur_p10": float(np.percentile(durs, 10)) * 25.0,
@@ -117,9 +115,9 @@ def main():
     print("=" * 110)
     print("      3-BRANCH BIG-SCOPE AUDIT: UNPATCHED JAX vs FIXED PATCHED vs BUGGY OLD PATCH")
     print("=" * 110)
-    
+
     model, data, metadata, _ = kpms.load_checkpoint(PROJECT_DIR, MODEL_NAME, iteration=50)
-    
+
     N_SLICED = 30
     sliced_data = {
         'Y': data['Y'][:N_SLICED],
@@ -127,19 +125,19 @@ def main():
     }
     if 'conf' in data and data['conf'] is not None:
         sliced_data['conf'] = data['conf'][:N_SLICED]
-        
+
     sliced_metadata = tuple(m[:N_SLICED] for m in metadata) if isinstance(metadata, tuple) else metadata
-    
+
     sliced_states = {}
     for k, v in model['states'].items():
         if hasattr(v, '__len__') and len(v) >= N_SLICED:
             sliced_states[k] = v[:N_SLICED]
         else:
             sliced_states[k] = v
-            
+
     if 'noise_prior' in model and hasattr(model['noise_prior'], '__len__') and len(model['noise_prior']) >= N_SLICED:
         model['noise_prior'] = model['noise_prior'][:N_SLICED]
-        
+
     # Save original references
     orig_resample_continuous = slds_gibbs.resample_continuous_stateseqs
     orig_resample_discrete = arhmm_gibbs.resample_discrete_stateseqs
@@ -158,12 +156,12 @@ def main():
     slds_gibbs.resample_scales = orig_resample_scales
     slds_gibbs.resample_heading = orig_resample_heading
     slds_gibbs.resample_location = orig_resample_loc
-    
+
     kp_slds_mod.resample_continuous_stateseqs = orig_resample_continuous
     kp_slds_mod.resample_scales = orig_resample_scales
     kp_slds_mod.resample_heading = orig_resample_heading
     kp_slds_mod.resample_location = orig_resample_loc
-    
+
     slds_mod.resample_continuous_stateseqs = slds_orig_resample_x
     slds_mod.resample_scales = orig_resample_scales
     slds_mod.resample_heading = orig_resample_heading
@@ -173,7 +171,7 @@ def main():
     m_unp['states'] = copy.deepcopy(sliced_states)
     out_dir_unp = os.path.join(KPMS_DIR, "scratch_audit_unp")
     os.makedirs(out_dir_unp, exist_ok=True)
-    
+
     m_unp, _ = kpms.fit_model(
         m_unp, sliced_data, sliced_metadata, out_dir_unp,
         model_name="audit_unp",
@@ -185,7 +183,7 @@ def main():
         verbose=False
     )
     unp = compute_model_macro_metrics(m_unp, sliced_data)
-    
+
     # 2. RUN PATCHED & FIXED
     print(f"\n[2/3] Running {NUM_ITERS} iterations with PATCHED & FIXED...")
     def _numpy_get_lags_fixed(x_np, nlags):
@@ -194,12 +192,12 @@ def main():
         return np.concatenate(lags, axis=-1)
     rb._numpy_get_lags = _numpy_get_lags_fixed
     apply_optimizations()
-    
+
     m_fix = copy.deepcopy(model)
     m_fix['states'] = copy.deepcopy(sliced_states)
     out_dir_fix = os.path.join(KPMS_DIR, "scratch_audit_fix")
     os.makedirs(out_dir_fix, exist_ok=True)
-    
+
     m_fix, _ = kpms.fit_model(
         m_fix, sliced_data, sliced_metadata, out_dir_fix,
         model_name="audit_fix",
@@ -211,7 +209,7 @@ def main():
         verbose=False
     )
     fix = compute_model_macro_metrics(m_fix, sliced_data)
-    
+
     # 3. RUN BUGGY OLD PATCH (REVERSED LAGS)
     print(f"\n[3/3] Running {NUM_ITERS} iterations with BUGGY OLD PATCH...")
     def _numpy_get_lags_buggy(x_np, nlags):
@@ -220,12 +218,12 @@ def main():
         return np.concatenate(lags, axis=-1)
     rb._numpy_get_lags = _numpy_get_lags_buggy
     apply_optimizations()
-    
+
     m_bug = copy.deepcopy(model)
     m_bug['states'] = copy.deepcopy(sliced_states)
     out_dir_bug = os.path.join(KPMS_DIR, "scratch_audit_bug")
     os.makedirs(out_dir_bug, exist_ok=True)
-    
+
     m_bug, _ = kpms.fit_model(
         m_bug, sliced_data, sliced_metadata, out_dir_bug,
         model_name="audit_bug",
@@ -241,11 +239,11 @@ def main():
     # Restore fixed globally
     rb._numpy_get_lags = _numpy_get_lags_fixed
     apply_optimizations()
-    
+
     # Transition matrix correlations with ground truth
     pi_corr_fix = float(np.corrcoef(unp['pi'].ravel(), fix['pi'].ravel())[0, 1])
     pi_corr_bug = float(np.corrcoef(unp['pi'].ravel(), bug['pi'].ravel())[0, 1])
-    
+
     # PRINT 3-WAY COMPARISON REPORT
     print("\n" + "=" * 115)
     print("                     3-WAY MACROSCOPIC SYSTEM DIVERGENCE REPORT")

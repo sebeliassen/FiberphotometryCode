@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 def trim_low_likelihood(data_series, fps, threshold, trim_duration):
     """
     Given a Pandas Series of average likelihoods, mark as NaN any contiguous stretch
@@ -59,7 +60,7 @@ def choose_longest_segment(segments):
         return max(segments, key=lambda s: s[1] - s[0])
     else:
         return None
-    
+
 
 def process_and_get_bounds_from_confidences_all(confidences, fps=60, threshold=0.8, trim_duration=15):
     """

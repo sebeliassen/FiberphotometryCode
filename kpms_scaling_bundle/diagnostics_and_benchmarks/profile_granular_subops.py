@@ -13,24 +13,24 @@ KPMS_DIR = os.path.join(REPO_ROOT, "syllable_generation", "syllabizers", "keypoi
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 import numpy as np
+
 np.bool8 = np.bool_
-import pandas as pd
-import keypoint_moseq as kpms
+
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-from functools import partial
-import shutil
-from utils.paths import ref_pairs_from_sessions
-from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg
-from utils.batch_init import batched_init_model_by_video
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+import keypoint_moseq as kpms
+import pandas as pd
+from dynamax.hidden_markov_model.inference import hmm_posterior_sample
 from jax_moseq.utils import pad_affine, psd_inv, psd_solve
 from jax_moseq.utils.autoregression import get_lags, get_nlags
 from jax_moseq.utils.transitions import count_transitions, sample_hdp_transitions
-from dynamax.hidden_markov_model.inference import hmm_posterior_sample
-from dynamax.linear_gaussian_ssm.inference import lgssm_posterior_sample
+from utils.batch_init import batched_init_model_by_video
+from utils.paths import ref_pairs_from_sessions
+from utils.trimming import clamp_conf_nonneg, filter_with_masks, presence_mask_from_conf
+
 SCRATCH_DIR = os.path.join(KPMS_DIR, "scratch_profiling_project")
 DIRTY_PKL = os.path.join(REPO_ROOT, "syllable_generation/data/sessions_karen_project_dirty.pkl")
 def profile_granular_subops(n_iters: int = 5):

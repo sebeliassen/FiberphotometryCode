@@ -1,19 +1,19 @@
 import os
-import numpy as np
-import tqdm
+import warnings
+from datetime import datetime
+from textwrap import fill
+
 import h5py
 import jax
 import jax.numpy as jnp
-import warnings
-from textwrap import fill
-from datetime import datetime
-
-from keypoint_moseq.viz import plot_progress
-from keypoint_moseq.io import save_hdf5, extract_results, load_checkpoint
+import numpy as np
+import tqdm
 from jax_moseq.models import allo_keypoint_slds, keypoint_slds
-from jax_moseq.models.arhmm import stateseq_marginals, marginal_log_likelihood
-from jax_moseq.utils.autoregression import get_nlags
+from jax_moseq.models.arhmm import marginal_log_likelihood, stateseq_marginals
 from jax_moseq.utils import check_for_nans, device_put_as_scalar, unbatch
+from jax_moseq.utils.autoregression import get_nlags
+from keypoint_moseq.io import extract_results, load_checkpoint, save_hdf5
+from keypoint_moseq.viz import plot_progress
 
 
 class StopResampling(Exception):

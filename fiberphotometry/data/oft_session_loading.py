@@ -1,29 +1,26 @@
 # oft_session_loading.py
 
-from pathlib import Path
 import re
-from typing import Callable, Union
 import warnings
+from pathlib import Path
+from typing import Callable, Union
+
 import pandas as pd
 
-from fiberphotometry.data.session_loading import populate_session
 from fiberphotometry.config import (
-    OFT_H5_GLOB,
-
-    OFT_TRACKDATA_GLOB,
+    CHAMBER_CAMERAS,
     OFT_ALLTIMES_GLOB,
     OFT_BONSAITS_GLOB,
-
     OFT_CAMERA_TIMES_REGEX,
     OFT_H5_EXACT_CORNER_REGEX,
+    OFT_H5_GLOB,
     OFT_H5_UPDOWN_REGEX,
-
-    OFT_VIDEO_GLOB,
+    OFT_TRACKDATA_GLOB,
     OFT_VIDEO_EXACT_CORNER_REGEX,
+    OFT_VIDEO_GLOB,
     OFT_VIDEO_UPDOWN_REGEX,
-
-    CHAMBER_CAMERAS
 )
+from fiberphotometry.data.session_loading import populate_session
 
 
 def _find_camera_timestamp_files(trial_dir: Path) -> list[Path]:
@@ -64,7 +61,7 @@ def _populate_oft_sync_dataframes(session) -> None:
     trial_dir = Path(session.trial_dir)
     # This helper correctly finds all potential timestamp files
     all_ts_files = _find_camera_timestamp_files(trial_dir)
-    
+
     # We are primarily interested in the 'AllTimestampsCombined' files for syncing
     sync_csv_paths = [p for p in all_ts_files if 'AllTimestampsCombined' in p.name]
 
@@ -80,7 +77,7 @@ def _populate_oft_sync_dataframes(session) -> None:
 
     # 1. Sort the paths to ensure a consistent order (e.g., sync_0 is always the same camera)
     sync_csv_paths.sort()
-    
+
     # 2. Initialize a counter for the generic key
     sync_counter = 0
 
@@ -89,15 +86,15 @@ def _populate_oft_sync_dataframes(session) -> None:
             cam_name, _ = _parse_camera_timestamp_filename(path)
             if cam_name in allowed_cameras:
                 df = pd.read_csv(path)
-                
+
                 # 3. Add a new column to the DataFrame to store the camera name
                 df['camera_name'] = cam_name
-                
+
                 # 4. Use the generic 'sync_n' key to add the data
                 session.dfs.add_data(f'sync_{sync_counter}', df)
-                
+
                 print(f"Loaded sync data for session {session.trial_id}/{session.chamber_id} from: {path.name} as sync_{sync_counter}")
-                
+
                 # 5. Increment the counter for the next file
                 sync_counter += 1
 
@@ -184,7 +181,7 @@ def _process_media(
     out = {}
     for i, p in enumerate(unique):
         key = f"{prefix}_{i}"
-        
+
         # This part finds the camera name (e.g., "LeftTopCam") associated with the file path `p`
         cam = None
         for m_p, m_cam in matched:
@@ -198,7 +195,7 @@ def _process_media(
 
             # OLD version (only has one column):
             # out[key] = pd.DataFrame({column_name: [str(p)]})
-            
+
             # NEW, CORRECTED version (has two columns):
             out[key] = pd.DataFrame({column_name: [str(p)], 'camera_name': [cam]})
 
@@ -246,7 +243,7 @@ def populate_oft_session(session, h5_root: str=None, video_root: str=None, load_
     """
     # This first call populates the basic photometry data ('phot_415', 'phot_470')
     populate_session(session)
-    
+
     # This new call finds and loads the corresponding sync CSVs into session.dfs
     _populate_oft_sync_dataframes(session)
 

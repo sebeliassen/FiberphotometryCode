@@ -20,21 +20,22 @@ Experiments Executed:
 """
 
 import os
+import pickle
 import sys
 import time
-import pickle
+
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader, TensorDataset
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 from scipy.optimize import minimize
 from sklearn.linear_model import Ridge
-from sklearn.neural_network import MLPRegressor
 from sklearn.model_selection import GroupKFold
+from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import StandardScaler
+from torch.utils.data import DataLoader, TensorDataset
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
@@ -130,9 +131,9 @@ for sess_idx, bouts in enumerate(session_bouts):
     sp = np.zeros((N, 6), dtype=np.float32)
     oh_bout = np.zeros((N, NUM_ACTIVE_SYLLS), dtype=np.float32)
     next_bout_ptrs = np.full(N, N, dtype=np.int32)
-    
+
     clean_tokens, clean_onsets, clean_durs = [], [], []
-    
+
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = b["syllable"] - 1
@@ -142,22 +143,22 @@ for sess_idx, bouts in enumerate(session_bouts):
             clean_tokens.append(s_id)
             clean_onsets.append(sf)
             clean_durs.append((ef - sf + 1) / FPS)
-            
+
         vec = b.get("vector", None)
         if vec is not None and len(vec) >= 14:
             sp[sf:ef+1, :4] = vec[:4]; sp[sf:ef+1, 4] = vec[10]; sp[sf:ef+1, 5] = vec[12]
-            
+
     b_starts = np.array([b["start_frame"] for b in bouts])
     for t_idx, b_st in enumerate(b_starts):
         prev_st = b_starts[t_idx-1] if t_idx > 0 else 0
         next_bout_ptrs[prev_st:b_st] = b_st
     if len(b_starts) > 0:
         next_bout_ptrs[b_starts[-1]:] = N
-        
+
     cum_bout = np.vstack([np.zeros((1, NUM_ACTIVE_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
     cum_spatial = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp, axis=0)])
     cum_spatial_sq = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp**2, axis=0)])
-    
+
     sessions_data.append({
         "sess_idx": sess_idx, "N": N, "fs": fs, "cum_bout": cum_bout,
         "next_bout_ptrs": next_bout_ptrs, "cum_spatial": cum_spatial,
@@ -174,13 +175,13 @@ for s in sessions_data:
     N = s["N"]
     if N < W_FRAMES + H_FRAMES + 200: continue
     inj_f = s["inj_frame"]
-    
+
     t_anchors = np.arange(W_FRAMES, N - H_FRAMES, STRIDE_FRAMES)
     t_tgt_start = s["next_bout_ptrs"][t_anchors]
     valid = (t_tgt_start + H_FRAMES < N)
     t_anchors = t_anchors[valid]
     t_tgt_start = t_tgt_start[valid]
-    
+
     past_start = t_anchors - W_FRAMES
     future_end = t_tgt_start + H_FRAMES
     no_straddle = (future_end < inj_f) | (past_start > inj_f)
@@ -188,7 +189,7 @@ for s in sessions_data:
     t_tgt_start = t_tgt_start[no_straddle]
     M = len(t_anchors)
     if M == 0: continue
-    
+
     # 1. Spatial context (14-D)
     t_norm = t_anchors / float(N)
     p1 = np.column_stack([t_norm, t_norm**2]).astype(np.float32)
@@ -197,20 +198,20 @@ for s in sessions_data:
     sp_sq = s["cum_spatial_sq"][t_anchors] - s["cum_spatial_sq"][t_anchors - W_FRAMES]
     sp_var = np.maximum(sp_sq / float(W_FRAMES) - sp_mean**2, 1e-6)
     feat_space = np.hstack([p1, sp_mean, np.sqrt(sp_var)]).astype(np.float32)
-    
+
     # 2. Repertoire (99-D)
     b_cnt = s["cum_bout"][t_anchors] - s["cum_bout"][t_anchors - W_FRAMES]
     feat_rep = (b_cnt + 1e-4) / (np.sum(b_cnt, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     # 3. Target Future (99-D)
     f_cnt = s["cum_bout"][t_tgt_start + H_FRAMES] - s["cum_bout"][t_tgt_start]
     target = (f_cnt + 1e-4) / (np.sum(f_cnt, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     # Sequential Tokens
     seq_toks = np.full((M, max_l), NUM_ACTIVE_SYLLS, dtype=np.int64)
     seq_durs = np.zeros((M, max_l), dtype=np.float32)
     seq_masks = np.ones((M, max_l), dtype=bool)
-    
+
     b_onsets, b_tokens, b_durs = s["onsets"], s["tokens"], s["durs"]
     for i, t_anc in enumerate(t_anchors):
         t_min = t_anc - W_FRAMES
@@ -222,7 +223,7 @@ for s in sessions_data:
             seq_toks[i, :L_i] = b_tokens[idx_b]
             seq_durs[i, :L_i] = b_durs[idx_b]
             seq_masks[i, :L_i] = False
-            
+
     for i in range(M):
         raw_windows.append({
             "sess_idx": s["sess_idx"],
@@ -284,7 +285,7 @@ K_NN = 50
 for fold, (tr, te) in enumerate(gkf.split(X_hybrid, groups=sess_ids)):
     log(f"  [Fold {fold+1}/5] Training models on {len(tr):,} windows, evaluating on {len(te):,}...")
     Y_tr, Y_te = Y_targets[tr], Y_targets[te]
-    
+
     # 1. k-NN (k=50) strictly on training sessions
     X_tr_t, X_te_t = X_hybrid_t[tr], X_hybrid_t[te]
     Y_tr_t = Y_t[tr]
@@ -294,12 +295,12 @@ for fold, (tr, te) in enumerate(gkf.split(X_hybrid, groups=sess_ids)):
         dists = torch.cdist(X_te_t[b_st:b_en], X_tr_t, p=2.0)
         _, topk_idx = torch.topk(dists, k=K_NN, largest=False, dim=1)
         preds_knn[te[b_st:b_en]] = torch.mean(Y_tr_t[topk_idx], dim=1).cpu().numpy()
-        
+
     # 2. Ridge BoW
     pred_r = np.clip(Ridge(1.0).fit(X_hybrid[tr], Y_tr).predict(X_hybrid[te]), 1e-4, 1.0)
     pred_r /= np.sum(pred_r, axis=1, keepdims=True)
     preds_ridge[te] = pred_r
-    
+
     # 3. Shuffled Transformer (Order-Agnostic Context)
     shuff_model = SequenceTransformer(vocab_size=NUM_ACTIVE_SYLLS, num_targets=NUM_ACTIVE_SYLLS, use_pos=False).to(DEVICE)
     opt_shuff = torch.optim.AdamW(shuff_model.parameters(), lr=1e-3, weight_decay=1e-4)
@@ -325,7 +326,7 @@ for fold, (tr, te) in enumerate(gkf.split(X_hybrid, groups=sess_ids)):
             torch.tensor(X_durs[te], dtype=torch.float32, device=DEVICE),
             torch.tensor(X_masks[te], dtype=torch.bool, device=DEVICE)
         ).cpu().numpy()
-        
+
     # 4. Ordered Transformer (Sequential Action-GPT)
     ord_model = SequenceTransformer(vocab_size=NUM_ACTIVE_SYLLS, num_targets=NUM_ACTIVE_SYLLS, use_pos=True).to(DEVICE)
     opt_ord = torch.optim.AdamW(ord_model.parameters(), lr=1e-3, weight_decay=1e-4)
@@ -352,15 +353,15 @@ for fold, (tr, te) in enumerate(gkf.split(X_hybrid, groups=sess_ids)):
     P_shf_tr = torch.tensor(preds_shuff_tf[tr], dtype=torch.float32, device=DEVICE)
     P_ord_tr = torch.tensor(preds_ord_tf[tr], dtype=torch.float32, device=DEVICE)
     Y_tr_t = Y_t[tr]
-    
+
     def blend_loss(w):
         w = np.maximum(w, 0.0); w /= (np.sum(w) + 1e-8)
         b = w[0]*P_knn_tr + w[1]*P_rdg_tr + w[2]*P_shf_tr + w[3]*P_ord_tr
         return float(js_divergence_pt(Y_tr_t, b).mean().cpu().numpy())
-        
+
     res = minimize(blend_loss, [0.25, 0.25, 0.25, 0.25], method='Nelder-Mead')
     w_opt = np.maximum(res.x, 0.0); w_opt /= np.sum(w_opt)
-    
+
     b_te = w_opt[0]*preds_knn[te] + w_opt[1]*preds_ridge[te] + w_opt[2]*preds_shuff_tf[te] + w_opt[3]*preds_ord_tf[te]
     b_te /= np.sum(b_te, axis=1, keepdims=True)
     preds_stacked_ens[te] = b_te
@@ -427,20 +428,20 @@ for frac in SCALING_FRACS:
     log(f"  Evaluating Training Scale N = {frac*100:3.0f}% of sessions...")
     frac_risk_ridge = []
     frac_risk_ord_tf = []
-    
+
     for fold, (tr, te) in enumerate(gkf.split(X_hybrid, groups=sess_ids)):
         tr_sessions = np.unique(sess_ids[tr])
         np.random.seed(42 + fold)
         n_sub_sess = max(2, int(len(tr_sessions) * frac)) if frac < 1.0 else len(tr_sessions)
         sub_sess = np.random.choice(tr_sessions, size=n_sub_sess, replace=False) if frac < 1.0 else tr_sessions
         sub_tr = tr[np.isin(sess_ids[tr], sub_sess)]
-        
+
         # 1. Ridge
         p_r = np.clip(Ridge(1.0).fit(X_hybrid[sub_tr], Y_targets[sub_tr]).predict(X_hybrid[te]), 1e-4, 1.0)
         p_r /= np.sum(p_r, axis=1, keepdims=True)
         r_r = js_divergence_pt(Y_t[te], torch.tensor(p_r, dtype=torch.float32, device=DEVICE)).mean().item()
         frac_risk_ridge.append(r_r)
-        
+
         # 2. Ordered Transformer
         tf_sub = SequenceTransformer(vocab_size=NUM_ACTIVE_SYLLS, num_targets=NUM_ACTIVE_SYLLS, use_pos=True).to(DEVICE)
         opt_s = torch.optim.AdamW(tf_sub.parameters(), lr=1e-3, weight_decay=1e-4)
@@ -468,12 +469,12 @@ for frac in SCALING_FRACS:
             )
             r_tf = js_divergence_pt(Y_t[te], p_tf).mean().item()
             frac_risk_ord_tf.append(r_tf)
-            
+
     m_r_rdg = float(np.mean(frac_risk_ridge))
     m_r_tf = float(np.mean(frac_risk_ord_tf))
     g_rdg = ((mean_null_js - m_r_rdg) / mean_null_js) * 100.0
     g_tf = ((mean_null_js - m_r_tf) / mean_null_js) * 100.0
-    
+
     scaling_records.append({
         "Training_Fraction": frac,
         "Ridge_Risk_bits": m_r_rdg,
@@ -501,24 +502,24 @@ oracle_records = []
 for k_pool in K_ORACLE_POOL:
     risk_matched_branch = np.zeros(N_win, dtype=np.float32)
     risk_random_branch = np.zeros(N_win, dtype=np.float32)
-    
+
     np.random.seed(42 + k_pool)
     for s_idx in np.unique(sess_ids):
         anchor_idx = np.where(sess_ids == s_idx)[0]
         cand_idx = np.where(sess_ids != s_idx)[0]
-        
+
         X_anc = X_hybrid_t[anchor_idx]
         X_cnd = X_hybrid_t[cand_idx]
         Y_anc = Y_t[anchor_idx]
         Y_cnd = Y_t[cand_idx]
-        
+
         batch_size = 512
         for b_st in range(0, len(anchor_idx), batch_size):
             b_en = min(b_st + batch_size, len(anchor_idx))
             b_X = X_anc[b_st:b_en]
             b_Y = Y_anc[b_st:b_en]
             b_glob = anchor_idx[b_st:b_en]
-            
+
             # 1. Matched Nearest Pasts
             dists = torch.cdist(b_X, X_cnd, p=2.0)
             _, topk_idx = torch.topk(dists, k=k_pool, largest=False, dim=1)
@@ -526,16 +527,16 @@ for k_pool in K_ORACLE_POOL:
             b_Y_exp = b_Y.unsqueeze(1).repeat(1, k_pool, 1)
             divs_m = js_divergence_pt(b_Y_exp.reshape(-1, NUM_ACTIVE_SYLLS), neigh_Y.reshape(-1, NUM_ACTIVE_SYLLS)).reshape(-1, k_pool)
             risk_matched_branch[b_glob] = torch.min(divs_m, dim=1).values.cpu().numpy()
-            
+
             # 2. Random Candidate Control
             rand_idx = np.random.choice(len(cand_idx), size=k_pool, replace=False)
             rand_Y = Y_cnd[rand_idx].unsqueeze(0).repeat(len(b_glob), 1, 1)
             divs_r = js_divergence_pt(b_Y_exp.reshape(-1, NUM_ACTIVE_SYLLS), rand_Y.reshape(-1, NUM_ACTIVE_SYLLS)).reshape(-1, k_pool)
             risk_random_branch[b_glob] = torch.min(divs_r, dim=1).values.cpu().numpy()
-            
+
     r_m, ci_m, g_m, ci_gm = get_stats(risk_matched_branch)
     r_r, ci_r, g_r, ci_gr = get_stats(risk_random_branch)
-    
+
     oracle_records.append({
         "Candidate_Pool_k": k_pool,
         "Matched_Branch_Risk_bits": r_m,

@@ -1,14 +1,14 @@
 import os
-import keypoint_moseq as kpms
-import pandas as pd
 import sys
+
+import keypoint_moseq as kpms
 
 # --- CONFIGURATION ---
 base_path = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll"
 project_dir = os.path.join(base_path, "amph_project")
 model_name = "amph_prod_k120k_run_1 copy"
 
-print(f"Testing label_syllables for:")
+print("Testing label_syllables for:")
 print(f"Project: {project_dir}")
 print(f"Model:   {model_name}")
 
@@ -29,13 +29,13 @@ try:
 except Exception as e:
     print(f"FAIL: Could not compute moseq_df: {e}")
     sys.exit(1)
-    
+
 # 3. Check Grid Movies Directory
 grid_movie_dir = os.path.join(project_dir, model_name, "grid_movies")
 if not os.path.exists(grid_movie_dir):
     print(f"FAIL: Grid movie dir not found at {grid_movie_dir}")
     sys.exit(1)
-    
+
 movies = os.listdir(grid_movie_dir)
 if len(movies) == 0:
     print("FAIL: Grid movie dir is empty.")
@@ -48,7 +48,7 @@ else:
 # We want to ensure it doesn't Crash looking for files.
 print("Attempting to initialize label_syllables...")
 try:
-    # Note: In a headless environment, this might warn about Ipywidgets, but shouldn't crash 
+    # Note: In a headless environment, this might warn about Ipywidgets, but shouldn't crash
     # if the logic (finding files) is correct.
     widget_or_obj = kpms.label_syllables(project_dir, model_name, moseq_df)
     print("SUCCESS: label_syllables returned without error.")

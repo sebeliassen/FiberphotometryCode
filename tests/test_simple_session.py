@@ -1,7 +1,6 @@
-import warnings
-import pytest
 from pathlib import Path
-from collections import defaultdict
+
+import pytest
 
 from fiberphotometry.config import PLOTTING_CONFIG
 from fiberphotometry.data.data_loading import DataContainer, load_all_sessions
@@ -19,7 +18,7 @@ def raw_sessions():
     """Discover & load up to 30 'cpt' sessions (but do NOT populate .dfs yet)."""
     all_dirs = [
         d for d in SRC.iterdir()
-        if d.is_dir() and any(c.is_dir() and c.name.startswith("T1_") 
+        if d.is_dir() and any(c.is_dir() and c.name.startswith("T1_")
                               for c in d.iterdir())
     ][:30]
 
@@ -105,7 +104,7 @@ def test_sync_and_timepoints(sessions):
 
     for sess in sessions:
         # each value in sess.signal_info is a dict with a 'signal_idx_ranges' list
-        per_pair_counts = [len(info['signal_idx_ranges']) 
+        per_pair_counts = [len(info['signal_idx_ranges'])
                         for info in sess.signal_info.values()]
         total_events = sum(per_pair_counts)
         print(

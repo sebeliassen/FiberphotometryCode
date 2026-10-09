@@ -14,19 +14,18 @@ Implements the canonical egocentric body-centered fusion algorithm:
 7. Exports unified 21-keypoint HDF5 files formatted for standard Keypoint-MoSeq.
 """
 
-import os
 import sys
-import json
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXPERIMENT_DIR = REPO_ROOT / "syllable_generation" / "multiview_top_bot_experiments"
 if str(EXPERIMENT_DIR) not in sys.path:
     sys.path.insert(0, str(EXPERIMENT_DIR))
 
-from clock_sync import align_tracking_dataframes, align_camera_timestamps
+from clock_sync import align_tracking_dataframes
 
 MANIFEST_FILE = EXPERIMENT_DIR / "paired_sessions_manifest.json"
 OUTPUT_H5_DIR = EXPERIMENT_DIR / "fused_h5_predictions"
@@ -151,7 +150,7 @@ def fuse_session_pair(
         names=['scorer', 'bodyparts', 'coords']
     )
     df_fused = pd.DataFrame(fused_dict, columns=columns)
-    
+
     out_path = Path(out_h5_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     df_fused.to_hdf(str(out_path), key="df_with_missing", mode="w")

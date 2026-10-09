@@ -14,19 +14,19 @@ Evaluates:
 - Leave-One-Animal-Out (LOAO) Genotype Decoding Balanced Accuracy per method & overall
 """
 
+import itertools
 import os
 import sys
 import time
 from pathlib import Path
-import itertools
+
 import numpy as np
 import pandas as pd
-import h5py
+from scipy.interpolate import interp1d
 from sklearn.decomposition import PCA
-from sklearn.neighbors import NearestNeighbors
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import balanced_accuracy_score
-from scipy.interpolate import interp1d
+from sklearn.neighbors import NearestNeighbors
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 os.environ["JAX_PLATFORMS"] = "cpu"
@@ -35,13 +35,10 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
-    load_chain_movie_resources,
-    standardize_chain_instances
-)
+from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import load_chain_movie_resources
 from syllable_generation.analysis.sequence_viz.run_24_candidate_transition_exemplars import (
+    SYLL_TO_CLUSTER,
     TransitionBucketEvaluator,
-    SYLL_TO_CLUSTER
 )
 
 DATA_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/data"
@@ -273,12 +270,12 @@ def main():
                 nbrs = NearestNeighbors(n_neighbors=k_pool).fit(Xpca_cand)
                 local_dists, local_indices = nbrs.kneighbors(Xpca_cand)
                 local_density = 1.0 / np.maximum(1e-6, local_dists.mean(axis=1))
-                
+
                 # Global density
                 Xpca_cand_global = pca_global.transform(X_cand)
                 global_dists, _ = bg_nbrs.kneighbors(Xpca_cand_global)
                 global_density = 1.0 / np.maximum(1e-6, global_dists.mean(axis=1))
-                
+
                 density_ratio = local_density / global_density
                 exemplar_idx = int(np.argmax(density_ratio))
                 top_indices = set(local_indices[exemplar_idx])
@@ -339,7 +336,7 @@ def main():
     # Evaluate Contrasts and LOAO for each mode
     print("\nComputing statistical contrasts and LOAO decoding across modes...")
     mode_results = []
-    
+
     wt_aids = [aid for aid in unique_animals if animal_genotypes[aid] == "WT"]
     ki_aids = [aid for aid in unique_animals if animal_genotypes[aid] == "KI"]
 
@@ -363,7 +360,7 @@ def main():
     for m_name in modes:
         cand_contrasts = []
         X_sal = np.zeros((len(unique_animals), len(candidates)))
-        
+
         for c_idx, cand in enumerate(candidates):
             cid = cand["id"]
             wt_sal_rates = [rates_by_mode[m_name][cid][a][0] for a in wt_aids]
@@ -427,7 +424,7 @@ def main():
     print(f"{'STATISTICAL METRIC':<35} | {'MODE 1: FULL POPULATION':<22} | {'MODE 2: DENSITY CORE':<22} | {'MODE 3: STRICT TRANSITION':<22}")
     print("=" * 85)
     r1, r2, r3 = mode_results[0], mode_results[1], mode_results[2]
-    
+
     print(f"{'Total Discovered Candidates':<35} | {24:<22} | {24:<22} | {24:<22}")
     print(f"{'Overall LOAO Genotype Decoding':<35} | {r1['loao_overall']*100:.1f}%{'':<17} | {r2['loao_overall']*100:.1f}%{'':<17} | {r3['loao_overall']*100:.1f}%{'':<17}")
     print(f"{'Contrast 1: Mean |Cohen d| (Genotype)':<35} | {r1['mean_abs_d_c1']:.2f}{'':<18} | {r2['mean_abs_d_c1']:.2f}{'':<18} | {r3['mean_abs_d_c1']:.2f}{'':<18}")

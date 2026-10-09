@@ -21,8 +21,9 @@ Outputs:
 
 import os
 import sys
-from pathlib import Path
 import warnings
+from pathlib import Path
+
 warnings.simplefilter("ignore")
 
 # Force headless Agg backend & disable GPU preallocation for plotting safety
@@ -32,25 +33,29 @@ os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = "platform"
 
 import matplotlib
+
 matplotlib.use("Agg", force=True)
 import matplotlib.pyplot as plt
+
 plt.show = lambda: None  # Ensure headless non-blocking execution
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-import re
 import time
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import jax.numpy as jnp
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
 import keypoint_moseq as kpms
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
 from tqdm import tqdm
+
 
 # ==============================================================================
 # 1. MATPLOTLIB 3.8+ COMPATIBILITY PATCH FOR RASTERIZE_FIGURE
@@ -84,7 +89,7 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 TARGET_SYLLABLES = list(range(100))
 
 print("=" * 80)
-print(f"🎨 KEYPOINT-MOSEQ TRAJECTORY & DENDROGRAM GENERATOR: KAREN DATASET")
+print("🎨 KEYPOINT-MOSEQ TRAJECTORY & DENDROGRAM GENERATOR: KAREN DATASET")
 print(f"   Model:            {MODEL_NAME}")
 print(f"   Target Syllables: {len(TARGET_SYLLABLES)} syllables (Full Repertoire 0 to 99)")
 print(f"   Output Directory: {OUT_DIR}")
@@ -113,7 +118,7 @@ print(f"      FPS: {fps} (Window: {pre_frames} frames pre [{pre_sec}s], {post_fr
 # ==============================================================================
 # 4. ESTIMATE RIGID COORDINATES & PRE-FILTER CENTROIDS/HEADINGS
 # ==============================================================================
-print(f"\n[2/5] Estimating continuous pose coordinates from latent states...", flush=True)
+print("\n[2/5] Estimating continuous pose coordinates from latent states...", flush=True)
 t0 = time.time()
 Y_est = estimate_coordinates(
     jnp.array(model["states"]["x"]),
@@ -126,7 +131,7 @@ if "bodyparts" in config and "use_bodyparts" in config:
     coordinates = kpms.util.reindex_by_bodyparts(coordinates, config["bodyparts"], config["use_bodyparts"])
 print(f"      Estimated coordinates across {len(coordinates)} recordings in {time.time()-t0:.2f}s", flush=True)
 
-print(f"\n[3/5] Pre-filtering session centroids and headings (size=9)...", flush=True)
+print("\n[3/5] Pre-filtering session centroids and headings (size=9)...", flush=True)
 t0 = time.time()
 centroids = {k: v["centroid"] for k, v in results.items()}
 headings = {k: v["heading"] for k, v in results.items()}
@@ -170,7 +175,7 @@ print(f"      Extracted {len(typical_trajectories)} typical trajectories in {tim
 # ==============================================================================
 # 6. RUN BUILT-IN KPMS GENERATE_TRAJECTORY_PLOTS
 # ==============================================================================
-print(f"\n[5/5] Calling kpms.generate_trajectory_plots to render PDFs & animated GIFs...", flush=True)
+print("\n[5/5] Calling kpms.generate_trajectory_plots to render PDFs & animated GIFs...", flush=True)
 
 # Inject the target trajectories directly into get_typical_trajectories
 kpms.viz.get_typical_trajectories = lambda *args, **kwargs: typical_trajectories
@@ -207,8 +212,9 @@ kpms.generate_trajectory_plots(
 # ==============================================================================
 # 7. GENERATE SYLLABLE SIMILARITY DENDROGRAM (ALL 100 SYLLABLES)
 # ==============================================================================
-print(f"\n[6/6] Generating syllable similarity dendrogram (Cosine Distance)...", flush=True)
+print("\n[6/6] Generating syllable similarity dendrogram (Cosine Distance)...", flush=True)
 import shutil
+
 dendro_path = OUT_DIR / "similarity_dendrogram"
 kpms.plot_similarity_dendrogram(
     coordinates=coordinates,
@@ -231,13 +237,13 @@ if (OUT_DIR / "similarity_dendrogram.pdf").exists():
 if (OUT_DIR / "similarity_dendrogram.png").exists():
     shutil.copy(str(OUT_DIR / "similarity_dendrogram.png"), str(ANALYSIS_DIR / "output" / "similarity_dendrogram.png"))
 
-print(f"      Dendrogram successfully saved:")
+print("      Dendrogram successfully saved:")
 print(f"       - {dendro_path}.pdf")
 print(f"       - {dendro_path}.png")
 print(f"       - {ANALYSIS_DIR / 'output' / 'similarity_dendrogram.pdf'}")
 
 print("\n" + "=" * 80)
-print(f"✅ ALL 100 TRAJECTORY PLOTS (PDF & GIF) AND DENDROGRAM GENERATED!")
+print("✅ ALL 100 TRAJECTORY PLOTS (PDF & GIF) AND DENDROGRAM GENERATED!")
 print(f"   Directory: {OUT_DIR}")
 print(f"   Total elapsed time: {time.time() - t_start:.2f}s")
 print("=" * 80)

@@ -13,29 +13,30 @@ Comprehensive Diagnostic and Audit of Clustering Resolution Comparisons:
 =============================================================================
 """
 
-import os
+import json
 import sys
 import time
-import json
 from pathlib import Path
+
+import matplotlib
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
-import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import cv2
+import matplotlib.pyplot as plt
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+    generate_chain_grid_movie,
     load_chain_movie_resources,
-    generate_chain_grid_movie
 )
 from syllable_generation.analysis.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
     get_level_definitions,
-    get_verified_metadata
+    get_verified_metadata,
 )
 
 EXP_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison"
@@ -226,20 +227,20 @@ def main():
     # B) Pooled multi-level reference (mean across all valid candidates from all levels)
     # C) Per-level own centroid reference
     theme_ids = ["theme_A_rear_descent", "theme_B_turn_slalom", "theme_C_sensory_rest"]
-    
+
     for th_id in theme_ids:
         th_cands = [c for c in all_theme_candidates if c["theme_id"] == th_id]
         l1_cands = [c for c in th_cands if c["level_id"] == 1]
-        
+
         l1_feats = np.array([c["feature_vector"] for c in l1_cands])
         all_feats = np.array([c["feature_vector"] for c in th_cands])
-        
+
         ref_l1 = np.mean(l1_feats, axis=0)
         ref_l1_norm = ref_l1 / (np.linalg.norm(ref_l1) + 1e-8)
-        
+
         ref_pool = np.mean(all_feats, axis=0)
         ref_pool_norm = ref_pool / (np.linalg.norm(ref_pool) + 1e-8)
-        
+
         for c in th_cands:
             f = c["feature_vector"]
             fn = f / (np.linalg.norm(f) + 1e-8)

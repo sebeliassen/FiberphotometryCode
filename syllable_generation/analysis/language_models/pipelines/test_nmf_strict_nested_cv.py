@@ -1,6 +1,7 @@
 import os
-import sys
 import pickle
+import sys
+
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import NMF
@@ -37,32 +38,32 @@ for sess_idx, bouts in enumerate(session_bouts):
     if len(bouts) < 100: continue
     max_frame = bouts[-1]["end_frame"]
     N = max_frame + 1
-    
+
     frame_sylls = np.zeros(N, dtype=np.int32)
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = min(b["syllable"], NUM_SYLLS - 1)
         frame_sylls[sf:ef+1] = s_id
-        
+
     start_f = W_FRAMES
     end_f = N - H_FRAMES
     for center_f in range(start_f, end_f, STRIDE_FRAMES):
         w_sylls = frame_sylls[center_f - W_FRAMES : center_f]
         h_sylls = frame_sylls[center_f : center_f + H_FRAMES]
         curr_syll = frame_sylls[center_f]
-        
+
         # Past counts (frequencies)
         w_counts = np.bincount(w_sylls, minlength=NUM_SYLLS)[:NUM_SYLLS].astype(np.float32)
         w_freq = w_counts / (np.sum(w_counts) + 1e-8)
-        
+
         # Current syllable one-hot
         curr_oh = np.zeros(NUM_SYLLS, dtype=np.float32)
         curr_oh[curr_syll] = 1.0
-        
+
         # Future distribution
         h_counts = np.bincount(h_sylls, minlength=NUM_SYLLS)[:NUM_SYLLS].astype(np.float32)
         h_dist = h_counts / (np.sum(h_counts) + 1e-8)
-        
+
         X_counts_list.append(w_freq)
         X_curr_list.append(curr_oh)
         Y_list.append(h_dist)
@@ -84,7 +85,7 @@ def compute_js_div(y_true, y_pred):
     eps = 1e-8
     y_pred_clipped = np.clip(y_pred, eps, None)
     y_pred_norm = y_pred_clipped / np.sum(y_pred_clipped, axis=1, keepdims=True)
-    
+
     js_vals = []
     for i in range(len(y_true)):
         m = 0.5 * (y_true[i] + y_pred_norm[i])
@@ -105,11 +106,11 @@ gains_full_rep = []
 for fold_idx, test_sess in enumerate(folds):
     train_mask = ~np.isin(sess_ids, test_sess)
     test_mask = np.isin(sess_ids, test_sess)
-    
+
     reg = Ridge(alpha=100.0)
     reg.fit(X_counts[train_mask], Y[train_mask])
     y_pred = reg.predict(X_counts[test_mask])
-    
+
     d_pred = compute_js_div(Y[test_mask], y_pred)
     d_null_test = compute_js_div(Y[test_mask], np.tile(p_global, (np.sum(test_mask), 1)))
     gain = (d_null_test - d_pred) / d_null_test * 100.0
@@ -126,11 +127,11 @@ gains_cumul = []
 for fold_idx, test_sess in enumerate(folds):
     train_mask = ~np.isin(sess_ids, test_sess)
     test_mask = np.isin(sess_ids, test_sess)
-    
+
     reg = Ridge(alpha=100.0)
     reg.fit(X_cumul[train_mask], Y[train_mask])
     y_pred = reg.predict(X_cumul[test_mask])
-    
+
     d_pred = compute_js_div(Y[test_mask], y_pred)
     d_null_test = compute_js_div(Y[test_mask], np.tile(p_global, (np.sum(test_mask), 1)))
     gain = (d_null_test - d_pred) / d_null_test * 100.0
@@ -150,58 +151,58 @@ for K in K_sweep:
     gains_k_pure = []
     gains_k_cumul = []
     recon_vars = []
-    
+
     for fold_idx, test_sess in enumerate(folds):
         train_mask = ~np.isin(sess_ids, test_sess)
         test_mask = np.isin(sess_ids, test_sess)
-        
+
         X_tr = X_counts[train_mask]
         X_te = X_counts[test_mask]
-        
+
         # Fit NMF ONLY on training set
         nmf = NMF(n_components=K, init='nndsvda', random_state=42, max_iter=400)
         W_tr = nmf.fit_transform(X_tr)
         W_te = nmf.transform(X_te)
-        
+
         # Measure train reconstruction variance explained
         X_tr_recon = W_tr @ nmf.components_
         var_exp = 1.0 - np.sum((X_tr - X_tr_recon)**2) / np.sum((X_tr - np.mean(X_tr, axis=0))**2)
         recon_vars.append(var_exp)
-        
+
         # Normalize W
         W_tr_norm = W_tr / np.clip(np.sum(W_tr, axis=1, keepdims=True), 1e-8, None)
         W_te_norm = W_te / np.clip(np.sum(W_te, axis=1, keepdims=True), 1e-8, None)
-        
+
         # A. Pure NMF Repertoire -> Predict Y
         reg_pure = Ridge(alpha=100.0)
         reg_pure.fit(W_tr_norm, Y[train_mask])
         y_pred_pure = reg_pure.predict(W_te_norm)
-        
+
         d_pred_p = compute_js_div(Y[test_mask], y_pred_pure)
         d_null_t = compute_js_div(Y[test_mask], np.tile(p_global, (np.sum(test_mask), 1)))
         gain_p = (d_null_t - d_pred_p) / d_null_t * 100.0
         gains_k_pure.append(gain_p)
-        
+
         # B. Cumulative [Current Syll + NMF Repertoire] -> Predict Y
         F_tr_cumul = np.hstack([X_curr[train_mask], W_tr_norm])
         F_te_cumul = np.hstack([X_curr[test_mask], W_te_norm])
-        
+
         reg_cumul = Ridge(alpha=100.0)
         reg_cumul.fit(F_tr_cumul, Y[train_mask])
         y_pred_c = reg_cumul.predict(F_te_cumul)
-        
+
         d_pred_c = compute_js_div(Y[test_mask], y_pred_c)
         gain_c = (d_null_t - d_pred_c) / d_null_t * 100.0
         gains_k_cumul.append(gain_c)
-        
+
     mean_g_p = np.mean(gains_k_pure)
     std_g_p = np.std(gains_k_pure)
     mean_g_c = np.mean(gains_k_cumul)
     std_g_c = np.std(gains_k_cumul)
     mean_var = np.mean(recon_vars) * 100.0
-    
+
     ret_pct = (mean_g_p / mean_full_rep) * 100.0
-    
+
     print(f"K = {K:2d} | Var Exp: {mean_var:5.1f}% | Pure Pred Gain: {mean_g_p:5.2f}% ± {std_g_p:.2f}% (Ret: {ret_pct:5.1f}%) | Cumulative [Curr+NMF]: {mean_g_c:5.2f}% ± {std_g_c:.2f}%")
     results_pure.append({
         "K": K,

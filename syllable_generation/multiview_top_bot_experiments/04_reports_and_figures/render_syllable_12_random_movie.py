@@ -8,17 +8,16 @@ Renders a 3x4 dual-view random grid movie for Syllable 12:
 - Saves to visualizations_cohort_static_21kp_v2_seed101_v4/grid_movies_random/syllable_12_tandem_grid_random.mp4
 """
 
+import json
 import os
 import sys
-import json
-import time
 from pathlib import Path
-import numpy as np
-import h5py
-import pandas as pd
+
 import cv2
+import h5py
 import imageio.v2 as imageio
-import yaml
+import numpy as np
+import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 EXP_DIR = SCRIPT_DIR.parent
@@ -28,6 +27,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 import viz_v2_common as vc
+
 from core.camera_correspondence import top_to_bot_frame_continuous
 from core.pair_matching import find_matched_pairs
 

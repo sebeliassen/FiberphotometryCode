@@ -1,10 +1,12 @@
 # analysis/utils/syll_results.py
 
 from __future__ import annotations
+
 from pathlib import Path
+from typing import Dict, Iterable, List
+
 import numpy as np
-import pandas as pd
-from typing import Dict, Iterable, Optional, List
+
 
 def load_kpms_results_and_vfi(path: str | Path, use_cpu: bool = True):
     """
@@ -33,7 +35,7 @@ def load_kpms_results_and_vfi(path: str | Path, use_cpu: bool = True):
         print(f"[load] No results.h5 found. Extracting from checkpoint for {model_name}...")
         model, data, metadata, current_iter = kpms.load_checkpoint(str(project_dir), model_name)
         results = kpms.extract_results(model, metadata, str(project_dir), model_name, save_results=True)
-        print(f"[load] Successfully extracted and saved results.h5.")
+        print("[load] Successfully extracted and saved results.h5.")
 
     # Load video_frame_indexes if saved by pipeline (NPZ of arrays keyed by recording name)
     vfi_npz = model_dir / "video_frame_indexes.npz"
@@ -84,10 +86,10 @@ def build_result_to_session_map(
         print(f"[load] DEBUG: System has {len(session_ids)} session IDs. First few: {session_ids[:3]}")
 
     for rk in results_keys:
-        # Flipped models append '_flipped' to the key, which prevents exact substring match 
+        # Flipped models append '_flipped' to the key, which prevents exact substring match
         # against the pure session ID if the session ID itself is at the end of the key.
         search_rk = rk.replace("_flipped", "")
-        
+
         matches = []
         for sid in session_ids:
             if sid in search_rk:
@@ -97,7 +99,7 @@ def build_result_to_session_map(
                     trial_id = s.metadata.get('trial_id')
                 if trial_id is None:
                     trial_id = getattr(s, 'trial_id', None)
-                
+
                 if trial_id is not None:
                     if trial_id in search_rk:
                         matches.append(sid)
@@ -123,8 +125,8 @@ def build_result_to_session_map(
             sessions[si].results_dict_key = rk  # always str in strict mode
 
         elif len(matches) == 0:
-            # If a result key has no matching session in the database, we can skip it 
-            # if strict=False or if we only match keys of interest. But in strict=True, 
+            # If a result key has no matching session in the database, we can skip it
+            # if strict=False or if we only match keys of interest. But in strict=True,
             # we only warn or ignore if the session was intentionally excluded.
             # To be safe, let's not raise an error for result keys that don't match any active session.
             if verbose:

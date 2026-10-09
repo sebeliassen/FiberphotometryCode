@@ -1,7 +1,7 @@
 import os
-import sys
 import pickle
-import numpy as np
+import sys
+
 import pandas as pd
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"

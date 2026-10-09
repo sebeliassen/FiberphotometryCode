@@ -9,12 +9,12 @@ Provides API endpoints for:
 5. Persisting ethological labels back into session objects and project config
 """
 
+import math
 import os
 import sys
-import yaml
-import json
-import math
+
 import numpy as np
+import yaml
 
 # Apply NumPy 2.x compatibility shim
 if not hasattr(np, "bool8"):
@@ -24,16 +24,16 @@ if not hasattr(np, "bool8"):
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.15"
 
-import pandas as pd
-import keypoint_moseq as kpms
-from keypoint_moseq.io import generate_config, setup_project, load_keypoints
-
 import subprocess
 from pathlib import Path
-from typing import Optional, List, Dict, Any
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from typing import Any, Dict, List, Optional
+
+import keypoint_moseq as kpms
+import pandas as pd
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
+from keypoint_moseq.io import generate_config
 from pydantic import BaseModel
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -59,7 +59,7 @@ def discover_projects():
                         cfg = yaml.safe_load(f) or {}
                 except Exception:
                     pass
-                
+
                 models = [m.name for m in item.iterdir() if m.is_dir() and ((m / "checkpoint.h5").exists() or (m / "results.h5").exists())]
                 bodyparts = cfg.get("bodyparts", [])
                 use_bodyparts = cfg.get("use_bodyparts", bodyparts)
@@ -228,7 +228,7 @@ async def select_project(req: SelectProjectRequest):
     target = Path(req.project_path)
     if not target.exists() or not (target / "config.yml").exists():
         raise HTTPException(status_code=404, detail="Invalid project directory or config.yml missing")
-    
+
     cfg = load_project_config(target)
     STATE["active_project_path"] = str(target)
     STATE["active_project_name"] = target.name
@@ -239,7 +239,7 @@ async def select_project(req: SelectProjectRequest):
     STATE["anterior_bodyparts"] = cfg.get("anterior_bodyparts", [])
     STATE["posterior_bodyparts"] = cfg.get("posterior_bodyparts", [])
     STATE["latent_dim"] = cfg.get("latent_dim", STATE["latent_dim"])
-    
+
     return {
         "status": "success",
         "active_project": STATE["active_project_name"],
@@ -261,12 +261,12 @@ async def inspect_dlc(req: InspectDlcRequest):
 
     sample_file = None
     all_files = []
-    
+
     if target_path.is_dir():
         h5_files = sorted(target_path.glob("*.h5"))
         csv_files = sorted(target_path.glob("*.csv"))
         cfg_files = sorted(target_path.glob("*config*.yaml")) + sorted(target_path.glob("*config*.yml"))
-        
+
         if cfg_files:
             sample_file = cfg_files[0]
             all_files = cfg_files
@@ -348,9 +348,9 @@ async def create_project(req: CreateProjectRequest):
     new_dir = DEFAULT_PROJECTS_DIR / req.project_name
     if new_dir.exists():
         raise HTTPException(status_code=400, detail="Project directory already exists")
-    
+
     new_dir.mkdir(parents=True, exist_ok=True)
-    
+
     bodyparts = req.bodyparts
     use_bodyparts = req.use_bodyparts if req.use_bodyparts else bodyparts
     anterior = req.anterior_bodyparts or ([bodyparts[0]] if bodyparts else [])
@@ -379,7 +379,7 @@ async def create_project(req: CreateProjectRequest):
             latent_dim=req.latent_dim,
             video_dir=req.video_dir or ""
         )
-        
+
     cfg = load_project_config(new_dir)
     STATE["active_project_path"] = str(new_dir)
     STATE["active_project_name"] = req.project_name
@@ -390,7 +390,7 @@ async def create_project(req: CreateProjectRequest):
     STATE["anterior_bodyparts"] = anterior
     STATE["posterior_bodyparts"] = posterior
     STATE["latent_dim"] = req.latent_dim
-    
+
     return {
         "status": "success",
         "message": f"Created new project '{req.project_name}' via native KPMS",
@@ -416,7 +416,7 @@ async def update_bodyparts(req: UpdateKeypointsRequest):
     STATE["use_bodyparts"] = req.use_bodyparts
     proj_path = Path(STATE["active_project_path"])
     cfg_file = proj_path / "config.yml"
-    
+
     if cfg_file.exists():
         cfg = load_project_config(proj_path)
         cfg["use_bodyparts"] = req.use_bodyparts
@@ -431,7 +431,7 @@ async def update_bodyparts(req: UpdateKeypointsRequest):
             STATE["skeleton"] = req.skeleton
         with open(cfg_file, "w") as f:
             yaml.dump(cfg, f, default_flow_style=False)
-            
+
     return {
         "status": "success",
         "use_bodyparts": STATE["use_bodyparts"],
@@ -481,7 +481,7 @@ async def get_pca_scree():
     current_dim = ar_hypp.get("latent_dim") if isinstance(ar_hypp, dict) else cfg.get("latent_dim", 6)
     if not current_dim:
         current_dim = cfg.get("latent_dim", 6)
-    
+
     if not pca_file.exists():
         return {
             "has_pca": False,
@@ -490,26 +490,26 @@ async def get_pca_scree():
             "has_pcs_image": False,
             "message": "PCA model (pca.p) not found for this project. Click 'Fit PCA' to assess latent dimensions."
         }
-    
+
     try:
         pca = kpms.load_pca(str(proj_path))
         exp_var = [float(x) for x in pca.explained_variance_ratio_]
         cum_var = [float(x) for x in np.cumsum(pca.explained_variance_ratio_)]
-        
+
         # Calculate components explaining >= 80%, 90%, 95%
         dims_80 = int(np.searchsorted(cum_var, 0.80) + 1)
         dims_90 = int(np.searchsorted(cum_var, 0.90) + 1)
         dims_95 = int(np.searchsorted(cum_var, 0.95) + 1)
-        
+
         # KPMS documentation heuristic: number of dims to explain 90% or 10, whichever is lower
         recommended_dim = min(dims_90, 10)
-        
+
         # Check / ensure pcs-xy-1.png exists
         pcs_png = proj_path / "pcs-xy-1.png"
         if not pcs_png.exists():
             pcs_png = ensure_pdf_as_png(proj_path / "pcs-xy.pdf", proj_path / "pcs-xy")
         has_pcs_img = pcs_png is not None and pcs_png.exists()
-        
+
         return {
             "has_pca": True,
             "project": STATE["active_project_name"],
@@ -534,7 +534,7 @@ async def get_pca_pcs_image():
     img_path = proj_path / "pcs-xy-1.png"
     if not img_path.exists():
         img_path = ensure_pdf_as_png(proj_path / "pcs-xy.pdf", proj_path / "pcs-xy")
-    
+
     if (not img_path or not img_path.exists()) and (proj_path / "pca.p").exists():
         try:
             pca = kpms.load_pca(str(proj_path))
@@ -553,7 +553,7 @@ async def fit_pca_endpoint(req: FitPcaRequest):
     """Fit PCA model using native kpms.fit_pca, save with kpms.save_pca, and generate scree & pcs plots."""
     proj_path = Path(STATE["active_project_path"])
     cfg = load_project_config(proj_path)
-    
+
     dlc_path = req.dlc_source
     if not dlc_path:
         video_dir = cfg.get("video_dir", "")
@@ -563,10 +563,10 @@ async def fit_pca_endpoint(req: FitPcaRequest):
             default_h5 = REPO_ROOT / "src_oft/jonathan_full/h5_files"
             if default_h5.exists():
                 dlc_path = str(default_h5)
-                
+
     if not dlc_path or not Path(dlc_path).exists():
         raise HTTPException(status_code=400, detail=f"Tracking source not found: {dlc_path}. Please provide a valid DLC folder or file.")
-        
+
     try:
         p = Path(dlc_path)
         if p.is_dir():
@@ -576,9 +576,9 @@ async def fit_pca_endpoint(req: FitPcaRequest):
             load_target = [str(f) for f in h5_files[:4]]
         else:
             load_target = str(p)
-            
+
         coords, confs, bodyparts = kpms.load_keypoints(load_target, "deeplabcut")
-        
+
         if req.outlier_scale_factor and req.outlier_scale_factor > 0:
             try:
                 coords, confs = kpms.outlier_removal(
@@ -588,27 +588,27 @@ async def fit_pca_endpoint(req: FitPcaRequest):
                 )
             except Exception:
                 pass
-                
+
         data, metadata = kpms.format_data(coords, confs, **cfg)
         pca = kpms.fit_pca(**data, **cfg)
         kpms.save_pca(pca, str(proj_path))
-        
+
         kpms.plot_scree(pca, project_dir=str(proj_path))
         try:
             kpms.plot_pcs(pca, project_dir=str(proj_path), **cfg)
             ensure_pdf_as_png(proj_path / "pcs-xy.pdf", proj_path / "pcs-xy")
         except Exception:
             pass
-            
+
         exp_var = [float(x) for x in pca.explained_variance_ratio_]
         cum_var = [float(x) for x in np.cumsum(pca.explained_variance_ratio_)]
         dims_90 = int(np.searchsorted(cum_var, 0.90) + 1)
         rec_dim = min(dims_90, 10)
-        
+
         kpms.update_config(str(proj_path), latent_dim=rec_dim)
         STATE["latent_dim"] = rec_dim
         STATE["config"] = load_project_config(proj_path)
-        
+
         return {
             "status": "success",
             "message": f"Fitted PCA ({len(exp_var)} components). Recommended latent_dim = {rec_dim} PCs (≥90% variance).",
@@ -626,13 +626,13 @@ async def update_latent_dim(req: UpdateLatentDimRequest):
     """Update latent_dim in active project config.yml using native kpms.update_config."""
     if req.latent_dim < 1 or req.latent_dim > 32:
         raise HTTPException(status_code=400, detail="latent_dim must be between 1 and 32")
-    
+
     proj_path = Path(STATE["active_project_path"])
     cfg_file = proj_path / "config.yml"
     if cfg_file.exists():
         kpms.update_config(str(proj_path), latent_dim=req.latent_dim)
         STATE["config"] = load_project_config(proj_path)
-            
+
     STATE["latent_dim"] = req.latent_dim
     return {
         "status": "success",
@@ -652,7 +652,7 @@ async def estimate_sigmasq_endpoint():
     proj_path = Path(STATE["active_project_path"])
     cfg = load_project_config(proj_path)
     fps = cfg.get("fps", 30)
-    
+
     try:
         sigmasq = round(1.277 * (fps / 40.0), 4)
         kpms.update_config(str(proj_path), sigmasq_loc=sigmasq)
@@ -675,7 +675,7 @@ async def reindex_syllables_endpoint(req: ModelActionRequest):
         if not models:
             raise HTTPException(status_code=404, detail="No model checkpoint found in active project")
         model_name = models[0]
-        
+
     try:
         kpms.reindex_syllables_in_checkpoint(str(proj_path), model_name)
         return {
@@ -696,7 +696,7 @@ async def extract_results_endpoint(req: ModelActionRequest):
         if not models:
             raise HTTPException(status_code=404, detail="No model checkpoint found in active project")
         model_name = models[0]
-        
+
     try:
         model, data, metadata, current_iter = kpms.load_checkpoint(str(proj_path), model_name)
         results = kpms.extract_results(model, metadata, str(proj_path), model_name)
@@ -715,14 +715,14 @@ async def extract_results_endpoint(req: ModelActionRequest):
 async def list_visualizations_endpoint():
     """Scan project and all model directories for native KPMS visualization artifacts."""
     proj_path = Path(STATE["active_project_path"])
-    
+
     models = [m.name for m in proj_path.iterdir() if m.is_dir() and ((m / "checkpoint.h5").exists() or (m / "results.h5").exists())]
-    
+
     dendrograms = []
     all_trajectories = []
     grid_movies = []
     trajectory_gifs = []
-    
+
     search_dirs = [proj_path] + [proj_path / m for m in models]
     for d in search_dirs:
         # Dendrograms
@@ -732,7 +732,7 @@ async def list_visualizations_endpoint():
             ensure_pdf_as_png(d / "similarity_dendrogram.pdf", d / "similarity_dendrogram")
             if (d / "similarity_dendrogram-1.png").exists():
                 dendrograms.append(str((d / "similarity_dendrogram-1.png").relative_to(proj_path)))
-                
+
         # Grid movies
         gm_dir = d / "grid_movies"
         if gm_dir.exists():
@@ -744,7 +744,7 @@ async def list_visualizations_endpoint():
                     "model": d.name if d != proj_path else "root",
                     "size_kb": round(mp4.stat().st_size / 1024, 1)
                 })
-                
+
         # Trajectory plots
         tp_dir = d / "trajectory_plots"
         if tp_dir.exists():
@@ -780,13 +780,13 @@ async def get_visualization_file_endpoint(path: str):
     """Serve media file (mp4, gif, png, pdf) from the active project."""
     proj_path = Path(STATE["active_project_path"])
     target_file = (proj_path / path).resolve()
-    
+
     if not str(target_file).startswith(str(proj_path.resolve())):
         raise HTTPException(status_code=403, detail="Access denied")
-        
+
     if not target_file.exists() or not target_file.is_file():
         raise HTTPException(status_code=404, detail="File not found")
-        
+
     ext = target_file.suffix.lower()
     media_types = {
         ".mp4": "video/mp4",
@@ -802,18 +802,18 @@ async def get_visualization_file_endpoint(path: str):
 async def run_kappa_search(req: KappaSearchRequest):
     target = req.target_frames
     frac = max(0.01, min(1.0, req.subset_fraction))
-    
+
     log_lo = math.log10(1e2)
     log_hi = math.log10(1e8)
     log_k = math.log10(max(10.0, req.start_kappa))
-    
+
     steps = []
     current_k = 10**log_k
-    
+
     for i in range(1, req.max_steps + 1):
         sim_duration = 5.0 + 3.3 * (math.log10(current_k) - 2.0)
         sim_duration = max(3.0, min(35.0, sim_duration + (np.random.normal(0, 0.2))))
-        
+
         diff = sim_duration - target
         step_entry = {
             "step": i,
@@ -825,32 +825,32 @@ async def run_kappa_search(req: KappaSearchRequest):
             "delta": round(diff, 2)
         }
         steps.append(step_entry)
-        
+
         if abs(diff) <= req.tol_frames:
             break
-            
+
         if diff < 0:
             log_lo = math.log10(current_k)
             log_k = log_lo + 0.38 * (log_hi - log_lo)
         else:
             log_hi = math.log10(current_k)
             log_k = log_hi - 0.38 * (log_hi - log_lo)
-            
+
         current_k = 10**log_k
 
     best_step = min(steps, key=lambda s: abs(s["median_duration_frames"] - target))
     best_kappa_scout = best_step["kappa"]
-    
+
     # Dataset Upscaling Rule
     upscale_ratio = (1.0 / frac) ** 0.90
     upscaled_kappa_prod = best_kappa_scout * upscale_ratio
-    
+
     STATE["current_kappa_scout"] = best_kappa_scout
     STATE["current_kappa_prod"] = upscaled_kappa_prod
     STATE["target_frames"] = target
     STATE["subset_fraction"] = frac
     STATE["search_history"] = steps
-    
+
     return {
         "status": "converged",
         "best_scout_kappa": best_kappa_scout,
@@ -892,7 +892,7 @@ async def export_syllables_csv():
     """
     import pandas as pd
     proj_path = Path(STATE["active_project_path"])
-    
+
     # 1. Syllable Summary / Label Lookup CSV
     lookup_rows = []
     for s in STATE["syllables"]:
@@ -1017,7 +1017,7 @@ async def inspect_videos(req: InspectVideosRequest):
         v_stem = v.stem
         # Match where DLC filename is a superset of the video name
         matches = [
-            d for d in dlc_files 
+            d for d in dlc_files
             if d.name.startswith(v_stem) or (v_stem in d.name and "DLC" in d.name)
         ]
         if matches:
@@ -1064,7 +1064,7 @@ async def apply_video_fps(req: ApplyFpsRequest):
     """Save detected/downsampled model FPS into active project config.yml."""
     if req.downsample_factor < 1 or not isinstance(req.downsample_factor, int):
         raise HTTPException(status_code=400, detail="Downsampling factor must be a strictly positive integer (1, 2, 3...)")
-    
+
     proj_path = Path(STATE["active_project_path"])
     cfg_file = proj_path / "config.yml"
     if cfg_file.exists():
@@ -1088,10 +1088,10 @@ async def save_video_correspondence(req: SaveCorrespondenceRequest):
     """Save verified Video <-> DLC file mapping table to video_mapping.csv for grid movies."""
     proj_path = Path(STATE["active_project_path"])
     csv_file = proj_path / "video_mapping.csv"
-    
+
     df = pd.DataFrame(req.pairs)
     df.to_csv(csv_file, index=False)
-    
+
     return {
         "status": "success",
         "csv_path": str(csv_file),

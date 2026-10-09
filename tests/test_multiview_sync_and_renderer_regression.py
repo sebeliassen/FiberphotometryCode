@@ -14,7 +14,7 @@ Regression test suite for multiview hardware synchronization and rendering:
 
 import sys
 from pathlib import Path
-import numpy as np
+
 import pandas as pd
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
@@ -22,14 +22,11 @@ EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.ttl_sync import find_camera_timestamp_files, get_session_ttl_offset
-from core.camera_correspondence import (
-    compute_session_camera_mapping,
-    top_to_bot_frame_continuous,
-    get_session_calibration_details,
-    get_session_mapping
-)
 import importlib.util
+
+from core.camera_correspondence import compute_session_camera_mapping, top_to_bot_frame_continuous
+from core.ttl_sync import find_camera_timestamp_files
+
 spec = importlib.util.spec_from_file_location(
     "renderer",
     str(EXP_DIR / "04_reports_and_figures/render_all_seed101_grid_movies.py")
@@ -56,7 +53,7 @@ def test_six_frame_gap_rejection_and_preservation():
         assert mapping[drop_f] == -1, f"Frame {drop_f} should be marked -1 in mapping"
         cont_val = top_to_bot_frame_continuous(sid, drop_f)
         assert cont_val == -1, f"top_to_bot_frame_continuous({drop_f}) must return -1, got {cont_val}"
-        
+
         # Verify renderer caller pattern does not convert -1 to 0
         safe_bot_frame = cont_val if cont_val >= 0 else None
         assert safe_bot_frame is None, "Caller must not clamp -1 to frame 0!"

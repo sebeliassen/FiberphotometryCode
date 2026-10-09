@@ -15,16 +15,16 @@ Output:
   - syllable_generation/multiview_top_bot_experiments/sessions_karen_project_tandem_cohort_static_21kp_seed101.pkl
 """
 
-import os
-import sys
-import re
-import time
 import pickle
-from pathlib import Path
+import re
+import sys
+import time
 from collections import defaultdict
+from pathlib import Path
+
+import h5py
 import numpy as np
 import pandas as pd
-import h5py
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
@@ -116,7 +116,7 @@ def main():
             # Bounds check
             valid_vfi_mask = (vfi >= 0) & (vfi < n_frames)
             vfi_clean = vfi[valid_vfi_mask]
-            
+
             syll_arr[vfi_clean] = seg_res["syllable"][valid_vfi_mask]
             latents_arr[vfi_clean, :] = seg_res["latent_state"][valid_vfi_mask, :]
             c0_arr[vfi_clean] = seg_res["centroid"][valid_vfi_mask, 0]

@@ -1,20 +1,20 @@
 import sys
 
 from matplotlib.lines import Line2D
+
 sys.path.append('../../')
 
-from main import load_and_prepare_sessions
-from processing.session_sampling import MiceAnalysis
+from itertools import product
+
+import matplotlib.pyplot as plt
+import numpy as np
 from analysis.timepoint_analysis import sample_signals_and_metrics
 from config import all_brain_regions, all_event_types
-from itertools import product
-import numpy as np
-from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-from utils import mouse_br_events_count
-
 from fitsne import FItSNE
-import matplotlib.pyplot as plt
-from scipy.ndimage import gaussian_filter1d
+from main import load_and_prepare_sessions
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+from processing.session_sampling import MiceAnalysis
+from utils import mouse_br_events_count
 
 window_size = 5
 window = np.ones(window_size) / window_size
@@ -35,7 +35,7 @@ for mouse in mouse_analyser.mice_dict.values():
         #     continue
         if event != 'mistake':
             continue
-        mouse_signals = [] 
+        mouse_signals = []
         for session in mouse_sessions:
             if session.signal_info.get((brain_region, event)) is None:
                 continue
@@ -62,16 +62,15 @@ all_event_signals = np.array(all_event_signals)
 # pca = PCA(n_components=2)
 # signals_embedded = pca.fit_transform(all_event_signals)
 ###
-signals_embedded = FItSNE(all_event_signals, max_iter=750);
+signals_embedded = FItSNE(all_event_signals, max_iter=750)
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 # Define mappings
-colors = {'hit': 'green', 
-        'reward_collect': 
-        'purple', 'mistake': 
-        'red', 'miss':'orange', 
+colors = {'hit': 'green',
+        'reward_collect':
+        'purple', 'mistake':
+        'red', 'miss':'orange',
         'cor_reject':'blue',
         'other': 'black'}
 

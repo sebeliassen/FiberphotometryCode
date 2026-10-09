@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+
 import numpy as np
 
 if not hasattr(np, "bool8"):
@@ -16,8 +17,6 @@ if KPMS_DIR not in sys.path:
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-from run_pipeline import get_sessions
-from kpms_pipeline import run_pipeline
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "karen_project_2")
 
@@ -28,11 +27,11 @@ def probe_batch_size(bs, N=1004, T=10030, k=17, d=2, latent_dim=10, nlags=3, num
     """
     print(f"\n[Probe] Testing batch_size = {bs} on {N} videos (bs slice = {min(bs, N)})...")
     seed = jr.PRNGKey(42)
-    
+
     slice_n = min(bs, N)
     try:
-        from utils.resample_batching import _jit_resample_x_batch, _jit_resample_discrete_batch
-        
+        from utils.resample_batching import _jit_resample_discrete_batch, _jit_resample_x_batch
+
         # Allocate one batch test on GPU
         Y = jr.normal(jr.fold_in(seed, 1), (slice_n, T, k, d))
         mask = jnp.ones((slice_n, T), dtype=bool)
@@ -52,7 +51,7 @@ def probe_batch_size(bs, N=1004, T=10030, k=17, d=2, latent_dim=10, nlags=3, num
         _ = _jit_resample_discrete_batch(seed, x, mask, Ab, Q, pi).block_until_ready()
         _ = _jit_resample_x_batch(seed, Y, mask, v, h, s, z, Cd, sigmasq, Ab, Q).block_until_ready()
         t_tot = time.perf_counter() - t0
-        
+
         # Clean up
         del Y, mask, v, h, s, z, Cd, sigmasq, Ab, Q, pi, x
         jax.clear_caches()
@@ -73,7 +72,7 @@ def binary_search_optimal_bs(low=1, high=1004):
     print("      BINARY SEARCH FOR OPTIMAL GPU BATCH SIZE ON RTX 4090 (24GB)")
     print(f"      Lower Bound: {low} | Upper Bound: {high}")
     print("=" * 70)
-    
+
     best_bs = low
     # First check upper bound directly
     ok, _ = probe_batch_size(high)

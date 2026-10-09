@@ -1,9 +1,12 @@
-import sys, pickle, re, time, os
+import pickle
+import re
+import sys
+import time
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
-from collections.abc import Mapping
 
 # Try to discover the repo root
 start = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd().resolve()
@@ -29,16 +32,16 @@ for d in [OUT_DIR, CACHE]:
 # --- ANALYSIS CONFIG ---
 BIN_GRID = list(range(1, 61))  # 1..60 s bins
 SEED     = 123
-NBOOT    = 500        
+NBOOT    = 500
 NSHUFF   = 300        # 300 shuffles per mode (Total 600/bin)
-NJOBS    = -1         
+NJOBS    = -1
 
 # OPTIMIZATION: Mean Only
-SCALAR_MODES = ["mean"] 
-SCALAR_ABS_MEAN_KEYS = {} 
+SCALAR_MODES = ["mean"]
+SCALAR_ABS_MEAN_KEYS = {}
 
 # REGEX: Capture Standard (_zscore) AND Datta (_zscore_datta)
-SIGNAL_COL_REGEX = r"^signal_\d+_zscore.*$" 
+SIGNAL_COL_REGEX = r"^signal_\d+_zscore.*$"
 
 RATE_METHOD = "cross"
 CORR_METHOD = "pearson"
@@ -80,7 +83,7 @@ def _zscore_groupwise(df: pd.DataFrame, by: str, cols: list[str]) -> pd.DataFram
         m = np.nanmean(v)
         s = np.nanstd(v)
         if not np.isfinite(s) or s == 0:
-            return (v - m) 
+            return (v - m)
         return (v - m) / s
     out[cols] = out.groupby(by, observed=True)[cols].transform(_z)
     return out
@@ -94,26 +97,26 @@ def _grad(y: np.ndarray, t: np.ndarray) -> np.ndarray:
 def peak_rate_cross(x: pd.Series, threshold: float = 1.96) -> float:
     v = x.to_numpy()
     if v.size <= 1: return np.nan
-    
+
     # Identify valid transitions:
     # 1. Start is below threshold
     # 2. End is above threshold
     # 3. BOTH Start and End must be finite (not NaN)
-    
+
     # Shifted arrays
     v_curr = v[:-1]
     v_next = v[1:]
-    
+
     # Logic: (Below -> Above) AND (Not NaN -> Not NaN)
     crossing = (v_curr < threshold) & (v_next > threshold) & np.isfinite(v_curr) & np.isfinite(v_next)
-    
+
     # We normalize by the number of VALID transitions, not total frames
     valid_transitions = np.isfinite(v_curr) & np.isfinite(v_next)
     n_valid = valid_transitions.sum()
-    
+
     if n_valid == 0:
         return np.nan
-        
+
     return crossing.sum() / n_valid
 
 def _shuffle_signals_within_groups(df, group_cols, cols_to_shuffle, seed, mode):
@@ -148,9 +151,9 @@ def _shuffle_signals_within_groups(df, group_cols, cols_to_shuffle, seed, mode):
 # 3. BUILD LONG TABLE
 # ==============================================================================
 rows = []
-sig_annot_rows = [] 
+sig_annot_rows = []
 
-print(f"Building long table...")
+print("Building long table...")
 for si, s in enumerate(sessions):
     sid = s.session_id
     meta = s.metadata or {}
@@ -173,7 +176,7 @@ for si, s in enumerate(sessions):
     adf["timestamp"] = adf["SystemTimestamp"].astype(float)
     vel = adf["velocity_px_s"].to_numpy()
     t   = adf["timestamp"].to_numpy()
-    
+
     # Calculate Jerk/Acc
     acc = _grad(vel, t)
     jerk = _grad(acc, t)
@@ -186,27 +189,27 @@ for si, s in enumerate(sessions):
 
     # Identify Signals
     all_sig_cols = sorted([c for c in adf.columns if re.match(SIGNAL_COL_REGEX, c)])
-    
+
     # FILTER: Only keep signals that have a valid Brain Region (Not UNK)
     keep_sig_cols = []
     smeta = meta.get("signal_meta", {}) or {}
-    
+
     for c in all_sig_cols:
         k = c.split("_")[1]
         sig_key = f"signal_{k}"
         m = smeta.get(sig_key, {})
-        
+
         brain_reg = m.get("brain_reg", "UNK")
-        
+
         # SKIP UNK REGIONS (Speed optimization)
         if brain_reg == "UNK":
             continue
-            
+
         sig_annot_rows.append({
             "session_id": sid, "signal": c, "base_signal": sig_key,
-            "brain_reg": brain_reg, 
+            "brain_reg": brain_reg,
             "hemisphere": m.get("hemisphere", "UNK"),
-            "fiber_num": m.get("fiber_num", "UNK"), 
+            "fiber_num": m.get("fiber_num", "UNK"),
             "animal_id": animal, "genotype": geno,
         })
         keep_sig_cols.append(c)
@@ -299,7 +302,7 @@ delays = []
 delays.append(delayed(run_bin_block)(peak_rate_cross, BIN_GRID))
 delays.append(delayed(run_bin_block)("mean", BIN_GRID))
 
-print(f"Running aggregation...")
+print("Running aggregation...")
 agg_mats = Parallel(n_jobs=NJOBS, verbose=5, backend="loky")(delays)
 agg_data = pd.concat(agg_mats).reset_index().rename(columns={"level_0": "session_id", "level_1": "animal_id", "level_2": "bin"})
 agg_data["timescale"] = agg_data["timescale"].astype(int)

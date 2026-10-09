@@ -1,4 +1,5 @@
 import os
+
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
@@ -6,16 +7,15 @@ os.environ["OPENBLAS_NUM_THREADS"] = "1"
 os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
 os.environ["NUMEXPR_NUM_THREADS"] = "1"
 
-import sys
 import argparse
+import gc
+import multiprocessing
+import pickle
+import sys
 import time
 import urllib.request
-import gc
-import psutil
-import pickle
-from typing import List, Dict
-import multiprocessing
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from typing import Dict, List
 
 # Resolve root path and add to sys.path
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../"))
@@ -47,9 +47,9 @@ def get_sessions(dataset, base_dir, test_mode=False):
     return _SESSIONS_CACHE
 
 def get_cached_prep(dataset, f_mode, c_model, k, vec, sessions, cache_dir, base_dir):
-    from analysis.language_models.lib.fusion.clustering import KinematicSyllableClustered
     from analysis.language_models.lib.evaluation import group_analysis
-    
+    from analysis.language_models.lib.fusion.clustering import KinematicSyllableClustered
+
     os.makedirs(cache_dir, exist_ok=True)
     cache_file = os.path.join(cache_dir, f"prep_{dataset}_{f_mode}_{c_model}_k{k}_{vec}.pkl")
     if os.path.exists(cache_file):
@@ -58,7 +58,7 @@ def get_cached_prep(dataset, f_mode, c_model, k, vec, sessions, cache_dir, base_
                 return pickle.load(rf)
         except Exception:
             pass
-            
+
     # Fit clusterer
     clusterer = KinematicSyllableClustered(
         n_clusters=k,
@@ -69,7 +69,7 @@ def get_cached_prep(dataset, f_mode, c_model, k, vec, sessions, cache_dir, base_
     )
     clusterer.fit(sessions)
     all_win_inputs, session_meta = group_analysis.extract_window_inputs(sessions, clusterer, vec)
-    
+
     # Save cache atomically
     tmp_path = cache_file + ".tmp"
     try:
@@ -82,33 +82,33 @@ def get_cached_prep(dataset, f_mode, c_model, k, vec, sessions, cache_dir, base_
                 os.remove(tmp_path)
             except Exception:
                 pass
-                
+
     return clusterer, all_win_inputs, session_meta
 
 def process_config_task(args_tuple):
     cfg, run_idx, total_configs, dataset, base_dir, runs_dir, test_mode = args_tuple
-    
+
     os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
     os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = "platform"
     os.environ["PARALLEL_CPU"] = "1"
-    
+
     if base_dir not in sys.path:
         sys.path.append(base_dir)
         sys.path.append(os.path.join(base_dir, "syllable_generation"))
-        
-    from analysis.language_models.lib.models.strategies import StrategyBERTopic
+
     from analysis.language_models.lib.evaluation import group_analysis
-    
+    from analysis.language_models.lib.models.strategies import StrategyBERTopic
+
     f_mode = cfg["feature_mode"]
     c_model = cfg["cluster_model"]
     k = cfg["n_clusters"]
     vec = cfg["vectorizer"]
     n_neigh = cfg["n_neighbors"]
     mcs = cfg["min_cluster_size"]
-    
+
     run_name = f"{f_mode}_{c_model}_k{k}_{vec}_n{n_neigh}_mcs{mcs}"
     run_txt_path = os.path.join(runs_dir, f"{run_name}.txt")
-    
+
     if os.path.exists(run_txt_path):
         try:
             with open(run_txt_path, "r") as rf:
@@ -118,12 +118,12 @@ def process_config_task(args_tuple):
                     return {"status": "skipped", "cfg": cfg, "accuracy": acc, "run_name": run_name, "run_idx": run_idx}
         except Exception:
             pass
-            
+
     try:
         sessions = get_sessions(dataset, base_dir, test_mode=test_mode)
         cache_dir = os.path.join(os.path.dirname(runs_dir), "cache")
         clusterer, all_win_inputs, session_meta = get_cached_prep(dataset, f_mode, c_model, k, vec, sessions, cache_dir, base_dir)
-        
+
         vocab_size = clusterer.next_token_id
         strategy_model = StrategyBERTopic(
             vectorizer_type=vec,
@@ -136,9 +136,9 @@ def process_config_task(args_tuple):
         )
         strategy_model.fit(all_win_inputs)
 
-        
+
         rf_summary_table = group_analysis.predict_experimental_groups(sessions, clusterer, strategy_model)
-        
+
         accuracy = 0.0
         if isinstance(rf_summary_table, str):
             for line in rf_summary_table.split("\n"):
@@ -150,13 +150,13 @@ def process_config_task(args_tuple):
                         except (ValueError, IndexError):
                             accuracy = 0.0
                     break
-                    
+
         with open(run_txt_path, "w") as wf:
             wf.write(f"accuracy: {accuracy}\n")
             wf.write(f"table:\n{rf_summary_table}\n")
-            
+
         return {"status": "success", "cfg": cfg, "accuracy": accuracy, "run_name": run_name, "run_idx": run_idx}
-        
+
     except Exception as run_err:
         try:
             with open(run_txt_path, "w") as wf:
@@ -174,11 +174,11 @@ def main():
     parser.add_argument("--workers", type=int, default=1, help="Number of workers for parallel execution")
     parser.add_argument("--test", action="store_true", help="Run fast 2-session smoke test")
     args = parser.parse_args()
-    
+
     print(f"\n*** Loading {args.dataset.upper()} dataset (Test mode: {args.test})... ***")
     sessions = get_sessions(args.dataset, ROOT_DIR, test_mode=args.test)
     print(f"Loaded {len(sessions)} sessions for sweep.")
-    
+
     if args.test:
         feature_modes = ["postural"]
         cluster_models = ["gmm"]
@@ -193,13 +193,13 @@ def main():
         n_clusters_opts = [2, 3, 4, 5]
         n_neighbors_opts = [30, 45]
         min_cluster_size_opts = [50, 75, 100]
-        
+
     out_dir = os.path.join(ROOT_DIR, "syllable_generation/analysis/language_models/output/strategies_extended")
     runs_dir = os.path.join(out_dir, "runs")
     os.makedirs(runs_dir, exist_ok=True)
-    
+
     report_path = os.path.join(out_dir, "extended_sweep_results.md")
-    
+
     configs = []
     for f_mode in feature_modes:
         for c_model in cluster_models:
@@ -215,13 +215,13 @@ def main():
                                 "n_neighbors": n_neigh,
                                 "min_cluster_size": mcs
                             })
-                            
+
     total_configs = len(configs)
     print(f"Total configurations in extended sweep: {total_configs}")
-    
+
     completed_runs = []
     pending_configs = []
-    
+
     for run_idx, cfg in enumerate(configs):
         f_mode = cfg["feature_mode"]
         c_model = cfg["cluster_model"]
@@ -229,10 +229,10 @@ def main():
         vec = cfg["vectorizer"]
         n_neigh = cfg["n_neighbors"]
         mcs = cfg["min_cluster_size"]
-        
+
         run_name = f"{f_mode}_{c_model}_k{k}_{vec}_n{n_neigh}_mcs{mcs}"
         run_txt_path = os.path.join(runs_dir, f"{run_name}.txt")
-        
+
         if os.path.exists(run_txt_path):
             try:
                 with open(run_txt_path, "r") as rf:
@@ -245,21 +245,21 @@ def main():
             except Exception:
                 pass
         pending_configs.append((cfg, run_idx))
-        
+
     print(f"Pending configurations to run: {len(pending_configs)}")
     if not args.test:
         send_notification(f"Starting Extended Strategy Sweep. Total: {total_configs}, Pending: {len(pending_configs)}.")
-    
+
     if completed_runs:
         write_markdown_report(report_path, completed_runs)
-        
+
     if not pending_configs:
         print("\n*** All extended configurations already completed! ***")
         return
 
     print(f"Running configurations (Test mode: {args.test}, workers: {args.workers})...")
     tasks = [(cfg, r_idx, total_configs, args.dataset, ROOT_DIR, runs_dir, args.test) for cfg, r_idx in pending_configs]
-    
+
     def process_result(res):
         r_name = res["run_name"]
         r_idx = res["run_idx"]
@@ -296,12 +296,12 @@ def write_markdown_report(path: str, runs: List[Dict]):
     rows.append(f"Total evaluated configurations: {len(runs)}")
     rows.append("\n| Rank | Feature Mode | Clusterer Model | k Substates | Vectorizer | UMAP n_neighbors | HDBSCAN min_cluster_size | Classifier Accuracy |")
     rows.append("|---|---|---|---|---|---|---|---|")
-    
+
     for idx, r in enumerate(sorted_runs):
         rows.append(
             f"| {idx+1} | `{r['feature_mode']}` | `{r['cluster_model']}` | {r['n_clusters']} | `{r['vectorizer']}` | {r['n_neighbors']} | {r['min_cluster_size']} | **{r['accuracy']:.2%}** |"
         )
-        
+
     with open(path, "w") as f:
         f.write("\n".join(rows))
 

@@ -16,14 +16,15 @@ Scope:
 """
 
 from __future__ import annotations
+
 import json
-import math
+import time
 from itertools import groupby
 from pathlib import Path
-import time
+
+import h5py
 import numpy as np
 import pandas as pd
-import h5py
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 EXP_DIR = SCRIPT_DIR.parents[1]

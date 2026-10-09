@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+
 import numpy as np
 
 # Compatibility alias for numpy 2.x with bokeh/panel
@@ -49,9 +50,9 @@ def main():
     t0 = time.perf_counter()
     results = run_pipeline(sessions, **pipeline_kwargs)
     t_tot = time.perf_counter() - t0
-    print(f"\n=======================================================================")
+    print("\n=======================================================================")
     print(f" Completed 3 iterations across 2 real sessions in {t_tot:.2f} seconds total!")
-    print(f"=======================================================================")
+    print("=======================================================================")
 
 if __name__ == "__main__":
     main()

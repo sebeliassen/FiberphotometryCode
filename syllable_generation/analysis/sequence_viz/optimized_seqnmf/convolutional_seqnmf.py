@@ -20,6 +20,7 @@ Implements the mathematical formulation from Mackevicius et al. (2019) & FeeLab:
 """
 
 import time
+
 import numpy as np
 
 # Detect JAX GPU availability

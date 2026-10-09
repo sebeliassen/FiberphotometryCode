@@ -11,14 +11,15 @@ and Drug (Saline vs. Amphetamine) modulation.
 =============================================================================
 """
 
-import os
+import pickle
 import sys
 import time
-import pickle
 from pathlib import Path
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -122,22 +123,22 @@ def main():
         # Dominant token at each lag
         dom_meta_ids = np.argmax(W_k, axis=0)
         dom_weights = np.max(W_k, axis=0)
-        
+
         chain_names = [meta_names[idx] for idx in dom_meta_ids]
         chain_str = " -> ".join(chain_names)
-        
+
         # Mean & max activation
         H_k = model.H[k]
         mean_act = float(np.mean(H_k))
         max_act = float(np.max(H_k))
-        
+
         # Candidate episode detection: peaks in H_k > threshold
         thresh = mean_act + 2.0 * np.std(H_k)
         peaks = []
         for t in range(1, len(H_k) - 1):
             if H_k[t] > thresh and H_k[t] > H_k[t-1] and H_k[t] >= H_k[t+1]:
                 peaks.append(t)
-                
+
         # Non-maximum suppression within L steps
         suppressed_peaks = []
         last_t = -999
@@ -145,16 +146,16 @@ def main():
             if p - last_t >= L:
                 suppressed_peaks.append(p)
                 last_t = p
-                
+
         # Template verification
         verified_episodes = 0
         wt_count = 0
         ki_count = 0
         sal_count = 0
         amph_count = 0
-        
+
         norm_W_k = np.linalg.norm(W_k, "fro")
-        
+
         for p in suppressed_peaks:
             if p + L <= N_FIT:
                 Y_t = X[:, p : p + L]
@@ -164,7 +165,7 @@ def main():
                     a_opt = max(0.0, inner / (norm_W_k ** 2))
                     resid = Y_t - a_opt * W_k
                     err = float(np.linalg.norm(resid, "fro") ** 2 / (norm_Y ** 2))
-                    
+
                     if err < 0.65:  # High confidence match
                         verified_episodes += 1
                         gt = all_gts[p]
@@ -177,11 +178,11 @@ def main():
                             sal_count += 1
                         else:
                             amph_count += 1
-                            
+
                         # Extract observed macro sequence
                         obs_meta = all_macro_meta[p : p + L]
                         obs_names = " -> ".join([meta_names[m] for m in obs_meta])
-                        
+
                         all_episodes.append({
                             "factor_id": k + 1,
                             "template_chain": chain_str,
@@ -198,7 +199,7 @@ def main():
                             "drug": dr,
                             "session_idx": all_sess[p],
                         })
-                        
+
         motifs_summary.append({
             "motif_id": k + 1,
             "template_chain": chain_str,
@@ -213,7 +214,7 @@ def main():
             "amph_episodes": amph_count,
             "wt_ki_ratio": float(wt_count / max(1, ki_count)),
         })
-        
+
         print(f"\nMotif {k+1}: {chain_str}")
         print(f"  Weights: {np.round(dom_weights, 3)} | Episodes: {verified_episodes} (WT: {wt_count}, KI: {ki_count} | Saline: {sal_count}, Amph: {amph_count})")
 

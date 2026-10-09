@@ -43,13 +43,13 @@ Key Features & Enhancements:
 """
 
 import os
-import sys
-import time
 import subprocess
-import numpy as np
+import time
+from pathlib import Path
+
 import cv2
 import h5py
-from pathlib import Path
+import numpy as np
 
 # Force CPU execution for JAX/TF to prevent GPU VRAM clashes
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -157,7 +157,7 @@ class FastVideoReader:
     def get_frame(self, frame_idx):
         if frame_idx < 0 or frame_idx >= self.total_frames:
             return np.zeros((self.height, self.width, 3), dtype=np.uint8)
-            
+
         gap = frame_idx - self.current_frame
         if 0 < gap <= 15:
             # Fast sequential grab
@@ -167,7 +167,7 @@ class FastVideoReader:
         else:
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
             ret, frame = self.cap.read()
-            
+
         if ret:
             self.current_frame = frame_idx
             return frame
@@ -228,7 +228,7 @@ def load_chain_movie_resources(
             day_tok = tokens[0]
             quad_tok = tokens[-1] if len(tokens) > 1 else ""
             v_matches = [p for p in all_avis if day_tok in p.name and quad_tok in p.name]
-            
+
         if v_matches:
             video_paths[rk] = str(v_matches[0])
         else:
@@ -257,27 +257,27 @@ def align_tokens_to_template(observed_tokens, template_tokens):
     """
     n = len(observed_tokens)
     m = len(template_tokens)
-    
+
     dp = np.zeros((n + 1, m + 1))
     back = {}
-    
+
     for i in range(1, n + 1):
         dp[i, 0] = i * 2.0
         back[(i, 0)] = ("ins", i - 1, None)
     for j in range(1, m + 1):
         dp[0, j] = j * 2.0
         back[(0, j)] = ("del", None, j - 1)
-        
+
     for i in range(1, n + 1):
         for j in range(1, m + 1):
             obs = observed_tokens[i - 1]
             tpl = template_tokens[j - 1]
-            
+
             sub_cost = 0.0 if obs == tpl else 1.5
             cost_diag = dp[i - 1, j - 1] + sub_cost
             cost_del = dp[i, j - 1] + 2.0
             cost_ins = dp[i - 1, j] + 2.0
-            
+
             min_c = min(cost_diag, cost_del, cost_ins)
             dp[i, j] = min_c
             if min_c == cost_diag:
@@ -287,7 +287,7 @@ def align_tokens_to_template(observed_tokens, template_tokens):
                 back[(i, j)] = ("del", None, j - 1)
             else:
                 back[(i, j)] = ("ins", i - 1, None)
-                
+
     curr = (n, m)
     ops = []
     while curr != (0, 0):
@@ -336,7 +336,7 @@ def standardize_chain_instances(instances, results=None, video_frame_indexes=Non
         start_f = int(d.get("start_frame", d.get("start_f", 0)))
         end_f = int(d.get("end_frame", d.get("end_f", start_f + 40)))
         rec_key = d.get("recording_key", d.get("rec_key"))
-        
+
         # Fallback recording resolution
         if rec_key is None and results is not None:
             aid = str(d.get("animal_id", ""))
@@ -471,12 +471,12 @@ def filter_chain_outliers(
     for inst in std_insts:
         sb = inst["stage_boundaries"]
         durs = [sb[k+1] - sb[k] for k in range(len(sb) - 1)]
-        
+
         # 1. Micro-flicker check (<125ms state noise)
         if any(d < min_bout_frames for d in durs):
             stats["flicker_outliers"] += 1
             continue
-            
+
         # 2. Prolonged / stuck state check (>1.625s tracking freeze)
         if any(d > max_bout_frames for d in durs):
             stats["stuck_outliers"] += 1
@@ -591,7 +591,7 @@ def draw_trajectory_inset(
     y0 = 8
     x1 = x0 + inset_size
     y1 = y0 + inset_size
-    
+
     # Semi-transparent dark background
     overlay = tile_img.copy()
     cv2.rectangle(overlay, (x0, y0), (x1, y1), (20, 20, 24), -1)
@@ -600,10 +600,10 @@ def draw_trajectory_inset(
     mid_inset_x = x0 + inset_size // 2
     cv2.line(overlay, (mid_inset_x, y0 + 2), (mid_inset_x, y0 + 6), (200, 200, 200), 1)
     cv2.addWeighted(overlay, 0.78, tile_img, 0.22, 0, tile_img)
-    
+
     if len(all_centroids) < 2:
         return
-        
+
     c0 = all_centroids[0]
     rel_c = all_centroids - c0
     R = np.array([
@@ -612,31 +612,31 @@ def draw_trajectory_inset(
     ])
     # Rotated relative coordinates: (0, 0) is onset, facing up (-Y)
     rot_c = (R @ rel_c.T).T
-    
+
     # Invert Y so forward movement points upward on the screen
     rx = rot_c[:, 0]
     ry = -rot_c[:, 1]
-    
+
     min_x, max_x = rx.min(), rx.max()
     min_y, max_y = ry.min(), ry.max()
     span = max(max_x - min_x, max_y - min_y, 25.0)
-    
+
     mid_x = (min_x + max_x) / 2.0
     mid_y = (min_y + max_y) / 2.0
-    
+
     avail = inset_size - 2 * margin
     scale = avail / span
-    
+
     px = np.clip((mid_inset_x + (rx - mid_x) * scale).astype(int), x0 + 2, x1 - 2)
     py = np.clip((y0 + inset_size // 2 + (ry - mid_y) * scale).astype(int), y0 + 2, y1 - 2)
-    
+
     # Draw trajectory line segments
     n_pts = len(px)
     for t in range(n_pts - 1):
         tok = all_tokens[t] if t < len(all_tokens) else None
         seg_color = token_colormap.get(tok, (160, 160, 160))
         cv2.line(tile_img, (px[t], py[t]), (px[t+1], py[t+1]), seg_color, 2, cv2.LINE_AA)
-        
+
     # Current position marker
     curr_idx = min(n_pts - 1, max(0, curr_frame_idx))
     curr_tok = all_tokens[curr_idx] if curr_idx < len(all_tokens) else None
@@ -671,7 +671,7 @@ def draw_stage_hud(
     alignment indicators (Alignment wait / No token / Skipped), and similarity badges.
     """
     hud = np.full((hud_h, tile_w, 3), 20, dtype=np.uint8) # Dark background
-    
+
     # Border line on top
     cv2.line(hud, (0, 0), (tile_w, 0), (60, 60, 60), 1)
 
@@ -748,7 +748,7 @@ def draw_stage_hud(
         x1 = x0 + box_w
         tok_c = token_colormap.get(tok, (180, 180, 180))
         text_c = get_contrasting_text_color(tok_c)
-        
+
         # Color coding: active stage vs past vs future
         if k == current_stage_idx:
             # Active box
@@ -813,7 +813,7 @@ def draw_stage_hud(
             else:
                 dur_s, warp_mult = dur_info[:2]
                 turn_str = None
-            
+
             # Format: '0.28s (+75dL)' or '0.28s [1.2x]' or '0.28s'
             if turn_str and turn_str not in ["0d", "0°", "Fwd"]:
                 d_str = f"{dur_s:.2f}s ({turn_str})"
@@ -821,7 +821,7 @@ def draw_stage_hud(
                 d_str = f"{dur_s:.2f}s ({warp_mult:.1f}x)"
             else:
                 d_str = f"{dur_s:.2f}s"
-                
+
             (dw, dh), _ = cv2.getTextSize(d_str, font, 0.28, 1)
             dx = x0 + max(0, (box_w - dw) // 2)
             cv2.putText(hud, d_str, (dx, dur_y), font, 0.28, (140, 140, 140), 1, cv2.LINE_AA)
@@ -867,27 +867,27 @@ class ChainGridMovieGenerator:
         self.results = results
         self.video_frame_indexes = video_frame_indexes
         self.video_paths = video_paths
-        
+
         self.centroid_mode = centroid_mode
         self.sync_mode = sync_mode
         self.alignment_mode = alignment_mode
         self.template_tokens = template_tokens
         self.suptitle_text = suptitle_text
-        
+
         self.rows = rows
         self.cols = cols
         self.n_tiles = rows * cols
-        
+
         self.window_size = window_size
         self.scaled_window_size = scaled_window_size
         self.fps = fps
         self.pre_frames = int(pre_sec * fps)
         self.post_frames = int(post_sec * fps)
-        
+
         self.dot_radius = dot_radius
         self.transition_flash_color = transition_flash_color
         self.transition_flash_frames = transition_flash_frames
-        
+
         self.show_hud = show_hud
         self.hud_height = hud_height if show_hud else 0
         self.show_trajectory_inset = show_trajectory_inset
@@ -902,7 +902,7 @@ class ChainGridMovieGenerator:
         to the chosen synchronization and alignment modes.
         """
         schedules = []
-        
+
         # Check if template alignment is active
         is_aligned_mode = False
         if self.template_tokens is not None or any(inst.get("aligned_stages") for inst in instances):
@@ -1014,7 +1014,7 @@ class ChainGridMovieGenerator:
                         oi = matched_op["obs_idx"]
                         orig_start = sb[oi]
                         orig_len = sb[oi+1] - sb[oi]
-                        
+
                         # Check cut badge (if compact_template skipped preceding insertion)
                         cut_badge = None
                         if self.alignment_mode == "compact_template":
@@ -1121,7 +1121,7 @@ class ChainGridMovieGenerator:
                         "cut_badge": None,
                         "alignment_badge": None
                     })
-                    
+
                 for k, target_d in enumerate(target_stage_durations):
                     if k < len(lens):
                         orig_start = sb[k]
@@ -1149,7 +1149,7 @@ class ChainGridMovieGenerator:
                                 "cut_badge": None,
                                 "alignment_badge": None
                             })
-                            
+
                 for p in range(self.post_frames):
                     sched.append({
                         "model_frame": min(max_valid_f, end_f + p),
@@ -1188,7 +1188,7 @@ class ChainGridMovieGenerator:
                         "cut_badge": None,
                         "alignment_badge": None
                     })
-                    
+
                 for k, target_d in enumerate(target_stage_durations):
                     if k < len(lens):
                         orig_start = sb[k]
@@ -1216,7 +1216,7 @@ class ChainGridMovieGenerator:
                                 "cut_badge": None,
                                 "alignment_badge": None
                             })
-                            
+
                 for p in range(self.post_frames):
                     sched.append({
                         "model_frame": min(max_valid_f, end_f + p),
@@ -1302,7 +1302,7 @@ class ChainGridMovieGenerator:
         """
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         instances = standardize_chain_instances(raw_instances, self.results, self.video_frame_indexes)[:self.n_tiles]
         if len(instances) < self.n_tiles:
             while len(instances) < self.n_tiles:
@@ -1340,7 +1340,7 @@ class ChainGridMovieGenerator:
                              for inst_other in instances if k < len(inst_other["stage_boundaries"]) - 1]
                     target_len = int(np.median(k_all)) if k_all else orig_len
                     warp_factor = orig_len / target_len
-                    
+
                 # Relative turn angle
                 turn_str = None
                 if self.reset_heading_per_syllable:
@@ -1357,7 +1357,7 @@ class ChainGridMovieGenerator:
                             turn_str = f"+{deg:.0f}dL"
                         else:
                             turn_str = f"-{abs(deg):.0f}dR"
-                            
+
                 dur_list.append((dur_s, warp_factor, turn_str))
             instance_stage_durations.append(dur_list)
 
@@ -1374,7 +1374,7 @@ class ChainGridMovieGenerator:
             c0 = self.results[rk]["centroid"][start_f]
             onset_headings.append(h0)
             onset_centroids.append(c0)
-            
+
             # Trajectory slice
             c_slice = self.results[rk]["centroid"][start_f:end_f]
             s_slice = self.results[rk]["syllable"][start_f:end_f]
@@ -1385,7 +1385,7 @@ class ChainGridMovieGenerator:
         tile_w = self.scaled_window_size
         tile_video_h = self.scaled_window_size
         tile_total_h = tile_video_h + self.hud_height
-        
+
         grid_w = self.cols * tile_w
         suptitle_h = 32 if self.suptitle_text else 0
         grid_h = self.rows * tile_total_h + suptitle_h
@@ -1490,18 +1490,18 @@ class ChainGridMovieGenerator:
         # Frame Generation Loop
         for frame_idx in range(total_frames):
             grid_tiles = []
-            
+
             for tile_idx, (inst, sched) in enumerate(zip(instances, schedules)):
                 rk = inst["recording_key"]
                 reader = readers[rk]
                 vfi = self.video_frame_indexes[rk]
-                
+
                 step = sched[frame_idx]
                 mod_f = step["model_frame"]
                 vid_f = int(vfi[min(len(vfi) - 1, mod_f)])
-                
+
                 raw_frame = reader.get_frame(vid_f)
-                
+
                 h0 = onset_headings[tile_idx]
                 if self.reset_heading_per_syllable:
                     curr_s_idx = step["stage_idx"]
@@ -1574,13 +1574,13 @@ class ChainGridMovieGenerator:
                     drug_raw = str(inst.get("drug", ""))
                     drug_short = "Sal" if "sal" in drug_raw.lower() else ("Amp" if "amp" in drug_raw.lower() else drug_raw[:3])
                     tile_title = f"M{inst['animal_id']} ({inst['genotype']}, {drug_short})"
-                    
+
                     sim_dict = None
                     if self.show_similarity_panel:
                         sim_dict = {}
                         if inst.get("proto_cost") is not None: sim_dict["proto_cost"] = inst["proto_cost"]
                         if inst.get("kin_dist") is not None: sim_dict["kin_dist"] = inst["kin_dist"]
-                    
+
                     hud_img = draw_stage_hud(
                         tile_w=tile_w,
                         hud_h=self.hud_height,
@@ -1683,7 +1683,7 @@ def generate_branch_grid_movie(
             ordered_instances.append(inst)
 
     std_instances = standardize_chain_instances(ordered_instances, results, vfi)
-    
+
     # Extract unique tokens
     all_toks = list(prefix_tokens) + branch_keys
     colormap = build_concurrent_token_colormap(all_toks)
@@ -1692,12 +1692,12 @@ def generate_branch_grid_movie(
     n_prefix = len(prefix_tokens)
     pre_frames = int(pre_sec * fps)
     post_frames = int(post_sec * fps)
-    
+
     prefix_durations = []
     for k in range(n_prefix):
         k_durs = [inst["stage_boundaries"][k+1] - inst["stage_boundaries"][k] for inst in std_instances]
         prefix_durations.append(int(np.median(k_durs)) if k_durs else 15)
-        
+
     branch_target_dur = 25 # ~0.6s continuation
     total_frames = pre_frames + sum(prefix_durations) + branch_target_dur + post_frames
     branch_sync_frame = pre_frames + sum(prefix_durations)
@@ -1708,7 +1708,7 @@ def generate_branch_grid_movie(
         sb = inst["stage_boundaries"]
         sched = []
         max_valid_f = len(results[inst["recording_key"]]["syllable"]) - 1
-        
+
         # 1. Pre-padding
         start_f = sb[0]
         for p in range(pre_frames, 0, -1):
@@ -1720,7 +1720,7 @@ def generate_branch_grid_movie(
                 "status": "LEAD-IN",
                 "is_branch": False
             })
-            
+
         # 2. Resampled prefix
         for k, target_d in enumerate(prefix_durations):
             orig_start = sb[k]
@@ -1735,7 +1735,7 @@ def generate_branch_grid_movie(
                     "status": "PREFIX",
                     "is_branch": False
                 })
-                
+
         # 3. Continuation branch
         branch_start = sb[n_prefix] if len(sb) > n_prefix else sb[-1]
         branch_end = sb[n_prefix+1] if len(sb) > n_prefix + 1 else min(max_valid_f, branch_start + branch_target_dur)
@@ -1750,7 +1750,7 @@ def generate_branch_grid_movie(
                 "status": "BRANCH",
                 "is_branch": True
             })
-            
+
         # 4. Post-padding (continuous ongoing footage)
         end_f = branch_end
         for p in range(post_frames):
@@ -1781,7 +1781,7 @@ def generate_branch_grid_movie(
         dot_radius=dot_radius,
         use_gpu_encoder=use_gpu_encoder
     )
-    
+
     # Custom titles per tile indicating the branch
     for idx, inst in enumerate(std_instances):
         b_tok = inst["stage_tokens"][-1] if len(inst["stage_tokens"]) > n_prefix else "Continuation"
@@ -1832,7 +1832,7 @@ def generate_chain_grid_movie(
             target_count=rows * cols,
             video_frame_indexes=resources.get("video_frame_indexes")
         )
-        
+
     generator = ChainGridMovieGenerator(
         results=resources["results"],
         video_frame_indexes=resources["video_frame_indexes"],

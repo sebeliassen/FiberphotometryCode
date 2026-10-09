@@ -18,8 +18,8 @@ SAFETY:
 =============================================================================
 """
 
-import sys
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from scipy.ndimage import median_filter

@@ -1,7 +1,6 @@
+import os
 import pickle
 import sys
-from pathlib import Path
-import os
 import time
 
 sys.path.append("/home/fsp585/Desktop/FiberphotometryCode")

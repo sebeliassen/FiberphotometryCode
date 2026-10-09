@@ -17,14 +17,11 @@ Parallelized across 16 worker processes for maximum throughput.
 """
 
 import os
-import sys
 import re
+import sys
 import time
-from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
-import numpy as np
-import pandas as pd
-from scipy.ndimage import median_filter
+from pathlib import Path
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 if str(REPO_ROOT) not in sys.path:
@@ -57,10 +54,8 @@ BOT_RENAME_MAP = {
 
 from syllable_generation.multiview_top_bot_experiments.core.fusion_engine import (
     fuse_single_pair as core_fuse_single_pair,
-    rot2d,
-    smooth_heading_circular,
-    smooth_centroid_median,
 )
+
 
 def fuse_single_pair(pair_info: dict, arena_width: float = 972.0, overwrite: bool = False) -> dict:
     return core_fuse_single_pair(

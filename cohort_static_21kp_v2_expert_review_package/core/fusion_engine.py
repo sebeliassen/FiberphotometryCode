@@ -18,43 +18,52 @@ Mathematical 2D tracking fusion engine implementing the 4 Golden Rules:
 
 import time
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 import numpy as np
 import pandas as pd
 from scipy.ndimage import median_filter
 
 try:
+    from .cache_manifest import (
+        OK as _CACHE_OK,
+    )
+    from .cache_manifest import (
+        UNVERIFIED_NO_MANIFEST as _CACHE_UNVERIFIED,
+    )
+    from .cache_manifest import (
+        atomic_path,
+        verify_manifest,
+        write_manifest,
+    )
+    from .camera_correspondence import get_session_calibration_details, get_session_mapping
     from .schemas import (
-        TOP_USE_BODYPARTS,
         BOT_RENAME_MAP,
         DEFAULT_ARENA_WIDTH,
+        TOP_USE_BODYPARTS,
         PathConfig,
     )
     from .ttl_sync import get_session_ttl_offset, load_ttl_cache
-    from .camera_correspondence import get_session_mapping, get_session_calibration_details
-    from .cache_manifest import (
+except ImportError:
+    from cache_manifest import (
         OK as _CACHE_OK,
+    )
+    from cache_manifest import (
         UNVERIFIED_NO_MANIFEST as _CACHE_UNVERIFIED,
+    )
+    from cache_manifest import (
         atomic_path,
         verify_manifest,
         write_manifest,
     )
-except ImportError:
+    from camera_correspondence import get_session_calibration_details, get_session_mapping
     from schemas import (
-        TOP_USE_BODYPARTS,
         BOT_RENAME_MAP,
         DEFAULT_ARENA_WIDTH,
+        TOP_USE_BODYPARTS,
         PathConfig,
     )
     from ttl_sync import get_session_ttl_offset, load_ttl_cache
-    from camera_correspondence import get_session_mapping, get_session_calibration_details
-    from cache_manifest import (
-        OK as _CACHE_OK,
-        UNVERIFIED_NO_MANIFEST as _CACHE_UNVERIFIED,
-        atomic_path,
-        verify_manifest,
-        write_manifest,
-    )
 
 _CORE_DIR = Path(__file__).resolve().parent
 # Implementation files whose content changes invalidate fused caches.

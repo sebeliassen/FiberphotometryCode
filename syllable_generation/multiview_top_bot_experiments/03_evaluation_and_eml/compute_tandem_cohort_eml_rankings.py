@@ -26,20 +26,21 @@ Workflow:
 """
 
 import os
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.75"
 
-import sys
-import re
-import json
-import time
 import argparse
+import re
+import sys
+import time
 import urllib.request
 from pathlib import Path
 
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
@@ -52,6 +53,8 @@ if str(EXP_DIR) not in sys.path:
 from core import eval_artifacts as ea
 from core.cache_manifest import (
     OK as CACHE_OK,
+)
+from core.cache_manifest import (
     atomic_path,
     verify_manifest,
     write_manifest,
@@ -69,12 +72,13 @@ def _load_heavy_deps():
     import jax.numpy as _jnp
     import matplotlib
     matplotlib.use("Agg")
-    import matplotlib.pyplot as _plt
     import keypoint_moseq  # noqa: F401  (registers KPMS / jax_moseq)
-    from keypoint_moseq.fitting import marginal_log_likelihood as _mll
-    from keypoint_moseq.util import get_frequencies as _gf
-    from keypoint_moseq.io import load_hdf5 as _lh, save_hdf5 as _sh
+    import matplotlib.pyplot as _plt
     from jax_moseq.utils import unbatch as _ub
+    from keypoint_moseq.fitting import marginal_log_likelihood as _mll
+    from keypoint_moseq.io import load_hdf5 as _lh
+    from keypoint_moseq.io import save_hdf5 as _sh
+    from keypoint_moseq.util import get_frequencies as _gf
     jax, jnp, plt = _jax, _jnp, _plt
     marginal_log_likelihood, get_frequencies = _mll, _gf
     load_hdf5, save_hdf5, unbatch = _lh, _sh, _ub

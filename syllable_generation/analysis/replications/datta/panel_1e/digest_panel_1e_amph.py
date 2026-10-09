@@ -8,6 +8,7 @@ It enables the reuse of the common digestion code (statistics, chance bands) for
 without code duplication.
 """
 from lib import config
+
 # Override Output Dir
 config.OUTPUT_DIR = config.PANEL_DIRS["1e_amph"]
 

@@ -6,15 +6,18 @@ Reads frames from an OpenCV VideoCapture and formats them for the composite layo
 Support optional tracking overlays (centroid/heading) for validation.
 """
 
+from typing import Optional
+
 import cv2
 import numpy as np
 import pandas as pd
-from typing import Optional
+
 from .. import config
 
+
 def get_video_grid(
-    cap: cv2.VideoCapture, 
-    frame_idx: int, 
+    cap: cv2.VideoCapture,
+    frame_idx: int,
     tracking_data: Optional[pd.Series] = None
 ) -> np.ndarray:
     """
@@ -31,9 +34,9 @@ def get_video_grid(
     if not cap.isOpened():
         return _make_black_frame()
 
-    # Note: We rely on the caller (composer.py) to have set the cap position via cap.set() 
+    # Note: We rely on the caller (composer.py) to have set the cap position via cap.set()
     # or sequential reads. We just read 'next'.
-    
+
     ret, frame = cap.read()
     if not ret or frame is None:
         return _make_black_frame()
@@ -66,18 +69,18 @@ def draw_tracking_overlay(frame: np.ndarray, row: dict, is_flipped_video: bool =
 
     # Draw Heading Arrow
     if not pd.isna(heading):
-        # We add the global configured offset 
+        # We add the global configured offset
         heading += getattr(config, 'TRACKING_HEADING_OFFSET', np.pi)
-        
+
         length = 60
         target_x = cx + length * np.cos(heading)
-        target_y = cy + length * np.sin(heading) 
-        
+        target_y = cy + length * np.sin(heading)
+
         target = (int(target_x), int(target_y))
-        
+
         # Cyan for flipped, Green for original
         arrow_color = (255, 255, 0) if is_flipped_video else (0, 255, 0)
-        cv2.arrowedLine(frame, center, target, arrow_color, 3, tipLength=0.3) 
+        cv2.arrowedLine(frame, center, target, arrow_color, 3, tipLength=0.3)
 
     return frame
 
@@ -92,12 +95,12 @@ def resize_and_pad(frame: np.ndarray, target_w: int, target_h: int) -> np.ndarra
     scale = min(target_w / w, target_h / h)
     nw, nh = int(w * scale), int(h * scale)
     resized = cv2.resize(frame, (nw, nh))
-    
+
     canvas = np.zeros((target_h, target_w, 3), dtype=np.uint8)
-    
+
     # Center
     x_off = (target_w - nw) // 2
     y_off = (target_h - nh) // 2
-    
+
     canvas[y_off:y_off+nh, x_off:x_off+nw] = resized
     return canvas

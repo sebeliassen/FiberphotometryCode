@@ -26,12 +26,13 @@ Preset: show_trajectory_inset=False (removes the 2D trajectory inset).
 =============================================================================
 """
 
-import sys
 import os
+import sys
 import time
 from pathlib import Path
-import numpy as np
+
 import cv2
+import numpy as np
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 os.environ["JAX_PLATFORMS"] = "cpu"
@@ -43,18 +44,20 @@ sys.path.insert(0, str(REPO_ROOT))
 
 # NumPy compatibility
 import numpy.core.numeric as _numeric
+
 sys.modules['numpy._core.numeric'] = _numeric
 
-from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
-    load_chain_movie_resources,
-    generate_chain_grid_movie
-)
-from syllable_generation.analysis.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
-    get_verified_metadata
-)
 from scipy.interpolate import interp1d
 from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
+
+from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+    generate_chain_grid_movie,
+    load_chain_movie_resources,
+)
+from syllable_generation.analysis.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
+    get_verified_metadata,
+)
 
 OUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars"
 OUT_DIR.mkdir(parents=True, exist_ok=True)

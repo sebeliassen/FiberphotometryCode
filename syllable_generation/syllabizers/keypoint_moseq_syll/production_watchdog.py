@@ -11,12 +11,12 @@ Sends real-time alerts to ntfy.sh/woody_videos_seb.
 Terminates gracefully when target parent queue PID exits.
 """
 
-import os
-import sys
-import time
 import argparse
+import os
 import subprocess
+import time
 import urllib.request
+
 import psutil
 
 NTFY_URL = "https://ntfy.sh/woody_videos_seb"
@@ -65,9 +65,9 @@ def main():
     print("  KPMS PRODUCTION RESOURCE & OOM WATCHDOG STARTED", flush=True)
     print(f"  Parent Queue PID:    {parent_pid if parent_pid else 'System-wide'}", flush=True)
     print(f"  Check Interval:      {args.check_interval}s", flush=True)
-    print(f"  Host RAM Emergency:  Avail < 4.0 GB or Proc RSS > 45.0 GB", flush=True)
-    print(f"  GPU VRAM Emergency:  > 23,500 MB (RTX 4090)", flush=True)
-    print(f"  Disk Free Emergency: < 40.0 GB", flush=True)
+    print("  Host RAM Emergency:  Avail < 4.0 GB or Proc RSS > 45.0 GB", flush=True)
+    print("  GPU VRAM Emergency:  > 23,500 MB (RTX 4090)", flush=True)
+    print("  Disk Free Emergency: < 40.0 GB", flush=True)
     print("=" * 70, flush=True)
 
     check_count = 0

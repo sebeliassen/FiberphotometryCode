@@ -39,8 +39,8 @@ for p in [PKG_ROOT, PKG_ROOT / "pipeline", EML_SCRIPT.parent.parent]:
 
 import h5py
 
-from core import eval_artifacts as ea
 from core import cache_manifest as cm
+from core import eval_artifacts as ea
 
 
 # --------------------------------------------------------------------------- #

@@ -13,10 +13,12 @@ Implements the user's pixel luminance diagnostic tool across all 113 recordings:
 """
 
 import os
-import sys
 import pickle
+import sys
 from pathlib import Path
+
 import numpy as np
+
 np.bool8 = np.bool_
 import cv2
 import pandas as pd
@@ -25,8 +27,8 @@ from tqdm import tqdm
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from vidio.read import OpenCVReader
 import keypoint_moseq as kpms
+from vidio.read import OpenCVReader
 
 # Fast reader
 _original_read = OpenCVReader.read
@@ -76,14 +78,14 @@ for s in sessions:
             if os.path.exists(row["path"]):
                 vid_path = row["path"]
                 break
-    
+
     # Chamber / animal info
     chamber = s.metadata.get("chamber", "unknown")
     animal_id = s.metadata.get("animal_id", "unknown")
     condition = s.metadata.get("condition", "unknown")
     trial_id = s.metadata.get("trial_id", "unknown")
     date = s.metadata.get("timestamp", "unknown").split("T")[0]
-    
+
     meta_dict = {
         "chamber": chamber,
         "animal_id": animal_id,
@@ -91,7 +93,7 @@ for s in sessions:
         "trial_id": trial_id,
         "date": date,
     }
-    
+
     if k and k in results:
         key_to_meta[k] = meta_dict
         if vid_path:
@@ -132,39 +134,39 @@ for k in tqdm(list(key_to_vid.keys()), desc="Scanning recordings", ncols=80):
     vfi_seq = vfi.get(k)
     if vfi_seq is None or len(c_seq) == 0:
         continue
-        
+
     meta = key_to_meta.get(k, {})
-    
+
     # Select 60 sample frames per session
     total_f = min(len(c_seq), len(vfi_seq))
     if total_f < 60:
         continue
     sample_indices = np.linspace(50, total_f - 50, 60, dtype=int)
-    
+
     cap = cv2.VideoCapture(vid_file)
-    
+
     # Read first frame to estimate arena background floor
     cap.set(cv2.CAP_PROP_POS_FRAMES, vfi_seq[sample_indices[0]])
     ret, frame0 = cap.read()
     if not ret:
         cap.release()
         continue
-        
+
     gray0 = cv2.cvtColor(frame0, cv2.COLOR_BGR2GRAY)
     # Background floor is typically around 75th percentile of arena image
     bg_floor_luminance = float(np.percentile(gray0, 75))
-    
+
     for f_idx in sample_indices:
         raw_frame_no = vfi_seq[f_idx]
         cap.set(cv2.CAP_PROP_POS_FRAMES, raw_frame_no)
         ret, frame = cap.read()
         if not ret:
             continue
-            
+
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         H, W = gray.shape
         cx, cy = int(round(c_seq[f_idx][0])), int(round(c_seq[f_idx][1]))
-        
+
         # Check boundary
         in_bounds = (PATCH_RADIUS <= cx < W - PATCH_RADIUS) and (PATCH_RADIUS <= cy < H - PATCH_RADIUS)
         if not in_bounds:
@@ -181,14 +183,14 @@ for k in tqdm(list(key_to_vid.keys()), desc="Scanning recordings", ncols=80):
                 "reason": "out_of_bounds"
             })
             continue
-            
+
         patch = gray[cy - PATCH_RADIUS : cy + PATCH_RADIUS + 1, cx - PATCH_RADIUS : cx + PATCH_RADIUS + 1]
         c_lum = float(np.mean(patch))
-        
+
         # In this dataset: Dark mouse fur is typically < 90, floor is > 150
         # If c_lum > 130 or c_lum > 0.8 * bg_floor_luminance, the centroid is on the bright floor
         is_off = (c_lum > 125.0) or (c_lum > 0.82 * bg_floor_luminance)
-        
+
         records.append({
             "recording": k,
             "chamber": meta.get("chamber", "unknown"),
@@ -201,7 +203,7 @@ for k in tqdm(list(key_to_vid.keys()), desc="Scanning recordings", ncols=80):
             "is_off_body": is_off,
             "reason": "high_luminance" if is_off else "on_body"
         })
-        
+
     cap.release()
 
 df = pd.DataFrame(records)
@@ -209,7 +211,7 @@ print(f"\n[3/4] Evaluated {len(df)} total sampled frames across {df['recording']
 
 overall_error_rate = df["is_off_body"].mean() * 100.0
 print("=" * 80)
-print(f"📊 OVERALL DIAGNOSTIC RESULT:")
+print("📊 OVERALL DIAGNOSTIC RESULT:")
 print(f"   Total Sampled Frames:       {len(df):,}")
 print(f"   Off-Body Centroid Frames:   {df['is_off_body'].sum():,} ({overall_error_rate:.2f}%)")
 print(f"   Empirical Error Frequency:  ~1 in {int(round(100.0 / max(overall_error_rate, 0.01)))} frames (matches your ~1/25 observation!)")

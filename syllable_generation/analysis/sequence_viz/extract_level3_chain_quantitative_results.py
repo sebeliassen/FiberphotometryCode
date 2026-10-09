@@ -20,21 +20,20 @@ Evaluates:
 =============================================================================
 """
 
-import os
-import sys
-import time
-import json
-import pickle
 import itertools
+import pickle
+import sys
 import urllib.request
 from pathlib import Path
+
+import matplotlib
 import numpy as np
 import pandas as pd
 from scipy import stats
-import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
@@ -154,7 +153,7 @@ def decode_episodes_in_session(X_sess, durs_sess, starts_sess, W, L=3,
     """
     S, T = X_sess.shape
     _, K, _ = W.shape
-    
+
     H_raw = np.zeros((K, T), dtype=np.float32)
     for k in range(K):
         for l in range(L):
@@ -168,20 +167,20 @@ def decode_episodes_in_session(X_sess, durs_sess, starts_sess, W, L=3,
         h_k = H_raw[k]
         W_k = W[:, k, :]
         W_k_norm_sq = float(np.sum(W_k ** 2)) + 1e-8
-        
+
         non_zero = h_k[h_k > 0.1]
         if len(non_zero) == 0:
             continue
         tau_k = float(np.percentile(non_zero, 85.0))
-        
+
         peaks = []
         for t in range(1, T - L - 1):
             if h_k[t] >= tau_k and h_k[t] >= h_k[t - 1] and h_k[t] >= h_k[t + 1]:
                 peaks.append((t, float(h_k[t])))
-                
+
         if not peaks:
             continue
-            
+
         peaks.sort(key=lambda p: p[1], reverse=True)
         suppressed = np.zeros(T, dtype=bool)
         selected_peaks = []
@@ -191,21 +190,21 @@ def decode_episodes_in_session(X_sess, durs_sess, starts_sess, W, L=3,
                 start_w = max(0, t - nms_window)
                 end_w = min(T, t + nms_window + 1)
                 suppressed[start_w:end_w] = True
-                
+
         selected_peaks.sort(key=lambda p: p[0])
-        
+
         for t, act in selected_peaks:
             if t + L > T:
                 continue
             Y_t = X_sess[:, t:t + L]
             Y_t_norm_sq = float(np.sum(Y_t ** 2)) + 1e-8
-            
+
             inner_prod = float(np.sum(Y_t * W_k))
             a_star = max(0.0, inner_prod / W_k_norm_sq)
-            
+
             recon_diff = Y_t - a_star * W_k
             E_kt = float(np.sum(recon_diff ** 2) / Y_t_norm_sq)
-            
+
             stage_matches = 0
             observed_tokens = []
             for l in range(L):
@@ -214,12 +213,12 @@ def decode_episodes_in_session(X_sess, durs_sess, starts_sess, W, L=3,
                 if W_k[obs_s, l] > 0.15:
                     stage_matches += 1
             stage_sup = stage_matches / L
-            
+
             if E_kt <= max_template_err and stage_sup >= min_stage_sup:
                 start_f = int(starts_sess[t])
                 end_f = int(starts_sess[min(T - 1, t + L)])
                 dur_s = float(np.sum(durs_sess[t:t + L]))
-                
+
                 session_episodes.append({
                     "factor_id": k + 1,
                     "start_bout": int(t),
@@ -232,7 +231,7 @@ def decode_episodes_in_session(X_sess, durs_sess, starts_sess, W, L=3,
                     "stage_support": float(stage_sup),
                     "observed_tokens": observed_tokens
                 })
-                
+
     session_episodes.sort(key=lambda ep: (ep["start_bout"], ep["template_error"]))
     cleaned_episodes = []
     last_end = -1
@@ -243,7 +242,7 @@ def decode_episodes_in_session(X_sess, durs_sess, starts_sess, W, L=3,
         elif cleaned_episodes and ep["template_error"] < cleaned_episodes[-1]["template_error"]:
             cleaned_episodes[-1] = ep
             last_end = ep["end_bout"]
-            
+
     return cleaned_episodes
 
 
@@ -252,17 +251,17 @@ def run_full_level3_pipeline():
     print("=" * 80)
     print("STEP 1: FITTING LEVEL 3 (22 FUNCTIONAL FAMILIES) SEQNMF MODEL")
     print("=" * 80)
-    
+
     token_names, mapping = get_level3_definitions()
     S = len(token_names)
     K, L = 10, 3
-    
+
     data_pkl = DATA_DIR / "unified_sequence_dataset.pkl"
     with open(data_pkl, "rb") as f:
         d_bundle = pickle.load(f)
     sessions = d_bundle["sessions"]
     print(f"Loaded unified dataset with {len(sessions)} sessions across all animals.")
-    
+
     # Assemble stream for model fitting
     all_mapped = []
     for s in sessions:
@@ -271,50 +270,50 @@ def run_full_level3_pipeline():
         all_mapped.extend(mapping[valid])
     all_mapped = np.array(all_mapped, dtype=int)
     T_total = len(all_mapped)
-    
+
     N_FIT = min(60000, T_total)
     X_train = np.zeros((S, N_FIT), dtype=np.float32)
     X_train[all_mapped[:N_FIT], np.arange(N_FIT)] = 1.0
-    
+
     print(f"Fitting Level 3 Convolutional seqNMF on JAX GPU (S={S}, K={K}, L={L}, N={N_FIT:,})...")
     model = ConvolutionalSeqNMF(K=K, L=L, lambda_ortho=0.005, max_iter=200, use_gpu=True, random_seed=42)
     model.fit(X_train)
     W = model.W
     print(f"Level 3 seqNMF model successfully fitted in {model.fit_time_sec:.2f}s!")
-    
+
     # Save model results
     model_save_path = DATA_DIR / "level3_seqnmf_model_results.pkl"
     with open(model_save_path, "wb") as f:
         pickle.dump({"W": W, "token_names": token_names, "mapping": mapping, "K": K, "L": L}, f)
     print(f"Saved Level 3 model weights to {model_save_path}")
-    
+
     print("\n" + "=" * 80)
     print("STEP 2: DECODING EPISODES ACROSS ALL 30 SESSIONS (LEVEL 3)")
     print("=" * 80)
-    
+
     all_episodes = []
     session_metadata = []
-    
+
     for s_idx, sess in enumerate(sessions):
         aid = str(sess["animal_id"])
         gt = sess["genotype"]
         drug = sess["drug"]
         df_bouts = sess["bouts_df"]
-        
+
         cohort_name = f"{gt}_{drug}"
         sylls = df_bouts["syllable"].values
         durs = df_bouts["duration_sec"].values
         starts = df_bouts["start_frame"].values
-        
+
         valid_mask = (sylls >= 0) & (sylls < 100)
         m_sylls = mapping[sylls[valid_mask]]
         m_durs = durs[valid_mask]
         m_starts = starts[valid_mask]
         T_sess = len(m_sylls)
-        
+
         sess_dur_sec = float(np.sum(m_durs))
         sess_dur_min = sess_dur_sec / 60.0
-        
+
         session_metadata.append({
             "session_idx": s_idx,
             "animal_id": aid,
@@ -325,10 +324,10 @@ def run_full_level3_pipeline():
             "duration_sec": sess_dur_sec,
             "duration_min": sess_dur_min
         })
-        
+
         X_sess = np.zeros((S, T_sess), dtype=np.float32)
         X_sess[m_sylls, np.arange(T_sess)] = 1.0
-        
+
         episodes = decode_episodes_in_session(X_sess, m_durs, m_starts, W, L=L)
         for ep in episodes:
             ep["session_idx"] = s_idx
@@ -337,13 +336,13 @@ def run_full_level3_pipeline():
             ep["drug"] = drug
             ep["cohort"] = cohort_name
             all_episodes.append(ep)
-            
+
     df_ep = pd.DataFrame(all_episodes)
     df_meta = pd.DataFrame(session_metadata)
     print(f"Decoded total {len(df_ep):,} verified Level 3 chain episodes across 30 sessions.")
     print("Episodes per cohort:")
     print(df_ep["cohort"].value_counts())
-    
+
     return W, token_names, df_ep, df_meta
 
 
@@ -352,9 +351,9 @@ def compute_animal_and_cohort_metrics(df_ep, df_meta, K=10):
     print("\n" + "=" * 80)
     print("STEP 3: COMPUTING PER-ANIMAL & COHORT CHAIN USAGE METRICS (LEVEL 3)")
     print("=" * 80)
-    
+
     animal_metrics = []
-    
+
     for _, s_row in df_meta.iterrows():
         s_idx = s_row["session_idx"]
         aid = s_row["animal_id"]
@@ -363,19 +362,19 @@ def compute_animal_and_cohort_metrics(df_ep, df_meta, K=10):
         cohort = s_row["cohort"]
         t_min = s_row["duration_min"]
         t_sec = s_row["duration_sec"]
-        
+
         ep_sub = df_ep[df_ep["session_idx"] == s_idx]
         total_ep_count = len(ep_sub)
-        
+
         for k in range(1, K + 1):
             k_sub = ep_sub[ep_sub["factor_id"] == k]
             count_k = len(k_sub)
             dur_k = float(k_sub["duration_sec"].sum()) if count_k > 0 else 0.0
-            
+
             rate_k = count_k / t_min if t_min > 0 else 0.0
             occ_pct = (dur_k / t_sec * 100.0) if t_sec > 0 else 0.0
             prob_k = count_k / total_ep_count if total_ep_count > 0 else 0.0
-            
+
             animal_metrics.append({
                 "session_idx": s_idx,
                 "animal_id": aid,
@@ -389,9 +388,9 @@ def compute_animal_and_cohort_metrics(df_ep, df_meta, K=10):
                 "occupancy_pct": occ_pct,
                 "probability": prob_k
             })
-            
+
     df_anim = pd.DataFrame(animal_metrics)
-    
+
     cohort_summary = []
     for (cohort, k), sub in df_anim.groupby(["cohort", "factor_id"]):
         cohort_summary.append({
@@ -408,13 +407,13 @@ def compute_animal_and_cohort_metrics(df_ep, df_meta, K=10):
             "probability_sem": sub["probability"].sem()
         })
     df_cohort = pd.DataFrame(cohort_summary)
-    
+
     anim_csv = DATA_DIR / "level3_animal_chain_usage_metrics.csv"
     df_anim.to_csv(anim_csv, index=False)
     cohort_csv = DATA_DIR / "level3_chain_cohort_usage_summary.csv"
     df_cohort.to_csv(cohort_csv, index=False)
     print(f"Saved animal and cohort metrics to {anim_csv} and {cohort_csv}")
-    
+
     return df_anim, df_cohort
 
 
@@ -427,21 +426,21 @@ def run_exact_animal_permutation_test(df_anim, K=10):
     print("\n" + "=" * 80)
     print("STEP 4: EXACT ANIMAL-LEVEL PERMUTATION TEST (TOTAL VARIATION DISTANCE)")
     print("=" * 80)
-    
+
     anim_gt = df_anim[["animal_id", "genotype"]].drop_duplicates().set_index("animal_id")["genotype"].to_dict()
     all_animals = sorted(list(anim_gt.keys()))
     wt_animals = [a for a in all_animals if anim_gt[a] == "WT"]
     ki_animals = [a for a in all_animals if anim_gt[a] == "KI"]
-    
+
     N_total = len(all_animals)
     N_wt = len(wt_animals)
     N_ki = len(ki_animals)
     print(f"Exact permutation setup: {N_total} animals ({N_wt} WT, {N_ki} DAT-KI).")
-    
+
     partitions = list(itertools.combinations(all_animals, N_wt))
     N_partitions = len(partitions)
     print(f"Total exact combinatorial partitions: C({N_total}, {N_wt}) = {N_partitions:,}")
-    
+
     profiles = {}
     for (aid, drug), sub in df_anim.groupby(["animal_id", "drug"]):
         vec = np.zeros(K, dtype=np.float64)
@@ -452,7 +451,7 @@ def run_exact_animal_permutation_test(df_anim, K=10):
         if s > 0:
             vec = vec / s
         profiles[(aid, drug)] = vec
-        
+
     def calc_tv(group1_aids, group2_aids, drug=None):
         if drug is not None:
             vecs1 = [profiles[(a, drug)] for a in group1_aids if (a, drug) in profiles]
@@ -460,7 +459,7 @@ def run_exact_animal_permutation_test(df_anim, K=10):
         else:
             vecs1 = [0.5 * (profiles.get((a, "Saline"), np.zeros(K)) + profiles.get((a, "Amphetamine"), np.zeros(K))) for a in group1_aids]
             vecs2 = [0.5 * (profiles.get((a, "Saline"), np.zeros(K)) + profiles.get((a, "Amphetamine"), np.zeros(K))) for a in group2_aids]
-            
+
         m1 = np.mean(vecs1, axis=0)
         m2 = np.mean(vecs2, axis=0)
         return 0.5 * np.sum(np.abs(m1 - m2))
@@ -468,35 +467,35 @@ def run_exact_animal_permutation_test(df_anim, K=10):
     tv_obs_sal = calc_tv(wt_animals, ki_animals, "Saline")
     tv_obs_amph = calc_tv(wt_animals, ki_animals, "Amphetamine")
     tv_obs_global = calc_tv(wt_animals, ki_animals, None)
-    
+
     null_sal = np.zeros(N_partitions, dtype=np.float64)
     null_amph = np.zeros(N_partitions, dtype=np.float64)
     null_global = np.zeros(N_partitions, dtype=np.float64)
-    
+
     all_set = set(all_animals)
     for p_idx, p_wt in enumerate(partitions):
         set_wt = set(p_wt)
         p_ki = list(all_set - set_wt)
-        
+
         null_sal[p_idx] = calc_tv(p_wt, p_ki, "Saline")
         null_amph[p_idx] = calc_tv(p_wt, p_ki, "Amphetamine")
         null_global[p_idx] = calc_tv(p_wt, p_ki, None)
-        
+
     p_sal = float(np.mean(null_sal >= tv_obs_sal))
     p_amph = float(np.mean(null_amph >= tv_obs_amph))
     p_global = float(np.mean(null_global >= tv_obs_global))
-    
+
     print(f"Exact Permutation Results (N={N_partitions:,}):")
     print(f"  Saline (WT vs. DAT-KI):      TV_obs = {tv_obs_sal:.4f}, exact p = {p_sal:.4f} {'*' if p_sal < 0.05 else 'n.s.'}")
     print(f"  Amphetamine (WT vs. DAT-KI): TV_obs = {tv_obs_amph:.4f}, exact p = {p_amph:.4f} {'*' if p_amph < 0.05 else 'n.s.'}")
     print(f"  Global Pooled (WT vs. DAT-KI): TV_obs = {tv_obs_global:.4f}, exact p = {p_global:.4f} {'*' if p_global < 0.05 else 'n.s.'}")
-    
+
     univariate_results = []
     for k in range(1, K + 1):
         for drug in ["Saline", "Amphetamine"]:
             wt_vals = df_anim[(df_anim["genotype"] == "WT") & (df_anim["drug"] == drug) & (df_anim["factor_id"] == k)]["rate_per_min"].values
             ki_vals = df_anim[(df_anim["genotype"] == "KI") & (df_anim["drug"] == drug) & (df_anim["factor_id"] == k)]["rate_per_min"].values
-            
+
             u_stat, p_val = stats.mannwhitneyu(wt_vals, ki_vals, alternative="two-sided")
             univariate_results.append({
                 "factor_id": k,
@@ -508,7 +507,7 @@ def run_exact_animal_permutation_test(df_anim, K=10):
             })
     df_uni = pd.DataFrame(univariate_results)
     df_uni["fdr_p"] = stats.false_discovery_control(df_uni["p_val"].values)
-    
+
     res_df = pd.DataFrame([
         {"comparison": "WT_vs_KI_Saline", "tv_observed": tv_obs_sal, "exact_p_val": p_sal, "n_partitions": N_partitions},
         {"comparison": "WT_vs_KI_Amphetamine", "tv_observed": tv_obs_amph, "exact_p_val": p_amph, "n_partitions": N_partitions},
@@ -516,11 +515,11 @@ def run_exact_animal_permutation_test(df_anim, K=10):
     ])
     res_csv = DATA_DIR / "level3_chain_genotype_permutation_results.csv"
     res_df.to_csv(res_csv, index=False)
-    
+
     uni_csv = DATA_DIR / "level3_chain_univariate_contrasts.csv"
     df_uni.to_csv(uni_csv, index=False)
     print(f"Saved permutation and contrast results to {res_csv} and {uni_csv}")
-    
+
     return {
         "tv_obs_sal": tv_obs_sal,
         "p_sal": p_sal,
@@ -540,10 +539,10 @@ def analyze_chain_looping_and_perseveration(df_ep, df_meta, K=10):
     print("\n" + "=" * 80)
     print("STEP 5: ANALYZING CHAIN LOOPING & PERSEVERATION STEREOTYPY (LEVEL 3)")
     print("=" * 80)
-    
+
     animal_loop_metrics = []
     cohort_trans_matrices = {c: np.zeros((K, K), dtype=np.float64) for c in COHORT_ORDER}
-    
+
     for _, s_row in df_meta.iterrows():
         s_idx = s_row["session_idx"]
         aid = s_row["animal_id"]
@@ -551,14 +550,14 @@ def analyze_chain_looping_and_perseveration(df_ep, df_meta, K=10):
         drug = s_row["drug"]
         cohort = s_row["cohort"]
         t_min = s_row["duration_min"]
-        
+
         ep_sub = df_ep[df_ep["session_idx"] == s_idx].sort_values("start_bout")
         factors = ep_sub["factor_id"].values
         n_ep = len(factors)
-        
+
         sess_trans = np.zeros((K, K), dtype=np.float64)
         loop_count = 0
-        
+
         if n_ep > 1:
             for i in range(n_ep - 1):
                 f_curr = factors[i] - 1
@@ -566,12 +565,12 @@ def analyze_chain_looping_and_perseveration(df_ep, df_meta, K=10):
                 sess_trans[f_curr, f_next] += 1.0
                 if f_curr == f_next:
                     loop_count += 1
-                    
+
             cohort_trans_matrices[cohort] += sess_trans
-            
+
         loop_rate = loop_count / t_min if t_min > 0 else 0.0
         loop_prob = loop_count / (n_ep - 1) if n_ep > 1 else 0.0
-        
+
         animal_loop_metrics.append({
             "session_idx": s_idx,
             "animal_id": aid,
@@ -583,19 +582,19 @@ def analyze_chain_looping_and_perseveration(df_ep, df_meta, K=10):
             "looping_rate_per_min": loop_rate,
             "perseveration_index": loop_prob
         })
-        
+
     df_loop = pd.DataFrame(animal_loop_metrics)
-    
+
     norm_cohort_trans = {}
     for cohort, mat in cohort_trans_matrices.items():
         row_sums = mat.sum(axis=1, keepdims=True)
         norm_mat = np.divide(mat, row_sums, out=np.zeros_like(mat), where=row_sums > 0)
         norm_cohort_trans[cohort] = norm_mat
-        
+
     loop_csv = DATA_DIR / "level3_chain_looping_perseveration_summary.csv"
     df_loop.to_csv(loop_csv, index=False)
     print(f"Saved looping and perseveration metrics to {loop_csv}")
-    
+
     return df_loop, norm_cohort_trans
 
 
@@ -604,26 +603,26 @@ def make_figure1_cohort_usage_and_permutation(df_anim, df_cohort, perm_results, 
     print("\n" + "=" * 80)
     print("GENERATING FIGURE 1 (LEVEL 3: COHORT USAGE & PERMUTATION TEST)")
     print("=" * 80)
-    
+
     fig = plt.figure(figsize=(19, 11), dpi=300)
     gs = gridspec.GridSpec(2, 4, figure=fig, height_ratios=[1.15, 0.95], hspace=0.34, wspace=0.28)
-    
+
     # Panel A: Usage Rate per Chain
     ax_a = fig.add_subplot(gs[0, :2])
     chain_indices = np.arange(1, K + 1)
     bar_w = 0.18
     offsets = [-1.5 * bar_w, -0.5 * bar_w, 0.5 * bar_w, 1.5 * bar_w]
-    
+
     for c_idx, cohort in enumerate(COHORT_ORDER):
         sub = df_cohort[df_cohort["cohort"] == cohort].sort_values("factor_id")
         means = sub["rate_per_min_mean"].values
         sems = sub["rate_per_min_sem"].values
         x_pos = chain_indices + offsets[c_idx]
-        
+
         ax_a.bar(x_pos, means, yerr=sems, width=bar_w, color=COHORT_COLORS[cohort],
                  capsize=2.5, edgecolor="#222222", linewidth=0.8, alpha=0.9,
                  label=COHORT_LABELS[cohort], zorder=3)
-        
+
         # Overlay animal scatter
         sub_anim = df_anim[df_anim["cohort"] == cohort]
         for _, a_row in sub_anim.iterrows():
@@ -647,7 +646,7 @@ def make_figure1_cohort_usage_and_permutation(df_anim, df_cohort, perm_results, 
         means = sub["occupancy_pct_mean"].values
         sems = sub["occupancy_pct_sem"].values
         x_pos = chain_indices + offsets[c_idx]
-        
+
         ax_b.bar(x_pos, means, yerr=sems, width=bar_w, color=COHORT_COLORS[cohort],
                  capsize=2.5, edgecolor="#222222", linewidth=0.8, alpha=0.9,
                  label=COHORT_LABELS[cohort], zorder=3)
@@ -666,12 +665,12 @@ def make_figure1_cohort_usage_and_permutation(df_anim, df_cohort, perm_results, 
     null_sal = perm_results["null_sal"]
     tv_sal = perm_results["tv_obs_sal"]
     p_sal = perm_results["p_sal"]
-    
+
     n_bins = 35
     counts, bins, patches = ax_c1.hist(null_sal, bins=n_bins, density=True, color="#A0AEC0",
                                        edgecolor="white", linewidth=0.7, alpha=0.75,
                                        label=f"Permutation Null (N={perm_results['N_partitions']:,})")
-    
+
     for b_idx in range(len(patches)):
         if bins[b_idx] >= tv_sal:
             patches[b_idx].set_facecolor("#E53E3E")
@@ -691,11 +690,11 @@ def make_figure1_cohort_usage_and_permutation(df_anim, df_cohort, perm_results, 
     null_amph = perm_results["null_amph"]
     tv_amph = perm_results["tv_obs_amph"]
     p_amph = perm_results["p_amph"]
-    
+
     counts_a, bins_a, patches_a = ax_c2.hist(null_amph, bins=n_bins, density=True, color="#A0AEC0",
                                              edgecolor="white", linewidth=0.7, alpha=0.75,
                                              label=f"Permutation Null (N={perm_results['N_partitions']:,})")
-    
+
     for b_idx in range(len(patches_a)):
         if bins_a[b_idx] >= tv_amph:
             patches_a[b_idx].set_facecolor("#3182CE")
@@ -712,7 +711,7 @@ def make_figure1_cohort_usage_and_permutation(df_anim, df_cohort, perm_results, 
 
     fig.suptitle("Publication Summary: Level 3 Cohort Chain Usage & Exact Genotype Separation",
                  fontweight="bold", fontsize=15.5, y=0.98)
-    
+
     fig_name = "fig_level3_cohort_chain_usage_genotype_separation.png"
     for d in OUTPUT_DIRS:
         fig.savefig(d / fig_name, dpi=300, bbox_inches="tight")
@@ -725,7 +724,7 @@ def make_figure2_syllable_progression_heatmaps(W, token_names):
     print("\n" + "=" * 80)
     print("GENERATING FIGURE 2 (LEVEL 3: SYLLABLE PROGRESSION & BRANCHING HEATMAPS)")
     print("=" * 80)
-    
+
     S, K, L = W.shape
     top_chains = [7, 10, 8, 5]  # Wall-Lean Descent, Slalom Redirection, Sprint-to-Rear, Sensory Scanning
     chain_titles = [
@@ -734,36 +733,36 @@ def make_figure2_syllable_progression_heatmaps(W, token_names):
         "Chain 8: Sprint Cornering into Rear (Sprint -> Turn_R -> Rear_Elevated)",
         "Chain 5: Ground Olfactory Scanning & Check (Sniff_Ground -> Look_L -> Sniff_Ground)"
     ]
-    
+
     fig, axes = plt.subplots(2, 2, figsize=(18, 11), dpi=300)
     axes = axes.flatten()
-    
+
     for idx, c_num in enumerate(top_chains):
         ax = axes[idx]
         k_idx = c_num - 1
         W_k = W[:, k_idx, :]  # (S, L)
-        
+
         active_mask = np.max(W_k, axis=1) > 0.08
         active_indices = np.where(active_mask)[0]
-        
+
         if len(active_indices) < 4:
             active_indices = np.argsort(-np.max(W_k, axis=1))[:6]
-            
+
         active_indices = sorted(active_indices, key=lambda s: np.argmax(W_k[s, :]))
         W_sub = W_k[active_indices, :]
-        
+
         y_labels = [token_names[s] for s in active_indices]
-        
+
         im = ax.imshow(W_sub, aspect="auto", cmap="magma", vmin=0, vmax=1.0)
-        
+
         ax.set_xticks(range(L))
         ax.set_xticklabels([f"Lag {l}\n(Step {l+1})" for l in range(L)], fontweight="bold", fontsize=10.5)
         ax.set_yticks(range(len(active_indices)))
         ax.set_yticklabels(y_labels, fontweight="bold", fontsize=10.5)
-        
+
         ax.set_title(chain_titles[idx], loc="left", fontweight="bold", fontsize=11.5, pad=9)
         ax.set_xlabel("Temporal Progression (Macro-Bouts)", fontweight="bold")
-        
+
         for r in range(len(active_indices)):
             for c in range(L):
                 val = W_sub[r, c]
@@ -771,14 +770,14 @@ def make_figure2_syllable_progression_heatmaps(W, token_names):
                     txt_color = "white" if val > 0.55 else "#1A202C"
                     ax.text(c, r, f"{val:.2f}", ha="center", va="center",
                             color=txt_color, fontweight="bold", fontsize=9.5)
-                    
+
         cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
         cbar.set_label("Level 3 Token Weight in Template ($W$)", fontweight="bold", fontsize=9.5)
 
     fig.suptitle("Publication Summary: Level 3 Functional Token Progression & Branching Heatmaps ($W$)",
                  fontweight="bold", fontsize=15.5, y=0.98)
     plt.tight_layout(rect=[0, 0, 1, 0.96])
-    
+
     fig_name = "fig_level3_syllable_progression_branching_heatmaps.png"
     for d in OUTPUT_DIRS:
         fig.savefig(d / fig_name, dpi=300, bbox_inches="tight")
@@ -791,21 +790,21 @@ def make_figure3_looping_and_perseveration(df_loop, norm_cohort_trans, K=10):
     print("\n" + "=" * 80)
     print("GENERATING FIGURE 3 (LEVEL 3: CHAIN LOOPING & PERSEVERATION STEREOTYPY)")
     print("=" * 80)
-    
+
     fig = plt.figure(figsize=(19, 12), dpi=300)
     gs = gridspec.GridSpec(2, 4, figure=fig, height_ratios=[1.0, 1.05], hspace=0.35, wspace=0.28)
-    
+
     # Panel A1: Looping Rate
     ax_a1 = fig.add_subplot(gs[0, 0])
     cohort_x = np.arange(len(COHORT_ORDER))
-    
+
     loop_means = [df_loop[df_loop["cohort"] == c]["looping_rate_per_min"].mean() for c in COHORT_ORDER]
     loop_sems = [df_loop[df_loop["cohort"] == c]["looping_rate_per_min"].sem() for c in COHORT_ORDER]
     colors = [COHORT_COLORS[c] for c in COHORT_ORDER]
-    
+
     bars1 = ax_a1.bar(cohort_x, loop_means, yerr=loop_sems, capsize=3.5, color=colors,
                       edgecolor="#222222", linewidth=0.9, alpha=0.9, zorder=3)
-    
+
     for c_idx, c in enumerate(COHORT_ORDER):
         vals = df_loop[df_loop["cohort"] == c]["looping_rate_per_min"].values
         x_dots = cohort_x[c_idx] + np.random.uniform(-0.1, 0.1, size=len(vals))
@@ -822,10 +821,10 @@ def make_figure3_looping_and_perseveration(df_loop, norm_cohort_trans, K=10):
     ax_a2 = fig.add_subplot(gs[0, 1])
     pi_means = [df_loop[df_loop["cohort"] == c]["perseveration_index"].mean() for c in COHORT_ORDER]
     pi_sems = [df_loop[df_loop["cohort"] == c]["perseveration_index"].sem() for c in COHORT_ORDER]
-    
+
     bars2 = ax_a2.bar(cohort_x, pi_means, yerr=pi_sems, capsize=3.5, color=colors,
                       edgecolor="#222222", linewidth=0.9, alpha=0.9, zorder=3)
-    
+
     for c_idx, c in enumerate(COHORT_ORDER):
         vals = df_loop[df_loop["cohort"] == c]["perseveration_index"].values
         x_dots = cohort_x[c_idx] + np.random.uniform(-0.1, 0.1, size=len(vals))
@@ -842,19 +841,19 @@ def make_figure3_looping_and_perseveration(df_loop, norm_cohort_trans, K=10):
     for c_idx, cohort in enumerate(COHORT_ORDER):
         ax_mat = fig.add_subplot(gs[1, c_idx])
         t_mat = norm_cohort_trans[cohort]
-        
+
         im = ax_mat.imshow(t_mat, cmap="viridis", vmin=0, vmax=0.45, aspect="equal")
         ax_mat.set_title(f"{COHORT_LABELS[cohort]}\nTransition Matrix", fontweight="bold", fontsize=11, pad=8)
-        
+
         ax_mat.set_xticks(np.arange(0, K, 2))
         ax_mat.set_xticklabels([f"C{k+1}" for k in range(0, K, 2)], fontsize=8.5)
         ax_mat.set_yticks(np.arange(0, K, 2))
         ax_mat.set_yticklabels([f"C{k+1}" for k in range(0, K, 2)], fontsize=8.5)
-        
+
         if c_idx == 0:
             ax_mat.set_ylabel("Current Chain $k_t$", fontweight="bold")
         ax_mat.set_xlabel("Next Chain $k_{t+1}$", fontweight="bold")
-        
+
         if c_idx == 3:
             cbar = fig.colorbar(im, ax=ax_mat, fraction=0.046, pad=0.06)
             cbar.set_label("Transition Probability", fontweight="bold", fontsize=9.5)
@@ -864,13 +863,13 @@ def make_figure3_looping_and_perseveration(df_loop, norm_cohort_trans, K=10):
     chain_indices = np.arange(1, K + 1)
     bar_w = 0.18
     offsets = [-1.5 * bar_w, -0.5 * bar_w, 0.5 * bar_w, 1.5 * bar_w]
-    
+
     for c_idx, cohort in enumerate(COHORT_ORDER):
         diag_probs = np.diag(norm_cohort_trans[cohort])
         x_pos = chain_indices + offsets[c_idx]
         ax_c.bar(x_pos, diag_probs, width=bar_w, color=COHORT_COLORS[cohort],
                  edgecolor="#222222", linewidth=0.8, alpha=0.9, label=COHORT_LABELS[cohort])
-        
+
     ax_c.set_xticks(chain_indices)
     ax_c.set_xticklabels([f"Chain {k}" for k in chain_indices], fontweight="bold")
     ax_c.set_ylabel("Self-Transition Probability $P(k \\to k)$", fontweight="bold")
@@ -880,10 +879,10 @@ def make_figure3_looping_and_perseveration(df_loop, norm_cohort_trans, K=10):
     ax_c.grid(axis="y", linestyle="--", alpha=0.35, zorder=0)
     ax_c.legend(frameon=True, facecolor="white", edgecolor="#CBD5E0", loc="upper right")
     ax_c.set_ylim(bottom=0)
-    
+
     fig.suptitle("Publication Summary: Level 3 Chain Looping & Perseveration Stereotypy",
                  fontweight="bold", fontsize=15.5, y=0.98)
-    
+
     fig_name = "fig_level3_chain_looping_perseveration_stereotypy.png"
     for d in OUTPUT_DIRS:
         fig.savefig(d / fig_name, dpi=300, bbox_inches="tight")
@@ -895,20 +894,20 @@ def main():
     print("=" * 80)
     print("STARTING LEVEL 3 SEQNMF QUANTITATIVE RESULTS PIPELINE")
     print("=" * 80)
-    
+
     W, token_names, df_ep, df_meta = run_full_level3_pipeline()
     df_anim, df_cohort = compute_animal_and_cohort_metrics(df_ep, df_meta, K=W.shape[1])
     perm_results = run_exact_animal_permutation_test(df_anim, K=W.shape[1])
     df_loop, norm_cohort_trans = analyze_chain_looping_and_perseveration(df_ep, df_meta, K=W.shape[1])
-    
+
     make_figure1_cohort_usage_and_permutation(df_anim, df_cohort, perm_results, K=W.shape[1])
     make_figure2_syllable_progression_heatmaps(W, token_names)
     make_figure3_looping_and_perseveration(df_loop, norm_cohort_trans, K=W.shape[1])
-    
+
     print("\n" + "=" * 80)
     print("LEVEL 3 PIPELINE COMPLETED SUCCESSFULLY!")
     print("=" * 80)
-    
+
     msg = (
         f"Level 3 seqNMF Pipeline Complete (22 Functional Families)!\n"
         f"• Total verified episodes: {len(df_ep):,}\n"

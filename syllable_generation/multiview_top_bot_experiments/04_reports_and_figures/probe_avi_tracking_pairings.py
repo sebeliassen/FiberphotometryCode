@@ -15,11 +15,10 @@ import hashlib
 import json
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple
-import cv2
-import h5py
 
+import h5py
 import viz_v2_common as vc
+
 
 def file_sha256(p: Path, max_bytes: int = 100 * 1024 * 1024) -> str:
     """Hash first 100 MB for rapid verification of large AVI files."""
@@ -68,7 +67,7 @@ def main():
         bot_vids = list(vc.BOT_VID_DIR.glob(f"*{arena}*BotCamVid*{ts}*.avi"))
 
         is_ambiguous = len(top_vids) > 1 or len(bot_vids) > 1
-        
+
         info = {
             "sid": sid,
             "ts": ts,
@@ -104,7 +103,7 @@ def main():
         else:
             clean_sessions.append(info)
 
-    print(f"\n[Pairing Audit Results]")
+    print("\n[Pairing Audit Results]")
     print(f"  Unambiguous sessions: {len(clean_sessions)} / {len(base_sids)}")
     print(f"  Sessions with multiple AVI candidates: {len(ambiguous_sessions)} / {len(base_sids)}")
 
@@ -114,7 +113,7 @@ def main():
     if manifest_path.exists():
         with open(manifest_path) as f:
             manifest_data = json.load(f)
-        
+
         ambig_sid_set = set(d["sid"] for d in ambiguous_sessions)
         for s_str, s_data in manifest_data.get("syllables", {}).items():
             for b in s_data.get("selected_bouts", []):
@@ -133,7 +132,7 @@ def main():
                         "bot_vid": b.get("bot_vid"),
                     })
 
-    print(f"\n[Manifest Impact]")
+    print("\n[Manifest Impact]")
     print(f"  Selected bouts in manifest using ambiguous sessions: {len(manifest_affected_bouts)}")
 
     # Print details of ambiguous sessions

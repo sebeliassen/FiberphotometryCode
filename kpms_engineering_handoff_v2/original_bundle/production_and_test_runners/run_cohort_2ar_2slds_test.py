@@ -12,12 +12,13 @@ Objectives:
 =============================================================================
 """
 
-import os
-import sys
 import copy
-import time
+import os
 import pickle
+import sys
+import time
 from pathlib import Path
+
 import numpy as np
 
 # Live unbuffered stdout/stderr
@@ -46,7 +47,7 @@ sys.path.insert(0, str(KPMS_UTILS_DIR))
 
 import utils.resample_batching as rb
 from utils.batch_init import batched_init_model_by_video
-from utils.trimming import presence_mask_from_conf, filter_with_masks
+from utils.trimming import filter_with_masks, presence_mask_from_conf
 
 EXPERIMENT_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 PROD_KPMS_DIR = EXPERIMENT_DIR / "kpms_tandem_cohort_production"
@@ -150,7 +151,7 @@ def main():
         model = copy.deepcopy(cached_model)
         # Restore GPU states
         model["states"] = {k: jax.device_put(jnp.asarray(v), gpu_device) for k, v in cached_model["states"].items()}
-        print(f"  [CACHE HIT] Model loaded and states placed on GPU in 0.5s.", flush=True)
+        print("  [CACHE HIT] Model loaded and states placed on GPU in 0.5s.", flush=True)
     else:
         print("  [CACHE MISS] Initializing fresh AR-HMM model via batched init...", flush=True)
         t0_init = time.time()

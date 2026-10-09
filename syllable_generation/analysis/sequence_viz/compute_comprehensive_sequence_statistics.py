@@ -24,15 +24,14 @@ Comprehensive analytical pipeline computing:
    - MASTER_72_VIDEO_CATALOG.md (All 72 videos grouped by candidate family x 3 modes)
 """
 
-import os
+import itertools
 import sys
 import time
-import itertools
 from pathlib import Path
-import numpy as np
+
 import h5py
+import numpy as np
 import pandas as pd
-from scipy import stats
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import balanced_accuracy_score
 

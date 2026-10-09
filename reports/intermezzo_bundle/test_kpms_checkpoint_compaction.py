@@ -14,9 +14,8 @@ Guarantees:
 =============================================================================
 """
 
-import os
-import sys
 import shutil
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -26,11 +25,10 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import h5py
-import numpy as np
-
-import keypoint_moseq as kpms
-from keypoint_moseq.fitting import marginal_log_likelihood
 import jax.numpy as jnp
+import keypoint_moseq as kpms
+import numpy as np
+from keypoint_moseq.fitting import marginal_log_likelihood
 
 # Import our compaction engine and patch
 from syllable_generation.syllabizers.keypoint_moseq_syll.utils.compact_checkpoint import (

@@ -12,14 +12,15 @@ Renders 6 high-density publication-grade figures consolidating all modules:
 =============================================================================
 """
 
-import sys
-import os
 from pathlib import Path
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
-import pandas as pd
 import matplotlib
+import pandas as pd
+
 matplotlib.use("Agg", force=True)
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -46,9 +47,9 @@ def render_figure_1():
     print("Rendering Figure 1: Repertoire Dynamics...")
     df_sess = pd.read_csv(BASE_DIR / "01_repertoire_dynamics/session_repertoire_metrics.csv")
     df_wave = pd.read_csv(BASE_DIR / "01_repertoire_dynamics/longitudinal_syllable_statistics_per_wave.csv")
-    
+
     fig, axes = plt.subplots(2, 2, figsize=(15, 11), dpi=300)
-    
+
     # 1A: Heatmap of log2FC across all active syllables
     ax1 = axes[0, 0]
     # Pivot log2fc
@@ -59,13 +60,13 @@ def render_figure_1():
         # Top 30 by peak deviation
         keep_sylls = piv.abs().max(axis=1).sort_values(ascending=False).head(30).index.values
     piv_sub = piv.loc[sorted(keep_sylls)]
-    
+
     sns.heatmap(piv_sub, cmap="vlag", center=0.0, vmin=-1.5, vmax=1.5, ax=ax1,
                 cbar_kws={"label": "log2(PFF / Monomer)"}, linewidths=0.5)
     ax1.set_title("A. Differential Syllable Occupancy log2(PFF/Mon)", fontsize=12, fontweight="bold")
     ax1.set_xticklabels(COND_LABELS, rotation=0, fontsize=9)
     ax1.set_ylabel("Syllable ID", fontsize=10)
-    
+
     # 1B: Repertoire Entropy & Participation Ratio
     ax2 = axes[0, 1]
     add_rescue_shading(ax2)
@@ -80,7 +81,7 @@ def render_figure_1():
     ax2.set_ylabel("Shannon Entropy H(S) (bits)", fontsize=10)
     ax2.set_title("B. Repertoire Diversity Over Disease Progression", fontsize=12, fontweight="bold")
     ax2.legend(loc="lower left", frameon=True)
-    
+
     # 1C: Locomotor Bout Duration & Switch Rate
     ax3 = axes[1, 0]
     add_rescue_shading(ax3)
@@ -95,7 +96,7 @@ def render_figure_1():
     ax3.set_ylabel("Mean Syllable Bout Duration (s)", fontsize=10)
     ax3.set_title("C. Behavioral Persistence (Dwell Time)", fontsize=12, fontweight="bold")
     ax3.legend(loc="lower left", frameon=True)
-    
+
     # 1D: Key Phenotype Syllables Longitudinal Trajectories
     ax4 = axes[1, 1]
     add_rescue_shading(ax4)
@@ -113,7 +114,7 @@ def render_figure_1():
     ax4.set_ylabel("Occupancy (% recording time)", fontsize=10)
     ax4.set_title("D. Top Divergent Syllable Trajectories", fontsize=12, fontweight="bold")
     ax4.legend(loc="upper left", fontsize=8.5, frameon=True)
-    
+
     plt.tight_layout()
     plt.savefig(FIG_DIR / "Figure_1_repertoire_longitudinal_master.png")
     plt.close()
@@ -127,15 +128,15 @@ def render_figure_2():
     print("Rendering Figure 2: Hierarchical Clustering (Levels 1 to 4)...")
     df_cov = pd.read_csv(BASE_DIR / "02_clustering_levels/hierarchical_clustering_cohort_coverage.csv")
     df_sess = pd.read_csv(BASE_DIR / "02_clustering_levels/hierarchical_clustering_per_session.csv")
-    
+
     fig, axes = plt.subplots(2, 2, figsize=(15, 11), dpi=300)
-    
+
     # 2A: Population Coverage by Resolution Level (5-Step)
     ax1 = axes[0, 0]
     sub5 = df_cov[df_cov["horizon"] == 5]
     levels = ["L1", "L2", "L3", "L4"]
     level_labels = ["Level 1\n(100 states)", "Level 2\n(93 syn)", "Level 3\n(22 meso)", "Level 4\n(14 macro)"]
-    
+
     for g, color in PALETTE.items():
         g_means = []
         g_sems = []
@@ -151,7 +152,7 @@ def render_figure_2():
     ax1.set_ylabel("5-Step Population Time Coverage (%)", fontsize=10)
     ax1.set_title("A. Multi-Animal Structured Time by Vocabulary Resolution", fontsize=12, fontweight="bold")
     ax1.legend(loc="upper left", frameon=True)
-    
+
     # 2B: Recurrent Sequence Families Discovered
     ax2 = axes[0, 1]
     width = 0.35
@@ -166,7 +167,7 @@ def render_figure_2():
     ax2.set_ylabel("Recurrent Families (>=15 ep, >=5 mice)", fontsize=10)
     ax2.set_title("B. Recurring Behavioral Routines Discovery", fontsize=12, fontweight="bold")
     ax2.legend(loc="upper left", frameon=True)
-    
+
     # 2C: Physical Elapsed Duration of 5-Step Sequences (Consecutive bout merging)
     ax3 = axes[1, 0]
     dur_df = df_sess[df_sess["horizon"] == 5]
@@ -174,7 +175,7 @@ def render_figure_2():
     ax3.set_xticklabels(level_labels, fontsize=9)
     ax3.set_ylabel("Physical Elapsed Duration (s)", fontsize=10)
     ax3.set_title("C. Extension of Continuous Behavioral Arcs", fontsize=12, fontweight="bold")
-    
+
     # 2D: Level 4 Longitudinal Coverage Trajectory
     ax4 = axes[1, 1]
     add_rescue_shading(ax4)
@@ -190,7 +191,7 @@ def render_figure_2():
     ax4.set_ylabel("Population Time Coverage (%)", fontsize=10)
     ax4.set_title("D. Macro-Syntax Population Coverage Across Waves", fontsize=12, fontweight="bold")
     ax4.legend(loc="lower left", frameon=True)
-    
+
     plt.tight_layout()
     plt.savefig(FIG_DIR / "Figure_2_clustering_hierarchy_levels_1_to_4.png")
     plt.close()
@@ -204,9 +205,9 @@ def render_figure_3():
     print("Rendering Figure 3: Inter-Chain Organization...")
     df_inter = pd.read_csv(BASE_DIR / "03_inter_chain/inter_chain_organization_per_session.csv")
     df_wave = pd.read_csv(BASE_DIR / "03_inter_chain/inter_chain_wave_statistics.csv")
-    
+
     fig, axes = plt.subplots(2, 2, figsize=(15, 11), dpi=300)
-    
+
     # 3A: Chain Perseveration Index P_persev
     ax1 = axes[0, 0]
     add_rescue_shading(ax1)
@@ -221,7 +222,7 @@ def render_figure_3():
     ax1.set_ylabel("Perseveration Probability P(persev)", fontsize=10)
     ax1.set_title("A. Chain Perseveration (Routine Self-Looping)", fontsize=12, fontweight="bold")
     ax1.legend(loc="lower left", frameon=True)
-    
+
     # 3B: Continuation Hazard P(1 -> 2)
     ax2 = axes[0, 1]
     add_rescue_shading(ax2)
@@ -236,7 +237,7 @@ def render_figure_3():
     ax2.set_ylabel("Continuation Hazard Rate", fontsize=10)
     ax2.set_title("B. Continuation Beyond Single Cycle", fontsize=12, fontweight="bold")
     ax2.legend(loc="lower left", frameon=True)
-    
+
     # 3C: Total Chains Executed per Session
     ax3 = axes[1, 0]
     add_rescue_shading(ax3)
@@ -251,7 +252,7 @@ def render_figure_3():
     ax3.set_ylabel("Chains Detected per Session", fontsize=10)
     ax3.set_title("C. Higher-Order Action Chunk Frequency", fontsize=12, fontweight="bold")
     ax3.legend(loc="upper right", frameon=True)
-    
+
     # 3D: Maximum Sustained Bout Length
     ax4 = axes[1, 1]
     add_rescue_shading(ax4)
@@ -266,7 +267,7 @@ def render_figure_3():
     ax4.set_ylabel("Max Consecutive Cycles in Bout", fontsize=10)
     ax4.set_title("D. Bout Span of Sustained Motor Routines", fontsize=12, fontweight="bold")
     ax4.legend(loc="lower left", frameon=True)
-    
+
     plt.tight_layout()
     plt.savefig(FIG_DIR / "Figure_3_inter_chain_organization_master.png")
     plt.close()
@@ -280,15 +281,15 @@ def render_figure_4():
     print("Rendering Figure 4: Intra-Chain Execution Fidelity...")
     df_intra = pd.read_csv(BASE_DIR / "04_intra_chain/intra_chain_execution_per_session.csv")
     df_wave = pd.read_csv(BASE_DIR / "04_intra_chain/intra_chain_wave_statistics.csv")
-    
+
     fig, axes = plt.subplots(2, 2, figsize=(15, 11), dpi=300)
-    
+
     # 4A: Progression Rate by Candidate Routine (16w Peak Deficit)
     ax1 = axes[0, 0]
     sub16 = df_intra[df_intra["condition"] == "16w_PI"]
     chains = ["K1_Rear_Settle", "K3_Vigilance_Pause", "K4_Look_Scrunch", "K5_Sniff_Step_Sniff", "K6_Dash_Steer_Dash"]
     chain_labels = ["K1: Rear", "K3: Vigilance", "K4: Scrunch", "K5: Sniff-Step", "K6: Dash-Steer"]
-    
+
     width = 0.35
     x = np.arange(len(chains))
     m_prog = [sub16[(sub16["genotype"] == "Monomer") & (sub16["chain_name"] == c)]["conditional_progression_rate"].mean() for c in chains]
@@ -300,7 +301,7 @@ def render_figure_4():
     ax1.set_ylabel("Conditional Progression Rate P(full | prefix)", fontsize=10)
     ax1.set_title("A. Routine Completion at Peak Deficit (16w PI)", fontsize=12, fontweight="bold")
     ax1.legend(loc="upper right", frameon=True)
-    
+
     # 4B: K6 Dash-Steer Progression Timecourse Across Waves
     ax2 = axes[0, 1]
     add_rescue_shading(ax2)
@@ -316,7 +317,7 @@ def render_figure_4():
     ax2.set_ylabel("Progression Rate P(K6 | Syll 42)", fontsize=10)
     ax2.set_title("B. K6 Steering Routine Commitment Trajectory", fontsize=12, fontweight="bold")
     ax2.legend(loc="lower left", frameon=True)
-    
+
     # 4C: Stage 1 Exit Hazard (Premature Abort) Timecourse
     ax3 = axes[1, 0]
     add_rescue_shading(ax3)
@@ -331,7 +332,7 @@ def render_figure_4():
     ax3.set_ylabel("Stage 1 Abort Hazard Rate", fontsize=10)
     ax3.set_title("C. Early Truncation Hazard at Steering Transition", fontsize=12, fontweight="bold")
     ax3.legend(loc="upper left", frameon=True)
-    
+
     # 4D: Context-Dependent Speed Modulation Ratio inside vs outside
     ax4 = axes[1, 1]
     add_rescue_shading(ax4)
@@ -347,7 +348,7 @@ def render_figure_4():
     ax4.set_ylabel("Speed Modulation Ratio (v_chain / v_base)", fontsize=10)
     ax4.set_title("D. Context Modulation (Acceleration Inside Routine)", fontsize=12, fontweight="bold")
     ax4.legend(loc="lower left", frameon=True)
-    
+
     plt.tight_layout()
     plt.savefig(FIG_DIR / "Figure_4_intra_chain_execution_and_hazards.png")
     plt.close()
@@ -361,9 +362,9 @@ def render_figure_5():
     print("Rendering Figure 5: Intra-Syllable & Intra-Frame Micro-Kinematics...")
     df_prof = pd.read_csv(BASE_DIR / "05_intra_frame/micro_velocity_tau_profiles.csv")
     df_micro = pd.read_csv(BASE_DIR / "05_intra_frame/intra_frame_micro_bouts.csv")
-    
+
     fig, axes = plt.subplots(2, 2, figsize=(15, 11), dpi=300)
-    
+
     # 5A: Phase tau Velocity Profile for Syllable 42 (Dash) at 16w Peak Deficit
     ax1 = axes[0, 0]
     p16 = df_prof[(df_prof["syllable_id"] == 42) & (df_prof["condition"] == "16w_PI")]
@@ -376,7 +377,7 @@ def render_figure_5():
     ax1.set_ylabel("Centroid Velocity (px/s)", fontsize=10)
     ax1.set_title("A. Syllable 42 (Dash) Micro-Velocity Profile (16w PI)", fontsize=12, fontweight="bold")
     ax1.legend(loc="lower center", frameon=True)
-    
+
     # 5B: Phase tau Velocity Profile for Syllable 42 under L-DOPA Rescue
     ax2 = axes[0, 1]
     p_ld = df_prof[(df_prof["syllable_id"] == 42) & (df_prof["condition"] == "L_dopa")]
@@ -389,7 +390,7 @@ def render_figure_5():
     ax2.set_ylabel("Centroid Velocity (px/s)", fontsize=10)
     ax2.set_title("B. Pharmacological Normalization of Syllable 42 Profile", fontsize=12, fontweight="bold")
     ax2.legend(loc="lower center", frameon=True)
-    
+
     # 5C: Initiation Lag (Peak Phase Timing tau_peak) Across Waves
     ax3 = axes[1, 0]
     add_rescue_shading(ax3)
@@ -405,7 +406,7 @@ def render_figure_5():
     ax3.set_ylabel("Peak Velocity Phase tau_peak", fontsize=10)
     ax3.set_title("C. Initiation Lag in Dash Syllable Across Disease Waves", fontsize=12, fontweight="bold")
     ax3.legend(loc="upper left", frameon=True)
-    
+
     # 5D: Launch Speed (tau = 0.0) Across Waves
     ax4 = axes[1, 1]
     add_rescue_shading(ax4)
@@ -420,7 +421,7 @@ def render_figure_5():
     ax4.set_ylabel("Launch Velocity v(tau=0) (px/s)", fontsize=10)
     ax4.set_title("D. Transition Launch Velocity Exiting Prior Syllable", fontsize=12, fontweight="bold")
     ax4.legend(loc="lower left", frameon=True)
-    
+
     plt.tight_layout()
     plt.savefig(FIG_DIR / "Figure_5_intra_frame_micro_kinematics.png")
     plt.close()
@@ -434,9 +435,9 @@ def render_figure_6():
     print("Rendering Figure 6: Networks & Session Fatigue...")
     df_fatigue = pd.read_csv(BASE_DIR / "06_networks_fatigue/session_time_fatigue_curves.csv")
     df_dod = pd.read_csv(BASE_DIR / "06_networks_fatigue/dod_progression_16w_vs_3w.csv", index_col=0)
-    
+
     fig, axes = plt.subplots(2, 2, figsize=(15, 11), dpi=300)
-    
+
     # 6A: Difference-of-Differences Progression Heatmap (16w vs 3w)
     ax1 = axes[0, 0]
     sns.heatmap(df_dod.iloc[:15, :15], cmap="vlag", center=0.0, vmin=-0.08, vmax=0.08, ax=ax1,
@@ -444,7 +445,7 @@ def render_figure_6():
     ax1.set_title("A. Progression DoD Network Rewiring ([16w-3w]_PFF - [16w-3w]_Mon)", fontsize=11, fontweight="bold")
     ax1.set_xlabel("Target Syllable", fontsize=9)
     ax1.set_ylabel("Source Syllable", fontsize=9)
-    
+
     # 6B: Within-Session Locomotor Fatigue (16w Peak Deficit)
     ax2 = axes[0, 1]
     f16 = df_fatigue[df_fatigue["condition"] == "16w_PI"]
@@ -458,7 +459,7 @@ def render_figure_6():
     ax2.set_ylabel("Velocity (px/s)", fontsize=10)
     ax2.set_title("B. Within-Session Locomotor Decay at Peak Deficit (16w)", fontsize=12, fontweight="bold")
     ax2.legend(loc="upper right", frameon=True)
-    
+
     # 6C: Within-Session Locomotor Fatigue Under L-DOPA Rescue
     ax3 = axes[1, 0]
     f_ld = df_fatigue[df_fatigue["condition"] == "L_dopa"]
@@ -472,7 +473,7 @@ def render_figure_6():
     ax3.set_ylabel("Velocity (px/s)", fontsize=10)
     ax3.set_title("C. Abolition of Motor Exhaustion Under L-DOPA", fontsize=12, fontweight="bold")
     ax3.legend(loc="upper right", frameon=True)
-    
+
     # 6D: Within-Session Transition Entropy Dynamics (16w PI)
     ax4 = axes[1, 1]
     for g, color in PALETTE.items():
@@ -485,7 +486,7 @@ def render_figure_6():
     ax4.set_ylabel("Transition Entropy Rate (bits/step)", fontsize=10)
     ax4.set_title("D. Syntax Disorder Over Session Time (16w PI)", fontsize=12, fontweight="bold")
     ax4.legend(loc="upper right", frameon=True)
-    
+
     plt.tight_layout()
     plt.savefig(FIG_DIR / "Figure_6_networks_and_session_fatigue.png")
     plt.close()

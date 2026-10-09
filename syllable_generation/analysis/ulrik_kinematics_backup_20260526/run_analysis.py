@@ -44,29 +44,29 @@ if __name__ == "__main__":
     parser.add_argument("--verify-timing-stats", action="store_true", help="Run the regional timing stats with a broken temporal relationship to verify test failure")
     parser.add_argument("--run-unique-info", action="store_true", help="Run the Unique Information Pipeline (kinematic stripping & residual decoding)")
     parser.add_argument("--verify-unique-info", action="store_true", help="Verify the Unique Information Pipeline on a fast subset")
-    
+
     args = parser.parse_args()
-    
+
     if args.run_full_temporal:
         from analysis.ulrik_kinematics.lib import temporal
         if args.dataset in ["amph", "all"]:
             print("\n*** Loading AMPH Dataset for Full-Session Temporal Discovery ***")
             sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_post_injection_delay_min=None)
             temporal.run_full_session_discovery(sessions_amph, project_name="AMPH")
-            
+
     if args.verify_motifs:
         from analysis.ulrik_kinematics.lib import motifs
-        
+
         if args.dataset in ["amph", "all"]:
             print("\n*** Loading AMPH Dataset for Verification ***")
             sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_post_injection_delay_min=5.0)
             motifs.verify_motifs_module(sessions_amph)
-            
+
         if args.dataset in ["ifdn", "all"]:
             print("\n*** Loading IFDN Dataset for Verification ***")
             sessions_ifdn = loader.load_dataset("ifdn", base_dir=root_dir)
             motifs.verify_motifs_module(sessions_ifdn)
-            
+
     if args.run_motifs_discovery and not args.run_phased_discovery:
         from analysis.ulrik_kinematics.lib import motifs
         if args.dataset in ["amph", "all"]:
@@ -74,58 +74,58 @@ if __name__ == "__main__":
             sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_post_injection_delay_min=5.0)
             motifs.run_discovery(sessions_amph, project_name="AMPH", style="standard")
             motifs.run_discovery(sessions_amph, project_name="AMPH", style="alphabet")
-            
+
         if args.dataset in ["ifdn", "all"]:
             print("\n*** Loading IFDN Dataset for Motif Discovery ***")
             sessions_ifdn = loader.load_dataset("ifdn", base_dir=root_dir)
             motifs.run_discovery(sessions_ifdn, project_name="IFDN", style="standard")
             motifs.run_discovery(sessions_ifdn, project_name="IFDN", style="alphabet")
-            
+
     if args.test_significance:
         from analysis.ulrik_kinematics.lib import motifs
         if args.dataset in ["amph", "all"]:
             print("\n*** Testing Motif Significance for AMPH Dataset ***")
             sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_post_injection_delay_min=5.0)
             motifs.check_significance(sessions_amph, project="AMPH", style="standard")
-            
+
     if args.verify_temporal:
         from analysis.ulrik_kinematics.lib import temporal
         if args.dataset in ["amph", "all"]:
             print("\n*** Loading AMPH Dataset for Temporal Verification ***")
             sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_post_injection_delay_min=5.0)
             temporal.verify_temporal_module(sessions_amph)
-            
+
         if args.dataset in ["ifdn", "all"]:
             print("\n*** Loading IFDN Dataset for Temporal Verification ***")
             sessions_ifdn = loader.load_dataset("ifdn", base_dir=root_dir)
             temporal.verify_temporal_module(sessions_ifdn)
-            
+
     if args.run_temporal_discovery:
         from analysis.ulrik_kinematics.lib import temporal
         if args.dataset in ["amph", "all"]:
             print("\n*** Loading AMPH Dataset for Temporal Discovery ***")
             sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_post_injection_delay_min=5.0)
             temporal.run_discovery(sessions_amph, project_name="AMPH")
-            
+
         if args.dataset in ["ifdn", "all"]:
             print("\n*** Loading IFDN Dataset for Temporal Discovery ***")
             sessions_ifdn = loader.load_dataset("ifdn", base_dir=root_dir)
             temporal.run_discovery(sessions_ifdn, project_name="IFDN")
-            
+
     if args.verify_clustering:
         from analysis.ulrik_kinematics.lib import clustering
         if args.dataset in ["amph", "all"]:
             print("\n*** Loading AMPH Dataset for Clustering Verification ***")
             sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_post_injection_delay_min=5.0)
             clustering.verify_clustering_module(sessions_amph)
-            
+
     if args.run_clustering_discovery:
         from analysis.ulrik_kinematics.lib import clustering
         if args.dataset in ["amph", "all"]:
             print("\n*** Loading AMPH Dataset for UMAP Discovery ***")
             sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_post_injection_delay_min=5.0)
             clustering.run_discovery(sessions_amph, project_name="AMPH")
-            
+
     if args.verify_micro:
         from analysis.ulrik_kinematics.lib import micro_kinematics
         if args.dataset in ["amph", "all"]:
@@ -169,24 +169,24 @@ if __name__ == "__main__":
             networks.run_discovery(sessions_ifdn, project_name="IFDN", style="standard")
 
     if args.run_phased_discovery:
-        from analysis.ulrik_kinematics.lib import clustering, motifs, micro_kinematics
-        
+        from analysis.ulrik_kinematics.lib import clustering, micro_kinematics, motifs
+
         run_all = not any([
-            args.run_clustering_discovery, 
-            args.run_motifs_discovery, 
-            args.run_micro_discovery, 
+            args.run_clustering_discovery,
+            args.run_motifs_discovery,
+            args.run_micro_discovery,
         ])
-        
+
         for phase in ["pre", "post"]:
-            print(f"\n" + "#"*60)
+            print("\n" + "#"*60)
             print(f" PHASED DISCOVERY: {phase.upper()}")
-            print(f"#"*60)
+            print("#"*60)
             sessions = loader.load_dataset("amph", base_dir=root_dir, amph_phase=phase)
             project_name = f"AMPH_{phase}"
-            
+
             if run_all or args.run_clustering_discovery:
                 clustering.run_discovery(sessions, project_name=project_name)
-            
+
             for style in ["alphabet", "standard"]:
                 if run_all or args.run_motifs_discovery:
                     motifs.run_discovery(sessions, project_name=project_name, style=style)
@@ -201,18 +201,17 @@ if __name__ == "__main__":
             legacy_viz.run_ifdn()
         if args.dataset in ["amph", "all"]:
             legacy_viz.run_amph()
-            
+
         legacy_viz.run_manual_viz(dataset=args.dataset)
         quantitative_viz.run_quantitative_viz(dataset=args.dataset)
         quantitative_viz.run_advanced_kinematics_viz(dataset=args.dataset)
 
     global_amph_kinematics = None
     global_ifdn_kinematics = None
-    
+
     if args.run_pnas_replication or args.run_neural_replication:
-        from analysis.ulrik_kinematics.lib import pnas_replication
-        from analysis.ulrik_kinematics.lib import neural_pnas
-        
+        from analysis.ulrik_kinematics.lib import neural_pnas, pnas_replication
+
         if args.dataset in ["amph", "all"]:
             print("\n*** Computing Global AMPH Kinematic Similarity (Both Phases, All Genotypes) ***")
             sessions_global_amph = loader.load_dataset("amph", base_dir=root_dir, amph_phase="both")
@@ -222,7 +221,7 @@ if __name__ == "__main__":
             )
             global_amph_kinematics = (_dist, _valid, _Z, top_sylls_global)
             pnas_replication.plot_fig3h_kinematic_similarity(sessions_global_amph, "AMPH", global_kinematics=global_amph_kinematics)
-            
+
         if args.dataset in ["ifdn", "all"]:
             print("\n*** Computing Global IFDN Kinematic Similarity (All Genotypes) ***")
             sessions_global_ifdn = loader.load_dataset("ifdn", base_dir=root_dir)
@@ -238,16 +237,16 @@ if __name__ == "__main__":
             for phase in ["pre", "post", "both"]:
                 print(f"\n*** Loading AMPH Dataset for PNAS Replication ({phase.upper()}) ***")
                 sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_phase=phase)
-                
+
                 for geno in ["WT", "KI"]:
                     sessions_geno = [s for s in sessions_amph if s.metadata.get("genotype", "").upper() == geno]
                     if sessions_geno:
                         pnas_replication.run_replication(sessions_geno, f"AMPH_{phase}_{geno}", global_kinematics=global_amph_kinematics)
-        
+
         if args.dataset in ["ifdn", "all"]:
             print("\n*** Loading IFDN Dataset for PNAS Replication ***")
             sessions_ifdn = loader.load_dataset("ifdn", base_dir=root_dir)
-            
+
             for geno in ["WT", "KI"]:
                 sessions_geno = [s for s in sessions_ifdn if s.metadata.get("genotype", "").upper() == geno]
                 if sessions_geno:
@@ -258,16 +257,16 @@ if __name__ == "__main__":
             for phase in ["pre", "post", "both"]:
                 print(f"\n*** Loading AMPH Dataset for Neural Replication ({phase.upper()}) ***")
                 sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_phase=phase)
-                
+
                 for geno in ["WT", "KI"]:
                     sessions_geno = [s for s in sessions_amph if s.metadata.get("genotype", "").upper() == geno]
                     if sessions_geno:
                         neural_pnas.run_replication(sessions_geno, f"AMPH_{phase}_{geno}", global_kinematics=global_amph_kinematics)
-                
+
         if args.dataset in ["ifdn", "all"]:
             print("\n*** Loading IFDN Dataset for Neural Replication ***")
             sessions_ifdn = loader.load_dataset("ifdn", base_dir=root_dir)
-            
+
             for geno in ["WT", "KI"]:
                 sessions_geno = [s for s in sessions_ifdn if s.metadata.get("genotype", "").upper() == geno]
                 if sessions_geno:
@@ -275,23 +274,23 @@ if __name__ == "__main__":
 
     if args.run_timing_stats or args.verify_timing_stats:
         from analysis.ulrik_kinematics.lib import regional_timing
-        
+
         is_verification = args.verify_timing_stats
-        
+
         if args.dataset in ["amph", "all"]:
             for phase in ["pre", "post", "both"]:
                 print(f"\n*** Loading AMPH Dataset for Regional Timing Stats ({phase.upper()}) ***")
                 sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_phase=phase)
-                
+
                 for geno in ["WT", "KI"]:
                     sessions_geno = [s for s in sessions_amph if s.metadata.get("genotype", "").upper() == geno]
                     if sessions_geno:
                         regional_timing.calculate_peak_timing_stats(sessions_geno, f"AMPH_{phase}_{geno}", is_verification=is_verification)
-                        
+
         if args.dataset in ["ifdn", "all"]:
             print("\n*** Loading IFDN Dataset for Regional Timing Stats ***")
             sessions_ifdn = loader.load_dataset("ifdn", base_dir=root_dir)
-            
+
             for geno in ["WT", "KI"]:
                 sessions_geno = [s for s in sessions_ifdn if s.metadata.get("genotype", "").upper() == geno]
                 if sessions_geno:
@@ -299,24 +298,24 @@ if __name__ == "__main__":
 
     if args.run_unique_info or args.verify_unique_info:
         from analysis.ulrik_kinematics.lib import unique_information
-        
+
         if args.dataset in ["amph", "all"]:
-            print(f"\n*** Loading AMPH Dataset for Unique Information Pipeline ***")
+            print("\n*** Loading AMPH Dataset for Unique Information Pipeline ***")
             if args.verify_unique_info:
                 sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_phase="both")[:2]
                 print(f"  [Verification Mode] Loaded {len(sessions_amph)} sessions.")
             else:
                 sessions_amph = loader.load_dataset("amph", base_dir=root_dir, amph_phase="both")
-            
+
             unique_information.run_pipeline(sessions_amph, "AMPH")
-            
+
         if args.dataset in ["ifdn", "all"]:
-            print(f"\n*** Loading IFDN Dataset for Unique Information Pipeline ***")
+            print("\n*** Loading IFDN Dataset for Unique Information Pipeline ***")
             if args.verify_unique_info:
                 sessions_ifdn = loader.load_dataset("ifdn", base_dir=root_dir)[:2]
                 print(f"  [Verification Mode] Loaded {len(sessions_ifdn)} sessions.")
             else:
                 sessions_ifdn = loader.load_dataset("ifdn", base_dir=root_dir)
-                
+
             unique_information.run_pipeline(sessions_ifdn, "IFDN")
 

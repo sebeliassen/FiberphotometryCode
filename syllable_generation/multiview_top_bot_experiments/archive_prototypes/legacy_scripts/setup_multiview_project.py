@@ -7,8 +7,8 @@ for 23-keypoint multi-view modeling.
 """
 
 from pathlib import Path
+
 import yaml
-import numpy as np
 
 PROJECT_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/multiview_kappa_search/project")
 PROJECT_DIR.mkdir(parents=True, exist_ok=True)

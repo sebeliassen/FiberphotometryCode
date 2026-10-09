@@ -15,6 +15,7 @@ Scientific Objective:
 import os
 import sys
 import time
+
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
 sys.path.insert(0, ROOT_DIR)
@@ -22,11 +23,12 @@ sys.path.insert(0, LM_DIR)
 sys.path.insert(0, os.path.join(ROOT_DIR, "syllable_generation"))
 
 import pickle
+
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 from sklearn.preprocessing import StandardScaler
 
 FIG_DIR = os.path.join(LM_DIR, "output", "presentation", "figures")
@@ -94,7 +96,7 @@ for sess_idx, bouts in enumerate(session_bouts):
     pose = np.zeros((N, 30), dtype=np.float32)
     oh_bout = np.zeros((N, NUM_ACTIVE_SYLLS), dtype=np.float32)
     next_bout_ptrs = np.full(N, N, dtype=np.int32)
-    
+
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_raw = b["syllable"]
@@ -102,7 +104,7 @@ for sess_idx, bouts in enumerate(session_bouts):
         if 0 <= s_id < NUM_ACTIVE_SYLLS:
             fs[sf:ef+1] = s_id
             oh_bout[sf, s_id] = 1.0
-            
+
         vec = b.get("vector", None)
         if vec is not None and len(vec) >= 14:
             sp[sf:ef+1, :4] = vec[:4]
@@ -112,18 +114,18 @@ for sess_idx, bouts in enumerate(session_bouts):
                 pose[sf:ef+1] = vec[:30]
             else:
                 pose[sf:ef+1, :len(vec)] = vec
-                
+
     b_starts = np.array([b["start_frame"] for b in bouts])
     for t_idx, b_st in enumerate(b_starts):
         prev_st = b_starts[t_idx-1] if t_idx > 0 else 0
         next_bout_ptrs[prev_st:b_st] = b_st
     if len(b_starts) > 0:
         next_bout_ptrs[b_starts[-1]:] = N
-        
+
     cum_bout = np.vstack([np.zeros((1, NUM_ACTIVE_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
     cum_spatial = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp, axis=0)])
     cum_spatial_sq = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp**2, axis=0)])
-    
+
     sessions_data.append({
         "sess_idx": sess_idx, "N": N, "fs": fs, "pose": pose, "cum_bout": cum_bout,
         "next_bout_ptrs": next_bout_ptrs, "cum_spatial": cum_spatial,
@@ -135,13 +137,13 @@ for s in sessions_data:
     N = s["N"]
     if N < W_FRAMES + H_FRAMES + 200: continue
     inj_f = s["meta"]["inj_frame"]
-    
+
     t_anchors = np.arange(W_FRAMES, N - H_FRAMES, STRIDE_FRAMES)
     t_tgt_start = s["next_bout_ptrs"][t_anchors]
     valid = (t_tgt_start + H_FRAMES < N)
     t_anchors = t_anchors[valid]
     t_tgt_start = t_tgt_start[valid]
-    
+
     past_start = t_anchors - W_FRAMES
     future_end = t_tgt_start + H_FRAMES
     no_straddle = (future_end < inj_f) | (past_start > inj_f)
@@ -149,7 +151,7 @@ for s in sessions_data:
     t_tgt_start = t_tgt_start[no_straddle]
     M = len(t_anchors)
     if M == 0: continue
-    
+
     # 1. Spatial context (14-D)
     t_norm = t_anchors / float(N)
     p1 = np.column_stack([t_norm, t_norm**2]).astype(np.float32)
@@ -158,15 +160,15 @@ for s in sessions_data:
     sp_sq = s["cum_spatial_sq"][t_anchors] - s["cum_spatial_sq"][t_anchors - W_FRAMES]
     sp_var = np.maximum(sp_sq / float(W_FRAMES) - sp_mean**2, 1e-6)
     feat_space = np.hstack([p1, sp_mean, np.sqrt(sp_var)]).astype(np.float32)
-    
+
     # 2. Repertoire probability distribution (99-D)
     b_cnt = s["cum_bout"][t_anchors] - s["cum_bout"][t_anchors - W_FRAMES]
     feat_rep = (b_cnt + 1e-4) / (np.sum(b_cnt, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     # 3. Future Target distribution over H=120s (99-D)
     f_cnt = s["cum_bout"][t_tgt_start + H_FRAMES] - s["cum_bout"][t_tgt_start]
     target = (f_cnt + 1e-4) / (np.sum(f_cnt, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     for i in range(M):
         raw_windows.append({
             "sess_idx": s["sess_idx"],
@@ -238,49 +240,49 @@ for eps_r in EPSILON_VALS:
     risk_arr = np.full(N_win, np.nan, dtype=np.float32)
     density_arr = np.zeros(N_win, dtype=np.int32)
     mean_dist_arr = np.full(N_win, np.nan, dtype=np.float32)
-    
+
     for s_idx in unique_sessions:
         anchor_mask = (sess_ids == s_idx)
         cand_mask = (sess_ids != s_idx)
-        
+
         anchor_indices = np.where(anchor_mask)[0]
         cand_indices = np.where(cand_mask)[0]
-        
+
         X_anchors = X_tensor[anchor_indices]
         X_cands = X_tensor[cand_indices]
         Y_anchors = Y_tensor[anchor_indices]
         Y_cands = Y_tensor[cand_indices]
-        
+
         batch_size = 512
         for b_start in range(0, len(anchor_indices), batch_size):
             b_end = min(b_start + batch_size, len(anchor_indices))
             b_X = X_anchors[b_start:b_end]
             b_Y = Y_anchors[b_start:b_end]
             b_global_idx = anchor_indices[b_start:b_end]
-            
+
             dists = torch.cdist(b_X, X_cands, p=2.0)  # [B, N_cands]
             within_eps = (dists < eps_r)
             counts = within_eps.sum(dim=1)  # [B]
-            
+
             counts_cpu = counts.cpu().numpy()
             density_arr[b_global_idx] = counts_cpu
-            
+
             # For windows with at least 2 cross-session analogues
             valid_b = np.where(counts_cpu >= 2)[0]
             for v_idx in valid_b:
                 mask_j = within_eps[v_idx]
                 matched_Y = Y_cands[mask_j]
                 matched_dists = dists[v_idx, mask_j]
-                
+
                 # JS Barycenter / Centroid
                 Y_bar = torch.mean(matched_Y, dim=0, keepdim=True)
-                
+
                 # Held-out prediction risk
                 r_pred = js_divergence_pt(b_Y[v_idx:v_idx+1], Y_bar).item()
-                
+
                 # Within-neighborhood future dispersion
                 disp_k = js_divergence_pt(matched_Y, Y_bar.repeat(len(matched_Y), 1)).mean().item()
-                
+
                 disp_arr[b_global_idx[v_idx]] = disp_k
                 risk_arr[b_global_idx[v_idx]] = r_pred
                 mean_dist_arr[b_global_idx[v_idx]] = matched_dists.mean().item()
@@ -288,20 +290,20 @@ for eps_r in EPSILON_VALS:
     valid_mask = ~np.isnan(disp_arr)
     n_covered = np.sum(valid_mask)
     coverage_pct = (n_covered / N_win) * 100.0
-    
+
     if n_covered > 0:
         mean_disp = float(np.mean(disp_arr[valid_mask]))
         mean_risk = float(np.mean(risk_arr[valid_mask]))
         mean_density = float(np.mean(density_arr[valid_mask]))
         mean_d = float(np.mean(mean_dist_arr[valid_mask]))
-        
+
         # Empirical Predictability Index normalized against R_window
         resolved_fraction = ((R_null - mean_disp) / (R_null - R_WINDOW_120S)) * 100.0
     else:
         mean_disp, mean_risk, mean_density, mean_d, resolved_fraction = np.nan, np.nan, np.nan, np.nan, np.nan
-        
+
     log(f"  [eps = {eps_r:4.2f}] Coverage: {coverage_pct:5.1f}% ({n_covered:,} wins) | Density: {mean_density:6.1f} | Mean d_X: {mean_d:.4f} | Disp D_i: {mean_disp:.4f} b | Resolved: {resolved_fraction:5.1f}%")
-    
+
     sweep_results.append({
         "Epsilon_Radius": eps_r,
         "Coverage_pct": coverage_pct,
@@ -313,7 +315,7 @@ for eps_r in EPSILON_VALS:
         "Finite_Window_Floor_bits": R_WINDOW_120S,
         "Resolved_Fraction_pct": resolved_fraction
     })
-    
+
     if eps_r == PRIMARY_EPS:
         per_window_primary["density_n"] = density_arr
         per_window_primary["dispersion_bits"] = disp_arr
@@ -386,7 +388,7 @@ q_colors = {
 
 for q_name, c in q_colors.items():
     sub = valid_win[valid_win["quadrant"] == q_name]
-    ax1.scatter(np.log10(sub["density_n"] + 1), sub["excess_dispersion_bits"], 
+    ax1.scatter(np.log10(sub["density_n"] + 1), sub["excess_dispersion_bits"],
                 color=c, alpha=0.35, s=12, label=f"{q_name.split(':')[0]} ({len(sub):,} wins)")
 
 ax1.axvline(np.log10(med_density + 1), color='black', linestyle='--', linewidth=1.5, alpha=0.7)
@@ -400,15 +402,15 @@ ax1.grid(True, linestyle='--', alpha=0.5)
 
 # Panel B: Calibrated Predictability Scale & Epsilon Sweep
 ax2 = fig.add_subplot(gs[1])
-ax2.plot(df_sweep["Epsilon_Radius"], df_sweep["Conditional_Dispersion_bits"], 
+ax2.plot(df_sweep["Epsilon_Radius"], df_sweep["Conditional_Dispersion_bits"],
          marker='o', linewidth=2.5, color='#1f77b4', label='Conditional Dispersion $D(\\epsilon)$')
-ax2.plot(df_sweep["Epsilon_Radius"], df_sweep["Held_Out_Risk_bits"], 
+ax2.plot(df_sweep["Epsilon_Radius"], df_sweep["Held_Out_Risk_bits"],
          marker='s', linewidth=2.0, linestyle='--', color='#9467bd', label='Held-Out Centroid Risk $\\text{JS}(Y_i, \\bar{Y})$')
 
 ax2.axhline(R_null, color='black', linestyle='--', linewidth=1.5, alpha=0.7, label=f'Random Pairs Null ({R_null:.3f} b)')
 ax2.axhline(R_WINDOW_120S, color='#2ca02c', linestyle=':', linewidth=2.0, alpha=0.9, label=f'Finite-Window Floor $R_{{\\text{{window}}}}$ ({R_WINDOW_120S:.3f} b)')
 
-ax2.set_title("B. Decoupling Similarity ($\epsilon$) from Sample Density\n(Dispersion Extrapolation & Finite-Window Floor Calibration)", fontsize=11, fontweight='bold', pad=12)
+ax2.set_title("B. Decoupling Similarity ($\\epsilon$) from Sample Density\n(Dispersion Extrapolation & Finite-Window Floor Calibration)", fontsize=11, fontweight='bold', pad=12)
 ax2.set_xlabel("Analogue Matching Radius $\\epsilon$ (Past Behavioral Distance)", fontsize=11)
 ax2.set_ylabel("Divergence / Dispersion (bits, $D_{\\text{JS}}$)", fontsize=11)
 ax2.legend(loc='lower right', frameon=True, fontsize=8.5)

@@ -12,8 +12,10 @@ Downstream code should always assume Absolute indices. This module detects legac
 data and scales it on-the-fly.
 """
 
+from typing import Dict
+
 import numpy as np
-from typing import Dict, Iterable, Optional
+
 
 def migrate_legacy_vfi(
     vfi_dict: Dict[str, np.ndarray],
@@ -29,17 +31,17 @@ def migrate_legacy_vfi(
     """
     vfi_out = {}
     migrated_count = 0
-    
+
     for rk, vfi_arr in vfi_dict.items():
         if vfi_arr.size == 0:
             vfi_out[rk] = vfi_arr.copy()
             continue
-            
+
         vfi_out[rk] = vfi_arr.copy()
-            
+
     if migrated_count > 0:
         print(f"[Legacy Support] Migrated {migrated_count} sessions to Ground Truth VFI (x{scale_factor}).")
     elif verbose:
         print("[Legacy Support] No legacy VFI detected.")
-        
+
     return vfi_out

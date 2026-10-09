@@ -11,9 +11,15 @@ and PCA variance allocation across:
 
 Evaluated strictly on the 10 pilot benchmark sessions across Arenas 1, 2, and 3.
 """
-import re, json
+import json
+import re
 from pathlib import Path
-import numpy as np, pandas as pd, h5py, joblib, yaml
+
+import h5py
+import joblib
+import numpy as np
+import pandas as pd
+import yaml
 from sklearn.cluster import MiniBatchKMeans
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")

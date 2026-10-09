@@ -12,14 +12,15 @@ Objectives:
 =============================================================================
 """
 
-import os
-import sys
-import copy
-import time
-import pickle
-from pathlib import Path
-import numpy as np
 import argparse
+import copy
+import os
+import pickle
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
 
 # Live unbuffered stdout/stderr
 sys.stdout.reconfigure(line_buffering=True)
@@ -47,7 +48,7 @@ sys.path.insert(0, str(KPMS_UTILS_DIR))
 
 import utils.resample_batching as rb
 from utils.batch_init import batched_init_model_by_video
-from utils.trimming import presence_mask_from_conf, filter_with_masks
+from utils.trimming import filter_with_masks, presence_mask_from_conf
 
 EXPERIMENT_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 PROD_KPMS_DIR = EXPERIMENT_DIR / "kpms_tandem_cohort_production"
@@ -313,7 +314,7 @@ def main():
         print(f"  • AR Cold JIT Time:           {t_ar_cold:6.2f} s", flush=True)
         print(f"  • AR WARM Iteration Time:     {t_ar_warm:6.2f} s / iteration", flush=True)
     else:
-        print(f"  • AR Phase:                   SKIPPED (--skip-ar)", flush=True)
+        print("  • AR Phase:                   SKIPPED (--skip-ar)", flush=True)
     print(f"  • SLDS Cold JIT Time:         {t_slds_cold:6.2f} s", flush=True)
     print(f"  • SLDS WARM Iteration Time:   {t_slds_warm:6.2f} s / iteration (measured over {max(1, len(warm_times))} warm sweeps)", flush=True)
     print("-" * 80, flush=True)

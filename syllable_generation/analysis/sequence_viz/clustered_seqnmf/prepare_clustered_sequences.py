@@ -14,10 +14,10 @@ Computes the 14x14 empirical macro-transition matrix and saves the unified bundl
 """
 
 import os
-import sys
-import time
 import pickle
+import time
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
@@ -80,30 +80,30 @@ def main():
         df = sess["bouts_df"]
         n_bouts = len(df)
         total_raw_bouts += n_bouts
-        
+
         sylls = df["syllable"].values
         durs = df["duration_sec"].values
         starts = df["start_frame"].values
         ends = df["end_frame"].values
-        
+
         meta_arr = SYLL_TO_META_ARR[sylls]
         all_meta_bouts_mode2.extend(meta_arr)
-        
+
         if n_bouts > 0:
             change_pts = np.where(meta_arr[:-1] != meta_arr[1:])[0] + 1
             g_starts = np.concatenate(([0], change_pts))
             g_ends = np.concatenate((change_pts, [n_bouts]))
-            
+
             rle_meta = meta_arr[g_starts]
             rle_start_frames = starts[g_starts]
             rle_end_frames = ends[g_ends - 1]
-            
+
             cum_durs = np.concatenate(([0.0], np.cumsum(durs)))
             rle_durs = cum_durs[g_ends] - cum_durs[g_starts]
             rle_sub_counts = g_ends - g_starts
-            
+
             all_meta_bouts_mode1.extend(rle_meta)
-            
+
             macro_df = pd.DataFrame({
                 "macro_bout_idx": np.arange(len(rle_meta)),
                 "meta_syllable": rle_meta,
@@ -115,7 +115,7 @@ def main():
             })
         else:
             macro_df = pd.DataFrame()
-            
+
         processed_sessions.append({
             "session_idx": sess["session_idx"],
             "animal_id": sess["animal_id"],

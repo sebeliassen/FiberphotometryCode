@@ -12,17 +12,13 @@ Renders movies, trajectories, and builds a side-by-side comparative HTML gallery
 =============================================================================
 """
 
-import argparse
 import copy
 import json
-import os
 import subprocess
 import sys
-import time
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict
 
-import h5py
 import numpy as np
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -33,6 +29,7 @@ if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
 import viz_v2_common as vc
+
 from core.pair_matching import find_matched_pairs
 
 TARGET_SYLLABLES = [1, 67, 42]
@@ -221,9 +218,9 @@ def render_all_variants(manifest_paths: Dict[str, Path]):
         movies_dir.mkdir(parents=True, exist_ok=True)
         traj_dir.mkdir(parents=True, exist_ok=True)
 
-        print(f"\n========================================================")
+        print("\n========================================================")
         print(f"🎬 RENDERING VARIANT: {v_name.upper()}")
-        print(f"========================================================")
+        print("========================================================")
 
         # 1. Grid Movies
         cmd_movies = [
@@ -251,7 +248,7 @@ def render_all_variants(manifest_paths: Dict[str, Path]):
 
 def build_comparison_html(metrics: Dict[str, Any]):
     html_file = COMPARISON_DIR / "comparison_gallery.html"
-    
+
     cards_html = []
     for s_str, m in metrics.items():
         s = m["syllable"]

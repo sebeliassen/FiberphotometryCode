@@ -15,10 +15,13 @@ Provides:
 """
 
 from __future__ import annotations
+
+from pathlib import Path
+from typing import Any, Dict, Optional, Tuple
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from typing import Optional, Tuple, Dict, Any
+
 
 def load_timestamps_from_csv(allts_csv_path: str | Path) -> np.ndarray:
     """
@@ -122,17 +125,17 @@ def align_tracking_dataframes(
 
     if top_ts is not None and bot_ts is not None:
         bot_idx_map, stats = align_camera_timestamps(top_ts, bot_ts, max_jitter_sec=max_jitter_sec)
-        
+
         # Build aligned BotCam dataframe
         # Where map == -1, rows will be NaN
         valid_mask = bot_idx_map >= 0
         valid_indices = bot_idx_map[valid_mask]
-        
+
         # Create empty DataFrame with same columns and index 0..N_top-1
         df_bot_aligned = pd.DataFrame(np.nan, index=np.arange(n_top), columns=df_bot.columns)
         if len(valid_indices) > 0:
             df_bot_aligned.iloc[valid_mask] = df_bot.iloc[valid_indices].values
-            
+
         df_top_aligned = df_top.copy().reset_index(drop=True)
     else:
         # 1:1 mapping fallback (e.g. when AllTimestampsCombined is not available)

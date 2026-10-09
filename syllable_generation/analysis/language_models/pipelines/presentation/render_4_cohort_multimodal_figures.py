@@ -20,15 +20,17 @@ Evaluation:
 """
 
 import os
-import sys
-import shutil
 import pickle
+import shutil
+import sys
+
+import matplotlib
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import TruncatedSVD
 from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import normalize
-import matplotlib
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
@@ -144,12 +146,12 @@ def extract_multimodal_dataset():
             past_feat_by_w = {}
             for w_sec in W_GRID:
                 w_fr = int(w_sec * FPS)
-                
+
                 # Syllable distribution (BoW)
                 c = cum_bout[t] - cum_bout[t - w_fr]
                 s = c.sum()
                 past_dist = c / s if s > 0 else c
-                
+
                 # Spatial kinematics (mean + std)
                 sp_sum = cum_spatial[t] - cum_spatial[t - w_fr]
                 sp_mean = sp_sum / float(w_fr)
@@ -157,7 +159,7 @@ def extract_multimodal_dataset():
                 sp_var = np.maximum(sp_sq_sum / float(w_fr) - sp_mean**2, 1e-8)
                 sp_std = np.sqrt(sp_var)
                 sp_feat = np.hstack([sp_mean, sp_std])
-                
+
                 past_feat_by_w[w_sec] = {
                     "past_dist": past_dist,
                     "spatial_feat": sp_feat
@@ -184,7 +186,7 @@ def extract_multimodal_dataset():
             })
 
     print(f"Total post-injection samples extracted: {len(samples)}")
-    
+
     # 24-D TruncatedSVD for bigram syntax (Identical to Slide 4)
     print("Fitting 24-D TruncatedSVD on bigram syntax...")
     X_trans = np.array([s["trans_flat"] for s in samples], dtype=np.float32)
@@ -210,7 +212,7 @@ def run_multimodal_evaluation(samples):
 
     for w_sec in W_GRID:
         row = {"W_sec": w_sec}
-        
+
         # Build multimodal feature matrix: [Time(2) + Spatial(12) + CurrSyll(100) + PastBoW(100) + Latent24(24)] = 238-D
         all_X = np.array([
             np.hstack([s["time_feat"], s["past_by_w"][w_sec]["spatial_feat"], s["curr_oh"], s["past_by_w"][w_sec]["past_dist"], s["latent_24d"]])
@@ -344,7 +346,7 @@ def render_multimodal_figure(df_res):
 
     # 1. Plot Pooled Post-Injection Baseline (Gray dashed reference trace)
     g_pooled = df_res["Pooled_Post_Injection"].values
-    ax.plot(w_vals, g_pooled, color="#333333", linestyle="--", linewidth=2.4, 
+    ax.plot(w_vals, g_pooled, color="#333333", linestyle="--", linewidth=2.4,
             label="Pooled Baseline (All 30 Sessions, Post-Inj, 5-Fold CV)", zorder=2)
     ax.scatter(w_vals, g_pooled, color="#333333", marker="x", s=45, linewidth=1.5, zorder=3)
 

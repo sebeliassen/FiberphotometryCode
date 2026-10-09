@@ -10,8 +10,9 @@ Located at: syllable_generation/analysis/language_models/pipelines/15_rebuild_cl
 """
 
 import os
-import sys
 import pickle
+import sys
+
 import numpy as np
 import pandas as pd
 
@@ -41,52 +42,52 @@ def main():
     print("=" * 75)
     print("REBUILDING CLEAN POST-INJECTION DATASET CACHE (True 4-Way Cohorts)")
     print("=" * 75)
-    
+
     pkl_path = os.path.join(ROOT_DIR, "syllable_generation/data/jonathan_amph_sessions_v2_w_sylls.pkl")
     if not os.path.exists(pkl_path):
         pkl_path = os.path.join(ROOT_DIR, "syllable_generation/data/jonathan_amph_sessions_w_sylls.pkl")
     with open(pkl_path, "rb") as f:
         sessions = pickle.load(f)
-        
+
     print(f"Loaded {len(sessions)} raw session objects")
-    
+
     window_size_frames = 10240  # ~128s at 80.025 Hz
     stride_frames = 800         # ~10s stride at 80.025 Hz
     n_syllables = 100
-    
+
     all_win_inputs = []
     session_window_meta = []
-    
+
     clean_sessions_count = 0
     total_post_windows = 0
-    
+
     for s_idx, session in enumerate(sessions):
         df = session.all_data_df
         sid = session.session_id
         meta_dict = getattr(session, "metadata", {})
-        
+
         gt = meta_dict.get("genotype", "WT")
         drug = meta_dict.get("drug", "Saline")
         cohort_4way = f"{gt}_{drug}"
-        
+
         inj_frame = meta_dict.get("injection_frame", 0)
         first_valid = df["centroid_x"].first_valid_index() if "centroid_x" in df.columns else 0
         first_valid = first_valid if first_valid is not None else 0
-        
+
         # Start at max(first_valid, inj_frame) to guarantee active mouse post-injection
         start_frame = max(first_valid, inj_frame)
-        
+
         vid_path = "unknown"
         if hasattr(session, "video_refs_df") and session.video_refs_df is not None and not session.video_refs_df.empty:
             vid_path = str(session.video_refs_df.iloc[0]["path"])
-            
+
         sub_df = df.iloc[start_frame:].copy()
         n_sub = len(sub_df)
-        
+
         if n_sub < window_size_frames:
             print(f"  [{s_idx+1:2d}/{len(sessions)}] Session {sid[:35]}: ⚠️ SKIPPED (Post-inj duration too short)")
             continue
-            
+
         win_count = 0
         for win_start in range(0, n_sub - window_size_frames + 1, stride_frames):
             win_end = win_start + window_size_frames
@@ -94,10 +95,10 @@ def main():
             trans_mat = compute_transition_matrix(win_data["syllable"], n_syllables=n_syllables)
             all_win_inputs.append(trans_mat.flatten())
             win_count += 1
-            
+
         abs_start_frame = start_frame
         abs_end_frame = start_frame + (win_count - 1) * stride_frames + window_size_frames
-        
+
         session_window_meta.append((
             win_count,
             abs_start_frame,
@@ -114,9 +115,9 @@ def main():
     cache_pkl_path = os.path.join(CACHE_DIR, "prep_amph_postural_gmm_k3_transition.pkl")
     with open(cache_pkl_path, "wb") as f:
         pickle.dump((None, all_win_inputs, session_window_meta), f)
-        
+
     print("\n" + "=" * 75)
-    print(f"SUCCESS: Rebuilt clean post-injection dataset cache!")
+    print("SUCCESS: Rebuilt clean post-injection dataset cache!")
     print(f"Total sessions: {clean_sessions_count} | Total windows: {total_post_windows}")
     print(f"Cache saved to: {cache_pkl_path}")
     print("=" * 75)

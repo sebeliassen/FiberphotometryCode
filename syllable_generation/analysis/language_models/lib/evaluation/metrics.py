@@ -1,5 +1,7 @@
+from typing import List
+
 import numpy as np
-from typing import List, Tuple
+
 
 def calculate_perplexity(model, sentences: List[List[str]]) -> float:
     """
@@ -8,7 +10,7 @@ def calculate_perplexity(model, sentences: List[List[str]]) -> float:
     """
     log_probs = []
     total_tokens = 0
-    
+
     n = model.n
     for sentence in sentences:
         if len(sentence) < n:
@@ -20,10 +22,10 @@ def calculate_perplexity(model, sentences: List[List[str]]) -> float:
             prob = model.get_probability(context, target)
             log_probs.append(np.log2(prob))
             total_tokens += 1
-            
+
     if total_tokens == 0:
         return np.nan
-        
+
     avg_log_prob = np.sum(log_probs) / total_tokens
     perplexity = 2 ** (-avg_log_prob)
     return perplexity

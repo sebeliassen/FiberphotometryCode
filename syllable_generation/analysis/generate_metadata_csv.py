@@ -1,7 +1,7 @@
-import pandas as pd
-import numpy as np
-import sys
 import os
+import sys
+
+import pandas as pd
 
 # Set up paths
 REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -31,32 +31,32 @@ def generate_metadata():
         sid_to_animal = {}
 
     session_rows = []
-    
+
     # 1. Gather all session info
     for s in sessions:
         sid = s.session_id
-        
+
         # Parse timestamp from string like "2025-04-28T09_31_08_bottom_left"
         # We can just rely on string sorting for the date part "YYYY-MM-DDTHH_MM_SS"
         # It's ISO-like enough to sort correctly.
-        timestamp_str = sid.split("_bottom")[0].split("_top")[0] 
-        
+        timestamp_str = sid.split("_bottom")[0].split("_top")[0]
+
         # Try to find AnimalID
         if sid in sid_to_animal:
             animal_id = str(sid_to_animal[sid])
         else:
             # Fallback: Inference/Placeholder
-            # If we don't have it in exclusions, we generate a stable placeholder 
+            # If we don't have it in exclusions, we generate a stable placeholder
             # based on the unique location? No, that's risky.
-            # Let's see if we can infer grouping. 
+            # Let's see if we can infer grouping.
             # Actually, without a log sheet, let's assume unique unknown animals for now
-            # unless instructed otherwise. 
+            # unless instructed otherwise.
             # But the user said "assume every animal has one drug and one saline".
             # This implies we can GROUP them.
-            # 
+            #
             # Heuristic: Group by (Date, Location)? No, same animal different days.
             # Heuristic: Group by Location? Maybe "bottom_left" is always the same animal? (Unlikely over long term but maybe for this dataset)
-            # 
+            #
             # For now, let's mark unknown ones clearly so the user sees them.
             animal_id = f"Unknown_{sid}"
 
@@ -68,16 +68,16 @@ def generate_metadata():
 
     # 2. Group by AnimalID and Assign Conditions
     df_temp = pd.DataFrame(session_rows)
-    
+
     # If we have "Unknown" IDs that are actually pairs, this simple logic fails for them.
     # However, for the IDs we recovered from exclusions.csv, we can proceed.
-    
+
     final_data = []
-    
+
     # Process known animals
     for animal_id, group in df_temp.groupby("AnimalID"):
         if "Unknown" in animal_id:
-            # Treat singular sessions as Saline by default or warn? 
+            # Treat singular sessions as Saline by default or warn?
             # User said: "assume every animal has one drug session and one saline"
             # We'll just assign Saline arbitrarily if only 1 session.
             sorted_sessions = group.sort_values("Timestamp")
@@ -85,7 +85,7 @@ def generate_metadata():
             for _, row in sorted_sessions.iterrows():
                 drug = "Saline" if run_idx == 0 else "Amphetamine"
                 dose = 3.0 if drug == "Amphetamine" else 0.0
-                
+
                 final_data.append({
                     "SessionID": row["SessionID"],
                     "AnimalID": row["AnimalID"],
@@ -98,13 +98,13 @@ def generate_metadata():
         else:
             # Known animal ID logic
             sorted_sessions = group.sort_values("Timestamp")
-            
+
             # 1st session -> Saline
             # 2nd session -> Amph
             # 3rd+ -> ? (User said "one drug one saline", implies max 2. We'll default to Amph for subsequent?)
-            
+
             sessions_list = sorted_sessions.to_dict('records')
-            
+
             # Session 1
             if len(sessions_list) > 0:
                 final_data.append({
@@ -115,7 +115,7 @@ def generate_metadata():
                     "InjectionFrame": 20000,
                     "Group": "Control"
                 })
-            
+
             # Session 2
             if len(sessions_list) > 1:
                 final_data.append({
@@ -126,7 +126,7 @@ def generate_metadata():
                     "InjectionFrame": 20000,
                     "Group": "Treatment"
                 })
-                
+
             # Handle extras if any
             for extra in sessions_list[2:]:
                 final_data.append({

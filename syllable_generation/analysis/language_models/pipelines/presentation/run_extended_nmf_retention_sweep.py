@@ -7,16 +7,19 @@ Evaluates dimensionality saturation to determine exactly where each cohort hits 
 """
 
 import os
+import pickle
 import sys
 import time
-import pickle
+
+import matplotlib
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import NMF
-import matplotlib
+
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import shutil
+
+import matplotlib.pyplot as plt
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")

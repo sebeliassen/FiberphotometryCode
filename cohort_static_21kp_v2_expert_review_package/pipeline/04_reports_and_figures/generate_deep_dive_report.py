@@ -6,9 +6,9 @@ Generates comprehensive cohort-wide multi-view synchronization & quality report.
 =============================================================================
 """
 
-import pandas as pd
-import numpy as np
 from pathlib import Path
+
+import pandas as pd
 
 csv_path = Path(__file__).resolve().parent / "comprehensive_cohort_quality_audit.csv"
 df = pd.read_csv(csv_path)

@@ -13,7 +13,7 @@ Key Principles:
    - Separate scores ensure sound, unusual motor variants are preserved, while
      measurement corruptions are cleanly identified and excluded.
 2. TRAJECTORY COMPARISON (NOT JUST SCALAR MEANS):
-   - Compares speed profiles v(t), signed turning rates \dot{\theta}(t), and
+   - Compares speed profiles v(t), signed turning rates \\dot{\theta}(t), and
      10D KPMS pose latents z(t) over normalized time.
 3. WEAKEST-STAGE (WORST-LINK) PRINCIPLE:
    - Evaluates Q_min = min_k(Q_k) and S_min = min_k(S_k), pinpointing the exact
@@ -26,8 +26,8 @@ Key Principles:
 =============================================================================
 """
 
+
 import numpy as np
-from pathlib import Path
 
 
 # ==============================================================================
@@ -86,7 +86,7 @@ class BoutQualityEvaluator:
             metrics["total_path_length"] = float(np.sum(step_vels))
             metrics["mean_speed"] = float(np.mean(step_vels))
             metrics["net_displacement"] = float(np.linalg.norm(c_stage[-1] - c_stage[0]))
-            
+
             if metrics["max_velocity"] > self.max_velocity_jump:
                 flags.append(f"VEL_JUMP_{metrics['max_velocity']:.1f}px")
             if expected_motion and metrics["total_path_length"] < self.min_path_displacement:
@@ -171,7 +171,7 @@ class BoutSimilarityEvaluator:
                     }
                 syll_data[s_id]["durations"].append(dur)
                 syll_data[s_id]["mean_speeds"].append(float(np.mean(v)))
-                
+
                 h_seg = heads[st:en]
                 dth = np.abs(np.diff(np.unwrap(h_seg))) if len(h_seg) > 1 else np.array([0.0])
                 syll_data[s_id]["turn_rates"].append(float(np.mean(dth)))
@@ -259,7 +259,7 @@ class SpatialContextEvaluator:
         """
         x, y = float(centroid[0]), float(centroid[1])
         h = float(heading)
-        
+
         # 4 Wall boundaries
         walls = [
             ("Wall_Left", np.array([self.x_min, y]), abs(x - self.x_min)),
@@ -268,12 +268,12 @@ class SpatialContextEvaluator:
             ("Wall_Bottom", np.array([x, self.y_max]), abs(self.y_max - y))
         ]
         wall_name, pt_near, d_near = min(walls, key=lambda w: w[2])
-        
+
         v_wall = pt_near - np.array([x, y])
         phi_wall = np.arctan2(v_wall[1], v_wall[0])
         beta_ego = (phi_wall - h + np.pi) % (2 * np.pi) - np.pi
         deg_ego = float(np.degrees(beta_ego))
-        
+
         if d_near > self.thigmotaxis_threshold:
             ebv_label = "OPEN_ARENA"
         elif abs(deg_ego) <= 40.0:
@@ -286,7 +286,7 @@ class SpatialContextEvaluator:
             ebv_label = "TAIL_BEHIND"
         else:
             ebv_label = "OBLIQUE"
-            
+
         return {
             "wall_name": wall_name,
             "dist": float(d_near),
@@ -342,7 +342,7 @@ class SpatialContextEvaluator:
         is_wall_following = bool(is_near_wall and is_parallel)
 
         zone = "Boundary" if is_near_wall else "Interior"
-        
+
         # Egocentric Boundary Vector at stage onset
         ebv_res = self.evaluate_ebv(c_seg[0], h_seg[0])
 
@@ -381,20 +381,20 @@ class SpatialContextEvaluator:
 
         c_start = c_seg[0]
         c_end = c_seg[-1]
-        
+
         d_from_start = np.linalg.norm(c_seg - c_start, axis=1)
         max_excursion = float(np.max(d_from_start))
         net_disp = float(np.linalg.norm(c_end - c_start))
-        
+
         ebv_start = self.evaluate_ebv(c_start, h_seg[0])
         ebv_end = self.evaluate_ebv(c_end, h_seg[-1])
-        
+
         start_is_bnd = ebv_start["dist"] <= self.thigmotaxis_threshold
         end_is_bnd = ebv_end["dist"] <= self.thigmotaxis_threshold
-        
+
         start_zone = "Boundary" if start_is_bnd else "Interior"
         end_zone = "Boundary" if end_is_bnd else "Interior"
-        
+
         if start_is_bnd and end_is_bnd:
             transition = "BOUNDARY_TO_BOUNDARY"
         elif start_is_bnd and not end_is_bnd:
@@ -505,7 +505,7 @@ class ChainQualityAndContextVerifier:
             # 3. Spatial Wall Context & EBV
             sp_res = self.spatial_eval.evaluate_bout(cents, heads, st, en)
             stage_spatials.append(sp_res)
-            
+
             # 4. Turn angle relative to previous stage
             if k > 0:
                 h_prev = heads[sb[k-1]]
@@ -516,7 +516,7 @@ class ChainQualityAndContextVerifier:
         # Weakest-Stage (Worst-Link) Principle
         q_min = float(np.min(stage_qualities))
         k_worst_q = int(np.argmin(stage_qualities))
-        
+
         s_min = float(np.min(stage_similarities))
         s_mean = float(np.mean(stage_similarities))
         k_worst_s = int(np.argmin(stage_similarities))

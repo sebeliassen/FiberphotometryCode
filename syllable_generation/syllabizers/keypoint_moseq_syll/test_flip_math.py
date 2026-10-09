@@ -5,6 +5,7 @@ keys = [
 ]
 # Let's get actual keys
 import glob
+
 results_path = glob.glob('/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll/optimized_flip_project/*/results.h5')
 if results_path:
     import keypoint_moseq as kpms
@@ -31,11 +32,11 @@ if results_path:
             if fid in k:
                 should_flip = True
                 matching_fids.append(fid)
-        
+
         if should_flip:
             n_flipped += 1
             print(f"[{k}] flipped due to matching fids: {matching_fids}")
         else:
             print(f"[{k}] NOT FLIPPED")
-            
+
     print(f"\nTotal Flipped: {n_flipped}/{len(keys)}")

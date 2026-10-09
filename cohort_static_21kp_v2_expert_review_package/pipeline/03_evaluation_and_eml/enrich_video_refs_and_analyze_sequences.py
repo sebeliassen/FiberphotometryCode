@@ -17,13 +17,14 @@ enrich_video_refs_and_analyze_sequences.py
    - Cumulative vocabulary coverage (50%, 80%, 95% threshold)
 """
 
-import sys
-import re
 import pickle
+import re
+import sys
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from scipy.stats import ks_2samp, entropy
+from scipy.stats import entropy, ks_2samp
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))

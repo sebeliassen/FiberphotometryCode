@@ -6,12 +6,11 @@ with informative .txt placeholders, strips Jupyter notebook outputs,
 and includes an executive SWE review prompt and archive README.
 """
 
-import os
-import sys
 import json
+import mimetypes
+import os
 import time
 import zipfile
-import mimetypes
 from datetime import datetime, timezone
 
 WORKSPACE_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -85,7 +84,7 @@ def get_file_type_desc(fname: str, ext: str) -> str:
     }
     if ext_lower in descriptions:
         return descriptions[ext_lower]
-    
+
     mime_type, _ = mimetypes.guess_type(fname)
     if mime_type:
         return f"{mime_type} ({ext_lower})"
@@ -134,7 +133,7 @@ def make_placeholder_content(rel_path: str, fname: str, ext: str, size: int, mti
     if is_symlink:
         content.append(f"Symlink Target         : {symlink_target}")
         content.append(f"Symlink Status         : {'BROKEN' if is_broken else 'VALID'}")
-    
+
     content.append("================================================================================")
     content.append("Note for AI / SWE Reviewers:")
     content.append("This file represents a real dataset, model checkpoint, video recording, or output")
@@ -366,7 +365,7 @@ def main():
                         content = nbf.read()
                     stripped_content = strip_notebook_outputs(content)
                     zf.writestr(rel_path, stripped_content)
-                except Exception as e:
+                except Exception:
                     # Fallback to placeholder if unreadable
                     stats['notebook_files'] -= 1
                     stats['placeholder_files'] += 1

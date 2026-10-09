@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-import sys, json, pickle, h5py
+import json
+import pickle
 from pathlib import Path
+
+import h5py
 import numpy as np
-from itertools import groupby
 from sklearn.metrics import adjusted_rand_score
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
@@ -25,7 +27,7 @@ def audit_schedule_truncation():
     requested_slds = 300
     total_requested = requested_ar + requested_slds
     max_chunk_iter = chunks[-1][1]
-    
+
     return {
         "hardcoded_chunks_max_iter": max_chunk_iter,
         "requested_total_iters_example": total_requested,

@@ -18,14 +18,16 @@ Methodology:
 =============================================================================
 """
 
-import os
-import sys
 import itertools
+import os
 import pickle
+import sys
+
+import matplotlib
 import numpy as np
 import pandas as pd
 from scipy.spatial.distance import jensenshannon
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
@@ -146,11 +148,11 @@ def main():
     print("\n" + "=" * 80)
     print("OBSERVED ANIMAL-LEVEL GROUP SEPARATION")
     print("=" * 80)
-    print(f"A. Saline Baseline Separation (N=15 mice):")
+    print("A. Saline Baseline Separation (N=15 mice):")
     print(f"   - Total Variation (TV) Distance: {obs_sal_tv:.4f} (meaning {obs_sal_tv*100:.1f}% of behavioral time is shifted)")
     print(f"   - Euclidean (L2) Distance:       {obs_sal_l2:.4f}")
     print(f"   - Jensen-Shannon (JS) Distance:  {obs_sal_js:.4f}")
-    print(f"\nB. Paired Drug Response Separation (Amph - Saline):")
+    print("\nB. Paired Drug Response Separation (Amph - Saline):")
     print(f"   - Response L2 Distance:          {obs_dlt_l2:.4f}")
     print(f"   - Response L1 Distance:          {obs_dlt_l1:.4f}")
 
@@ -242,7 +244,7 @@ def main():
         q_vals[i] = min(sorted_p[i] * N_STATES / (i + 1), q_vals[i + 1])
     q_sal_orig = np.zeros(N_STATES)
     q_sal_orig[p_order] = np.clip(q_vals, 0.0, 1.0)
-    
+
     bonf_thresh = 0.05 / N_STATES
     df_state_p["saline_bonferroni_sig"] = df_state_p["saline_exact_p"] < bonf_thresh
     df_state_p["saline_fdr_q_value"] = q_sal_orig
@@ -427,7 +429,7 @@ def main():
     ax_c.set_xticks(x_states)
     ax_c.set_xticklabels(STATE_NAMES, fontsize=10, fontweight="bold")
     ax_c.set_ylabel("$\\Delta$ Occupancy (Amph − Saline %)", fontsize=10, fontweight="semibold")
-    ax_c.set_title("C. Animal-Level Drug Response ($\Delta_{\\text{drug}}$)", fontsize=11, fontweight="bold", pad=8, loc="left")
+    ax_c.set_title("C. Animal-Level Drug Response ($\\Delta_{\\text{drug}}$)", fontsize=11, fontweight="bold", pad=8, loc="left")
     ax_c.grid(True, linestyle=":", alpha=0.4, color="#888888")
     ax_c.legend(loc="upper right", framealpha=0.92, fontsize=8)
 
@@ -447,7 +449,7 @@ def main():
     ax_d.axvline(np.percentile(perm_dlt_l2, 95), color="#000000", lw=1.8, ls="--",
                  label=f"95th Percentile: {np.percentile(perm_dlt_l2, 95):.3f}")
 
-    ax_d.set_xlabel("Drug Response Euclidean Distance ($\\|\Delta_{\\text{WT}} - \Delta_{\\text{KI}}\\|_2$)", fontsize=10, fontweight="semibold")
+    ax_d.set_xlabel("Drug Response Euclidean Distance ($\\|\\Delta_{\\text{WT}} - \\Delta_{\\text{KI}}\\|_2$)", fontsize=10, fontweight="semibold")
     ax_d.set_ylabel("Number of Permutations", fontsize=10, fontweight="semibold")
     ax_d.set_title("D. Exact Animal Permutation Null: Drug Response", fontsize=11, fontweight="bold", pad=8, loc="left")
     ax_d.grid(True, linestyle=":", alpha=0.4, color="#888888")
@@ -464,7 +466,7 @@ def main():
 
     x_loao = np.arange(N_ANIMALS)
     bars = ax_e.bar(x_loao, loao_tv, color=loao_cols, alpha=0.75, edgecolor="#333333", lw=0.9, label="Reduced Sample $d_{TV}$")
-    
+
     # Plot reduced sample's own null 95th percentile
     ax_e.plot(x_loao, loao_95th, color="#e65100", marker="D", markersize=5, lw=1.5, ls="--", zorder=4, label="Sample-Specific 95th Null")
     ax_e.axhline(obs_sal_tv, color="#000000", lw=2.0, ls=":", label=f"Full Cohort $d_{{TV}}$: {obs_sal_tv:.3f}")
@@ -512,10 +514,10 @@ def main():
             ax_f.text(k, pvals_log[k] + 0.06, f"p={p_val:.3f}", ha="center", fontsize=7.2, fontweight="semibold")
 
     ax_f.text(0.04, 0.45,
-              f"Multiple Comparisons Note:\n"
-              f"• State Z6 is the largest difference\n  (raw p = 0.0107, FDR q = 0.086)\n"
-              f"• No state reaches FDR 0.05 cutoff\n"
-              f"• Omnibus multivariate test across\n  all 8 states is significant (p = 0.0099)",
+              "Multiple Comparisons Note:\n"
+              "• State Z6 is the largest difference\n  (raw p = 0.0107, FDR q = 0.086)\n"
+              "• No state reaches FDR 0.05 cutoff\n"
+              "• Omnibus multivariate test across\n  all 8 states is significant (p = 0.0099)",
               transform=ax_f.transAxes, bbox=dict(boxstyle="round,pad=0.45", fc="#ffffff", ec="#b0bec5", lw=1.1),
               fontsize=7.2, fontweight="semibold")
 

@@ -1,8 +1,9 @@
 import os
 import sys
+
 import numpy as np
+
 np.bool8 = np.bool_
-import jax
 import jax.numpy as jnp
 import jax.random as jr
 
@@ -13,22 +14,19 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import keypoint_moseq as kpms
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from jax_moseq.utils.autoregression import get_lags as jax_get_lags
-from jax_moseq.utils import pad_affine, psd_inv
-
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import utils.resample_batching as rb
+from jax_moseq.utils.autoregression import get_lags as jax_get_lags
 from utils.resample_batching import (
     _numpy_get_lags,
-    vectorized_resample_ar_params,
+    batched_resample_heading,
+    batched_resample_scales,
     fast_resample_discrete_stateseqs,
     pure_numba_resample_continuous_stateseqs,
-    batched_resample_scales,
-    batched_resample_heading,
-    batched_gpu_resample_location
+    vectorized_resample_ar_params,
 )
+
 
 def test_get_lags_parity():
     print("Test 1: get_lags parity...")
@@ -46,16 +44,16 @@ def test_negative_control_old_buggy_get_lags_fails():
     rng = np.random.default_rng(42)
     x = rng.standard_normal((4, 200, 10))
     nlags = 3
-    
+
     # Old buggy slice
     def _old_buggy_get_lags(x_np, nlags):
         N, T, D = x_np.shape
         lags = [x_np[:, nlags - 1 - i : T - 1 - i, :] for i in range(nlags)]
         return np.concatenate(lags, axis=-1)
-        
+
     j_lags = np.array(jax_get_lags(jnp.array(x), nlags))
     buggy_lags = _old_buggy_get_lags(x, nlags)
-    
+
     diff = np.max(np.abs(j_lags - buggy_lags))
     assert diff > 1e-3, "Negative control failed! Buggy lags should NOT match JAX lags."
     print(f"  --> PASSED: Negative control confirmed. Old buggy get_lags fails with max diff = {diff:.4f}.")
@@ -69,12 +67,12 @@ def test_ar_params_parity():
     x = rng.standard_normal((N, T, D))
     z = rng.integers(0, num_states, size=(N, T - nlags))
     mask = np.ones((N, T), dtype=bool)
-    
+
     K_0 = np.eye(nlags * D + 1) * 10.0
     nu_0 = D + 2
     S_0 = np.eye(D) * 0.1
     M_0 = np.zeros((D, nlags * D + 1))
-    
+
     ar_hypparams = {
         "K_0": jnp.array(K_0),
         "nu_0": nu_0,
@@ -83,17 +81,17 @@ def test_ar_params_parity():
         "nlags": nlags,
         "num_states": num_states
     }
-    
+
     seed = jr.PRNGKey(123)
-    
+
     orig_Ab, orig_Q = arhmm_gibbs.resample_ar_params(
         seed, mask=jnp.array(mask), x=jnp.array(x), z=jnp.array(z), **ar_hypparams
     )
-    
+
     opt_Ab, opt_Q = vectorized_resample_ar_params(
         seed, mask=mask, x=x, z=z, **ar_hypparams
     )
-    
+
     assert np.allclose(np.array(orig_Ab), np.array(opt_Ab), atol=1e-6), "AR Ab parameters mismatch!"
     assert np.allclose(np.array(orig_Q), np.array(opt_Q), atol=1e-6), "AR Q covariances mismatch!"
     print("  --> PASSED: 100% exact parity on Ab and Q posteriors.")
@@ -106,7 +104,7 @@ def test_discrete_resampling_parity():
     num_states = 20
     x = rng.standard_normal((N, T, D))
     mask = np.ones((N, T), dtype=bool)
-    
+
     Ab = rng.standard_normal((num_states, D, nlags * D + 1)) * 0.05
     Q = np.stack([np.eye(D) * 0.1 for _ in range(num_states)])
     # Sticky transition matrix with heterogeneous state usage (realistic KPMS dynamics)
@@ -114,14 +112,14 @@ def test_discrete_resampling_parity():
     weights = np.linspace(0.1, 2.0, num_states)
     pi = pi * weights[:, None]
     pi = pi / pi.sum(axis=-1, keepdims=True)
-    
+
     seed = jr.PRNGKey(456)
-    
+
     z_orig = arhmm_gibbs.resample_discrete_stateseqs(
         seed, jnp.array(x), jnp.array(mask), jnp.array(Ab), jnp.array(Q), jnp.array(pi),
         nlags=nlags, num_states=num_states
     )
-    
+
     # Mode A: Pure JAX Tensor-Core GPU mode (Exact sample-for-sample parity)
     rb.CONFIG.use_numba_hmm = False
     z_jax_opt = fast_resample_discrete_stateseqs(
@@ -129,7 +127,7 @@ def test_discrete_resampling_parity():
         nlags=nlags, num_states=num_states
     )
     assert np.array_equal(np.array(z_orig), np.array(z_jax_opt)), "Discrete stateseqs z mismatch in JAX mode!"
-    
+
     # Mode B: 15.6x Faster Numba Parallel CPU FFBS mode (Distribution & entropy match)
     rb.CONFIG.use_numba_hmm = True
     p_orig_total = np.zeros(num_states)
@@ -148,7 +146,7 @@ def test_discrete_resampling_parity():
 
     corr_usage = float(np.corrcoef(p_orig_total, p_numba_total)[0, 1])
     assert corr_usage > 0.90, f"Numba FFBS syllable usage distribution mismatch: {corr_usage:.4f}"
-    
+
     print(f"  --> PASSED: Exact sample match in JAX mode + High-fidelity distribution match in Numba FFBS mode (r={corr_usage:.4f}).")
 
 def test_scales_and_location_parity():
@@ -156,7 +154,7 @@ def test_scales_and_location_parity():
     rng = np.random.default_rng(42)
     N, T, k, d = 4, 100, 17, 2
     D = 10
-    
+
     Y = rng.standard_normal((N, T, k, d))
     mask = np.ones((N, T), dtype=bool)
     x = rng.standard_normal((N, T, D))
@@ -165,9 +163,9 @@ def test_scales_and_location_parity():
     Cd = rng.standard_normal(((k - 1) * d, D + 1))
     sigmasq = np.ones(k) * 0.1
     s = rng.uniform(0.5, 2.0, size=(N, T, k))
-    
+
     seed = jr.PRNGKey(789)
-    
+
     # Scales
     s_orig = slds_gibbs.resample_scales(
         seed, jnp.array(Y), jnp.array(x), jnp.array(v), jnp.array(h),
@@ -178,7 +176,7 @@ def test_scales_and_location_parity():
         jnp.array(Cd), jnp.array(sigmasq), nu_s=5, s_0=1.0
     )
     assert np.allclose(np.array(s_orig), np.array(s_opt), atol=1e-6), "Scales mismatch!"
-    
+
     # Heading
     h_orig = slds_gibbs.resample_heading(
         seed, jnp.array(Y), jnp.array(x), jnp.array(v), jnp.array(s),
@@ -189,7 +187,7 @@ def test_scales_and_location_parity():
         jnp.array(Cd), jnp.array(sigmasq)
     )
     assert np.allclose(np.array(h_orig), np.array(h_opt), atol=1e-6), "Heading mismatch!"
-    
+
     print("  --> PASSED: 100% exact parity for scales and heading.")
 
 def test_continuous_stateseqs_distribution_parity():

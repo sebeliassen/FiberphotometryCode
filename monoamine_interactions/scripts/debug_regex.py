@@ -1,9 +1,8 @@
+import re
 import sys
 from pathlib import Path
-import re
 
 # Add path to config and project root
-import sys
 project_root = str(Path(__file__).resolve().parents[2])
 if project_root not in sys.path:
     sys.path.append(project_root)
@@ -24,7 +23,7 @@ if match:
     print(match.groupdict())
 else:
     print("MATCH FAILED")
-    
+
 # Debug: list actual files in directory to ensure we cover them
 video_dir = Path("/home/fsp585/Desktop/FiberphotometryCode/src_mono_inter/jonathan_oft_baseline/video_files")
 if video_dir.exists():

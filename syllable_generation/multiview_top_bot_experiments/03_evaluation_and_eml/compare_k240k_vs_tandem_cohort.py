@@ -14,13 +14,13 @@ Checks:
 """
 
 import pickle
-import numpy as np
-import pandas as pd
-from pathlib import Path
-from scipy.stats import pearsonr, spearmanr
-from sklearn.metrics import normalized_mutual_info_score, adjusted_rand_score
-
 import sys
+from pathlib import Path
+
+import numpy as np
+from scipy.stats import pearsonr
+from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
+
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 

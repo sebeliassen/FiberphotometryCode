@@ -19,12 +19,13 @@ Display: show_trajectory_inset=False (clean animal view, no trajectory HUD).
 =============================================================================
 """
 
-import sys
 import os
+import sys
 import time
 from pathlib import Path
-import numpy as np
+
 import cv2
+import numpy as np
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 os.environ["JAX_PLATFORMS"] = "cpu"
@@ -36,18 +37,20 @@ sys.path.insert(0, str(REPO_ROOT))
 
 # NumPy compatibility
 import numpy.core.numeric as _numeric
+
 sys.modules['numpy._core.numeric'] = _numeric
 
-from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
-    load_chain_movie_resources,
-    generate_chain_grid_movie
-)
-from syllable_generation.analysis.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
-    get_verified_metadata
-)
 from scipy.interpolate import interp1d
 from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
+
+from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+    generate_chain_grid_movie,
+    load_chain_movie_resources,
+)
+from syllable_generation.analysis.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
+    get_verified_metadata,
+)
 
 OUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/movies_2x3_right_turn_chains"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -260,7 +263,7 @@ def main():
                 if c["animal_id"] not in suite_seen_aids:
                     suite_seen_aids.add(c["animal_id"])
                     c_copy = c.copy()
-                    c_copy["role"] = f"NEAREST_NEIGHBOR"
+                    c_copy["role"] = "NEAREST_NEIGHBOR"
                     c_copy["proto_cost"] = float(dists[n_idx])
                     c_copy["kin_dist"] = float(ratios[n_idx])
                     suite_panels.append(c_copy)
@@ -275,7 +278,7 @@ def main():
                     c = cands[n_idx]
                     if (c["recording_key"], c["start_frame"]) not in {(p["recording_key"], p["start_frame"]) for p in suite_panels}:
                         c_copy = c.copy()
-                        c_copy["role"] = f"NEAREST_NEIGHBOR"
+                        c_copy["role"] = "NEAREST_NEIGHBOR"
                         c_copy["proto_cost"] = float(dists[n_idx])
                         c_copy["kin_dist"] = float(ratios[n_idx])
                         suite_panels.append(c_copy)

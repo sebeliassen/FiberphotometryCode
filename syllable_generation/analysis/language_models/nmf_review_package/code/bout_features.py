@@ -1,10 +1,11 @@
 import os
 import pickle
+from typing import Dict, List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
-from typing import List, Dict, Tuple, Optional
 from sklearn.decomposition import TruncatedSVD
-from sklearn.preprocessing import StandardScaler
+
 
 class Behavior2VecEmbedder:
     """
@@ -25,16 +26,16 @@ class Behavior2VecEmbedder:
         for seq in syllable_sequences:
             valid = seq[~pd.isna(seq)]
             all_sylls.update(valid.astype(int).tolist())
-        
+
         unique_sylls = sorted(list(all_sylls))
         self.vocab_size = len(unique_sylls)
         self.syll_to_idx = {s: i for i, s in enumerate(unique_sylls)}
         self.idx_to_syll = {i: s for i, s in enumerate(unique_sylls)}
-        
+
         # Build co-occurrence matrix within context window
         co_occ = np.zeros((self.vocab_size, self.vocab_size), dtype=np.float64)
         total_pairs = 0
-        
+
         for seq in syllable_sequences:
             valid = seq[~pd.isna(seq)].astype(int)
             L = len(valid)
@@ -47,7 +48,7 @@ class Behavior2VecEmbedder:
                         ctx = self.syll_to_idx[valid[j]]
                         co_occ[target, ctx] += 1.0
                         total_pairs += 1.0
-                        
+
         if total_pairs == 0:
             self.embeddings = np.zeros((self.vocab_size, self.n_components))
             return self
@@ -56,19 +57,19 @@ class Behavior2VecEmbedder:
         p_ij = (co_occ + 1e-8) / total_pairs
         p_i = np.sum(p_ij, axis=1, keepdims=True)
         p_j = np.sum(p_ij, axis=0, keepdims=True)
-        
+
         pmi = np.log(p_ij / (p_i @ p_j + 1e-12))
         ppmi = np.maximum(pmi, 0.0)
-        
+
         # Truncated SVD for dense semantic vectors
         k_dim = min(self.n_components, self.vocab_size - 1)
         svd = TruncatedSVD(n_components=k_dim, random_state=self.random_state)
         emb = svd.fit_transform(ppmi)
-        
+
         if emb.shape[1] < self.n_components:
             pad = np.zeros((self.vocab_size, self.n_components - emb.shape[1]))
             emb = np.hstack([emb, pad])
-            
+
         # L2 normalize embeddings
         norms = np.linalg.norm(emb, axis=1, keepdims=True) + 1e-12
         self.embeddings = emb / norms
@@ -91,39 +92,39 @@ def extract_session_bouts(session, b2v: Optional[Behavior2VecEmbedder] = None) -
     """
     df = session.all_data_df
     syll_df = session.syllables
-    
+
     first_valid = df['centroid_x'].first_valid_index()
     last_valid = df['centroid_x'].last_valid_index()
     if first_valid is None or last_valid is None:
         return []
-        
+
     sub_df = df.loc[first_valid:last_valid].copy()
     sub_syll = syll_df.loc[first_valid:last_valid].copy()
-    
+
     # Drop interleaved NA rows to get contiguous tracking samples
     valid_mask = ~pd.isna(sub_syll['syllable'])
     if not np.any(valid_mask):
         return []
-        
+
     sub_df = sub_df[valid_mask].copy()
     sub_syll = sub_syll[valid_mask].copy()
-    
+
     # Compute instantaneous acceleration
     vel = sub_df['velocity_px_s'].values
     dt = 1.0 / 40.0  # active sampling rate
     acc = np.gradient(vel, dt)
     sub_df['acceleration'] = acc
-    
+
     pose_cols = [f'latent_state_{i}' for i in range(10)]
     pose_data = sub_syll[pose_cols].values
     syll_arr = sub_syll['syllable'].values.astype(int)
     frame_indices = sub_df.index.values
-    
+
     # Run Length Encoding on genuine continuous bouts
     bouts = []
     curr_syll = syll_arr[0]
     start_idx = 0
-    
+
     n_samples = len(syll_arr)
     for i in range(1, n_samples):
         if syll_arr[i] != curr_syll:
@@ -133,16 +134,16 @@ def extract_session_bouts(session, b2v: Optional[Behavior2VecEmbedder] = None) -
             mean_pose = np.nanmean(pose_data[start_idx:end_idx], axis=0)
             if np.isnan(mean_pose).any():
                 mean_pose = np.nan_to_num(mean_pose, nan=0.0)
-                
+
             # Kinematics
             mean_v = np.nanmean(sub_df['velocity_px_s'].values[start_idx:end_idx])
             mean_w = np.nanmean(np.abs(sub_df['angular_velocity'].values[start_idx:end_idx]))
             mean_a = np.nanmean(np.abs(sub_df['acceleration'].values[start_idx:end_idx]))
-            
+
             # Contextual Semantic Embedding (16D)
             syll_int = int(curr_syll)
             emb = b2v.get_embedding(syll_int) if b2v is not None else np.zeros(16, dtype=np.float32)
-                
+
             # 30-D vector
             feat_vec = np.hstack([
                 mean_pose,                               # 10D
@@ -152,7 +153,7 @@ def extract_session_bouts(session, b2v: Optional[Behavior2VecEmbedder] = None) -
                 np.log1p(dur_frames),                    # 1D
                 emb                                      # 16D
             ]).astype(np.float32)
-            
+
             bouts.append({
                 "syllable": syll_int,
                 "start_frame": frame_indices[start_idx],
@@ -161,10 +162,10 @@ def extract_session_bouts(session, b2v: Optional[Behavior2VecEmbedder] = None) -
                 "mid_frame": (frame_indices[start_idx] + frame_indices[end_idx - 1]) // 2,
                 "vector": feat_vec
             })
-            
+
             curr_syll = syll_arr[i]
             start_idx = i
-            
+
     # Tail bout
     if start_idx < n_samples:
         dur_frames = n_samples - start_idx
@@ -191,12 +192,12 @@ def extract_session_bouts(session, b2v: Optional[Behavior2VecEmbedder] = None) -
             "mid_frame": (frame_indices[start_idx] + frame_indices[n_samples - 1]) // 2,
             "vector": feat_vec
         })
-        
+
     return bouts
 
 
 def build_and_cache_dataset_bouts(
-    sessions: List, 
+    sessions: List,
     cache_path: str = "syllable_generation/analysis/language_models/output/continuous_bout_cache.pkl",
     force_recompute: bool = False
 ) -> Tuple[List[List[Dict]], Behavior2VecEmbedder]:
@@ -208,7 +209,7 @@ def build_and_cache_dataset_bouts(
             data = pickle.load(f)
             print(f"[CACHE HIT] Loaded {len(data['session_bouts'])} sessions from {cache_path}")
             return data["session_bouts"], data["b2v"]
-            
+
     print("[BUILDING] Fitting Behavior2Vec syllable contextual embeddings across all sessions...")
     syll_seqs = []
     for s in sessions:
@@ -216,22 +217,22 @@ def build_and_cache_dataset_bouts(
         last_valid = s.all_data_df['centroid_x'].last_valid_index()
         if first_valid is not None and last_valid is not None:
             syll_seqs.append(s.syllables.loc[first_valid:last_valid, 'syllable'].values)
-            
+
     b2v = Behavior2VecEmbedder(n_components=16, window_size=2)
     b2v.fit(syll_seqs)
-    
+
     print("[BUILDING] Extracting continuous 30-D bout features per session...")
     all_session_bouts = []
     for s in sessions:
         bouts = extract_session_bouts(s, b2v)
         all_session_bouts.append(bouts)
-        
+
     total_bouts = sum(len(b) for b in all_session_bouts)
     print(f"[DONE] Extracted {total_bouts} total bouts across {len(all_session_bouts)} sessions.")
-    
+
     os.makedirs(os.path.dirname(cache_path), exist_ok=True)
     with open(cache_path, "wb") as f:
         pickle.dump({"session_bouts": all_session_bouts, "b2v": b2v}, f)
     print(f"[CACHED] Saved to {cache_path}")
-    
+
     return all_session_bouts, b2v

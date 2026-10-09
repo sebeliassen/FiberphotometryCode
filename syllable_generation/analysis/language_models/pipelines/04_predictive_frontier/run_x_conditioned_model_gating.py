@@ -17,25 +17,26 @@ Diagnostics & Experiments:
 """
 
 import os
+import pickle
 import sys
 import time
-import pickle
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader, TensorDataset
-from sklearn.model_selection import GroupKFold
-from sklearn.linear_model import Ridge, LogisticRegression
 from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression, Ridge
+from sklearn.metrics import accuracy_score, balanced_accuracy_score
+from sklearn.model_selection import GroupKFold
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score, balanced_accuracy_score, confusion_matrix
+from torch.utils.data import DataLoader, TensorDataset
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
@@ -153,12 +154,12 @@ for sess_idx, bouts in enumerate(session_bouts):
     oh_bout = np.zeros((N, NUM_ACTIVE_SYLLS), dtype=np.float32)
     next_bout_ptrs = np.full(N, N, dtype=np.int32)
     clean_tokens, clean_onsets, clean_durs = [], [], []
-    
+
     sp_raw = session_meta[sess_idx]["spatial"]
     po_raw = session_meta[sess_idx]["pose"]
     sp = sp_raw[:N] if sp_raw is not None and len(sp_raw) >= N else np.zeros((N, 6), dtype=np.float32)
     po = po_raw[:N] if po_raw is not None and len(po_raw) >= N else np.zeros((N, 30), dtype=np.float32)
-    
+
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = b["syllable"] - 1
@@ -168,18 +169,18 @@ for sess_idx, bouts in enumerate(session_bouts):
             clean_tokens.append(s_id)
             clean_onsets.append(sf)
             clean_durs.append((ef - sf + 1) / FPS)
-            
+
     b_starts = np.array([b["start_frame"] for b in bouts])
     for t_idx, b_st in enumerate(b_starts):
         prev_st = b_starts[t_idx-1] if t_idx > 0 else 0
         next_bout_ptrs[prev_st:b_st] = b_st
     if len(b_starts) > 0:
         next_bout_ptrs[b_starts[-1]:] = N
-        
+
     cum_bout = np.vstack([np.zeros((1, NUM_ACTIVE_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
     cum_sp = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp, axis=0)])
     cum_po = np.vstack([np.zeros((1, 30), dtype=np.float32), np.cumsum(po, axis=0)])
-    
+
     sessions_data.append({
         "sess_idx": sess_idx, "N": N, "fs": fs, "cum_bout": cum_bout,
         "cum_sp": cum_sp, "cum_po": cum_po,
@@ -207,27 +208,27 @@ for s in sessions_data:
     t_tgt_start = t_tgt_start[no_straddle]
     M = len(t_anchors)
     if M == 0: continue
-    
+
     past_s = t_anchors - W_FRAMES
     p_cnt = s["cum_bout"][t_anchors] - s["cum_bout"][past_s]
     p_sp = (s["cum_sp"][t_anchors] - s["cum_sp"][past_s]) / W_FRAMES
     p_po = (s["cum_po"][t_anchors] - s["cum_po"][past_s]) / W_FRAMES
-    
+
     f_cnt = s["cum_bout"][t_tgt_start + H_FRAMES] - s["cum_bout"][t_tgt_start]
     target = (f_cnt + 1e-4) / (np.sum(f_cnt, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     seq_toks = np.full((M, max_l), NUM_ACTIVE_SYLLS, dtype=np.int64)
     seq_durs = np.zeros((M, max_l), dtype=np.float32)
     seq_masks = np.ones((M, max_l), dtype=bool)
     seq_lens = np.zeros(M, dtype=np.int64)
-    
+
     b_onsets, b_tokens, b_durs = s["onsets"], s["tokens"], s["durs"]
     entropy_arr = np.zeros(M, dtype=np.float32)
     unique_arr = np.zeros(M, dtype=np.float32)
     trans_rate_arr = np.zeros(M, dtype=np.float32)
     mean_dwell_arr = np.zeros(M, dtype=np.float32)
     last_syll_arr = np.full(M, NUM_ACTIVE_SYLLS, dtype=np.int64)
-    
+
     for i, t_anc in enumerate(t_anchors):
         t_min = t_anc - W_FRAMES
         m_b = (b_onsets >= t_min) & (b_onsets < t_anc)
@@ -240,7 +241,7 @@ for s in sessions_data:
             seq_durs[i, :L_i] = sub_durs[-L_i:]
             seq_masks[i, :L_i] = False
             seq_lens[i] = L_i
-            
+
             # Entropy & statistics
             p_dist = p_cnt[i] / max(np.sum(p_cnt[i]), 1e-6)
             pos_p = p_dist[p_dist > 0]
@@ -249,7 +250,7 @@ for s in sessions_data:
             trans_rate_arr[i] = len(idx_b) / (W_FRAMES / FPS)
             mean_dwell_arr[i] = np.mean(sub_durs)
             last_syll_arr[i] = sub_toks[-1]
-            
+
     for i in range(M):
         raw_windows.append({
             "sess_idx": s["sess_idx"],
@@ -336,11 +337,11 @@ else:
         log(f"  [Fold {fold+1}/5] Train N={len(tr):,}, Test N={len(te):,}...")
         Y_tr = Y_targets[tr]
         te_len = len(te)
-        
+
         # 1. k-NN (k=50)
         X_tr_m = X_match_space[tr]
         X_te_m = X_match_space[te]
-        
+
         # Compute in batches
         k_nn = 50
         p_knn = np.zeros((te_len, NUM_ACTIVE_SYLLS), dtype=np.float32)
@@ -352,16 +353,16 @@ else:
             for row_i in range(top_k.shape[0]):
                 p_knn[b_i + row_i] = np.mean(Y_tr[top_k[row_i]], axis=0)
                 knn_densities[te[b_i + row_i]] = np.mean(dists[row_i, top_k[row_i]])
-                
+
         p_knn = np.clip(p_knn, 1e-4, 1.0)
         p_knn /= np.sum(p_knn, axis=1, keepdims=True)
         out_preds[te, 0] = p_knn
-        
+
         # 2. Ridge BoW
         p_ridge = np.clip(Ridge(alpha=10.0).fit(X_linear_full[tr], Y_tr).predict(X_linear_full[te]), 1e-4, 1.0)
         p_ridge /= np.sum(p_ridge, axis=1, keepdims=True)
         out_preds[te, 1] = p_ridge
-        
+
         # PyTorch Tensors for Transformers
         tr_ds = TensorDataset(
             torch.tensor(X_toks[tr], dtype=torch.long),
@@ -370,7 +371,7 @@ else:
             torch.tensor(Y_tr, dtype=torch.float32)
         )
         tr_loader = DataLoader(tr_ds, batch_size=256, shuffle=True)
-        
+
         # 3. Shuffled Transformer (use_pos=False)
         tf_shuff = SequenceTransformer(vocab_size=NUM_ACTIVE_SYLLS, num_targets=NUM_ACTIVE_SYLLS, use_pos=False).to(DEVICE)
         opt_shuff = torch.optim.AdamW(tf_shuff.parameters(), lr=1e-3, weight_decay=1e-4)
@@ -391,7 +392,7 @@ else:
                 torch.tensor(X_masks[te], dtype=torch.bool, device=DEVICE)
             ).cpu().numpy()
         out_preds[te, 2] = p_shuff
-        
+
         # 4. Ordered Transformer (use_pos=True)
         tf_ord = SequenceTransformer(vocab_size=NUM_ACTIVE_SYLLS, num_targets=NUM_ACTIVE_SYLLS, use_pos=True).to(DEVICE)
         opt_ord = torch.optim.AdamW(tf_ord.parameters(), lr=1e-3, weight_decay=1e-4)
@@ -444,7 +445,7 @@ for m_idx, m_name in enumerate(MODEL_NAMES):
     median_margin_m = float(np.median(winning_margins[mask_m])) if np.sum(mask_m) > 0 else 0.0
     base_risk = float(np.mean(loss_matrix[:, m_idx]))
     base_gain = ((mean_null_risk - base_risk) / mean_null_risk) * 100.0
-    
+
     oracle_winner_df.append({
         "Model_ID": m_idx,
         "Model_Name": m_name,
@@ -516,27 +517,27 @@ hard_selections = {
 
 for fold, (tr, te) in enumerate(gkf.split(X_gate_raw, groups=sess_ids)):
     log(f"  [Gating Fold {fold+1}/5] Fitting gates on N={len(tr):,} windows...")
-    
+
     # Scale features strictly on training fold
     scaler = StandardScaler()
     Z_tr = scaler.fit_transform(X_gate_raw[tr])
     Z_te = scaler.transform(X_gate_raw[te])
-    
+
     y_tr_oracle = oracle_winners[tr]
     L_tr = loss_matrix[tr]
-    
+
     # 1. Global Stacked Ensemble (Fixed Weights fitted on training fold)
     # Fit non-negative linear regression on training out-of-fold logits
     ens_ridge = Ridge(alpha=100.0, positive=True).fit(out_preds[tr].reshape(len(tr), -1), Y_targets[tr])
     p_ens = np.clip(ens_ridge.predict(out_preds[te].reshape(len(te), -1)), 1e-4, 1.0)
     p_ens /= np.sum(p_ens, axis=1, keepdims=True)
     gated_preds["Global Stacked Ensemble"][te] = p_ens
-    
+
     # 2. Majority Class Baseline
     maj_winner = int(pd.Series(y_tr_oracle).mode()[0])
     hard_selections["Majority Baseline"][te] = maj_winner
     gated_preds["Majority Baseline"][te] = out_preds[te, maj_winner]
-    
+
     # 3. Random-Label Control
     perm_labels = np.random.permutation(y_tr_oracle)
     clf_rand = LogisticRegression(C=1.0, max_iter=200, random_state=42).fit(Z_tr, perm_labels)
@@ -544,41 +545,41 @@ for fold, (tr, te) in enumerate(gkf.split(X_gate_raw, groups=sess_ids)):
     hard_selections["Random Control"][te] = pred_rand_m
     for idx_local, global_i in enumerate(te):
         gated_preds["Random Control"][global_i] = out_preds[global_i, pred_rand_m[idx_local]]
-        
+
     # 4. Logistic Regression Gate
     clf_log = LogisticRegression(C=0.1, max_iter=200, class_weight="balanced", random_state=42).fit(Z_tr, y_tr_oracle)
     pred_log_m = clf_log.predict(Z_te)
     hard_selections["Logistic Regression Gate"][te] = pred_log_m
     for idx_local, global_i in enumerate(te):
         gated_preds["Logistic Regression Gate"][global_i] = out_preds[global_i, pred_log_m[idx_local]]
-        
+
     # 5. Gradient Boosted Decision Trees
     clf_gbdt = HistGradientBoostingClassifier(max_iter=50, max_depth=4, class_weight="balanced", random_state=42).fit(Z_tr, y_tr_oracle)
     pred_gbdt_m = clf_gbdt.predict(Z_te)
     hard_selections["Gradient Boosted Gate (GBDT)"][te] = pred_gbdt_m
     for idx_local, global_i in enumerate(te):
         gated_preds["Gradient Boosted Gate (GBDT)"][global_i] = out_preds[global_i, pred_gbdt_m[idx_local]]
-        
+
     # 6. MLP Neural Gate
     clf_mlp = MLPClassifier(hidden_layer_sizes=(64, 32), max_iter=30, alpha=0.01, random_state=42).fit(Z_tr, y_tr_oracle)
     pred_mlp_m = clf_mlp.predict(Z_te)
     hard_selections["MLP Neural Gate"][te] = pred_mlp_m
     for idx_local, global_i in enumerate(te):
         gated_preds["MLP Neural Gate"][global_i] = out_preds[global_i, pred_mlp_m[idx_local]]
-        
+
     # 7. Soft Mixture-of-Experts (MoE Gate) with Temperature T=0.1 & T=0.5
     for T_val, name_t in [(0.1, "Soft MoE Gate (T=0.1)"), (0.5, "Soft MoE Gate (T=0.5)")]:
         # Soft preference targets: p_im \propto \exp(-L_im / T)
         soft_targets = np.exp(-L_tr / T_val)
         soft_targets /= np.sum(soft_targets, axis=1, keepdims=True)
-        
+
         # Train PyTorch gating network
         moe_net = SoftGatingMoE(input_dim=Z_tr.shape[1], num_models=NUM_MODELS, hidden_dim=64, temperature=T_val).to(DEVICE)
         opt_moe = torch.optim.AdamW(moe_net.parameters(), lr=3e-3, weight_decay=1e-4)
-        
+
         ds_moe = TensorDataset(torch.tensor(Z_tr, dtype=torch.float32), torch.tensor(soft_targets, dtype=torch.float32))
         loader_moe = DataLoader(ds_moe, batch_size=256, shuffle=True)
-        
+
         moe_net.train()
         for ep in range(8):
             for b_z, b_p in loader_moe:
@@ -588,11 +589,11 @@ for fold, (tr, te) in enumerate(gkf.split(X_gate_raw, groups=sess_ids)):
                 # KL loss between predicted weights and soft preferences
                 loss_moe = torch.sum(b_p * torch.log((b_p + 1e-8) / (w_pred + 1e-8)), dim=-1).mean()
                 loss_moe.backward(); opt_moe.step()
-                
+
         moe_net.eval()
         with torch.no_grad():
             w_test = moe_net(torch.tensor(Z_te, dtype=torch.float32, device=DEVICE)).cpu().numpy()
-            
+
         # Combine model predictions using soft weights
         for idx_local, global_i in enumerate(te):
             p_combo = np.zeros(NUM_ACTIVE_SYLLS, dtype=np.float32)
@@ -624,7 +625,7 @@ orc_risk_mean, orc_risk_ci = calc_session_ci(oracle_losses, sess_ids)
 
 results_summary = []
 all_model_eval_names = (
-    MODEL_NAMES + 
+    MODEL_NAMES +
     ["5. Global Stacked Ensemble", "6. Majority Baseline", "7. Random Control"] +
     ["8. Logistic Regression Gate", "9. Gradient Boosted Gate (GBDT)", "10. MLP Neural Gate"] +
     ["11. Soft MoE Gate (T=0.1)", "12. Soft MoE Gate (T=0.5)"] +
@@ -643,20 +644,20 @@ for m_name in all_model_eval_names:
         key = m_name.split(". ")[1]
         pred_mat = gated_preds[key]
         method_type = "Deployable Gated Ensemble" if "Gate" in m_name or "Ensemble" in m_name else "Baseline Control"
-        
+
     losses = js_divergence_np(Y_targets, pred_mat)
     r_mean, r_ci = calc_session_ci(losses, sess_ids)
     gain_mean = ((mean_null_risk - r_mean) / mean_null_risk) * 100.0
     gain_ci = (r_ci / mean_null_risk) * 100.0
-    
+
     # Regret metric: Regret_i = L_{i, model} - L_{i, oracle}
     regrets = losses - oracle_losses
     reg_mean, reg_ci = calc_session_ci(regrets, sess_ids)
-    
+
     # Recovery ratio of oracle advantage: (R_ens - R_model) / (R_ens - R_oracle)
     denom = (ens_risk_mean - orc_risk_mean)
     rec_ratio = ((ens_risk_mean - r_mean) / denom * 100.0) if denom > 0 else 0.0
-    
+
     # Classification metrics if hard gating
     key_short = m_name.split(". ")[1] if ". " in m_name else m_name
     if key_short in hard_selections:
@@ -664,7 +665,7 @@ for m_name in all_model_eval_names:
         bal_acc = float(balanced_accuracy_score(oracle_winners, hard_selections[key_short]) * 100.0)
     else:
         acc, bal_acc = np.nan, np.nan
-        
+
     results_summary.append({
         "Model_Name": m_name,
         "Methodology_Type": method_type,
@@ -678,7 +679,7 @@ for m_name in all_model_eval_names:
         "Classification_Acc_pct": acc,
         "Balanced_Acc_pct": bal_acc
     })
-    
+
     log(f"  {m_name:36s} | Risk: {r_mean:.4f} ± {r_ci:.4f} b (+{gain_mean:5.1f}%) | Regret: {reg_mean:.4f} b | Recov: {rec_ratio:5.1f}% | Acc: {acc:.1f}%")
 
 gating_results_df = pd.DataFrame(results_summary)
@@ -703,7 +704,7 @@ for subset_name, mask_sub in margin_subsets:
     N_sub = int(np.sum(mask_sub))
     sub_sess = sess_ids[mask_sub]
     sub_orc_l = oracle_losses[mask_sub]
-    
+
     for m_name in ["6. Majority Baseline", "7. Random Control", "5. Global Stacked Ensemble", "8. Logistic Regression Gate", "9. Gradient Boosted Gate (GBDT)", "11. Soft MoE Gate (T=0.1)"]:
         key = m_name.split(". ")[1]
         p_mat = gated_preds[key][mask_sub]
@@ -711,7 +712,7 @@ for subset_name, mask_sub in margin_subsets:
         reg_sub = l_sub - sub_orc_l
         r_m, r_ci = calc_session_ci(l_sub, sub_sess)
         reg_m, reg_ci = calc_session_ci(reg_sub, sub_sess)
-        
+
         margin_results.append({
             "Margin_Stratum": subset_name,
             "Subset_Size_N": N_sub,
@@ -750,7 +751,7 @@ for m_idx, m_name in enumerate(MODEL_NAMES):
     coefs = clf_inspect.coef_[m_idx]
     top_pos = np.argsort(coefs)[-5:][::-1]
     top_neg = np.argsort(coefs)[:5]
-    
+
     for f_idx in range(len(feature_names)):
         feat_importance_df.append({
             "Model_ID": m_idx,
@@ -806,7 +807,7 @@ cols = [p[3] for p in plot_models]
 bars = ax.bar(x_pos, gains, yerr=cis, capsize=5, color=cols, edgecolor="black", alpha=0.85, width=0.6)
 ax.set_xticks(x_pos)
 ax.set_xticklabels(names, rotation=35, ha="right", fontsize=10, fontweight="bold")
-ax.set_ylabel("Predictive Gain (% $\Delta D_{JS}$ over Null)", fontsize=11, fontweight="bold")
+ax.set_ylabel(r"Predictive Gain (% $\Delta D_{JS}$ over Null)", fontsize=11, fontweight="bold")
 ax.set_title("A. Predictive Spectrum: Deployable Gating vs. Oracle Selector", fontsize=12, fontweight="bold", pad=10)
 ax.axhline(gains[4], color="#2ECC71", linestyle="--", alpha=0.7, label=f"Global Ensemble ({gains[4]:.1f}%)")
 ax.axhline(gains[-1], color="#E74C3C", linestyle="--", alpha=0.7, label=f"Oracle Selector* ({gains[-1]:.1f}%)")
@@ -831,7 +832,7 @@ ax.set_xticklabels(m_short_names, fontsize=10, fontweight="bold")
 # Winning margin boxplots / mean margins
 margin_means = [oracle_winner_df.loc[oracle_winner_df["Model_ID"] == i, "Mean_Win_Margin_bits"].values[0] for i in range(4)]
 bars_m = ax2.bar(np.arange(4) + 0.15, margin_means, width=0.3, color="#F1C40F", edgecolor="black", alpha=0.85, label="Mean Winning Margin (bits)")
-ax2.set_ylabel("Mean Winning Margin $\Delta_i$ (bits)", fontsize=11, fontweight="bold", color="#B7950B")
+ax2.set_ylabel(r"Mean Winning Margin $\Delta_i$ (bits)", fontsize=11, fontweight="bold", color="#B7950B")
 ax2.grid(False)
 ax.set_title("B. Oracle-Winner Distribution & Winning Margins", fontsize=12, fontweight="bold", pad=10)
 
@@ -858,7 +859,7 @@ for m_key, m_label, col, mk in comp_models:
 
 ax.set_xticks(range(4))
 ax.set_xticklabels(strata_labels, fontsize=10, fontweight="bold")
-ax.set_ylabel("Mean Regret ($L_{\hat{m}} - L_{m^*}$ bits)", fontsize=11, fontweight="bold")
+ax.set_ylabel(r"Mean Regret ($L_{\hat{m}} - L_{m^*}$ bits)", fontsize=11, fontweight="bold")
 ax.set_title("C. Margin-Stratified Regret ($L_{gated} - L_{oracle}$)", fontsize=12, fontweight="bold", pad=10)
 ax.legend(loc="upper left", frameon=True, fontsize=10)
 ax.set_ylim(0, 0.10)

@@ -1,8 +1,8 @@
 import os
-import sys
 import pickle
+import sys
+
 import numpy as np
-import pandas as pd
 from sklearn.decomposition import NMF
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -53,20 +53,20 @@ for s_idx, bouts in enumerate(session_bouts):
     if len(bouts) < 100: continue
     max_frame = bouts[-1]["end_frame"]
     N = max_frame + 1
-    
+
     frame_sylls = np.zeros(N, dtype=np.int32)
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = min(b["syllable"], NUM_SYLLS - 1)
         frame_sylls[sf : ef + 1] = s_id
-            
+
     oh_bout = np.zeros((N, NUM_SYLLS), dtype=np.float32)
     diffs = np.where(frame_sylls[1:] != frame_sylls[:-1])[0] + 1
     onsets = np.zeros(N, dtype=bool)
     onsets[0] = True; onsets[diffs] = True
     oh_bout[onsets, frame_sylls[onsets]] = 1.0
     cum_bout = np.vstack([np.zeros((1, NUM_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
-    
+
     for t in range(W_FRAMES, N - H_FRAMES, STRIDE_FRAMES):
         w_b = cum_bout[t] - cum_bout[t - W_FRAMES]
         all_past_counts.append(w_b)
@@ -85,32 +85,32 @@ for s_idx, entry_f, inj_f, sid in wt_saline_indices:
     bouts = session_bouts[s_idx]
     max_frame = bouts[-1]["end_frame"]
     N = max_frame + 1
-    
+
     frame_sylls = np.zeros(N, dtype=np.int32)
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = min(b["syllable"], NUM_SYLLS - 1)
         frame_sylls[sf : ef + 1] = s_id
-            
+
     oh_bout = np.zeros((N, NUM_SYLLS), dtype=np.float32)
     diffs = np.where(frame_sylls[1:] != frame_sylls[:-1])[0] + 1
     onsets = np.zeros(N, dtype=bool)
     onsets[0] = True; onsets[diffs] = True
     oh_bout[onsets, frame_sylls[onsets]] = 1.0
     cum_bout = np.vstack([np.zeros((1, NUM_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
-    
+
     # Start tracking from entry_f + W_FRAMES
     sess_w_counts = []
     sess_times = []
-    
+
     start_t = entry_f + W_FRAMES
     end_t = N
-    
+
     for t in range(start_t, end_t, STRIDE_FRAMES):
         w_b = cum_bout[t] - cum_bout[t - W_FRAMES]
         sess_w_counts.append(w_b)
         sess_times.append((t - entry_f) / FPS / 60.0)  # minutes from entry
-        
+
     if len(sess_w_counts) > 20:
         W_sess = nmf.transform(np.array(sess_w_counts, dtype=np.float32))
         W_sess_probs = W_sess / np.clip(np.sum(W_sess, axis=1, keepdims=True), 1e-8, None)

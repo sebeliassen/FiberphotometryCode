@@ -1,11 +1,13 @@
 import os
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.75"
 
-import sys 
 import multiprocessing
+import sys
+
 if multiprocessing.current_process().name != 'MainProcess':
     os.environ["CUDA_VISIBLE_DEVICES"] = ""
     os.environ["JAX_PLATFORMS"] = "cpu"
@@ -20,12 +22,14 @@ sys.path.insert(0, "/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import numpy as np
+
 np.bool8 = np.bool_
 
 import json
 from pathlib import Path
-from kpms_pipeline import run_pipeline
+
 import pandas as pd
+from kpms_pipeline import run_pipeline
 
 # ========= constants (edit these) =========
 PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "karen_project_2")
@@ -34,7 +38,7 @@ CAM = "center_cam"
 SUBROUTINE = "jonathan"
 LATENT_DIM = 10
 NUM_AR_ITERS = 50
-TOTAL_ITERS = 125                    
+TOTAL_ITERS = 125
 VIDEO_EXTENSION_OVERRIDE = None
 PCA_MODE = "load_or_fit"
 
@@ -112,11 +116,11 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         SEED = int(sys.argv[2])
     else:
-        SEED = 42 
+        SEED = 42
 
     if len(sys.argv) > 3:
         FLIPPING_MODE = sys.argv[3]
-        if FLIPPING_MODE == "None": 
+        if FLIPPING_MODE == "None":
             FLIPPING_MODE = None
     else:
         FLIPPING_MODE = None
@@ -136,15 +140,15 @@ if __name__ == "__main__":
     else:
         PCA_MODE_OVERRIDE = PCA_MODE
 
-    print(f"--- STARTING PIPELINE ---")
+    print("--- STARTING PIPELINE ---")
     print(f"Name: {MODEL_NAME}")
     print(f"Seed: {SEED}")
     print(f"Downsample: x{DOWNSAMPLE} (FPS -> {NEW_FPS})")
     print(f"Batched Init: {USE_BATCHED_INIT}")
     print(f"Memory Patch: {USE_MEMORY_PATCH}")
-    
+
     sessions = get_sessions()
-    
+
     # Auto-test mode: if model name starts with "test", only use 2 sessions
     if MODEL_NAME.startswith("test"):
         print("[TEST MODE] Detected 'test' prefix. Slicing to first 2 sessions.")

@@ -5,7 +5,7 @@ Ground-truth human annotations and ethological semantics for the 100 syllables
 in the Full Cohort Static 21kp V2 production model (Seed 101).
 """
 
-from typing import Dict, Any, Optional
+from typing import Dict
 
 KAREN_21KP_LABELS: Dict[int, Dict[str, str]] = {
     0: {"name": "x", "notes": "", "category": "Unassigned"},

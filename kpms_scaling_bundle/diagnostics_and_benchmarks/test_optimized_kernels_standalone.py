@@ -5,7 +5,9 @@ Test script for verified optimization of:
 2. Preallocated workspace for continuous Banded Cholesky
 3. LAPACK dpbtrf + BLAS dtbsv solver parity
 """
-import sys, os
+import os
+import sys
+
 import numpy as np
 
 if not hasattr(np, "bool8"):
@@ -18,16 +20,11 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import jax
-import jax.numpy as jnp
-import jax.random as jr
-from numba import njit, prange
-from scipy.linalg.lapack import dpbtrf
-from scipy.linalg.blas import dtbsv
-import concurrent.futures
-import time
-
 import utils.resample_batching as rb
+from numba import njit
+from scipy.linalg.blas import dtbsv
+from scipy.linalg.lapack import dpbtrf
+
 
 def test_ffbs_parity():
     print("--- Testing FFBS Contiguous pi_T Parity ---")

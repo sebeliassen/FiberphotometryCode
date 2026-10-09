@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-import os, sys, shutil, zipfile
+import os
+import shutil
+import zipfile
 from pathlib import Path
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")

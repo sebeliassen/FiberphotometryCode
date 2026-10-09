@@ -21,13 +21,13 @@ Solves the "Contortion in Place / Stationary Impostor" Problem:
 =============================================================================
 """
 
+import json
 import os
 import sys
 import time
-import json
 from pathlib import Path
+
 import numpy as np
-import pandas as pd
 from scipy.interpolate import interp1d
 from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
@@ -36,12 +36,11 @@ REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+    generate_chain_grid_movie,
     load_chain_movie_resources,
-    generate_chain_grid_movie
 )
 from syllable_generation.analysis.sequence_viz.clustered_seqnmf.prepare_clustered_sequences import (
     SYLL_TO_META_ARR,
-    META_SYLLABLE_DEFS
 )
 
 OUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/clustered_seqnmf/movies_3panel_exemplars"

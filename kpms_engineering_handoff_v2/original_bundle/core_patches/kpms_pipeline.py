@@ -1,25 +1,31 @@
 import os
+
 os.environ.setdefault("MPLBACKEND", "Agg")
 os.environ.setdefault("DISPLAY", "")
 
 import matplotlib
+
 matplotlib.use("Agg", force=True)
 
 from pathlib import Path
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
+import jax
 import keypoint_moseq as kpms
 from keypoint_moseq.viz import get_durations
-import jax
+from utils.batch_init import batched_init_model_by_video
+from utils.flipping import flip_data
 
 # --- CUSTOM IMPORTS ---
-from utils.paths import ref_pairs_from_sessions, get_key_to_aid_mapping
-from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg, subset_after_filter
-from utils.batch_init import batched_init_model_by_video
+from utils.paths import get_key_to_aid_mapping, ref_pairs_from_sessions
+
 # Ensure this filename matches exactly what you have on disk
-from utils.resample_batching import apply_optimizations, restore_original_kernels 
-from utils.flipping import flip_data 
+from utils.resample_batching import apply_optimizations, restore_original_kernels
+from utils.trimming import clamp_conf_nonneg, filter_with_masks, presence_mask_from_conf, subset_after_filter
+
 
 def run_pipeline(
     sessions,
@@ -41,7 +47,7 @@ def run_pipeline(
     subset_seed=None,
     mixed_map_iters=24,
     seed=None,
-    downsample_rate=1,  
+    downsample_rate=1,
     new_fps=None,
     use_batched_init=False,
     use_memory_patch=True,
@@ -72,7 +78,7 @@ def run_pipeline(
     if flipping_mode is not None and flipping_mode != "none":
         # Build Key to AID mapping for correct flipping logic
         final_key_to_aid = get_key_to_aid_mapping(sessions, coordinates)
-        
+
         # Hardcoded width 404 based on ffprobe of source videos
         coordinates, confidences = flip_data(
             coordinates, confidences, bodyparts, image_width=404, mode=flipping_mode, key_to_aid=final_key_to_aid
@@ -89,7 +95,7 @@ def run_pipeline(
     # 5) Compress + outlier removal
     filtered_coords, filtered_confs, video_frame_indexes = filter_with_masks(
         coordinates, confidences, all_masks, project_dir,
-        return_video_frame_indexes=True, downsample_rate=downsample_rate, 
+        return_video_frame_indexes=True, downsample_rate=downsample_rate,
         **kpms.load_config(project_dir)
     )
     # Immediately free the uncompressed raw dicts to reclaim ~15 GB RAM
@@ -166,10 +172,11 @@ def run_pipeline(
             pca = kpms.load_pca(project_dir)
         except:
             pca = _safe_fit_pca(data, project_dir)
-    
+
     # === Batching settings ===
-    from jax_moseq.utils import set_mixed_map_iters
     import math
+
+    from jax_moseq.utils import set_mixed_map_iters
     eff_mixed_map_iters = mixed_map_iters
     if (subset_fraction is not None) and (subset_fraction < 1.0):
         eff_mixed_map_iters = max(1, math.ceil(mixed_map_iters * subset_fraction))
@@ -185,7 +192,7 @@ def run_pipeline(
         try:
             # === 9) Initialization & Checkpoint Loading ===
             requested_name = model_name
-            model_name_used = requested_name 
+            model_name_used = requested_name
             ckpt_path = Path(project_dir) / (requested_name or "NON_EXISTENT") / "checkpoint.h5"
 
             # [STEP 1] GET STATE (Load or Init)
@@ -199,7 +206,7 @@ def run_pipeline(
                     rb.precompute_optimal_batch_config(data, model=model, verbose=True)
                 print(f"[resume] Loaded at iteration {current_iter}.")
             else:
-                print(f"[init] Fresh start. Initializing model...")
+                print("[init] Fresh start. Initializing model...")
                 rb.KPMSStateCache.clear()
                 rng_key = jax.random.PRNGKey(int(seed)) if seed is not None else jax.random.PRNGKey(0)
                 init_config = kpms.load_config(project_dir)
@@ -208,16 +215,16 @@ def run_pipeline(
                     init_bs = min(rb.CONFIG.discrete_bs, 20)
                     print(f"[init] Using BATCHED initialization (batch_size={init_bs})...")
                     model = batched_init_model_by_video(
-                        data, pca, init_config, 
+                        data, pca, init_config,
                         params_subset_size=5, batch_size=init_bs, seed=rng_key
                     )
                 else:
                     print("[init] Using STANDARD initialization...")
                     model = kpms.init_model(data, pca=pca, seed=rng_key, location_aware=location_aware, **init_config)
-                    
+
                 if init_kappa is not None:
                      model = kpms.update_hypparams(model, kappa=float(init_kappa))
-                     
+
                 current_iter = 0
 
             # Store iteration at the beginning of the run for progress logging and start-over reference
@@ -227,11 +234,11 @@ def run_pipeline(
             # We only run this if we haven't reached the AR iteration count yet.
             if current_iter < num_ar_iters:
                 print(f"[phase 1] Current iter ({current_iter}) < AR target ({num_ar_iters}). Running AR fit in chunks of 10...")
-                
+
                 import time
                 from datetime import datetime, timedelta
                 ar_start_time = time.time()
-                
+
                 chunk_size = 10
                 while current_iter < num_ar_iters:
                     next_target = min(current_iter + chunk_size, num_ar_iters)
@@ -252,7 +259,7 @@ def run_pipeline(
                     )
                     requested_name = model_name_used
                     current_iter = next_target
-                    
+
                     if should_save:
                         savedir = os.path.join(project_dir, model_name_used)
                         checkpoint_path = os.path.join(savedir, "checkpoint.h5")
@@ -263,16 +270,16 @@ def run_pipeline(
                             exist_ok=True,
                             overwrite=True,
                         )
-                    
+
                     # Calculate ETA
                     elapsed = time.time() - ar_start_time
                     sec_per_iter = elapsed / (current_iter - run_start_iter) if (current_iter - run_start_iter) > 0 else 0
                     remaining_iters = num_ar_iters - current_iter
                     eta_sec = remaining_iters * sec_per_iter
-                    
+
                     eta_time_str = str(timedelta(seconds=int(eta_sec)))
                     est_completion = (datetime.now() + timedelta(seconds=eta_sec)).strftime('%H:%M:%S')
-                    
+
                     # Send ntfy progress notification
                     if not os.environ.get("DISABLE_NTFY"):
                         try:
@@ -290,7 +297,7 @@ def run_pipeline(
                                 pass
                         except Exception as e:
                             print(f"Failed to send progress notification: {e}")
-                        
+
                 print(f"[phase 1] AR Milestone reached: {current_iter}/{num_ar_iters} AR iterations complete.")
             else:
                 print(f"[phase 1] Skipping AR fit (Already at iter {current_iter} >= {num_ar_iters}).")
@@ -307,11 +314,11 @@ def run_pipeline(
                     model = kpms.update_hypparams(model, kappa=kappa)
 
                 print(f"[phase 2] Starting SLDS fit from {current_iter} to {final_target_iter} in chunks of 10...")
-                
+
                 import time
                 from datetime import datetime, timedelta
                 slds_start_time = time.time()
-                
+
                 # DIAGNOSTICS: Comprehensive Object Inspection
                 print("\n=======================================================================")
                 print("           MOSEQ DIAGNOSTICS: PRE-SLDS DATA & MODEL MEMORY AUDIT")
@@ -334,7 +341,7 @@ def run_pipeline(
                             except Exception as ex:
                                 print(f"  * [{k:20s}]: error={ex}")
                     print(f"Total Array Footprint for {tag}: {total_bytes/1e6:.2f} MB ({total_bytes/1e9:.3f} GB)")
-                
+
                 print_dict_diagnostics("MODEL DICT ARRAYS", model)
                 print_dict_diagnostics("DATA DICT ARRAYS", data)
                 print("=======================================================================\n", flush=True)
@@ -357,7 +364,7 @@ def run_pipeline(
                         location_aware=location_aware,
                     )[0]
                     current_iter = next_target
-                    
+
                     if should_save:
                         savedir = os.path.join(project_dir, model_name_used)
                         checkpoint_path = os.path.join(savedir, "checkpoint.h5")
@@ -368,17 +375,17 @@ def run_pipeline(
                             exist_ok=True,
                             overwrite=True,
                         )
-                    
+
                     # Calculate ETA
                     slds_iters_done = current_iter - num_ar_iters
                     elapsed = time.time() - slds_start_time
                     sec_per_iter = elapsed / slds_iters_done if slds_iters_done > 0 else 0
                     remaining_iters = final_target_iter - current_iter
                     eta_sec = remaining_iters * sec_per_iter
-                    
+
                     eta_time_str = str(timedelta(seconds=int(eta_sec)))
                     est_completion = (datetime.now() + timedelta(seconds=eta_sec)).strftime('%H:%M:%S')
-                    
+
                     # Send ntfy progress notification
                     if not os.environ.get("DISABLE_NTFY"):
                         try:
@@ -398,7 +405,7 @@ def run_pipeline(
                             print(f"Failed to send progress notification: {e}")
             else:
                 print(f"[phase 2] Training already complete (Current {current_iter} >= Target {final_target_iter}).")
-            
+
             # Succeeded without OOM, break out of while True loop
             break
 
@@ -416,7 +423,7 @@ def run_pipeline(
                         f"Scaled down batch sizes (discrete_bs={new_bs}, chunk_size={rb.CONFIG.continuous_chunk_size}) and restarting from iteration {run_start_iter}."
                     )
                     print(f"\n[OOM DETECTED] {oom_msg}\n")
-                    
+
                     # Send ntfy notification
                     try:
                         import urllib.request
@@ -429,12 +436,12 @@ def run_pipeline(
                             pass
                     except Exception as ntfy_err:
                         print(f"Failed to send ntfy notification: {ntfy_err}")
-                    
+
                     # Force Python and JAX garbage collection to release VRAM
                     if 'model' in locals():
                         del model
                     gc.collect()
-                    
+
                     # Let the loop start over (it will reload the checkpoint or re-init)
                     continue
             raise e

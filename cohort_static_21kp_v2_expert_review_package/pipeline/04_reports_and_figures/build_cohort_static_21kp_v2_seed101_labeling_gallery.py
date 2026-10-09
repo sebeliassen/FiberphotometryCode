@@ -14,14 +14,11 @@ for Cohort Static 21kp V2 Seed 101 syllables, linking:
 Environment: Python 3
 """
 
-import os
-import sys
 import json
-import re
 from pathlib import Path
+
 import h5py
 import numpy as np
-import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 VIZ_DIR = SCRIPT_DIR / "visualizations_cohort_static_21kp_v2_seed101"
@@ -600,7 +597,7 @@ def main():
         f.write(full_html)
 
     # Markdown Catalog
-    catalog_md = f"""# Cohort Static 21kp V2 Seed 101 Syllable Catalog & Ethologist Reference
+    catalog_md = rf"""# Cohort Static 21kp V2 Seed 101 Syllable Catalog & Ethologist Reference
 
 This document catalogs all **{len(syll_ids)} syllables** inferred by the **Full Cohort Static 21kp V2 Production Model** (50 AR + 300 SLDS = 350 iterations, Seed 101).
 

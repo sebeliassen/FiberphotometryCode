@@ -19,11 +19,13 @@ Outputs:
 """
 
 import os
+
 os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
 
 import re
 import time
 from pathlib import Path
+
 import h5py
 import numpy as np
 import pandas as pd
@@ -318,7 +320,7 @@ Out of 100 syllables, **{len(sig_sylls)} syllables** show statistically signific
         dir_str = "🔺 Elevated in PFF" if l2fc > 0 else "🔻 Depressed in PFF"
         report_md += f"| **Syllable {sid:02d}** | {grp} | {m_m:.2f}% | {m_p:.2f}% | {l2fc:+.2f} | **{pval:.4f}** | {dir_str} |\n"
 
-    report_md += f"""
+    report_md += """
 ---
 
 ## 4. Longitudinal Progression (3w -> 8w -> 16w -> 24w) & L-DOPA Rescue

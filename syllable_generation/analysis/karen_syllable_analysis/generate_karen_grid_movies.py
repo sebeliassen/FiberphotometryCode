@@ -16,8 +16,9 @@ Features:
 
 import os
 import sys
-from pathlib import Path
 import warnings
+from pathlib import Path
+
 warnings.simplefilter("ignore")
 
 # Force CPU/threading safety for video encoding
@@ -30,19 +31,21 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import pickle
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
-import h5py
 import jax.numpy as jnp
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
 import keypoint_moseq as kpms
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
 
 # ==============================================================================
 # 1. OPENCVREADER MONKEYPATCH (FAST SEEKING FOR STRIDED VFI)
 # ==============================================================================
 from vidio.read import OpenCVReader
+
 _original_read = OpenCVReader.read
 
 def _fast_read(self, framenum):
@@ -90,15 +93,15 @@ print(f"[INFO] Target Syllables to Render ({len(TARGET_SYLLABLES)}): {TARGET_SYL
 print(f"[INFO] Loading checkpoint for {MODEL_NAME}...", flush=True)
 model, data, metadata, current_iter = kpms.load_checkpoint(str(PROJECT_DIR), MODEL_NAME)
 
-print(f"[INFO] Loading config...", flush=True)
+print("[INFO] Loading config...", flush=True)
 config = kpms.load_config(str(PROJECT_DIR))
 if "use_bodyparts" in config:
     config["bodyparts"] = config["use_bodyparts"]
 
-print(f"[INFO] Loading results.h5...", flush=True)
+print("[INFO] Loading results.h5...", flush=True)
 results = kpms.load_results(str(PROJECT_DIR), MODEL_NAME)
 
-print(f"[INFO] Estimating coordinates, centroids, and headings...", flush=True)
+print("[INFO] Estimating coordinates, centroids, and headings...", flush=True)
 Y_est = estimate_coordinates(
     jnp.array(model["states"]["x"]),
     jnp.array(model["states"]["v"]),
@@ -164,7 +167,7 @@ def _filtering_and_lenient_sample_instances(syllable_instances, num_samples, *ar
             padded_instances[k] = v + [v[0]] * (num_samples - len(v))
         else:
             padded_instances[k] = v
-            
+
     sampled = original_sample_instances(padded_instances, num_samples, *args, **kwargs)
     filtered = {k: v for k, v in sampled.items() if k in TARGET_SYLLABLES}
     print(f"[INFO] Filtered down to {len(filtered)} target syllables for grid rendering.", flush=True)
@@ -185,7 +188,7 @@ OUTPUT_FPS = 40  # 40Hz output
 
 # 1. Grid Movies WITH Keypoint/Trajectory Overlays
 print("\n" + "="*80, flush=True)
-print(f"🎬 GENERATING GRID MOVIES WITH TRAJECTORIES (overlay_keypoints=True)", flush=True)
+print("🎬 GENERATING GRID MOVIES WITH TRAJECTORIES (overlay_keypoints=True)", flush=True)
 print(f"   Output Directory: {OUT_WITH_TRAJ}", flush=True)
 print("="*80, flush=True)
 
@@ -211,7 +214,7 @@ print(" Grid movies with trajectories completed.", flush=True)
 
 # 2. Grid Movies WITHOUT Keypoint/Trajectory Overlays
 print("\n" + "="*80, flush=True)
-print(f"🎬 GENERATING GRID MOVIES WITHOUT TRAJECTORIES (overlay_keypoints=False)", flush=True)
+print("🎬 GENERATING GRID MOVIES WITHOUT TRAJECTORIES (overlay_keypoints=False)", flush=True)
 print(f"   Output Directory: {OUT_WITHOUT_TRAJ}", flush=True)
 print("="*80, flush=True)
 
@@ -241,7 +244,7 @@ kpms.util.sample_instances = original_util_sample
 kpms.viz.sample_instances = original_sample_instances
 
 print("\n" + "="*80, flush=True)
-print(f" ALL GRID MOVIES SUCCESSFULLY GENERATED IN:", flush=True)
+print(" ALL GRID MOVIES SUCCESSFULLY GENERATED IN:", flush=True)
 print(f"  - {OUT_WITH_TRAJ}", flush=True)
 print(f"  - {OUT_WITHOUT_TRAJ}", flush=True)
 print("="*80, flush=True)

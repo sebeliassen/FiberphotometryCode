@@ -1,16 +1,17 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Dict
+from typing import List
 
-import re
 import pandas as pd
 
 from syllable_generation.datamodel import SessionRecord
-from ..context import BuildContext
+
 from ..config import JCFG
-from ..utils.files import parse_h5_path, group_by_session_id, sort_parsed_h5_key
+from ..context import BuildContext
+from ..utils.files import group_by_session_id, parse_h5_path, sort_parsed_h5_key
 
 H5_PATTERN = re.compile(JCFG.h5_filename_regex, re.IGNORECASE)
 

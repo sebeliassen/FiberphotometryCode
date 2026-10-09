@@ -13,28 +13,16 @@ Cohort-Agnostic:
 =============================================================================
 """
 
-import os
-import sys
 import argparse
-import json
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
-import numpy as np
 import pandas as pd
 
-from .core import (
-    ChainDefinition,
-    ChainOccurrence,
-    ChainBout,
-    CohortDataAdapter,
-    ChainFinder,
-    auto_discover_chains
-)
+from .core import ChainDefinition, ChainFinder, ChainOccurrence, CohortDataAdapter, auto_discover_chains
 from .inter_chain import InterChainAnalyzer
 from .intra_chain import IntraChainAnalyzer
 from .visualizer import ChainVisualizer
-
 
 # -----------------------------------------------------------------------------
 # Canonical Chain Definitions for Built-In Cohorts
@@ -386,7 +374,7 @@ def _generate_markdown_report(
 
         f.write("## 2. Inter-Chain Organization Summary\n\n")
         f.write("![Inter-Chain Organization](inter_chain_organization_summary.png)\n\n")
-        
+
         f.write("### 2.1 Perseveration Index & Chain Repeat Rates\n")
         if not repeat_df.empty:
             grp_rep = repeat_df.groupby("genotype")["perseveration_index"].agg(["count", "mean", "std"]).reset_index()

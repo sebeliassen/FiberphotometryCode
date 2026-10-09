@@ -18,13 +18,14 @@ import json
 import re
 from pathlib import Path
 from typing import Dict, Optional, Tuple
+
 import numpy as np
 import pandas as pd
 
 try:
     from .schemas import CHAMBER_MAP, PathConfig
 except ImportError:
-    from schemas import CHAMBER_MAP, PathConfig
+    pass
 
 HDD_DIR = Path("/mnt/hdd/karen_project")
 CACHE_FILE = Path(__file__).resolve().parent / "ttl_cohort_offsets.json"

@@ -19,21 +19,23 @@ For sequence lengths N = 2, 3, 4, 5, 6 steps.
 
 import sys
 import time
-from pathlib import Path
 from collections import Counter, defaultdict
+from pathlib import Path
+
+import h5py
 import numpy as np
 import pandas as pd
-import h5py
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT / "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison"))
 
 from run_clustering_resolution_experiment import get_level_definitions, get_verified_metadata
 
+
 def main():
     t0 = time.time()
     res_path = REPO_ROOT / "syllable_generation/syllabizers/keypoint_moseq_syll/amph_project/amph_prod_k150k_run_12/results.h5"
-    
+
     print("[INIT] Loading raw syllable streams from results.h5...", flush=True)
     with h5py.File(res_path, "r") as f:
         session_data = {k: f[f"{k}/syllable"][:] for k in sorted(f.keys()) if "syllable" in f[k]}

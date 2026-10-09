@@ -20,7 +20,10 @@ We report:
 ===============================================================================
 """
 
-import os, sys, pickle
+import os
+import pickle
+import sys
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import GroupKFold
@@ -243,7 +246,7 @@ for c in cohort_order:
     if taper_90 is not None:
         print(f"  Drops below 90% of peak at W = {taper_90:.1f}s")
     else:
-        print(f"  Does NOT drop below 90% of peak within W ≤ 360s")
+        print("  Does NOT drop below 90% of peak within W ≤ 360s")
     if zero_cross is not None:
         print(f"  Crosses zero gain at W ≈ {zero_cross:.1f}s")
     else:
@@ -287,7 +290,7 @@ for _, r in df_pool.iterrows():
 
 peak_idx = df_pool["Pooled_All30"].idxmax()
 print(f"\n  >>> Pooled peak: +{df_pool.loc[peak_idx, 'Pooled_All30']:.2f}% at W = {df_pool.loc[peak_idx, 'W_sec']:.1f}s")
-print(f"  >>> Compare to original slide 4 CSV peak: +30.05% at W = 90.0s")
+print("  >>> Compare to original slide 4 CSV peak: +30.05% at W = 90.0s")
 
 print("\n" + "=" * 80)
 print("CONCLUSION")

@@ -18,11 +18,10 @@ Evaluates under 5-Fold Session-Grouped Cross-Validation (W=68.3s -> H=120s):
 """
 
 import os
-import sys
-import time
 import pickle
+import sys
+
 import numpy as np
-import pandas as pd
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GroupKFold
 
@@ -179,9 +178,9 @@ for tr_idx, te_idx in gkf.split(X_p2, groups=groups):
     g_p35.append(((js_blind - js_vec(Y_te, p_35 / np.sum(p_35, axis=1, keepdims=True))) / js_blind) * 100.0)
 
 print("=" * 80)
-print(f"RESULTS: Continuous Pose vs. Discrete Syllable (30 Sessions, 30,469 Windows)")
+print("RESULTS: Continuous Pose vs. Discrete Syllable (30 Sessions, 30,469 Windows)")
 print("=" * 80)
-print(f"P_0 (Blind Null):                                +  0.00% ± 0.00%")
+print("P_0 (Blind Null):                                +  0.00% ± 0.00%")
 print(f"P_1 (Time Drift):                                + {np.mean(g_p1):5.2f}% ± {1.96*np.std(g_p1)/np.sqrt(5):4.2f}%")
 print(f"P_2 (Spatial Context: Centroid, Velocity):       + {np.mean(g_p2):5.2f}% ± {1.96*np.std(g_p2)/np.sqrt(5):4.2f}%")
 print(f"P_2.5 (Continuous 30-D Pose Kinematics ONLY):    + {np.mean(g_p25):5.2f}% ± {1.96*np.std(g_p25)/np.sqrt(5):4.2f}%")

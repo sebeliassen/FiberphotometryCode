@@ -20,11 +20,10 @@ Produces publication-grade, space-efficient aggregated figures & tables in:
   8. JSON export of per-syllable cohort stats for the interactive Labeling Gallery & Catalog.
 """
 
-import sys
-import os
 import argparse
 import json
 import pickle
+import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[5]
@@ -32,11 +31,13 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
+import matplotlib
 import pandas as pd
 from scipy import stats
-import matplotlib
+
 matplotlib.use("Agg", force=True)
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -609,13 +610,13 @@ def main():
         center=0,
         vmin=-2.0,
         vmax=2.0,
-        cbar_kws={"label": "$\log_2$ Fold Change (PFF / Monomer)", "shrink": 0.6},
+        cbar_kws={"label": r"$\log_2$ Fold Change (PFF / Monomer)", "shrink": 0.6},
         ax=ax_h,
         linewidths=0.5,
         linecolor="#e2e8f0"
     )
 
-    ax_h.set_title("Longitudinal Syllable Repertoire Dynamics Across Cohorts\n($\log_2$ Fold Change PFF vs Monomer, * p<0.05, ** p<0.01, *** p<0.001)",
+    ax_h.set_title("Longitudinal Syllable Repertoire Dynamics Across Cohorts\n($\\log_2$ Fold Change PFF vs Monomer, * p<0.05, ** p<0.01, *** p<0.001)",
                    fontsize=12, fontweight="bold", pad=15)
     ax_h.set_xticklabels(condition_labels_short, fontsize=11, fontweight="bold")
     ax_h.set_ylabel("Syllable ID (Ordered by 16w PI Peak Deficit)", fontsize=11, fontweight="bold")

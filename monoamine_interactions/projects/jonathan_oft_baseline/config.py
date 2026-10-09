@@ -25,7 +25,7 @@ def patched_t2c(camset: str, token: str) -> str:
 
     # Try original Logic
     res = _orig_t2c(stripped_camset, token)
-    
+
     # Debug logging
     # print(f"[DEBUG-PATCH] camset='{camset}', token='{token}', stripped='{stripped_camset}', orig_res='{res}'")
 
@@ -40,13 +40,13 @@ def patched_t2c(camset: str, token: str) -> str:
 
     # Fallback: Inference from Arena prefix in camset
     c_lower = (camset or "").lower()
-    if "arena1_" in c_lower: 
+    if "arena1_" in c_lower:
         # print("  -> Inferred top_left")
         return "top_left"
     if "arena2_" in c_lower: return "bottom_left"
     if "arena3_" in c_lower: return "bottom_right" # Assumed order
     if "arena4_" in c_lower: return "top_right"    # Assumed order
-    
+
     # print(f"  -> Returning fallback res: {res}")
     return res
 

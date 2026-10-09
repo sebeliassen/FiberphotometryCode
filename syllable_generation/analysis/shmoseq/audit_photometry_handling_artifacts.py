@@ -22,12 +22,13 @@ Analysis:
 """
 
 import os
-import sys
-import shutil
 import pickle
+import shutil
+import sys
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
 BASE_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -214,7 +215,7 @@ def main():
     ax_a.plot(t_sec, norm_std * 1.5 - 2.5, color='#e65100', lw=1.8, label='Rolling Std Dev (Motion Index)')
 
     # Markers
-    ax_a.axvline(0, color='#d32f2f', lw=2.2, ls='--', label=f"Animal Removal (T=0s)")
+    ax_a.axvline(0, color='#d32f2f', lw=2.2, ls='--', label="Animal Removal (T=0s)")
     ax_a.axvline(t_ret_s, color='#2e7d32', lw=2.2, ls='--', label=f"Animal Return (T={t_ret_s:.1f}s)")
     ax_a.axvline(t_nom_s, color='#f57c00', lw=2.4, ls='-', label=f"Nominal Inj (T={t_nom_s:.1f}s)")
 
@@ -269,7 +270,7 @@ def main():
     ax_b.plot(t_sec24, norm_raw24, color='#00897b', lw=1.2, alpha=0.85, label='Raw Photometry (L-VS)')
     ax_b.plot(t_sec24, norm_std24 * 0.8 - 2.5, color='#e65100', lw=1.8, label='Rolling Std Dev (Motion Index)')
 
-    ax_b.axvline(0, color='#d32f2f', lw=2.2, ls='--', label=f"Animal Removal (T=0s)")
+    ax_b.axvline(0, color='#d32f2f', lw=2.2, ls='--', label="Animal Removal (T=0s)")
     ax_b.axvline(t_ret_s24, color='#2e7d32', lw=2.2, ls='--', label=f"Animal Return (T={t_ret_s24:.1f}s)")
     ax_b.axvline(t_nom_s24, color='#f57c00', lw=2.4, ls='-', label=f"Nominal Inj (T={t_nom_s24:.1f}s)")
 

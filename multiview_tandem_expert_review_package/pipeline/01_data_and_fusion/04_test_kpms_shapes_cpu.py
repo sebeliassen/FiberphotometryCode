@@ -19,7 +19,6 @@ GUARANTEES:
 # --- GPU ISOLATION GUARDS (Must be set BEFORE importing jax / torch / kpms) ---
 import os
 import sys
-import shutil
 
 sys.stdout.reconfigure(line_buffering=True)
 sys.stderr.reconfigure(line_buffering=True)
@@ -30,11 +29,14 @@ os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = "platform"
 
 from pathlib import Path
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import jax
+
 jax.config.update("jax_platform_name", "cpu")
 
 import pandas as pd
@@ -45,7 +47,6 @@ EXPERIMENT_DIR = REPO_ROOT / "syllable_generation" / "multiview_top_bot_experime
 if str(EXPERIMENT_DIR) not in sys.path:
     sys.path.insert(0, str(EXPERIMENT_DIR))
 
-from clock_sync import align_tracking_dataframes
 
 TEST_PROJECT_DIR = EXPERIMENT_DIR / "kpms_cpu_shape_test"
 TEST_DATA_DIR = TEST_PROJECT_DIR / "data"

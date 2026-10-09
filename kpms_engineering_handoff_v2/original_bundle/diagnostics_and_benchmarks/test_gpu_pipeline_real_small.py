@@ -1,11 +1,11 @@
 import os
 import sys
 import time
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
-import jax
-import jax.numpy as jnp
 
 REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
 KPMS_DIR = os.path.join(REPO_ROOT, "syllable_generation", "syllabizers/keypoint_moseq_syll")

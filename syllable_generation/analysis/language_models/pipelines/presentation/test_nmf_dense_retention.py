@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import os
+import pickle
 import sys
 import time
-import pickle
+
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import NMF
@@ -13,7 +14,7 @@ sys.path.insert(0, LM_DIR)
 sys.path.insert(0, os.path.join(ROOT_DIR, "syllable_generation", "analysis", "ulrik_kinematics"))
 sys.path.insert(0, ROOT_DIR)
 
-from pipelines.presentation.render_4_cohort_figures import load_data, js_divergence
+from pipelines.presentation.render_4_cohort_figures import js_divergence, load_data
 
 CACHE_PATH = os.path.join(LM_DIR, "output", "strategies_extended", "post_injection_df_cache.pkl")
 
@@ -38,7 +39,7 @@ def get_post_injection_data():
 def run_retention_sweep():
     df_post = get_post_injection_data()
     cohort_order = ["WT_Saline", "WT_Amphetamine", "KI_Saline", "KI_Amphetamine"]
-    
+
     wt_df = df_post[df_post["cohort"] == "WT_Saline"]
     wt_sess = wt_df["session_idx"].unique()
     wt_sess_arr = wt_df["session_idx"].values
@@ -78,7 +79,7 @@ def run_retention_sweep():
         p_tr = np.mean(Y_tr, axis=0, keepdims=True)
         d_prior = np.mean(js_divergence(Y_te, p_tr))
         gains_wt_100d.append((d_prior - d_pr) / d_prior * 100.0)
-    
+
     ceil_100d = {"WT_Saline": np.mean(gains_wt_100d)}
 
     # Full WT model transfer to other cohorts
@@ -109,7 +110,7 @@ def run_retention_sweep():
     for K in K_GRID:
         t0 = time.time()
         nmf = NMF(n_components=K, init="nndsvda", random_state=42, max_iter=400)
-        
+
         # SPEEDUP 1: Fit and transform once per dataset!
         Z_wt = nmf.fit_transform(wt_X_past)
         Z_others = {c: nmf.transform(other_cohorts[c]["past"]) for c in other_cohorts}
@@ -122,19 +123,19 @@ def run_retention_sweep():
             m_tr = ~m_te
             X_tr, Y_tr = X_wt_all[m_tr], wt_Y[m_tr]
             X_te, Y_te = X_wt_all[m_te], wt_Y[m_te]
-            
+
             d_feat = X_tr.shape[1]
             I = np.eye(d_feat, dtype=np.float32)
             beta = np.linalg.solve(X_tr.T @ X_tr + 500.0 * I, X_tr.T @ Y_tr)
-            
+
             Y_pr = np.clip(X_te @ beta, 1e-12, None)
             Y_pr /= Y_pr.sum(axis=-1, keepdims=True)
             d_pr = np.mean(js_divergence(Y_te, Y_pr))
-            
+
             p_tr = np.mean(Y_tr, axis=0, keepdims=True)
             d_prior = np.mean(js_divergence(Y_te, p_tr))
             gains_wt.append((d_prior - d_pr) / d_prior * 100.0)
-            
+
         wt_gain = np.mean(gains_wt)
 
         # Full WT model transfer to other cohorts
@@ -170,7 +171,7 @@ def run_retention_sweep():
     print(f"\nTotal sweep of 30 components took {total_time:.2f}s ({total_time/len(K_GRID):.2f}s/K)!")
 
     df_sweep = pd.DataFrame(sweep_results)
-    
+
     # Also compute relative to K=30 ceiling
     for c in cohort_order:
         k30_val = df_sweep.loc[df_sweep["K"] == 30, c].values[0]

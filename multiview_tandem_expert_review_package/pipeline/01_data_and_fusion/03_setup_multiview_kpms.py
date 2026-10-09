@@ -12,10 +12,9 @@ Sets up the dedicated Keypoint-MoSeq project for Multi-View (TopCam + BotCam) pi
    - Optimized AR-SLDS hyperparameters (latent_dim=10, fps=40, kappa=15000)
 """
 
-import os
-import sys
-import yaml
 from pathlib import Path
+
+import yaml
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXPERIMENT_DIR = REPO_ROOT / "syllable_generation" / "multiview_top_bot_experiments"

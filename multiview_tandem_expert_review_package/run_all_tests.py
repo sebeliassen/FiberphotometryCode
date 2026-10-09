@@ -25,13 +25,13 @@ def main():
     print(f"  Package Root: {PACKAGE_ROOT}")
     print(f"  Python:       {sys.version.split()[0]}")
     print("=" * 80)
-    
+
     loader = unittest.TestLoader()
     suite = loader.discover(start_dir=str(PACKAGE_ROOT / "tests"), pattern="test_*.py")
-    
+
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
-    
+
     print("\n" + "=" * 80)
     if result.wasSuccessful():
         print(f"✅ ALL {result.testsRun} TESTS PASSED SUCCESSFULLY!")

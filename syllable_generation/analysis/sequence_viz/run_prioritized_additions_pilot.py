@@ -20,8 +20,8 @@ import sys
 import time
 import urllib.request
 from pathlib import Path
+
 import numpy as np
-import pandas as pd
 
 # Force CPU execution for modeling/JAX
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -31,9 +31,9 @@ REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
-    load_chain_movie_resources,
+    generate_branch_grid_movie,
     generate_chain_grid_movie,
-    generate_branch_grid_movie
+    load_chain_movie_resources,
 )
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/output_pilot_movies"
@@ -48,7 +48,7 @@ def log(msg, notify=False, ntfy_title=None):
     print(line, flush=True)
     with open(LOG_FILE, "a") as f:
         f.write(line + "\n")
-        
+
     if notify:
         try:
             req = urllib.request.Request(
@@ -84,7 +84,7 @@ def main():
         b_sylls = [sylls[0]] + sylls[c_idx].tolist()
         b_starts = [0] + c_idx.tolist()
         b_ends = c_idx.tolist() + [len(sylls)]
-        
+
         for i in range(len(b_sylls) - 4):
             # Full match: 6 -> 17 -> 2
             if b_sylls[i] == 6 and b_sylls[i+1] == 17 and b_sylls[i+2] == 2 and len(full_ori) < 2:
@@ -130,7 +130,7 @@ def main():
     # 3. Render Alignment Pilots: show_variations vs compact_template vs natural_speed
     log("==================================================================")
     log("Step 3/4: Rendering Indel Alignment Pilots...")
-    
+
     # Pilot 1A: Show Variations (Preserves inserted footage; other panels wait on dimmed frame)
     p1a = OUTPUT_DIR / "pilot_additions_1a_alignment_show_variations.mp4"
     log(f"Rendering Pilot 1A (Show Variations) -> {p1a.name}")
@@ -212,14 +212,14 @@ def main():
     log("Step 4/4: Assembling and Rendering Branch-Centred Grid Pilot...")
     prefix = ["syll_014", "syll_007"]
     branch_groups = {"syll_000": [], "syll_001": [], "syll_038": []}
-    
+
     for rk, data in results.items():
         sylls = data["syllable"]
         c_idx = np.where(sylls[1:] != sylls[:-1])[0] + 1
         b_sylls = [sylls[0]] + sylls[c_idx].tolist()
         b_starts = [0] + c_idx.tolist()
         b_ends = c_idx.tolist() + [len(sylls)]
-        
+
         for i in range(len(b_sylls) - 3):
             if b_sylls[i] == 14 and b_sylls[i+1] == 7:
                 next_s = b_sylls[i+2]

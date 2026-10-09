@@ -12,17 +12,18 @@ Renders:
 """
 
 import os
-import sys
-import shutil
 import pickle
-import numpy as np
-import pandas as pd
-from sklearn.decomposition import NMF
-from scipy.interpolate import interp1d
+import shutil
+import sys
+
 import matplotlib
+import numpy as np
+from scipy.interpolate import interp1d
+from sklearn.decomposition import NMF
+
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
@@ -67,20 +68,20 @@ for s_idx, bouts in enumerate(session_bouts):
     if len(bouts) < 100: continue
     max_frame = bouts[-1]["end_frame"]
     N = max_frame + 1
-    
+
     frame_sylls = np.zeros(N, dtype=np.int32)
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = min(b["syllable"], NUM_SYLLS - 1)
         frame_sylls[sf : ef + 1] = s_id
-            
+
     oh_bout = np.zeros((N, NUM_SYLLS), dtype=np.float32)
     diffs = np.where(frame_sylls[1:] != frame_sylls[:-1])[0] + 1
     onsets = np.zeros(N, dtype=bool)
     onsets[0] = True; onsets[diffs] = True
     oh_bout[onsets, frame_sylls[onsets]] = 1.0
     cum_bout = np.vstack([np.zeros((1, NUM_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
-    
+
     for t in range(W_FRAMES, N - H_FRAMES, STRIDE_FRAMES):
         w_b = cum_bout[t] - cum_bout[t - W_FRAMES]
         all_past_counts.append(w_b)
@@ -102,49 +103,49 @@ for item in wt_saline_sessions:
     bouts = session_bouts[s_idx]
     max_frame = bouts[-1]["end_frame"]
     N = max_frame + 1
-    
+
     frame_sylls = np.zeros(N, dtype=np.int32)
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = min(b["syllable"], NUM_SYLLS - 1)
         frame_sylls[sf : ef + 1] = s_id
-            
+
     oh_bout = np.zeros((N, NUM_SYLLS), dtype=np.float32)
     diffs = np.where(frame_sylls[1:] != frame_sylls[:-1])[0] + 1
     onsets = np.zeros(N, dtype=bool)
     onsets[0] = True; onsets[diffs] = True
     oh_bout[onsets, frame_sylls[onsets]] = 1.0
     cum_bout = np.vstack([np.zeros((1, NUM_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
-    
+
     sess_w_counts = []
     sess_times = []
-    
+
     start_t = entry_f + W_FRAMES
     max_eval_frame = int(entry_f + (MAX_T_MIN + 1.0) * 60.0 * FPS)
     end_t = min(N, max_eval_frame)
-    
+
     for t in range(start_t, end_t, STRIDE_FRAMES):
         w_b = cum_bout[t] - cum_bout[t - W_FRAMES]
         sess_w_counts.append(w_b)
         sess_times.append((t - entry_f) / FPS / 60.0)  # minutes from entry
-        
+
     sess_times = np.array(sess_times)
     if len(sess_times) > 20:
         W_sess = nmf.transform(np.array(sess_w_counts, dtype=np.float32))
         W_probs = W_sess / np.clip(np.sum(W_sess, axis=1, keepdims=True), 1e-8, None)
-        
+
         # Smooth slightly over adjacent 10s windows for clean presentation
         from scipy.ndimage import uniform_filter1d
         W_probs_smooth = uniform_filter1d(W_probs, size=3, axis=0)
         W_probs_smooth = W_probs_smooth / np.clip(np.sum(W_probs_smooth, axis=1, keepdims=True), 1e-8, None)
-        
+
         # Interpolate onto common time grid
         interp_probs = np.zeros((len(common_time_min), K))
         for k in range(K):
             f_interp = interp1d(sess_times, W_probs_smooth[:, k], bounds_error=False, fill_value="extrapolate")
             interp_probs[:, k] = np.clip(f_interp(common_time_min), 0, 1)
         interp_probs = interp_probs / np.clip(np.sum(interp_probs, axis=1, keepdims=True), 1e-8, None)
-        
+
         session_timecourses.append({
             "sid": item["sid"],
             "raw_times": sess_times,
@@ -191,7 +192,7 @@ ax_grp.text(20.5, 0.78, "Saline Injection\n(t = 20 min)", fontsize=9, color='#44
 
 ax_grp.set_title("A. Cohort Average Timecourse (n = 8 WT/Saline)", fontsize=12.5, fontweight='bold', pad=10)
 ax_grp.set_xlabel("Time from Arena Entry (minutes)", fontsize=10.5)
-ax_grp.set_ylabel("Mixture Weight ($\mathbf{z}_t$)", fontsize=10.5)
+ax_grp.set_ylabel(r"Mixture Weight ($\mathbf{z}_t$)", fontsize=10.5)
 ax_grp.set_xlim(1.5, MAX_T_MIN)
 ax_grp.set_ylim(0, 0.85)
 ax_grp.grid(True, linestyle=':', alpha=0.4)
@@ -217,7 +218,7 @@ ax_rep.text(inj_m + 0.5, 0.95, f"Saline Injection\n(t = {inj_m:.1f} min)", fonts
 
 ax_rep.set_title("B. Single Representative Session Trajectory", fontsize=12.5, fontweight='bold', pad=10)
 ax_rep.set_xlabel("Time from Arena Entry (minutes)", fontsize=10.5)
-ax_rep.set_ylabel("Mixture Weight ($\mathbf{z}_t$)", fontsize=10.5)
+ax_rep.set_ylabel(r"Mixture Weight ($\mathbf{z}_t$)", fontsize=10.5)
 ax_rep.set_xlim(1.5, MAX_T_MIN)
 ax_rep.set_ylim(0, 1.05)
 ax_rep.grid(True, linestyle=':', alpha=0.4)
@@ -263,9 +264,9 @@ ax_norm.spines['right'].set_visible(False)
 # --- Panel D: Smooth Continuous Trajectory in Behavioral Space ---
 ax_man = fig.add_subplot(gs[1, 1])
 
-from sklearn.decomposition import PCA
-from scipy.ndimage import gaussian_filter1d
 from matplotlib.collections import LineCollection
+from scipy.ndimage import gaussian_filter1d
+from sklearn.decomposition import PCA
 
 pca_2d = PCA(n_components=2, random_state=42)
 probs_clean = np.nan_to_num(probs_rep, nan=0.25)

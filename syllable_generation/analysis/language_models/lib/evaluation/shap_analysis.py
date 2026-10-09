@@ -5,13 +5,14 @@ Provides interface for computing SHapley Additive exPlanations (SHAP) to quantif
 which specific behavioral strategy vibes drive cohort separation in evaluation classifiers.
 """
 
+from typing import Any, Dict, Optional
+
 import numpy as np
-import pandas as pd
-from typing import Dict, Any, Optional
+
 
 def compute_vibe_shap_importance(
-    classifier_model: Any, 
-    X_strategy_proportions: np.ndarray, 
+    classifier_model: Any,
+    X_strategy_proportions: np.ndarray,
     y_cohort_labels: np.ndarray,
     vibe_names: Optional[Dict[int, str]] = None
 ) -> Dict[str, Any]:

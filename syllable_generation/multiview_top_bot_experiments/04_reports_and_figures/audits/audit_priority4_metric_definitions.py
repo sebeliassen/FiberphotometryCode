@@ -10,9 +10,14 @@ Audits:
   4. Sensitivity to confidence filtering, center embedding, and whitening.
 """
 
-import sys, json, yaml
+import json
+import sys
 from pathlib import Path
-import numpy as np, pandas as pd, joblib
+
+import joblib
+import numpy as np
+import pandas as pd
+import yaml
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"

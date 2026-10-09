@@ -11,9 +11,12 @@ Tests:
   5. Missing / out-of-bounds mapping masking: strictly produces NaNs and 0.0 likelihood.
 """
 
-import sys, json
+import json
+import sys
 from pathlib import Path
-import numpy as np, pandas as pd
+
+import numpy as np
+import pandas as pd
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
@@ -21,7 +24,7 @@ if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
 from core.pair_matching import find_matched_pairs
-from core.static_fusion_engine import STATIC_ARENA_TRANSFORMS, PAW_MAP, TOP_USE_BODYPARTS
+from core.static_fusion_engine import PAW_MAP, STATIC_ARENA_TRANSFORMS, TOP_USE_BODYPARTS
 
 PILOT_FUSED_DIR = EXP / "data/pilot_fused_static_21kp"
 

@@ -5,12 +5,12 @@ Safe I/O utilities for HDF5 datasets, Keypoint-MoSeq checkpoints,
 and pickle session databases.
 """
 
-from pathlib import Path
-from typing import Dict, Any, Optional, Tuple, List
-import h5py
-import numpy as np
-import pandas as pd
 import pickle
+from pathlib import Path
+from typing import Any, List
+
+import h5py
+import pandas as pd
 
 from .logging_utils import get_logger
 

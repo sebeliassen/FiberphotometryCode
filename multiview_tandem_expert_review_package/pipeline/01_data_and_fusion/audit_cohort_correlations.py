@@ -14,20 +14,17 @@ Parallelized across CPU workers for fast execution on all 118 sessions.
 """
 
 import os
-import sys
-import re
 import time
-from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
+
 import numpy as np
 import pandas as pd
-from scipy.ndimage import median_filter
 
-from syllable_generation.multiview_top_bot_experiments.core.schemas import CHAMBER_MAP, PathConfig
 from syllable_generation.multiview_top_bot_experiments.core.pair_matching import (
-    find_matched_pairs,
     circular_correlation,
+    find_matched_pairs,
 )
+from syllable_generation.multiview_top_bot_experiments.core.schemas import PathConfig
 
 REPO_ROOT = PathConfig().repo_root
 TOP_H5_DIR = PathConfig().top_h5_dir
@@ -40,17 +37,17 @@ def audit_single_session(pair_info: dict, arena_width: float = 972.0) -> dict:
     bot_h5_path = pair_info["bot_h5"]
     arena = pair_info["arena"]
     quadrant = pair_info["quadrant"]
-    
+
     try:
         df_top = pd.read_hdf(top_h5_path)
         df_bot = pd.read_hdf(bot_h5_path)
-        
+
         st = df_top.columns.levels[0][0]
         sb = df_bot.columns.levels[0][0]
-        
+
         n_frames = min(len(df_top), len(df_bot))
         active_slice = slice(0, n_frames)
-        
+
         # TopCam landmarks
         top_nx = df_top[st, "nose", "x"].iloc[active_slice].to_numpy(dtype=np.float32)
         top_ny = df_top[st, "nose", "y"].iloc[active_slice].to_numpy(dtype=np.float32)
@@ -60,7 +57,7 @@ def audit_single_session(pair_info: dict, arena_width: float = 972.0) -> dict:
             df_top[st, "nose", "likelihood"].iloc[active_slice].to_numpy(dtype=np.float32),
             df_top[st, "tail_base", "likelihood"].iloc[active_slice].to_numpy(dtype=np.float32)
         )
-        
+
         # BotCam landmarks (horizontal reflection x -> arena_width - x)
         bot_nx_raw = df_bot[sb, "nose_tip", "x"].iloc[active_slice].to_numpy(dtype=np.float32)
         bot_ny = df_bot[sb, "nose_tip", "y"].iloc[active_slice].to_numpy(dtype=np.float32)
@@ -70,30 +67,30 @@ def audit_single_session(pair_info: dict, arena_width: float = 972.0) -> dict:
             df_bot[sb, "nose_tip", "likelihood"].iloc[active_slice].to_numpy(dtype=np.float32),
             df_bot[sb, "tail_base", "likelihood"].iloc[active_slice].to_numpy(dtype=np.float32)
         )
-        
+
         bot_nx = arena_width - bot_nx_raw
         bot_tx = arena_width - bot_tx_raw
-        
+
         # Centroids
         c_top_x = 0.5 * (top_nx + top_tx)
         c_top_y = 0.5 * (top_ny + top_ty)
         c_bot_x = 0.5 * (bot_nx + bot_tx)
         c_bot_y = 0.5 * (bot_ny + bot_ty)
-        
+
         # Lengths and reliable mask
         len_top = np.sqrt((top_nx - top_tx)**2 + (top_ny - top_ty)**2)
         len_bot = np.sqrt((bot_nx - bot_tx)**2 + (bot_ny - bot_ty)**2)
-        
+
         reliable = (top_like > 0.5) & (bot_like > 0.5) & (len_top > 20.0) & (len_bot > 40.0)
         n_reliable = int(np.sum(reliable))
         rel_pct = (n_reliable / n_frames) * 100.0 if n_frames > 0 else 0.0
-        
+
         # Scale
         if n_reliable > 100:
             scale_s = float(np.nanmedian(len_top[reliable]) / np.nanmedian(len_bot[reliable]))
         else:
             scale_s = 0.3716
-            
+
         # Centroid correlations
         valid_c = reliable & ~np.isnan(c_top_x) & ~np.isnan(c_bot_x) & ~np.isnan(c_top_y) & ~np.isnan(c_bot_y)
         if np.sum(valid_c) > 100:
@@ -102,14 +99,14 @@ def audit_single_session(pair_info: dict, arena_width: float = 972.0) -> dict:
             raw_corr_x = float(np.corrcoef(c_top_x[valid_c], (arena_width - c_bot_x)[valid_c])[0, 1])
         else:
             corr_x, corr_y, raw_corr_x = np.nan, np.nan, np.nan
-            
+
         # Headings
         theta_top = np.arctan2(top_ny - top_ty, top_nx - top_tx)
         theta_bot = np.arctan2(bot_ny - bot_ty, bot_nx - bot_tx)
-        
+
         # Angular difference with circular wrapping [-pi, pi]
         d_theta = np.arctan2(np.sin(theta_top - theta_bot), np.cos(theta_top - theta_bot))
-        
+
         if n_reliable > 100:
             circ_corr = circular_correlation(theta_top[reliable], theta_bot[reliable])
             cos_align = float(np.nanmean(np.cos(d_theta[reliable])))
@@ -118,7 +115,7 @@ def audit_single_session(pair_info: dict, arena_width: float = 972.0) -> dict:
             std_dtheta_deg = float(np.degrees(np.nanstd(d_theta[reliable])))
         else:
             circ_corr, cos_align, med_abs_dtheta_deg, mean_dtheta_deg, std_dtheta_deg = np.nan, np.nan, np.nan, np.nan, np.nan
-            
+
         # Outlier flag
         is_outlier = (
             (corr_x < 0.95 or np.isnan(corr_x)) or
@@ -127,7 +124,7 @@ def audit_single_session(pair_info: dict, arena_width: float = 972.0) -> dict:
             (med_abs_dtheta_deg > 15.0 or np.isnan(med_abs_dtheta_deg)) or
             (rel_pct < 40.0)
         )
-        
+
         return {
             "sid": sid,
             "arena": arena,
@@ -147,7 +144,7 @@ def audit_single_session(pair_info: dict, arena_width: float = 972.0) -> dict:
             "is_outlier": is_outlier,
             "error": None
         }
-        
+
     except Exception as e:
         return {
             "sid": sid,
@@ -178,14 +175,14 @@ def main():
     print(f"BotCam:   {BOT_PROD_DIR}")
     print(f"Output:   {OUT_CSV}")
     print("=" * 80)
-    
+
     pairs = find_matched_pairs()
     print(f"Found {len(pairs)} unique matched session pairs.\n")
-    
+
     t0 = time.time()
     max_workers = min(16, os.cpu_count() or 4)
     print(f"Executing correlation calculations across {max_workers} CPU workers...\n")
-    
+
     results = []
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
         future_map = {executor.submit(audit_single_session, p): p for p in pairs}
@@ -197,15 +194,15 @@ def main():
                   f"CorrX: {res['corr_x']:+.4f} | CorrY: {res['corr_y']:+.4f} | "
                   f"CircCorr: {res['circular_corr']:.3f} | Cos: {res['mean_cos_heading']:.3f} | "
                   f"|dθ|: {res['median_abs_dtheta_deg']:.1f}°", flush=True)
-            
+
     df = pd.DataFrame(results).sort_values("sid").reset_index(drop=True)
     df.to_csv(OUT_CSV, index=False)
-    
+
     elapsed = time.time() - t0
     print("\n" + "=" * 80)
     print(f"🎉 AUDIT COMPLETE in {elapsed:.1f} seconds!")
     print(f"Saved complete metrics to {OUT_CSV}\n")
-    
+
     # Cohort Distribution Summary
     print("-" * 80)
     print("📊 COHORT DISTRIBUTION SUMMARY (All Matched Sessions):")
@@ -219,7 +216,7 @@ def main():
     print(f"Mean Cosine Alignment:    Median = {valid_df['mean_cos_heading'].median():.4f} (IQR: {valid_df['mean_cos_heading'].quantile(0.25):.4f} to {valid_df['mean_cos_heading'].quantile(0.75):.4f}, Min: {valid_df['mean_cos_heading'].min():.4f})")
     print(f"Median |Δθ| (degrees):    Median = {valid_df['median_abs_dtheta_deg'].median():.2f}° (IQR: {valid_df['median_abs_dtheta_deg'].quantile(0.25):.2f}° to {valid_df['median_abs_dtheta_deg'].quantile(0.75):.2f}°, Max: {valid_df['median_abs_dtheta_deg'].max():.2f}°)")
     print(f"Median Scale s:           Median = {valid_df['scale_s'].median():.4f} (IQR: {valid_df['scale_s'].quantile(0.25):.4f} to {valid_df['scale_s'].quantile(0.75):.4f})")
-    
+
     # Outliers
     outliers = df[df["is_outlier"]]
     print("\n" + "-" * 80)

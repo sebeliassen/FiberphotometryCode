@@ -33,14 +33,15 @@ Deliverables:
 """
 
 import os
-import sys
 import pickle
-import time
 import shutil
+import sys
+import time
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy import stats
-import matplotlib.pyplot as plt
 
 # ---------------------------------------------------------------------------
 # PATHS & CONSTANTS
@@ -107,13 +108,13 @@ def build_matched_dataset():
     with open(CACHE_PATH, "rb") as f:
         data = pickle.load(f)
     session_bouts = data["session_bouts"] if isinstance(data, dict) and "session_bouts" in data else data
-    
+
     with open(RAW_PATH, "rb") as f:
         raw_sessions = pickle.load(f)
-        
+
     sessions = []
     total_anchors = 0
-    
+
     for i, bouts in enumerate(session_bouts):
         if len(bouts) < 150:
             continue
@@ -126,31 +127,31 @@ def build_matched_dataset():
             continue
         inj_f = meta.get("injection_frame", 0)
         sid = meta.get("subject_id", f"mouse_{i}")
-        
+
         # Post-injection bouts only
         post_bouts = [b for b in bouts if b["start_frame"] > inj_f]
         if len(post_bouts) < N_MAX_BOUTS + 50:
             continue
-            
+
         sylls = np.array([b["syllable"] for b in post_bouts], dtype=np.int32)
         starts = np.array([b["start_frame"] for b in post_bouts], dtype=np.int64)
         ends = np.array([b["end_frame"] for b in post_bouts], dtype=np.int64)
         durs = ends - starts
         max_f = ends[-1]
         M = len(post_bouts)
-        
+
         # Cumulative event counts over bouts
         cum_events = np.zeros((M + 1, NUM_SYLLS), dtype=np.float32)
         for idx_b in range(M):
             cum_events[idx_b + 1] = cum_events[idx_b]
             cum_events[idx_b + 1, sylls[idx_b]] += 1.0
-            
+
         # Cumulative duration-weighted event counts over bouts
         cum_dur_events = np.zeros((M + 1, NUM_SYLLS), dtype=np.float32)
         for idx_b in range(M):
             cum_dur_events[idx_b + 1] = cum_dur_events[idx_b]
             cum_dur_events[idx_b + 1, sylls[idx_b]] += float(durs[idx_b])
-            
+
         # Cumulative frame counts over continuous time
         N_frames = max_f + 1
         cum_frame_sylls = np.zeros((N_frames, NUM_SYLLS), dtype=np.float32)
@@ -159,7 +160,7 @@ def build_matched_dataset():
             if dur > 0:
                 cum_frame_sylls[b["start_frame"]:b["end_frame"], b["syllable"]] = 1.0
         cum_frame_sylls = np.cumsum(cum_frame_sylls, axis=0)
-        
+
         # Find STRICT MATCHED ANCHORS
         # Every anchor satisfies:
         # - anc >= N_MAX_BOUTS (50 bouts)
@@ -172,23 +173,23 @@ def build_matched_dataset():
             t_ed = ends[anc]
             if (t_st - W_MAX_FRAMES >= min_start) and (t_ed + H_FRAMES < N_frames):
                 valid_anchors.append(anc)
-                
+
         if len(valid_anchors) < 50:
             continue
-            
+
         valid_anchors = np.array(valid_anchors, dtype=np.int32)
         K = len(valid_anchors)
         total_anchors += K
-        
+
         # Target Y: future 120s syllable distribution (K, 100)
         t_ends = ends[valid_anchors]
         Y_counts = cum_frame_sylls[t_ends + H_FRAMES] - cum_frame_sylls[t_ends]
         Y_dist = Y_counts / (np.sum(Y_counts, axis=1, keepdims=True) + 1e-6)
-        
+
         # Baseline S_t (K, 100)
         s_curr = np.zeros((K, NUM_SYLLS), dtype=np.float32)
         s_curr[np.arange(K), sylls[valid_anchors]] = 1.0
-        
+
         # Precompute features for Module 1: Clock Time W_GRID
         clock_features = {}
         t_starts = starts[valid_anchors]
@@ -196,22 +197,22 @@ def build_matched_dataset():
             w_f = int(w * FPS)
             cnt = cum_frame_sylls[t_starts] - cum_frame_sylls[t_starts - w_f]
             clock_features[w] = cnt / (np.sum(cnt, axis=1, keepdims=True) + 1e-6)
-            
+
         # Precompute features for Module 1: Event Depth N_GRID
         event_features = {}
         for n in N_GRID:
             cnt = cum_events[valid_anchors] - cum_events[valid_anchors - n]
             event_features[n] = cnt / float(n)
-            
+
         # Precompute features for Module 2: 2x2 Factorial Matrix
         # Cell 1: 20 bouts, Event-Weighted
         cnt_b20_ev = cum_events[valid_anchors] - cum_events[valid_anchors - 20]
         feat_b20_ev = cnt_b20_ev / 20.0
-        
+
         # Cell 2: 20 bouts, Duration-Weighted
         cnt_b20_dur = cum_dur_events[valid_anchors] - cum_dur_events[valid_anchors - 20]
         feat_b20_dur = cnt_b20_dur / (np.sum(cnt_b20_dur, axis=1, keepdims=True) + 1e-6)
-        
+
         # Cell 3: 15 seconds, Event-Weighted (counts of bouts initiated in past 15s)
         w15_f = int(15.0 * FPS)
         feat_t15_ev = np.zeros((K, NUM_SYLLS), dtype=np.float32)
@@ -225,23 +226,23 @@ def build_matched_dataset():
                 feat_t15_ev[k_idx] /= float(len(b_in_win))
             else:
                 feat_t15_ev[k_idx, sylls[anc]] = 1.0
-                
+
         # Cell 4: 15 seconds, Duration-Weighted (continuous frame dwell in past 15s)
         cnt_t15_dur = cum_frame_sylls[t_starts] - cum_frame_sylls[t_starts - w15_f]
         feat_t15_dur = cnt_t15_dur / (np.sum(cnt_t15_dur, axis=1, keepdims=True) + 1e-6)
-        
+
         # Precompute features for Module 3: Shuffled-Order vs. Chronological Recency
         # Chronological decay gamma = 0.85 over the 20 bouts
         gamma = 0.85
         weights_chrono = gamma ** np.arange(19, -1, -1) # oldest=0, newest=19
         weights_chrono /= np.sum(weights_chrono)
-        
+
         feat_chrono_decay = np.zeros((K, NUM_SYLLS), dtype=np.float32)
         for k_idx, anc in enumerate(valid_anchors):
             syll_seq = sylls[anc - 20:anc]
             for pos in range(20):
                 feat_chrono_decay[k_idx, syll_seq[pos]] += weights_chrono[pos]
-                
+
         # Shuffled surrogate: average over 20 random permutations of weights
         np.random.seed(42)
         feat_shuffled_decay = np.zeros((K, NUM_SYLLS), dtype=np.float32)
@@ -253,7 +254,7 @@ def build_matched_dataset():
                 w_perm = perm_weights_list[p_idx]
                 for pos in range(20):
                     feat_shuffled_decay[k_idx, syll_seq[pos]] += w_perm[pos] / float(N_PERMS)
-                    
+
         sessions.append({
             "session_idx": i,
             "sid": sid,
@@ -270,7 +271,7 @@ def build_matched_dataset():
             "feat_chrono_decay": feat_chrono_decay,
             "feat_shuffled_decay": feat_shuffled_decay
         })
-        
+
     print(f"Built {len(sessions)} valid sessions with {total_anchors} strictly matched observations.")
     return sessions
 
@@ -279,22 +280,22 @@ def build_matched_dataset():
 # ---------------------------------------------------------------------------
 def run_suite():
     sessions = build_matched_dataset()
-    
+
     print("\n" + "="*80)
     print("EXECUTING DEFINITIVE COORDINATE SYSTEM SUITE (LOAO-CV)")
     print("="*80)
-    
+
     # -----------------------------------------------------------------------
     # MODULE 1: Continuous Curves W vs n
     # -----------------------------------------------------------------------
     print("\n[MODULE 1] Computing Matched Curves: Delta_clock(W) vs. Delta_event(n)...")
     curve_records = []
     animal_curve_records = []
-    
+
     for c in COHORT_ORDER:
         c_sess = [s for s in sessions if s["cohort"] == c]
         n_mice = len(c_sess)
-        
+
         # 1. Baseline M0 (S_t only)
         m0_scores = {}
         for test_idx in range(n_mice):
@@ -311,9 +312,9 @@ def run_suite():
             d_m0 = np.mean(js_divergence(Y_te, Y0_pr))
             g_m0 = (d_prior - d_m0) / d_prior * 100.0
             m0_scores[test_idx] = {"d_prior": d_prior, "g_m0": g_m0}
-            
+
         m0_mean = np.mean([m0_scores[i]["g_m0"] for i in range(n_mice)])
-        
+
         # Sweep W (Clock Time)
         for w in W_GRID:
             deltas = []
@@ -324,34 +325,34 @@ def run_suite():
                 Y_te = te["Y_dist"]
                 d_prior = m0_scores[test_idx]["d_prior"]
                 g_m0 = m0_scores[test_idx]["g_m0"]
-                
+
                 F_tr_raw = np.vstack([s["clock_features"][w] for s in tr])
                 F_te_raw = te["clock_features"][w]
                 mu = np.mean(F_tr_raw, axis=0, keepdims=True)
                 sig = np.std(F_tr_raw, axis=0, keepdims=True) + 1e-6
                 F_tr = (F_tr_raw - mu) / sig
                 F_te = (F_te_raw - mu) / sig
-                
+
                 X_tr = np.hstack([np.vstack([s["s_curr"] for s in tr]), F_tr])
                 X_te = np.hstack([te["s_curr"], F_te])
-                
+
                 beta = np.linalg.solve(X_tr.T @ X_tr + LAMBDA * np.eye(200, dtype=np.float32), X_tr.T @ Y_tr)
                 Y_pr = np.clip(X_te @ beta, 1e-12, None); Y_pr /= Y_pr.sum(axis=-1, keepdims=True)
                 d_m = np.mean(js_divergence(Y_te, Y_pr))
                 g_tot = (d_prior - d_m) / d_prior * 100.0
                 delta = g_tot - g_m0
                 deltas.append(delta)
-                
+
                 animal_curve_records.append({
                     "cohort": c, "sid": te["sid"], "domain": "Clock_Time_W",
                     "param_val": w, "delta_history": delta
                 })
-                
+
             curve_records.append({
                 "cohort": c, "domain": "Clock_Time_W", "param_val": w,
                 "mean_delta": float(np.mean(deltas)), "sem_delta": float(stats.sem(deltas))
             })
-            
+
         # Sweep n (Event Depth)
         for n in N_GRID:
             deltas = []
@@ -362,39 +363,39 @@ def run_suite():
                 Y_te = te["Y_dist"]
                 d_prior = m0_scores[test_idx]["d_prior"]
                 g_m0 = m0_scores[test_idx]["g_m0"]
-                
+
                 F_tr_raw = np.vstack([s["event_features"][n] for s in tr])
                 F_te_raw = te["event_features"][n]
                 mu = np.mean(F_tr_raw, axis=0, keepdims=True)
                 sig = np.std(F_tr_raw, axis=0, keepdims=True) + 1e-6
                 F_tr = (F_tr_raw - mu) / sig
                 F_te = (F_te_raw - mu) / sig
-                
+
                 X_tr = np.hstack([np.vstack([s["s_curr"] for s in tr]), F_tr])
                 X_te = np.hstack([te["s_curr"], F_te])
-                
+
                 beta = np.linalg.solve(X_tr.T @ X_tr + LAMBDA * np.eye(200, dtype=np.float32), X_tr.T @ Y_tr)
                 Y_pr = np.clip(X_te @ beta, 1e-12, None); Y_pr /= Y_pr.sum(axis=-1, keepdims=True)
                 d_m = np.mean(js_divergence(Y_te, Y_pr))
                 g_tot = (d_prior - d_m) / d_prior * 100.0
                 delta = g_tot - g_m0
                 deltas.append(delta)
-                
+
                 animal_curve_records.append({
                     "cohort": c, "sid": te["sid"], "domain": "Event_Depth_n",
                     "param_val": n, "delta_history": delta
                 })
-                
+
             curve_records.append({
                 "cohort": c, "domain": "Event_Depth_n", "param_val": n,
                 "mean_delta": float(np.mean(deltas)), "sem_delta": float(stats.sem(deltas))
             })
-            
+
     df_curves = pd.DataFrame(curve_records)
     csv_curves_path = os.path.join(TAB_DIR, "table_definitive_w_vs_n_curves.csv")
     df_curves.to_csv(csv_curves_path, index=False)
     print(f"Saved: {csv_curves_path}")
-    
+
     # -----------------------------------------------------------------------
     # MODULE 2: The 2x2 Factorial Matrix
     # -----------------------------------------------------------------------
@@ -402,11 +403,11 @@ def run_suite():
     factorial_cells = ["B20_Event", "B20_Duration", "T15_Event", "T15_Duration"]
     fact_records = []
     animal_fact_records = []
-    
+
     for c in COHORT_ORDER:
         c_sess = [s for s in sessions if s["cohort"] == c]
         n_mice = len(c_sess)
-        
+
         for cell in factorial_cells:
             deltas = []
             for test_idx in range(n_mice):
@@ -416,14 +417,14 @@ def run_suite():
                 Y_te = te["Y_dist"]
                 p_prior = np.mean(Y_tr, axis=0, keepdims=True)
                 d_prior = np.mean(js_divergence(Y_te, p_prior))
-                
+
                 X0_tr = np.vstack([s["s_curr"] for s in tr])
                 X0_te = te["s_curr"]
                 beta0 = np.linalg.solve(X0_tr.T @ X0_tr + LAMBDA * np.eye(NUM_SYLLS, dtype=np.float32), X0_tr.T @ Y_tr)
                 Y0_pr = np.clip(X0_te @ beta0, 1e-12, None); Y0_pr /= Y0_pr.sum(axis=-1, keepdims=True)
                 d_m0 = np.mean(js_divergence(Y_te, Y0_pr))
                 g_m0 = (d_prior - d_m0) / d_prior * 100.0
-                
+
                 if cell == "B20_Event":
                     F_tr_raw = np.vstack([s["feat_b20_ev"] for s in tr])
                     F_te_raw = te["feat_b20_ev"]
@@ -436,36 +437,36 @@ def run_suite():
                 elif cell == "T15_Duration":
                     F_tr_raw = np.vstack([s["feat_t15_dur"] for s in tr])
                     F_te_raw = te["feat_t15_dur"]
-                    
+
                 mu = np.mean(F_tr_raw, axis=0, keepdims=True)
                 sig = np.std(F_tr_raw, axis=0, keepdims=True) + 1e-6
                 F_tr = (F_tr_raw - mu) / sig
                 F_te = (F_te_raw - mu) / sig
-                
+
                 X_tr = np.hstack([X0_tr, F_tr])
                 X_te = np.hstack([X0_te, F_te])
-                
+
                 beta = np.linalg.solve(X_tr.T @ X_tr + LAMBDA * np.eye(200, dtype=np.float32), X_tr.T @ Y_tr)
                 Y_pr = np.clip(X_te @ beta, 1e-12, None); Y_pr /= Y_pr.sum(axis=-1, keepdims=True)
                 d_m = np.mean(js_divergence(Y_te, Y_pr))
                 g_tot = (d_prior - d_m) / d_prior * 100.0
                 delta = g_tot - g_m0
                 deltas.append(delta)
-                
+
                 animal_fact_records.append({
                     "cohort": c, "sid": te["sid"], "cell": cell, "delta_history": delta
                 })
-                
+
             fact_records.append({
                 "cohort": c, "cell": cell,
                 "mean_delta": float(np.mean(deltas)), "sem_delta": float(stats.sem(deltas))
             })
-            
+
     df_fact = pd.DataFrame(fact_records)
     csv_fact_path = os.path.join(TAB_DIR, "table_definitive_2x2_factorial.csv")
     df_fact.to_csv(csv_fact_path, index=False)
     print(f"Saved: {csv_fact_path}")
-    
+
     # -----------------------------------------------------------------------
     # MODULE 3: Shuffled-Order Surrogate Control
     # -----------------------------------------------------------------------
@@ -473,11 +474,11 @@ def run_suite():
     order_cells = ["Chronological_Recency", "Shuffled_Order_Surrogate"]
     order_records = []
     animal_order_records = []
-    
+
     for c in COHORT_ORDER:
         c_sess = [s for s in sessions if s["cohort"] == c]
         n_mice = len(c_sess)
-        
+
         for cell in order_cells:
             deltas = []
             for test_idx in range(n_mice):
@@ -487,50 +488,50 @@ def run_suite():
                 Y_te = te["Y_dist"]
                 p_prior = np.mean(Y_tr, axis=0, keepdims=True)
                 d_prior = np.mean(js_divergence(Y_te, p_prior))
-                
+
                 X0_tr = np.vstack([s["s_curr"] for s in tr])
                 X0_te = te["s_curr"]
                 beta0 = np.linalg.solve(X0_tr.T @ X0_tr + LAMBDA * np.eye(NUM_SYLLS, dtype=np.float32), X0_tr.T @ Y_tr)
                 Y0_pr = np.clip(X0_te @ beta0, 1e-12, None); Y0_pr /= Y0_pr.sum(axis=-1, keepdims=True)
                 d_m0 = np.mean(js_divergence(Y_te, Y0_pr))
                 g_m0 = (d_prior - d_m0) / d_prior * 100.0
-                
+
                 if cell == "Chronological_Recency":
                     F_tr_raw = np.vstack([s["feat_chrono_decay"] for s in tr])
                     F_te_raw = te["feat_chrono_decay"]
                 else:
                     F_tr_raw = np.vstack([s["feat_shuffled_decay"] for s in tr])
                     F_te_raw = te["feat_shuffled_decay"]
-                    
+
                 mu = np.mean(F_tr_raw, axis=0, keepdims=True)
                 sig = np.std(F_tr_raw, axis=0, keepdims=True) + 1e-6
                 F_tr = (F_tr_raw - mu) / sig
                 F_te = (F_te_raw - mu) / sig
-                
+
                 X_tr = np.hstack([X0_tr, F_tr])
                 X_te = np.hstack([X0_te, F_te])
-                
+
                 beta = np.linalg.solve(X_tr.T @ X_tr + LAMBDA * np.eye(200, dtype=np.float32), X_tr.T @ Y_tr)
                 Y_pr = np.clip(X_te @ beta, 1e-12, None); Y_pr /= Y_pr.sum(axis=-1, keepdims=True)
                 d_m = np.mean(js_divergence(Y_te, Y_pr))
                 g_tot = (d_prior - d_m) / d_prior * 100.0
                 delta = g_tot - g_m0
                 deltas.append(delta)
-                
+
                 animal_order_records.append({
                     "cohort": c, "sid": te["sid"], "order_type": cell, "delta_history": delta
                 })
-                
+
             order_records.append({
                 "cohort": c, "order_type": cell,
                 "mean_delta": float(np.mean(deltas)), "sem_delta": float(stats.sem(deltas))
             })
-            
+
     df_order = pd.DataFrame(order_records)
     csv_order_path = os.path.join(TAB_DIR, "table_definitive_order_vs_shuffled.csv")
     df_order.to_csv(csv_order_path, index=False)
     print(f"Saved: {csv_order_path}")
-    
+
     # -----------------------------------------------------------------------
     # PRINT SUMMARY FINDINGS
     # -----------------------------------------------------------------------
@@ -538,22 +539,22 @@ def run_suite():
     print("MODULE 2: 2x2 FACTORIAL DISSECTION SUMMARY (MEAN ± SEM %)")
     print("="*80)
     print(df_fact.pivot(index="cohort", columns="cell", values="mean_delta").round(2))
-    
+
     print("\n" + "="*80)
     print("MODULE 3: CHRONOLOGICAL VS. SHUFFLED SURROGATE SUMMARY (MEAN ± SEM %)")
     print("="*80)
     print(df_order.pivot(index="cohort", columns="order_type", values="mean_delta").round(2))
-    
+
     # -----------------------------------------------------------------------
     # MULTI-PANEL PUBLICATION FIGURE
     # -----------------------------------------------------------------------
     print("\nRendering Publication Figure: fig_definitive_coordinate_system_suite.png...")
     fig, axes = plt.subplots(1, 3, figsize=(22, 6.5), dpi=300)
-    
+
     # PANEL A: Matched Continuous Curves W vs n
     ax1 = axes[0]
     ax1_twin = ax1.twiny()
-    
+
     for c in COHORT_ORDER:
         # Clock time curve W
         sub_w = df_curves[(df_curves["cohort"] == c) & (df_curves["domain"] == "Clock_Time_W")]
@@ -561,19 +562,19 @@ def run_suite():
                  marker="o", linewidth=2.0, label=f"{COHORT_LABELS[c]} (Clock $W$)")
         ax1.fill_between(sub_w["param_val"], sub_w["mean_delta"] - sub_w["sem_delta"],
                          sub_w["mean_delta"] + sub_w["sem_delta"], color=COLORS[c], alpha=0.12)
-        
+
         # Event depth curve n
         sub_n = df_curves[(df_curves["cohort"] == c) & (df_curves["domain"] == "Event_Depth_n")]
         ax1_twin.plot(sub_n["param_val"], sub_n["mean_delta"], color=COLORS[c], linestyle="--",
                       marker="s", linewidth=2.0, alpha=0.85, label=f"{COHORT_LABELS[c]} (Event $n$)")
-                      
+
     ax1.axhline(0.0, color="black", linestyle=":", linewidth=1.2, alpha=0.8)
     ax1.set_xlabel("Physical Clock-Time History $W$ (seconds) [Solid Lines]", fontsize=11, fontweight="bold")
     ax1_twin.set_xlabel("Behavioral Event-Depth History $n$ (bouts) [Dashed Lines]", fontsize=11, fontweight="bold")
     ax1.set_ylabel("Incremental History Gain $\\Delta_{\\text{hist}}$ (% above $S_t$)", fontsize=11.5, fontweight="bold")
     ax1.set_title("A. Continuous History Trajectories\n(Strictly Matched Observation Anchors)", fontsize=12.5, fontweight="bold")
     ax1.grid(True, linestyle="--", alpha=0.35)
-    
+
     # Custom legend for Panel A
     from matplotlib.lines import Line2D
     custom_lines = [
@@ -585,13 +586,13 @@ def run_suite():
         Line2D([0], [0], color=COLORS["KI_Amphetamine"], lw=3, label="KI Amphetamine"),
     ]
     ax1.legend(handles=custom_lines, loc="lower left", fontsize=8.8, framealpha=0.92)
-    
+
     # PANEL B: 2x2 Factorial Dissection per Cohort
     ax2 = axes[1]
     cell_order = ["B20_Event", "B20_Duration", "T15_Event", "T15_Duration"]
     cell_names = ["20b (Event)", "20b (Dwell)", "15s (Event)", "15s (Dwell)"]
     cell_colors = ["#2ca02c", "#e377c2", "#17becf", "#1f77b4"]
-    
+
     bar_width = 0.18
     n_cells = len(cell_order)
     for i, cell in enumerate(cell_order):
@@ -601,11 +602,11 @@ def run_suite():
             row = df_fact[(df_fact["cohort"] == c) & (df_fact["cell"] == cell)]
             vals.append(row["mean_delta"].values[0])
             errs.append(row["sem_delta"].values[0])
-            
+
         x_pos = np.arange(len(COHORT_ORDER)) + (i - (n_cells - 1) / 2.0) * bar_width
         ax2.bar(x_pos, vals, bar_width, yerr=errs, capsize=3, label=cell_names[i],
                 color=cell_colors[i], alpha=0.88, edgecolor="black", linewidth=0.8)
-                
+
     ax2.axhline(0.0, color="black", linestyle="--", linewidth=1.2, alpha=0.8)
     ax2.set_xticks(range(len(COHORT_ORDER)))
     ax2.set_xticklabels([COHORT_LABELS[c] for c in COHORT_ORDER], fontsize=11, fontweight="bold")
@@ -613,7 +614,7 @@ def run_suite():
     ax2.set_title("B. $2 \\times 2$ Factorial Dissection\n(Window Boundary $\\times$ Internal Weighting)", fontsize=12.5, fontweight="bold")
     ax2.legend(loc="upper left", fontsize=9.0, framealpha=0.9)
     ax2.grid(True, linestyle="--", alpha=0.35)
-    
+
     # PANEL C: Shuffled-Order Surrogate Control
     ax3 = axes[2]
     bar_w = 0.32
@@ -624,13 +625,13 @@ def run_suite():
             row = df_order[(df_order["cohort"] == c) & (df_order["order_type"] == o_type)]
             vals.append(row["mean_delta"].values[0])
             errs.append(row["sem_delta"].values[0])
-            
+
         x_pos = np.arange(len(COHORT_ORDER)) + (i - 0.5) * bar_w
         lbl = "Chronological Recency" if i == 0 else "Shuffled-Order Surrogate"
         col = "#333333" if i == 0 else "#aaaaaa"
         ax3.bar(x_pos, vals, bar_w, yerr=errs, capsize=4, label=lbl,
                 color=col, alpha=0.85, edgecolor="black", linewidth=0.9)
-                
+
     ax3.axhline(0.0, color="black", linestyle="--", linewidth=1.2, alpha=0.8)
     ax3.set_xticks(range(len(COHORT_ORDER)))
     ax3.set_xticklabels([COHORT_LABELS[c] for c in COHORT_ORDER], fontsize=11, fontweight="bold")
@@ -638,14 +639,14 @@ def run_suite():
     ax3.set_title("C. Sequence Order vs. Shuffled Surrogate\n(Identical 100-D Representation & Scale)", fontsize=12.5, fontweight="bold")
     ax3.legend(loc="upper left", fontsize=9.2, framealpha=0.9)
     ax3.grid(True, linestyle="--", alpha=0.35)
-    
+
     plt.tight_layout()
     fig_path = os.path.join(OUT_DIR, "fig_definitive_coordinate_system_suite.png")
     pdf_path = os.path.join(OUT_DIR, "fig_definitive_coordinate_system_suite.pdf")
     plt.savefig(fig_path, dpi=300, bbox_inches="tight")
     plt.savefig(pdf_path, bbox_inches="tight")
     plt.close()
-    
+
     shutil.copy(fig_path, os.path.join(ARTIFACT_DIR, "fig_definitive_coordinate_system_suite.png"))
     print(f"Saved figure to:\n  -> {fig_path}\n  -> {pdf_path}")
     print(f"Copied to artifact dir: {os.path.join(ARTIFACT_DIR, 'fig_definitive_coordinate_system_suite.png')}")

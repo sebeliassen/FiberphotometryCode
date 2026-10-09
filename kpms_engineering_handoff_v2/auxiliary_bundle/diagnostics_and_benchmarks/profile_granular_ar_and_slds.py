@@ -14,7 +14,7 @@ Outputs:
 import os
 import sys
 import time
-import copy
+
 import numpy as np
 
 # Numpy 2.x compatibility
@@ -32,28 +32,21 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import jax
 import jax.numpy as jnp
 import jax.random as jr
-
 import keypoint_moseq as kpms
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
-import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from jax_moseq.models.arhmm.gibbs import resample_hdp_transitions
-import jax_moseq.models.keypoint_slds.alignment as slds_alignment
-from jax_moseq.utils.autoregression import get_nlags
-
 import utils.resample_batching as rb
+from jax_moseq.models.arhmm.gibbs import resample_hdp_transitions
+from jax_moseq.utils.autoregression import get_nlags
 from utils.resample_batching import (
     CONFIG,
     _jit_compute_discrete_emissions,
+    _jit_solve_mniw_posteriors,
     _numba_ffbs_all_parallel,
     _zero_alloc_accumulate_ar_stats,
-    _jit_solve_mniw_posteriors,
-    _numba_assemble_and_solve_all_parallel,
-    batched_resample_scales,
-    batched_resample_heading,
     batched_gpu_resample_location,
+    batched_resample_heading,
+    batched_resample_scales,
 )
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "karen_project_2")
@@ -80,19 +73,19 @@ def run_profiler():
     # 1. Load real 2-session checkpoint data
     print(f"[1/4] Loading real checkpoint from {TEST_MODEL_NAME}...")
     model, data, metadata, current_iter = kpms.load_checkpoint(PROJECT_DIR, TEST_MODEL_NAME)
-    
+
     # 2 sessions = 4 sequences (~40,120 active frames)
     N_SEQS = 4
     Y = jnp.array(data["Y"][:N_SEQS])
     mask = jnp.array(data["mask"][:N_SEQS])
     conf = jnp.array(data["conf"][:N_SEQS])
-    
+
     x = jnp.array(model["states"]["x"][:N_SEQS])
     z = jnp.array(model["states"]["z"][:N_SEQS])
     v = jnp.array(model["states"]["v"][:N_SEQS])
     h = jnp.array(model["states"]["h"][:N_SEQS])
     s = jnp.array(model["states"]["s"][:N_SEQS])
-    
+
     params = {k: jnp.array(val) for k, val in model["params"].items()}
     hypparams = model["hypparams"]
     raw_prior = model.get("noise_prior", 1.0)
@@ -381,7 +374,7 @@ def run_profiler():
     report = []
     report.append("# Keypoint-MoSeq Granular Profiling Report: 2 Sessions (4 Seqs, ~40,120 Frames)")
     report.append(f"\n**Execution Date:** {time.strftime('%Y-%m-%d %H:%M:%S')}")
-    report.append(f"**Dataset Specifications:**")
+    report.append("**Dataset Specifications:**")
     report.append(f"- Sequences: {N}")
     report.append(f"- Sequence Length: T = {T} frames")
     report.append(f"- Active (Observed) Frames: {total_frames:,}")
@@ -389,7 +382,7 @@ def run_profiler():
     report.append(f"- Latent Dimension: D = {D}")
     report.append(f"- States: K = {num_states} syllables")
     report.append(f"- Autoregressive Lags: {nlags}")
-    report.append(f"- Hardware: NVIDIA GeForce RTX 4090 + Multi-threaded CPU (Numba fastmath)")
+    report.append("- Hardware: NVIDIA GeForce RTX 4090 + Multi-threaded CPU (Numba fastmath)")
 
     report.append("\n---")
     report.append("## 1. Average Iteration Sub-Step Timing Breakdown")
@@ -450,13 +443,13 @@ def run_profiler():
     report.append("## 3. Scaling Extrapolation to 30-Session Production (5.5 Million Frames)")
     report.append("\nBased on linear scaling from 40,120 active frames (4 sequences) up to 5,516,954 frames (562 sequences, ~137.5x scale):")
     scale_factor = 5516954.0 / total_frames
-    
+
     extrap_ar_sec = (total_ar_ms / 1000.0) * scale_factor
     extrap_slds_sec = (total_slds_ms / 1000.0) * scale_factor
-    
+
     report.append(f"- **Scaled AR Iteration**: ~`{extrap_ar_sec:.1f} s` (Matches observed live run of ~`35.6 s/iter`)")
     report.append(f"- **Scaled SLDS Iteration**: ~`{extrap_slds_sec:.1f} s` (Matches observed live run of ~`104.5 s/iter`)")
-    report.append(f"- **Dominant SLDS Bottlenecks**:")
+    report.append("- **Dominant SLDS Bottlenecks**:")
     report.append(f"  1. Continuous Latents ($x$) via Banded Cholesky on CPU: accounts for ~**{(avg_slds['x_banded_cholesky_gmrf']/avg_slds['total_iteration_time'])*100:.1f}%** of SLDS iteration time.")
     report.append(f"  2. Discrete State Resampling ($z$) via CPU FFBS: accounts for ~**{((avg_slds['z_gpu_emissions']+avg_slds['z_cpu_numba_ffbs'])/avg_slds['total_iteration_time'])*100:.1f}%** of iteration time.")
     report.append(f"  3. Pose Location, Heading, Scales ($v, h, s$) on GPU: accounts for ~**{((avg_slds['v_centroid_location']+avg_slds['h_heading']+avg_slds['s_noise_scales'])/avg_slds['total_iteration_time'])*100:.1f}%** of iteration time.")

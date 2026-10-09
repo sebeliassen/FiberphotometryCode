@@ -21,11 +21,10 @@ Outputs:
 import os
 import sys
 import time
-import json
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
-import h5py
 
 # Force CPU execution for JAX to avoid GPU clashes
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -37,9 +36,9 @@ REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
-    load_chain_movie_resources,
     generate_chain_grid_movie,
-    standardize_chain_instances
+    load_chain_movie_resources,
+    standardize_chain_instances,
 )
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/screening_24_batch"
@@ -100,7 +99,7 @@ def write_catalog(records):
         vid_link = f"[{Path(r['video_file']).name}](./{Path(r['video_file']).name})" if r.get("video_file") else "Pending"
         row = f"| **{r['id']}** | {r['method']} | {r['name']} | `{r['tokens']}` | {r['total_matches']} | {r['wt_count']} / {r['ki_count']} | {r['sal_count']} / {r['amph_count']} | {vid_link} |"
         rows.append(row)
-    
+
     with open(MD_CATALOG, "w") as f:
         f.write(header + "\n".join(rows) + "\n")
 
@@ -412,7 +411,7 @@ def main():
                             sal_count += 1
                         else:
                             amph_count += 1
-                        
+
                         s_frame = int(b_starts[i])
                         e_frame = int(b_ends[i+pat_len-1])
                         s_bounds = [int(b_starts[i+s]) for s in range(pat_len)] + [e_frame]
@@ -468,7 +467,7 @@ def main():
                         end_bout = c_b_end[i+pat_len-1] - 1
                         s_frame = int(b_starts[start_bout])
                         e_frame = int(b_ends[end_bout])
-                        
+
                         # Internal stage boundaries at cluster transitions
                         s_bounds = [int(b_starts[c_b_start[i+s]]) for s in range(pat_len)] + [e_frame]
                         toks = [f"Cluster_{c_vals[i+s]:02d}" for s in range(pat_len)]

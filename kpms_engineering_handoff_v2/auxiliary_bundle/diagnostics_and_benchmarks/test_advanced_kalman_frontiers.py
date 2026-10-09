@@ -1,12 +1,10 @@
 import os
-import sys
 import time
+
+import jax
+import jax.random as jr
 import numpy as np
 import scipy.linalg as sla
-import scipy.sparse as sp
-import jax
-import jax.numpy as jnp
-import jax.random as jr
 from numba import njit
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -86,30 +84,30 @@ def run_advanced_frontiers_test():
     def numba_kalman_sampler(y, A, Q, H, R_diag, T, D_state, D_obs):
         filt_m = np.zeros((T, D_state))
         filt_P = np.zeros((T, D_state, D_state))
-        
+
         m = np.zeros(D_state)
         P = np.eye(D_state) * 10.0
-        
+
         H_T_Rinv = np.zeros((D_state, D_obs))
         for i in range(D_state):
             for j in range(D_obs):
                 H_T_Rinv[i, j] = H[j, i] / R_diag[j]
-        
+
         H_T_Rinv_H = H_T_Rinv @ H
 
         # Forward filter
         for t in range(T):
             P_inv = np.linalg.inv(P) + H_T_Rinv_H
             P_filt = np.linalg.inv(P_inv)
-            
+
             y_t = y[t]
             residual = y_t - H @ m
             K = P_filt @ H_T_Rinv
             m_filt = m + K @ residual
-            
+
             filt_m[t] = m_filt
             filt_P[t] = P_filt
-            
+
             # Predict
             m = A @ m_filt
             P = A @ P_filt @ A.T + Q
@@ -151,11 +149,11 @@ def run_advanced_frontiers_test():
     # -------------------------------------------------------------
     print("\n3. Testing Steady-State Covariance Convergence |P_t - P_{t-1}| in KPMS:")
     print("-" * 85)
-    
+
     P_curr = np.eye(D_state) * 10.0
     H_T_Rinv = (H.T / R_diag[None, :])
     H_T_Rinv_H = H_T_Rinv @ H
-    
+
     diffs = []
     for step in range(500):
         P_inv = np.linalg.inv(P_curr) + H_T_Rinv_H

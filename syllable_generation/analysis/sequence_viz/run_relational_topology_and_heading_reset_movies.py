@@ -19,9 +19,10 @@ import sys
 import time
 import urllib.request
 from pathlib import Path
+
+import cv2
 import numpy as np
 import pandas as pd
-import cv2
 
 # CPU execution for JAX / Keypoint-MoSeq
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -30,12 +31,10 @@ os.environ["JAX_PLATFORMS"] = "cpu"
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
+from syllable_generation.analysis.sequence_viz.bout_quality_and_spatial_verifier import ChainQualityAndContextVerifier
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+    generate_chain_grid_movie,
     load_chain_movie_resources,
-    generate_chain_grid_movie
-)
-from syllable_generation.analysis.sequence_viz.bout_quality_and_spatial_verifier import (
-    ChainQualityAndContextVerifier
 )
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/output_pilot_movies"
@@ -50,7 +49,7 @@ def log(msg, notify=False, ntfy_title=None):
     print(line, flush=True)
     with open(LOG_FILE, "a") as f:
         f.write(line + "\n")
-        
+
     if notify:
         try:
             req = urllib.request.Request(
@@ -98,7 +97,7 @@ def main():
         b_sylls = [sylls[0]] + sylls[c_idx].tolist()
         b_starts = [0] + c_idx.tolist()
         b_ends = c_idx.tolist() + [len(sylls)]
-        
+
         for i in range(len(b_sylls) - 4):
             if b_sylls[i] == 1 and b_sylls[i+1] == 11 and b_sylls[i+2] == 1 and b_sylls[i+3] == 30:
                 candidates.append({
@@ -123,7 +122,7 @@ def main():
     df = pd.DataFrame(verified_chains)
     log("Classification distribution:")
     log(str(df["classification"].value_counts().to_dict()))
-    
+
     clean_df = df[df["classification"].isin(["TRUSTED_CLEAN", "MOTOR_VARIANT"])]
     log(f"Clean sound episodes: {len(clean_df)} / {len(df)}")
     log("Dvorkin Relational Topology distribution on clean episodes:")
@@ -255,7 +254,7 @@ def main():
         d["animal_id"] = f"{e['animal_id']} [Reset Per Syllable]"
         row2_insts.append(d)
 
-    log(f"Rendering Row 1 (Standard Chain Onset Alignment)...")
+    log("Rendering Row 1 (Standard Chain Onset Alignment)...")
     generate_chain_grid_movie(
         instances=row1_insts,
         output_path=out_row1,
@@ -277,7 +276,7 @@ def main():
         use_gpu_encoder=True
     )
 
-    log(f"Rendering Row 2 (Reset Heading Per Syllable)...")
+    log("Rendering Row 2 (Reset Heading Per Syllable)...")
     generate_chain_grid_movie(
         instances=row2_insts,
         output_path=out_row2,
@@ -324,11 +323,11 @@ def main():
         subprocess.run(cmd_nvenc, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except Exception:
         subprocess.run(cmd_cpu, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    
+
     # Clean up temp files
     if out_row1.exists(): out_row1.unlink()
     if out_row2.exists(): out_row2.unlink()
-    
+
     log(f"Movie 2 Ready: {out_comparison.name}", notify=True, ntfy_title="Movie 2 Generated")
 
     # --------------------------------------------------------------------------
@@ -336,11 +335,11 @@ def main():
     # --------------------------------------------------------------------------
     log("Extracting diagnostic screenshot frames for walkthrough...")
     brain_dir = Path("/home/fsp585/.gemini/antigravity-ide/brain/6b2f8bd9-6fe5-4797-8e3f-dfeea193e3f8")
-    
+
     # From Movie 1: Relational Topology
     extract_frame_from_video(out_relational, 60, brain_dir / "relational_topology_frame60.png")
     extract_frame_from_video(out_relational, 110, brain_dir / "relational_topology_frame110.png")
-    
+
     # From Movie 2: Heading Reset Comparison
     extract_frame_from_video(out_comparison, 55, brain_dir / "syllable_heading_reset_frame55.png")
     extract_frame_from_video(out_comparison, 95, brain_dir / "syllable_heading_reset_frame95.png")

@@ -13,9 +13,11 @@ across the 4 experimental groups:
 
 import os
 import pickle
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -181,8 +183,8 @@ def main():
     ax_c.set_xlim([lag_seconds[0], lag_seconds[-1]])
     ax_c.set_ylim([-0.15, 0.35])
     ax_c.set_xlabel("Lag $\\tau$ (seconds, log scale)", fontweight="bold")
-    ax_c.set_ylabel("Excess Mutual Information $\Delta I$ (bits)", fontweight="bold")
-    ax_c.set_title("C. Excess Behavioral Memory Across Groups ($\Delta I = I_{\\mathrm{real}} - I_{\\mathrm{markov}}$)", fontweight="bold", fontsize=11)
+    ax_c.set_ylabel(r"Excess Mutual Information $\Delta I$ (bits)", fontweight="bold")
+    ax_c.set_title("C. Excess Behavioral Memory Across Groups ($\\Delta I = I_{\\mathrm{real}} - I_{\\mathrm{markov}}$)", fontweight="bold", fontsize=11)
     ax_c.grid(True, which="both", linestyle="--", alpha=0.35)
     ax_c.legend(loc="upper right", frameon=True, fontsize=8.5)
 

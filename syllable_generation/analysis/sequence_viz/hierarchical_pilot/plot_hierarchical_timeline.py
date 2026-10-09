@@ -17,23 +17,25 @@ Features:
 =============================================================================
 """
 
-import sys
 import json
 import pickle
+import sys
 from pathlib import Path
-import numpy as np
-import pandas as pd
+
 import matplotlib
+import numpy as np
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 import matplotlib.colors as mcolors
+import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.hierarchical_pilot.run_hierarchical_feasibility_experiment import (
-    load_cohort_sessions, segment_session_organization
+    load_cohort_sessions,
+    segment_session_organization,
 )
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/hierarchical_pilot"

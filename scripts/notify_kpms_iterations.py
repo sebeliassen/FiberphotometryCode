@@ -1,6 +1,6 @@
-import time
-import re
 import os
+import re
+import time
 import urllib.request
 
 NTFY_URL = "https://ntfy.sh/woody_videos_seb"
@@ -58,7 +58,7 @@ def parse_log_for_iters():
 
 def main():
     print(f"[iter-notifier] Monitoring final_karen_model.log strictly for target iterations: {sorted(list(TARGET_ITERS))}...", flush=True)
-    
+
     while True:
         try:
             current_found = parse_log_for_iters()
@@ -69,13 +69,13 @@ def main():
                         f"KPMS model final_karen_model is currently processing/reached Iteration {iter_num}."
                     )
                     notified_iters.add(iter_num)
-                    
+
             if TARGET_ITERS.issubset(notified_iters):
                 print("[iter-notifier] All target iteration notifications sent! Exiting listener.", flush=True)
                 break
         except Exception as err:
             print(f"[iter-notifier] Error: {err}", flush=True)
-            
+
         time.sleep(30)
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 
-import pandas as pd
 import numpy as np
+
 """
 Panel 1h Plotting Script (Unified)
 
@@ -16,12 +16,12 @@ Features:
 - Row-wise normalization and sorting by peak activity.
 - Bit-exact visual parity with legacy notebook outputs.
 """
-import matplotlib.pyplot as plt
-import seaborn as sns
-from pathlib import Path
 import argparse
-import sys
 import pickle
+import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter1d
 
 # Pathing
@@ -55,17 +55,17 @@ def plot_panel_1h_trace(project, min_trials=50):
     if not data_path.exists():
         print(f"Error: Trace data file {data_path} not found. Run digestion with --type trace first.")
         return
-        
+
     print(f"Loading {data_path}...")
     with open(data_path, "rb") as f:
         data_buckets = pickle.load(f)
-        
+
     # Auto-discovery
     discovered_drugs = sorted(data_buckets.keys())
-    
+
     unique_genos = sorted({g for d in data_buckets for g in data_buckets[d]})
     unique_regions = sorted({r for d in data_buckets for g in data_buckets[d] for r in data_buckets[d][g]})
-    
+
     discovered_hemis = set()
     discovered_colors = set()
     for d in data_buckets:
@@ -75,14 +75,14 @@ def plot_panel_1h_trace(project, min_trials=50):
                     discovered_hemis.add(h)
                     for c in data_buckets[d][g][r][h]:
                         discovered_colors.add(c)
-    
+
     target_hemis = sorted(list(discovered_hemis))
     target_colors = sorted(list(discovered_colors))
-    
+
     print(f"Drugs: {discovered_drugs}")
     print(f"Hemispheres: {target_hemis}")
     print(f"Colors: {target_colors}")
-    
+
     output_dir = Path(__file__).parent / "plots" / f"panel_1h_trace_{project}"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -90,24 +90,24 @@ def plot_panel_1h_trace(project, min_trials=50):
         for color in target_colors:
             for hemi in target_hemis:
                 print(f"\n=== Plotting: {drug} | {hemi} Hemisphere | {color} Channel ===")
-                
+
                 # Check Data Existence
                 has_data = False
                 for g in unique_genos:
                     for r in unique_regions:
                         # Safe check for nested dict
                         val = data_buckets.get(drug, {}).get(g, {}).get(r, {}).get(hemi, {}).get(color)
-                        if val: 
+                        if val:
                             has_data = True
                             break
                     if has_data: break
-                
+
                 if not has_data:
                     print(f"   [SKIP] No data found for {drug}-{hemi}-{color}.")
                     continue
 
                 fig, axes = plt.subplots(
-                    nrows=len(unique_regions), ncols=len(unique_genos), 
+                    nrows=len(unique_regions), ncols=len(unique_genos),
                     figsize=(5 * len(unique_genos), 6 * len(unique_regions)),
                     dpi=150, sharex=False, sharey=False
                 )
@@ -119,76 +119,76 @@ def plot_panel_1h_trace(project, min_trials=50):
                 for r_idx, region in enumerate(unique_regions):
                     for c_idx, geno in enumerate(unique_genos):
                         ax = axes[r_idx, c_idx]
-                        
+
                         # Safe access
                         syll_data = data_buckets.get(drug, {}).get(geno, {}).get(region, {}).get(hemi, {}).get(color, {})
-                        
+
                         if not syll_data:
                             ax.set_title(f"{region} | {geno}\n(No Data)", fontsize=10)
-                            ax.axis("off") 
+                            ax.axis("off")
                             continue
-                            
+
                         z_waveforms = []
                         syllables = []
                         peak_metrics = []
-                        
+
                         # Process Syllables
                         for syll, session_list in syll_data.items():
                             total_trials = sum(item[0] for item in session_list)
                             if total_trials < min_trials: continue
-                                
+
                             first_act = session_list[0][1]
-                            if first_act is None: continue 
-                            
+                            if first_act is None: continue
+
                             weighted_actual = np.zeros_like(first_act)
                             weighted_shuffle = np.zeros_like(first_act)
                             all_shuffle_means = []
-                            
+
                             for n, act, shuff in session_list:
                                 weighted_actual += act * n
                                 weighted_shuffle += shuff * n
                                 all_shuffle_means.append(shuff)
-                                
+
                             global_actual = weighted_actual / total_trials
                             global_shuffle = weighted_shuffle / total_trials
-                            
+
                             global_actual = np.nan_to_num(global_actual)
                             global_shuffle = np.nan_to_num(global_shuffle)
-                            
+
                             if len(all_shuffle_means) > 1:
                                 global_shuffle_std = np.std(all_shuffle_means, axis=0)
                             else:
                                 global_shuffle_std = np.ones_like(global_shuffle)
-                            
+
                             global_shuffle_std[global_shuffle_std == 0] = 1.0
                             z_trace = (global_actual - global_shuffle) / global_shuffle_std
-                            
+
                             if TRACE_ROW_WISE_NORM:
                                 max_val = np.nanmax(np.abs(z_trace))
-                                if max_val > 0 and not np.isnan(max_val): 
+                                if max_val > 0 and not np.isnan(max_val):
                                     z_trace /= max_val
-                            
+
                             if TRACE_SIGMA_SMOOTHING > 0:
                                 z_trace = np.nan_to_num(z_trace)
                                 z_trace = gaussian_filter1d(z_trace, sigma=TRACE_SIGMA_SMOOTHING)
-                            
+
                             z_waveforms.append(z_trace)
                             syllables.append(syll)
-                            
+
                             idx_0 = len(z_trace) // 2
                             idx_end = idx_0 + int(len(z_trace) * 0.1)
                             peak_metrics.append(np.mean(z_trace[idx_0:idx_end]))
-                            
+
                         if not z_waveforms:
                             ax.text(0.5, 0.5, f"All < {min_trials}", ha='center', va='center'); continue
-                            
+
                         # Sort
                         z_matrix = np.array(z_waveforms)
                         sort_idx = np.argsort(peak_metrics)[::-1]
                         z_sorted = z_matrix[sort_idx]
 
                         plot_vmax = 1.0 if TRACE_ROW_WISE_NORM else np.percentile(np.abs(z_sorted), 99)
-                        
+
                         im = ax.imshow(
                             z_sorted,
                             aspect="auto",
@@ -197,7 +197,7 @@ def plot_panel_1h_trace(project, min_trials=50):
                             interpolation="nearest",
                             extent=(-TRACE_WINDOW_SECONDS, TRACE_WINDOW_SECONDS, len(z_sorted), 0)
                         )
-                        
+
                         ax.axvline(0, color="black", linestyle="--", linewidth=0.5, alpha=0.5)
                         ax.set_title(f"{region} | {geno}\n({len(z_sorted)} Sylls)", fontsize=10)
                         ax.set_xlabel("Time (s)", fontsize=8)
@@ -219,7 +219,7 @@ if __name__ == "__main__":
     parser.add_argument("--type", type=str, choices=["peak", "trace"], default="peak")
     parser.add_argument("--min-trials", type=int, default=100)
     args = parser.parse_args()
-    
+
     if args.type == "trace":
         # Trace mode often uses lower MIN_TRIALS in notebooks
         plot_panel_1h_trace(args.project, min_trials=args.min_trials)

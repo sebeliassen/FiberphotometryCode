@@ -28,28 +28,26 @@ os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0")
 os.environ["USE_MEMORY_PATCH"] = "1"
 
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
-import copy
-import time
-import signal
-import shutil
-import pickle
-import traceback
-import urllib.request
 import argparse
+import gc
 import json
-from datetime import datetime, timedelta
-from pathlib import Path
+import pickle
+import shutil
+import signal
+import time
+import urllib.request
 from itertools import groupby
+from pathlib import Path
+
+import h5py
+import jax
+import matplotlib
 import pandas as pd
 
-import jax
-import h5py
-import gc
-import psutil
-import matplotlib
 matplotlib.use("Agg")
 
 import keypoint_moseq as kpms
@@ -67,8 +65,9 @@ if str(KPMS_UTILS_DIR) not in sys.path:
 
 import utils.resample_batching as rb
 from utils.batch_init import batched_init_model_by_video
+
+from core.cache_manifest import write_manifest
 from syllable_generation.syllabizers.keypoint_moseq_syll.utils.patch_checkpoint import apply_kpms_checkpoint_patch
-from core.cache_manifest import write_manifest, verify_manifest, OK as CACHE_OK
 
 # Configuration constants
 DATA_SOURCE_DIR = EXPERIMENT_DIR / "data/cohort_fused_static_21kp_v2"

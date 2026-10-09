@@ -1,7 +1,6 @@
 
 import pickle
 import sys
-from pathlib import Path
 
 # Add project root to sys.path
 project_root = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -25,18 +24,18 @@ def load_pkl(p):
 def verify_metadata():
     sessions = load_pkl(pkl_path)
     print(f"Loaded {len(sessions)} sessions.")
-    
+
     for s in sessions:
         md = s.metadata
         sid = s.session_id
         aid = md.get("animal_id")
-        
+
         print(f"\nSession: {sid} | Mouse: {aid}")
-        
+
         # Check Fiber Indices
         eff_indices = md.get("fiber_indices_effective")
         print(f"  Effective Fiber Indices: {eff_indices}")
-        
+
         # Check Signals
         for k in ["signal_0", "signal_1", "signal_2", "signal_3"]:
             if k in md:
@@ -44,13 +43,13 @@ def verify_metadata():
                 if "signal_meta" in md and k in md["signal_meta"]:
                     sm = md["signal_meta"][k]
                     print(f"    - Color: {sm.get('color')}, Hemi: {sm.get('hemisphere')}, Orig: {sm.get('orig_id')}")
-                
+
         # Check Exclusions
         excl = md.get("exclusions")
         if excl:
             print(f"  Exclusions: {excl}")
         else:
-            print(f"  Exclusions: None")
+            print("  Exclusions: None")
 
 if __name__ == "__main__":
     verify_metadata()

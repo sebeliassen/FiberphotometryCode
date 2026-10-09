@@ -1,6 +1,7 @@
 import keypoint_moseq as kpms
 import numpy as np
 
+
 def update_config(project_dir, bodyparts):
     # Suppose cfg is your original configuration loaded from disk.
     cfg = kpms.load_config(project_dir)

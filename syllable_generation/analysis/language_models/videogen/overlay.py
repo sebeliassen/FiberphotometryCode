@@ -3,9 +3,10 @@ OpenCV Overlay Utilities for Vibe & Syllable Video Generation
 Located at syllable_generation/analysis/language_models/videogen/overlay.py
 """
 
+from typing import Dict, Optional, Tuple
+
 import cv2
 import numpy as np
-from typing import Dict, Optional, Tuple
 
 # Pre-defined curated vibrant color palette for 9 macro-vibes (BGR format)
 VIBE_COLORS_BGR = {
@@ -69,11 +70,11 @@ def draw_vibe_hud_overlay(
     """
     out_frame = frame.copy()
     h, w = out_frame.shape[:2]
-    
+
     # 1. Resolve Vibe Name & Color
     vibe_name = vibe_names.get(vibe_id, f"Vibe {vibe_id}") if vibe_names else f"Vibe {vibe_id}"
     vibe_color = VIBE_COLORS_BGR.get(vibe_id % 9, (200, 200, 200))
-    
+
     # 2. Draw Full 27-Keypoint DeepLabCut Skeleton (if keypoint_coords provided)
     if show_skeleton and keypoint_coords is not None:
         # Draw skeleton limbs
@@ -85,7 +86,7 @@ def draw_vibe_hud_overlay(
                     pt1 = (int(x1), int(y1))
                     pt2 = (int(x2), int(y2))
                     cv2.line(out_frame, pt1, pt2, (0, 230, 100), 2, cv2.LINE_AA)
-                    
+
         # Draw keypoint dots
         for bp, (x, y, p) in keypoint_coords.items():
             if p >= 0.3 and not (np.isnan(x) or np.isnan(y)):
@@ -100,30 +101,30 @@ def draw_vibe_hud_overlay(
             end_x = int(cx + arrow_len * np.cos(heading))
             end_y = int(cy + arrow_len * np.sin(heading))
             cv2.arrowedLine(out_frame, (cx, cy), (end_x, end_y), (0, 255, 255), 2, cv2.LINE_AA, tipLength=0.3)
-            
+
     # 3. Draw Compact Bottom Floating HUD Badge (keeps mouse & arena fully un-obscured)
     card_h = int(h * 0.16)
     card_top = h - card_h - 10
     card_w = int(w * 0.95)
     card_left = int((w - card_w) / 2)
-    
+
     overlay = out_frame.copy()
     cv2.rectangle(overlay, (card_left, card_top), (card_left + card_w, card_top + card_h), (15, 15, 15), -1)
     # Color bar on the left of card
     cv2.rectangle(overlay, (card_left, card_top), (card_left + 12, card_top + card_h), vibe_color, -1)
     cv2.addWeighted(overlay, 0.75, out_frame, 0.25, 0, out_frame)
-    
+
     vibe_text = f"MACRO VIBE: {vibe_name.upper()}"
     cv2.putText(
         out_frame, vibe_text, (card_left + 22, card_top + int(card_h * 0.45)),
         cv2.FONT_HERSHEY_SIMPLEX, 0.52, (255, 255, 255), 2, cv2.LINE_AA
     )
-    
+
     syll_name = syllable_names.get(syllable_id, f"Syllable #{syllable_id}") if syllable_names else f"Syllable #{syllable_id}"
     syll_text = f"MICRO SYLLABLE: {syll_name}"
     cv2.putText(
         out_frame, syll_text, (card_left + 22, card_top + int(card_h * 0.85)),
         cv2.FONT_HERSHEY_SIMPLEX, 0.45, (220, 220, 220), 1, cv2.LINE_AA
     )
-    
+
     return out_frame

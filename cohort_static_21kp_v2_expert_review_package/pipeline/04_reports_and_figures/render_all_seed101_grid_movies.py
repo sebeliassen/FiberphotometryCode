@@ -22,18 +22,17 @@ Environment: kpms_gpu_cuml
 =============================================================================
 """
 
-import os
-import sys
 import argparse
-import time
-import re
 import json
+import re
+import sys
 from pathlib import Path
-import numpy as np
-import h5py
-import pandas as pd
+
 import cv2
+import h5py
 import imageio
+import numpy as np
+import pandas as pd
 from vidio.read import OpenCVReader
 
 # 2. Fast-seek monkeypatch to OpenCVReader supporting scalar ints, slices, and array-likes
@@ -59,9 +58,8 @@ EXP_DIR = SCRIPT_DIR.parent
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.pair_matching import find_matched_pairs
-from core.ttl_sync import top_to_bot_frame
 from core.camera_correspondence import top_to_bot_frame_continuous
+from core.pair_matching import find_matched_pairs
 
 # Paths
 PROJECT_DIR = EXP_DIR / "kpms_tandem_cohort_production"
@@ -364,8 +362,8 @@ def main():
                 # Check if c_top_onset is out-of-bounds for pre-cropped/quadrant videos
                 df_top_override = None
                 top_scorer_override = None
-                if (c_top_onset[0] < 0 or c_top_onset[0] >= top_w or 
-                    c_top_onset[1] < 0 or c_top_onset[1] >= top_h or 
+                if (c_top_onset[0] < 0 or c_top_onset[0] >= top_w or
+                    c_top_onset[1] < 0 or c_top_onset[1] >= top_h or
                     np.isnan(c_top_onset[0]) or np.isnan(c_top_onset[1])):
                     try:
                         df_top_override = pd.read_hdf(bout["top_h5"])
@@ -438,8 +436,8 @@ def main():
                                 cp = df_top_override[top_scorer_override, "mouse_center", "likelihood"].iloc[raw_t_fix]
                                 if cp > 0.4 and 0 <= cx < top_w and 0 <= cy < top_h:
                                     c_t_curr = (cx, cy)
-                        elif (np.isnan(c_t_curr[0]) or np.isnan(c_t_curr[1]) or 
-                            c_t_curr[0] < 0 or c_t_curr[0] >= top_w or 
+                        elif (np.isnan(c_t_curr[0]) or np.isnan(c_t_curr[1]) or
+                            c_t_curr[0] < 0 or c_t_curr[0] >= top_w or
                             c_t_curr[1] < 0 or c_t_curr[1] >= top_h):
                             c_t_curr = c_top_onset
                         pos_t = tuple([int(round(x)) for x in (M_top @ np.append(c_t_curr, 1)) * scale_factor_top])

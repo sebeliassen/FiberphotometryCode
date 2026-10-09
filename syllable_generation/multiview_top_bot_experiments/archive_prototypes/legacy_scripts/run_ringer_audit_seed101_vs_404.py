@@ -16,9 +16,10 @@ Expected invariants:
 =============================================================================
 """
 
-import sys
 import pickle
+import sys
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
@@ -26,7 +27,6 @@ REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.datamodel import SessionRecord
 SEED101_PKL = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments/sessions_karen_project_tandem_cohort_seed101.pkl"
 
 CANDIDATE_404_PATHS = [

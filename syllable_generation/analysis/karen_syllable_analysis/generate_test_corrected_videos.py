@@ -11,23 +11,24 @@ Generates test grid movies for Syllable 6, 72, and 0 with:
    preventing the posterior spine cluster from dragging the centroid to the rump.
 """
 
-import sys
 import pickle
+import sys
 from pathlib import Path
+
 import numpy as np
+
 np.bool8 = np.bool_
 import cv2
-from tqdm import tqdm
 import jax.numpy as jnp
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from vidio.read import OpenCVReader
 import keypoint_moseq as kpms
 from jax_moseq.models.keypoint_slds import estimate_coordinates
 from jax_moseq.utils import unbatch
-from keypoint_moseq.viz import write_video_clip, get_syllable_instances
+from keypoint_moseq.viz import get_syllable_instances, write_video_clip
+from vidio.read import OpenCVReader
 
 # Fast-seek reader
 _original_read = OpenCVReader.read
@@ -137,11 +138,11 @@ for syl in TEST_SYLLABLES:
     insts = all_instances.get(syl, [])
     if len(insts) < num_samples:
         insts = insts * (num_samples // len(insts) + 1)
-    
+
     np.random.seed(42)
     sub_idx = np.random.choice(len(insts), num_samples, replace=False)
     sampled = [insts[i] for i in sub_idx]
-    
+
     tiles_clean = []
     for key, start, end in sampled:
         cs = centroids_corr[key][start - pre : start + post]
@@ -168,7 +169,7 @@ for syl in TEST_SYLLABLES:
 
     tc = np.stack(tiles_clean).reshape(rows, cols, post + pre, window_size, window_size, 3)
     clean_frames = np.concatenate(np.concatenate(tc, axis=2), axis=2)
-    
+
     out_path = OUT_DIR / f"syllable{syl}_corrected.mp4"
     write_video_clip(clean_frames, str(out_path), fps=fps)
     print(f"  Generated corrected video: {out_path.name}")

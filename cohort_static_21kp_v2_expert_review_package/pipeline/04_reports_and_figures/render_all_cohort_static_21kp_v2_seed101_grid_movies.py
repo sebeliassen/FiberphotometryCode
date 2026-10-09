@@ -24,18 +24,18 @@ Publication-grade Tandem Dual-View Syllable Grid Movies for Cohort Static 21kp V
 Environment: kpms_gpu_cuml (pure CPU)
 """
 
-import os
-import sys
 import argparse
-import time
-import re
 import json
+import re
+import sys
+import time
 from pathlib import Path
-import numpy as np
-import h5py
-import pandas as pd
+
 import cv2
+import h5py
 import imageio
+import numpy as np
+import pandas as pd
 from vidio.read import OpenCVReader
 
 # Fast-seek monkeypatch to OpenCVReader supporting scalar ints, slices, and array-likes
@@ -61,8 +61,8 @@ EXP_DIR = SCRIPT_DIR.parent
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.pair_matching import find_matched_pairs
 from core.camera_correspondence import top_to_bot_frame_continuous
+from core.pair_matching import find_matched_pairs
 
 COHORT_DIR = EXP_DIR / "cohort_static_21kp_v2"
 MODEL_DIR = COHORT_DIR / "model_21kp_static_50ar_300slds_seed101"
@@ -325,7 +325,7 @@ def main():
     print("🎬 RENDERING V2 COHORT STATIC 21KP DUAL-VIEW GRID MOVIES (60 FPS NATIVE)")
     print(f"Timing Window:  pre={pre}f (1.0s), post={post}f (2.0s) -> {clip_frames}f (3.0s total @ 60 FPS)")
     print(f"Grid Layout:    {grid_rows}x{grid_cols} ({grid_size} tiles)")
-    print(f"Tracking Filter:Strict (0 bouts with tracking lost allowed on display)")
+    print("Tracking Filter:Strict (0 bouts with tracking lost allowed on display)")
     print(f"Syllables:      {len(target_sylls)} targets")
     print(f"Output Target:  {out_dir}")
     print("=" * 80)

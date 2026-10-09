@@ -1,9 +1,9 @@
-import numpy as np
-from scipy import stats
-from scipy.signal import savgol_filter
+import config
+
 # import plotly.graph_objects as go
 import matplotlib.pyplot as plt
-import config
+import numpy as np
+from scipy import stats
 
 
 def plot_session_events_and_signal(session, brain_reg, fig, row, col, title_suffix="", smooth=False):
@@ -25,11 +25,11 @@ def plot_session_events_and_signal(session, brain_reg, fig, row, col, title_suff
         'Mistake': 'orange',
         'Correction Trial Correct Rejection': 'cyan',
     }
-    
+
 
     #signal = np.convolve(signal, window, mode='same')
     # Plot the photometry signal
-    fig.add_trace(go.Scatter(x=phot_times, y=signal, mode='lines', line=dict(color='black'), showlegend=False), 
+    fig.add_trace(go.Scatter(x=phot_times, y=signal, mode='lines', line=dict(color='black'), showlegend=False),
                   row=row, col=col)
 
     event_traces = {}
@@ -55,17 +55,17 @@ def plot_session_events_and_signal(session, brain_reg, fig, row, col, title_suff
 
     # Add a dark grey dashed vertical line at blank image time
     fig.add_vline(
-        x=blank_image_time, 
-        line=dict(color='darkgrey', dash='dash'), 
-        annotation_text='CPT start', 
-        annotation_position='top right', 
+        x=blank_image_time,
+        line=dict(color='darkgrey', dash='dash'),
+        annotation_text='CPT start',
+        annotation_position='top right',
         row=row, col=col
     )
 
     # Calculate limits for x-axis based on the event times
     first_event_time = min(event_times)
     last_event_time = max(event_times)
-    x_range = [first_event_time - (last_event_time - first_event_time) * 0.05, 
+    x_range = [first_event_time - (last_event_time - first_event_time) * 0.05,
                last_event_time + (last_event_time - first_event_time) * 0.05]
 
     start_index = np.searchsorted(phot_times, first_event_time, side='left')
@@ -73,7 +73,7 @@ def plot_session_events_and_signal(session, brain_reg, fig, row, col, title_suff
 
     y_min = min(signal[start_index:end_index])
     y_max = max(signal[start_index:end_index])
-    y_range = [y_min - (y_max - y_min) * 0.05, 
+    y_range = [y_min - (y_max - y_min) * 0.05,
                y_max + (y_max - y_min) * 0.05]
 
     fig.update_layout(height=400, width=1000, title_text=title_suffix)
@@ -84,9 +84,9 @@ def preprocess_signals(all_signals, smoothing_len):
     interval_start = config.peak_interval_config["interval_start"]
     interval_end = config.peak_interval_config["interval_end"]
     fps = config.PLOTTING_CONFIG['fps']
-    
+
     xs = np.arange(-interval_start, interval_end) / fps
-    
+
     all_ys = []
     all_lbs = []
     all_ubs = []
@@ -116,7 +116,7 @@ def preprocess_signals(all_signals, smoothing_len):
         global_ylim = ((global_lb + global_ub) / 2 - 1, (global_lb + global_ub) / 2 + 1)
     else:
         global_ylim = (global_lb, global_ub)
-    
+
     return xs, all_ys, all_lbs, all_ubs, global_ylim
 
 
@@ -156,18 +156,18 @@ def plot_signals(all_signals, subtitles, suptitle, color, smoothing_len, shading
 def plot_signals_p_values(all_signals, subtitles, suptitle, color, smoothing_len, shading_boundaries, p_values, fname=None):
     xs, all_ys, all_lbs, all_ubs, global_ylim = preprocess_signals(all_signals, smoothing_len)
     fig, ax1 = plt.subplots(figsize=(10, 5), dpi=300)  # Changed to use a single primary axis
-    
+
     labels = ['lower mice', 'upper mice']
     line_styles = ['--', '-']  # Solid for the first, dashed for the second
 
     # Superimposed signal plots using adjust_and_plot
     for ys, lb, ub, subtitle, label, line_style in zip(all_ys, all_lbs, all_ubs, subtitles, labels, line_styles):
         adjust_and_plot(ax1, xs, ys, lb, ub, title=subtitle, ylim=global_ylim, color=color, shading_boundaries=shading_boundaries, label=label, line_style=line_style)
-    
-    
+
+
     # Creating a secondary y-axis for p-values
     ax2 = ax1.twinx()
-    
+
     # Plotting p-values on the secondary y-axis
     p_values = np.convolve(p_values, np.ones(10)/10, mode='same')
     # ax2.plot(xs, p_values_smoothed, label='P-Value (Smoothed)', color='black', alpha=0.8)
@@ -183,7 +183,7 @@ def plot_signals_p_values(all_signals, subtitles, suptitle, color, smoothing_len
 
     # Get handles and labels from ax1
     handles1, labels1 = ax1.get_legend_handles_labels()
-    
+
     # Create upper right legend with ax1's handles and labels
     legend1 = ax2.legend(handles=handles1, labels=labels1, loc='upper right')
     ax2.add_artist(legend1)  # Add the first legend back (it will handle ax1's legends)
@@ -201,7 +201,7 @@ def plot_signals_p_values(all_signals, subtitles, suptitle, color, smoothing_len
 
     plt.suptitle(suptitle)
     plt.tight_layout(rect=[0, 0.03, 1, 0.97])
-    
+
     if fname:
         plt.savefig(fname, dpi=300)
         plt.clf()

@@ -1,8 +1,9 @@
-from fiberphotometry.config import *
+import numpy as np
 from scipy.stats import norm
+
+from fiberphotometry.config import *
 from fiberphotometry.data.data_loading import DataContainer
 from fiberphotometry.utils import count_session_events
-import numpy as np
 
 
 def set_event_counts(mouse):
@@ -66,7 +67,7 @@ def get_hr_and_far(event_counts):
     hit_rate = calculate_rate(event_counts, 'hit', 'miss')
     false_alarm_rate = calculate_rate(event_counts, 'mistake', 'cor_reject')
     # print(f"[get_hr_and_far] hit_rate: {hit_rate}, false_alarm_rate: {false_alarm_rate}")
-    
+
     # Check for extreme rates (0 or 1) that would lead to infinite z-scores.
     if hit_rate in (0, 1) or false_alarm_rate in (0, 1):
         # print("[get_hr_and_far] One of the rates is 0 or 1, returning None, None")
@@ -123,12 +124,12 @@ def get_avg_time_from_disp_to_hit_to_reward(sessions):
     dispimg_idxs = []
     hit_idxs = []
     reward_idxs = []
-    
+
     for session in sessions:
         event_idxs_data = session.event_idxs_container.data
         phot_df = session.df_container.get_data("photwrit_470")
         phot_times = phot_df['SecFromZero_FP3002'].values
-        
+
         curr_dispimg_idxs = event_idxs_data['before_dispimg_hit']
         curr_hit_idxs = event_idxs_data['hit']
         curr_reward_idxs = event_idxs_data['reward_collect']
@@ -152,12 +153,12 @@ def get_avg_time_from_disp_to_hit_to_reward(sessions):
         raise ValueError("Indices are not in order")
 
     return (np.mean(phot_times[hit_idxs] - phot_times[dispimg_idxs]),
-            np.mean(phot_times[reward_idxs] - phot_times[hit_idxs])) 
+            np.mean(phot_times[reward_idxs] - phot_times[hit_idxs]))
 
 def add_performance_container(mouse):
     metric_container = DataContainer(float)
     set_event_counts(mouse)
-    
+
     # Define a dictionary with metric names and their corresponding functions
     metrics = {
         'd_prime': d_prime,
@@ -168,7 +169,7 @@ def add_performance_container(mouse):
         'hit_rate': hit_rate,
         'false_alarm_rate': false_alarm_rate,
     }
-    
+
     # Loop through the dictionary, calculating and adding each metric
     for metric_name, metric_function in metrics.items():
         metric_val = metric_function(mouse.event_counts)
@@ -179,11 +180,11 @@ def add_performance_container(mouse):
         metric_container.add_data(metric_name, metric_val)
 
     disp_to_hit_time, hit_to_reward_time = get_avg_time_from_disp_to_hit_to_reward(mouse.sessions)
-    metric_container.add_data('disp_to_hit_time', disp_to_hit_time) 
-    metric_container.add_data('hit_to_reward_time', hit_to_reward_time) 
+    metric_container.add_data('disp_to_hit_time', disp_to_hit_time)
+    metric_container.add_data('hit_to_reward_time', hit_to_reward_time)
     num_center_touches = sum(
         session.df_container.get_data("raw")['Item_Name'].str.contains("Centre_Touches_during_ITI").sum()
         for session in mouse.sessions)
-    
+
     metric_container.add_data('num_center_touches', float(num_center_touches))
     mouse.metric_container = metric_container

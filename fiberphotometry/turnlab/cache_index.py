@@ -1,9 +1,11 @@
-from .utils import _ensure_dir
 from .config import PROJECT_DIR_FULL
 from .detect import make_turn_syllable_series
+from .utils import _ensure_dir
+
 
 def _param_hash(d: dict) -> str:
-    import json, hashlib
+    import hashlib
+    import json
     whitelist = [
         'method','fps','turn_start_pct','stop_ratio','min_bout_ms','merge_gap_ms',
         'smooth_win','clip_hi_pct','speed_floor',
@@ -21,7 +23,9 @@ def build_or_load_turn_index(
     Run detection (non-percentile params), extract per-bout rows with peak |omega| & |kappa|,
     attach argsort ranks for fast binning, and cache to disk.
     """
-    import os, time
+    import os
+    import time
+
     import numpy as np
     import pandas as pd
 

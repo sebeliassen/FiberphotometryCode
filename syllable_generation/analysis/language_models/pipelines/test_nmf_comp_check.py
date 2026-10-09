@@ -1,8 +1,8 @@
 import os
-import sys
 import pickle
+import sys
+
 import numpy as np
-import pandas as pd
 from sklearn.decomposition import NMF
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -32,10 +32,10 @@ for s_idx, bouts in enumerate(session_bouts):
     if len(bouts) < 100: continue
     max_frame = bouts[-1]["end_frame"]
     N = max_frame + 1
-    
+
     frame_sylls = np.zeros(N, dtype=np.int32)
     frame_spatial = np.zeros((N, 2), dtype=np.float32)
-    
+
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = min(b["syllable"], NUM_SYLLS - 1)
@@ -44,16 +44,16 @@ for s_idx, bouts in enumerate(session_bouts):
         if vec is not None and len(vec) >= 2:
             frame_spatial[sf : ef + 1, 0] = vec[0]
             frame_spatial[sf : ef + 1, 1] = vec[1]
-            
+
     oh_bout = np.zeros((N, NUM_SYLLS), dtype=np.float32)
     diffs = np.where(frame_sylls[1:] != frame_sylls[:-1])[0] + 1
     onsets = np.zeros(N, dtype=bool)
     onsets[0] = True; onsets[diffs] = True
     oh_bout[onsets, frame_sylls[onsets]] = 1.0
-    
+
     cum_bout = np.vstack([np.zeros((1, NUM_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
     cum_spatial = np.vstack([np.zeros((1, 2), dtype=np.float32), np.cumsum(frame_spatial, axis=0)])
-    
+
     for t in range(W_FRAMES, N - H_FRAMES, STRIDE_FRAMES):
         w_b = cum_bout[t] - cum_bout[t - W_FRAMES]
         sp_mean = (cum_spatial[t] - cum_spatial[t - W_FRAMES]) / float(W_FRAMES)
@@ -79,7 +79,7 @@ for k in range(K):
     print(f"\nComponent {k+1}:")
     for s in top_sylls:
         print(f"  Syllable {s:2d}: fold-enrichment = {enrichment[s]:.2f}x (H loading = {H[k, s]:.3f})")
-    
+
     # Spatial center/periphery check
     weights_k = W_probs[:, k]
     high_mask = weights_k > np.percentile(weights_k, 75)

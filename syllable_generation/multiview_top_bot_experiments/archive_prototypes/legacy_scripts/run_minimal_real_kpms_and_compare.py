@@ -23,11 +23,12 @@ import sys
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.15"
 
-from pathlib import Path
 import copy
-import time
 import pickle
+import time
 import urllib.request
+from pathlib import Path
+
 import numpy as np
 
 if not hasattr(np, "bool8"):
@@ -45,6 +46,7 @@ if str(EXPERIMENT_DIR) not in sys.path:
     sys.path.insert(0, str(EXPERIMENT_DIR))
 
 import importlib
+
 fuse_module = importlib.import_module("02_fuse_dorsal_ventral")
 fuse_session_pair = fuse_module.fuse_session_pair
 TOPCAM_BPS = fuse_module.TOPCAM_BPS
@@ -211,8 +213,8 @@ def main():
     # 3. Setup Keypoint-MoSeq Configuration for GPU Run
     # -------------------------------------------------------------
     print("\n[Step 3] Setting up Keypoint-MoSeq project for GPU training...")
-    import keypoint_moseq as kpms
     import jax
+    import keypoint_moseq as kpms
     print(f"  Keypoint-MoSeq version: {getattr(kpms, '__version__', 'unknown')}")
     print(f"  JAX default backend:    {jax.default_backend()}")
     print(f"  JAX available devices:  {jax.devices()}")
@@ -358,7 +360,7 @@ def main():
 
         # Verify Photometry bit-for-bit identity on the sliced frames
         ref_slice_df = s_ref.all_data_df.iloc[FRAME_START:FRAME_END]
-        
+
         # Photometry channels check
         phot_cols = [c for c in ref_slice_df.columns if any(k in c.lower() for k in ["phot", "465", "405", "filt", "dff"])]
         if phot_cols:
@@ -388,11 +390,11 @@ def main():
 
         # Verify that newly trained syllables are NOT simply copied!
         identical_fraction = np.mean(baseline_sylls == new_mv_sylls)
-        print(f"\n  Syllable Discrepancy & Genuine Training Analysis:")
+        print("\n  Syllable Discrepancy & Genuine Training Analysis:")
         print(f"    Baseline Syllables Active:   {len(np.unique(baseline_sylls))} unique states (Karen TopCam-only model)")
         print(f"    New Multi-View Sylls Active: {len(np.unique(new_mv_sylls))} unique states (Trained with Ventral Paws)")
         print(f"    Identity Fraction:           {identical_fraction*100:.2f}%")
-        
+
         # Genuine training proof:
         assert identical_fraction < 0.90, "ERROR: Syllables appear to be copied! Genuine training required."
         print(f"    -> [GENUINE LEARNING CONFIRMED]: Newly trained multi-view syllables differ substantially from baseline ({100-identical_fraction*100:.1f}% different) while preserving kinematic structure.")
@@ -402,7 +404,7 @@ def main():
             pd.Series(baseline_sylls, name="Baseline_TopCam_Syllable"),
             pd.Series(new_mv_sylls, name="New_MultiView_Syllable")
         )
-        print(f"\n  Top 5 Cross-Tabulation Interactions (Baseline -> Multi-View with Paws):")
+        print("\n  Top 5 Cross-Tabulation Interactions (Baseline -> Multi-View with Paws):")
         # Flatten and show top interactions
         ct_unstacked = ct.unstack().reset_index(name="frame_count")
         ct_top = ct_unstacked.sort_values(by="frame_count", ascending=False).head(5)
@@ -479,7 +481,7 @@ def main():
     print(f"\n[Step 10] Saving real multi-session pilot pickle ({len(enriched_sessions)} sessions) to {PILOT_PKL_OUT}...")
     with open(PILOT_PKL_OUT, "wb") as f:
         pickle.dump(enriched_sessions, f)
-    
+
     pkl_size_mb = PILOT_PKL_OUT.stat().st_size / (1024 * 1024)
     total_time = time.time() - t0
     print(f"  SUCCESS! Created {PILOT_PKL_OUT.name} ({pkl_size_mb:.2f} MB, {len(enriched_sessions)} sessions).")

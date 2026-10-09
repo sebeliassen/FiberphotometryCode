@@ -12,7 +12,6 @@ macro-level behavioral and kinematic phenotypes between PFF and Monomer:
 """
 
 import sys
-import os
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[5]
@@ -20,12 +19,15 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import pickle
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
+import matplotlib
 import pandas as pd
 from scipy import stats
-import matplotlib
+
 matplotlib.use("Agg", force=True)
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -57,33 +59,33 @@ def main():
 
     with open(DATA_PKL, "rb") as f:
         sessions = pickle.load(f)
-        
+
     valid = [s for s in sessions if getattr(s, "metadata", {}).get("genotype") in ["PFF", "Monomer"]]
-    
+
     records = []
-    
+
     for s in valid:
         df = s.all_data_df
         g = s.metadata["genotype"]
         sid = s.session_id
         aid = s.metadata.get("animal_id", sid)
-        
+
         vdf = df.dropna(subset=["velocity_px_s", "syllable", "centroid_x", "centroid_y"])
         if len(vdf) < 1000:
             continue
-            
+
         speed = vdf["velocity_px_s"].values
         mean_speed = np.mean(speed)
         p95_speed = np.percentile(speed, 95)
         immobility_frac = np.mean(speed < 5.0)
-        
+
         # Bout durations
         is_active = (speed >= 5.0).astype(int)
         changes = np.diff(np.concatenate(([0], is_active, [0])))
         starts, ends = np.where(changes == 1)[0], np.where(changes == -1)[0]
         bout_lens = (ends - starts) / fps
         mean_bout_dur = np.mean(bout_lens) if len(bout_lens) > 0 else 0.0
-        
+
         # Transition Entropy Rate
         sylls = vdf["syllable"].values.astype(int)
         collapsed = sylls[np.concatenate(([True], sylls[1:] != sylls[:-1]))]
@@ -99,7 +101,7 @@ def main():
                 h_cond -= pij * np.log2((pij / pi) + 1e-12)
         else:
             h_cond = np.nan
-            
+
         # Fatigue (First 10 min vs Last 10 min)
         if len(vdf) >= int(fps * 60 * 25): # at least 25 min
             n10 = int(fps * 60 * 10)
@@ -108,7 +110,7 @@ def main():
             fatigue_drop_pct = ((sp_late - sp_early) / (sp_early + 1e-3)) * 100.0
         else:
             fatigue_drop_pct = np.nan
-            
+
         records.append({
             "session_id": sid,
             "animal_id": aid,
@@ -120,10 +122,10 @@ def main():
             "transition_entropy_rate_bits": h_cond,
             "late_session_speed_change_pct": fatigue_drop_pct,
         })
-        
+
     df_macro = pd.DataFrame(records)
     df_macro.to_csv(OUT_DIR / "macro_behavior_per_session.csv", index=False)
-    
+
     # Statistical summary
     metrics = [
         ("mean_speed_px_s", "Mean Locomotor Speed (px/s)"),
@@ -133,21 +135,21 @@ def main():
         ("transition_entropy_rate_bits", "Behavioral Syntax Entropy Rate (bits/step)"),
         ("late_session_speed_change_pct", "Late-Session Speed Change (Fatigue %)"),
     ]
-    
+
     stat_rows = []
     for m, label in metrics:
         mon = df_macro[df_macro["genotype"] == "Monomer"][m].dropna()
         pff = df_macro[df_macro["genotype"] == "PFF"][m].dropna()
-        
+
         t_stat, t_pval = stats.ttest_ind(pff, mon, equal_var=False)
         u_stat, u_pval = stats.mannwhitneyu(pff, mon, alternative="two-sided")
-        
+
         mon_m, pff_m = mon.mean(), pff.mean()
         mon_s, pff_s = mon.std(), pff.std()
         pooled_std = np.sqrt(((len(mon)-1)*mon_s**2 + (len(pff)-1)*pff_s**2) / (len(mon) + len(pff) - 2))
         cohens_d = (pff_m - mon_m) / (pooled_std + 1e-12)
         pct_change = ((pff_m - mon_m) / (mon_m + 1e-12)) * 100.0
-        
+
         stat_rows.append({
             "metric": m,
             "description": label,
@@ -160,30 +162,30 @@ def main():
             "t_test_pvalue": t_pval,
             "mannwhitney_pvalue": u_pval,
         })
-        
+
     df_stats = pd.DataFrame(stat_rows)
     df_stats.to_csv(OUT_DIR / "macro_behavior_statistical_summary.csv", index=False)
     print(f"Saved {OUT_DIR / 'macro_behavior_statistical_summary.csv'}")
-    
+
     # Generate 6-panel publication figure
     fig, axes = plt.subplots(2, 3, figsize=(16, 10))
     axes = axes.flatten()
-    
+
     for i, (m, label) in enumerate(metrics):
         ax = axes[i]
         sns.boxplot(data=df_macro, x="genotype", y=m, palette=palette, ax=ax, width=0.4, boxprops=dict(alpha=0.7))
         sns.stripplot(data=df_macro, x="genotype", y=m, color="black", alpha=0.6, jitter=0.2, size=5, ax=ax)
-        
+
         row = df_stats[df_stats["metric"] == m].iloc[0]
         pval = row["mannwhitney_pvalue"]
         t_pval = row["t_test_pvalue"]
         chosen_p = min(pval, t_pval)
         sig_str = "***" if chosen_p < 0.001 else "**" if chosen_p < 0.01 else "*" if chosen_p < 0.05 else "n.s."
-        
+
         ax.set_title(f"{label}\n(p = {chosen_p:.4f} [{sig_str}], d = {row['cohens_d']:+.2f})", fontsize=11, fontweight="bold")
         ax.set_xlabel("")
         ax.set_ylabel(label)
-        
+
     plt.tight_layout()
     fig.savefig(OUT_DIR / "macro_behavior_genotype_comparison.png", dpi=300)
     plt.close(fig)

@@ -1,11 +1,9 @@
-import numpy as np
-from vispy import scene, app
-import imageio
-from tqdm import tqdm
-import matplotlib.pyplot as plt
-import os
-import asyncio
 import time
+
+import matplotlib.pyplot as plt
+import numpy as np
+from vispy import scene
+
 
 def linear_interp_nans_1d(arr):
     """Interpolate linearly to fill in 1D NaNs."""
@@ -28,10 +26,6 @@ def fill_nans_linear(coords):
             filled[:, i, d] = linear_interp_nans_1d(filled[:, i, d])
     return filled
 
-import numpy as np
-from vispy import scene, app
-import matplotlib.pyplot as plt
-import time
 
 def plot_three_frames(coords):
     """
@@ -120,21 +114,21 @@ def plot_three_frames(coords):
         segs[0::2] = current_coords[skeleton_edges[:, 0]]
         segs[1::2] = current_coords[skeleton_edges[:, 1]]
         lines.set_data(segs)
-        
+
         # Update the canvas and render the frame.
         canvas.update()
         # A short sleep can ensure the scene is fully updated.
         time.sleep(0.05)
         img = canvas.render(size=(800,600))
         rendered_images.append(img)
-        
+
         # Display the frame using matplotlib.
         plt.figure(figsize=(8,6))
         plt.imshow(img)
         plt.title(f"Frame {idx}")
         plt.axis('off')
         plt.show()
-    
+
     return rendered_images
 
 # Example usage:
@@ -146,7 +140,7 @@ def plot_nose_coordinates(coords, sample_rate=100):
     T, N, D = coords.shape
     nose_coords = coords[::sample_rate, 0, :]
     time_axis = np.arange(0, T, sample_rate)
-    
+
     plt.figure(figsize=(10,6))
     plt.plot(time_axis, nose_coords[:, 0], label='nose_x')
     plt.plot(time_axis, nose_coords[:, 1], label='nose_y')
@@ -157,7 +151,7 @@ def plot_nose_coordinates(coords, sample_rate=100):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    
+
     output_plot = "nose_coordinates.png"
     plt.savefig(output_plot)
     plt.show()
@@ -168,10 +162,6 @@ def plot_nose_coordinates(coords, sample_rate=100):
 # coords = np.load('your_coords.npy')
 # create_3d_vid(coords)
 
-import numpy as np
-from vispy import scene
-import matplotlib.pyplot as plt
-import time
 
 def minimal_example():
     # Create an artificial coordinate array of shape (3, 27, 3)
@@ -180,29 +170,29 @@ def minimal_example():
     N = 27   # 27 bodyparts
     D = 3    # 3 dimensions (x, y, z)
     coords = np.random.uniform(0, 100, size=(T, N, D))
-    
+
     # Compute global bounds.
     global_min = np.nanmin(coords.reshape(-1, 3), axis=0)
     global_max = np.nanmax(coords.reshape(-1, 3), axis=0)
     center = (global_min + global_max) / 2.0
     extent = global_max - global_min
     max_extent = np.max(extent)
-    
+
     print("Global min:", global_min)
     print("Global max:", global_max)
     print("Center:", center)
     print("Max extent:", max_extent)
-    
+
     # Define bodyparts names (here just dummy names "bp0", "bp1", ... "bp26")
     bodyparts = ['bp' + str(i) for i in range(27)]
     # Create a minimal skeleton: simply connect each bodypart to the next one.
     skeleton_edges = np.array([[i, i+1] for i in range(26)])
-    
+
     # --- Set up the VisPy scene.
     canvas = scene.SceneCanvas(keys='interactive', size=(800, 600), show=True)
     canvas.bgcolor = 'white'
     view = canvas.central_widget.add_view()
-    
+
     # Set up a TurntableCamera.
     view.camera = scene.cameras.TurntableCamera(fov=45, azimuth=30, elevation=30)
     view.camera.center = center
@@ -212,46 +202,46 @@ def minimal_example():
     view.camera.set_range(x=(global_min[0], global_max[0]),
                           y=(global_min[1], global_max[1]),
                           z=(global_min[2], global_max[2]))
-    
+
     # --- Create visuals.
     # Markers for points.
     points = scene.visuals.Markers()
     # Set initial data for frame 0 with a large size for visibility.
     points.set_data(coords[0], face_color='red', edge_color='black', size=50)
     view.add(points)
-    
+
     # Lines for the skeleton.
     lines = scene.visuals.Line(connect='segments', color='blue', width=5)
     view.add(lines)
-    
+
     # Give the scene a moment to update.
     canvas.update()
     time.sleep(0.1)
-    
+
     # Render three consecutive frames and display each.
     for idx in range(T):
         current_coords = coords[idx]
         # Update marker positions.
         points.set_data(current_coords, face_color='red', edge_color='black', size=50)
-        
+
         # Build skeleton line segments.
         segs = np.empty((skeleton_edges.shape[0]*2, 3))
         segs[0::2] = current_coords[skeleton_edges[:, 0]]
         segs[1::2] = current_coords[skeleton_edges[:, 1]]
         lines.set_data(segs)
-        
+
         canvas.update()
         time.sleep(0.1)
         # Render the scene.
         img = canvas.render(size=(800,600))
-        
+
         # Display the frame using matplotlib.
         plt.figure(figsize=(8,6))
         plt.imshow(img)
         plt.title(f"Frame {idx}")
         plt.axis('off')
         plt.show()
-    
+
     return coords  # Return the artificial data (for debugging if needed)
 
 # Run the minimal example.

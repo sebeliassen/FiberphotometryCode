@@ -9,9 +9,12 @@ Unified source for:
 """
 
 from __future__ import annotations
+
+from typing import Dict, Iterable, List, Optional
+
 import numpy as np
 import pandas as pd
-from typing import Dict, Iterable, List, Optional, Any
+
 
 def tile_results(results: Dict[str, dict], factor: int, verbose: bool = False):
     """
@@ -22,7 +25,7 @@ def tile_results(results: Dict[str, dict], factor: int, verbose: bool = False):
     if factor <= 1: return
     if verbose:
         print(f"[sampling] Tiling Results by factor {factor}...")
-    
+
     for k in results:
         for key, val in results[k].items():
             if isinstance(val, (np.ndarray, list)):
@@ -50,7 +53,7 @@ def flatten_results_to_timeline(
             if k not in vdict: continue
             a = np.asarray(vdict[k])
             result_rows = a.shape[0] if result_rows is None else result_rows
-            
+
             if a.ndim == 1:
                 col_blocks.append(a.reshape(-1, 1))
                 col_names.append(k)
@@ -61,7 +64,7 @@ def flatten_results_to_timeline(
 
         idx = np.asarray(idx, dtype=int).ravel()
         idx_size = idx.size
-        
+
         # Filter Results to match VFI length
         if result_rows != idx_size:
             # Simple truncation/padding to match VFI count
@@ -117,27 +120,27 @@ def build_aligned_dfs(
         rk = getattr(s, 'results_dict_key', None)
         if not rk or rk not in moseq_grouped or rk not in vfi_dict:
             raise ValueError(f"Missing data for session {i} ({rk})")
-            
+
         grp = moseq_grouped[rk].copy()
-        
+
         # Reset frame_index to be 0..M so it maps 1-to-1 with VFI list
         grp = grp.reset_index(drop=True)
         grp["frame_index"] = np.arange(len(grp))
 
         raw_indices = grp["frame_index"].values.astype(int)
         used_vfi = vfi_dict[rk]
-        
+
         # Map to absolute timeline
         valid_mask = raw_indices < len(used_vfi)
         abs_indices = used_vfi[raw_indices[valid_mask]]
         grp = grp[valid_mask]
-        
+
         # Assign absolute frame indices
         grp["frame_index"] = abs_indices
-        
+
         # Determine Target Length (Use Photometry if available, else VFI max)
         target_len = abs_indices.max() + 1
-        
+
         # Priority 1: Explicit n_frames from video metadata (The "Mother" Anchor)
         if hasattr(s, 'video_refs_df') and hasattr(s.video_refs_df, 'empty') and not s.video_refs_df.empty:
              # Look for 'primary' role first, or just take max n_frames? Primary is safest.
@@ -162,19 +165,19 @@ def build_aligned_dfs(
              # We densify if there are gaps OR if we need to extend to target_len
              min_idx = abs_indices.min()
              max_span = target_len - min_idx
-             
+
              # Check if we need to act (Coverage < Span OR Gaps exist)
              # Simplest robust approach: Reindex to full range of interest
              if target_len > len(abs_indices):
                  if verbose:
                      print(f"[sampling] Densifying/Extrapolating {rk} (VFI Count={len(abs_indices)} -> Target={target_len}).")
-                 
+
                  full_idx = np.arange(target_len)
-                 
+
                  # Separate reindex and ffill to control filling behavior
                  grp_reindexed = grp.set_index("frame_index").reindex(full_idx)
                  grp = grp_reindexed.ffill().reset_index()
-                 
+
                  # MASK EXTENSION: Enforce NaNs after the last actual VFI index
                  # This prevents the last syllable from bleeding into the 'n_frames' extension
                  last_vfi = abs_indices.max()
@@ -192,14 +195,14 @@ def build_aligned_dfs(
                      # But verification used int64. Let's try to match int64 if no NaNs.
                      # Syllable usually shouldn't be NaN after ffill if check start.
                      grp["syllable"] = grp["syllable"].astype("Int64") # Nullable Int is safest
-                 
+
                  grp["frame_index"] = grp.index # Should match if index was reset? No, reindex result has index=full_idx.
                  # Wait. set_index().reindex().reset_index() makes the index a column.
                  # The column 'frame_index' is now the index.
                  # So grp['frame_index'] is correct.
-        
+
         grp = grp.reset_index(drop=True)
         ordered_dfs.append(grp)
-        
+
     return ordered_dfs
 

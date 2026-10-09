@@ -1,6 +1,7 @@
 #this is a module for binary kappa search
-import os
 import multiprocessing
+import os
+
 if multiprocessing.current_process().name != 'MainProcess':
     os.environ["CUDA_VISIBLE_DEVICES"] = ""
     os.environ["JAX_PLATFORMS"] = "cpu"
@@ -10,19 +11,20 @@ if multiprocessing.current_process().name != 'MainProcess':
     logging.getLogger("jax").setLevel(logging.CRITICAL)
 
 import numpy as np
+
 np.bool8 = np.bool_
 
-import math
 import json
+import math
 import os
+import sys
+from datetime import datetime
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from kpms_pipeline import run_pipeline
 
-import sys
-from pathlib import Path
-from datetime import datetime
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # repo root
 
 # ========= constants (edit these) =========
@@ -94,10 +96,10 @@ def main():
         FLIPPING_MODE = sys.argv[1]
         if FLIPPING_MODE == "None":
             FLIPPING_MODE = None
-    
+
     if len(sys.argv) > 2:
         SUBSET_METHOD = sys.argv[2]
-        
+
     print(f"[config] Kappa Search: Method={SUBSET_METHOD}, Fraction={EFF_SUBSET_FRACTION}, Flipping={FLIPPING_MODE}")
 
     sessions = get_sessions()
@@ -168,24 +170,24 @@ def main():
             "project_dir": PROJECT_DIR,
             "model_name": model_name_used,
             "model_dir": model_dir,
-            
+
             "kappa_init": summary.get("kappa_init"),
             "kappa_slds": summary.get("kappa_slds"),
-            
+
             "median_duration_frames": median,
             "frames_used": frames_used,
             "target_frames": TARGET_FRAMES,
             "tol_frames": TOL_FRAMES,
-            
+
             "num_ar_iters": NUM_AR_ITERS,
             "num_slds_iters": NUM_SLDS_ITERS,
             "decrease_kappa_factor": DECREASE_KAPPA_FACTOR,
-            
+
             "subset_fraction": EFF_SUBSET_FRACTION,
             "subset_blocks": SUBSET_BLOCKS,
             "subset_block_len": SUBSET_BLOCK_LEN,
             "subset_seed": SUBSET_SEED,
-            
+
             "detector": summary.get("detector"),
             "cam": summary.get("cam"),
             "latent_dim": summary.get("latent_dim"),
@@ -193,12 +195,12 @@ def main():
             "video_extension": summary.get("video_extension"),
             "pca_mode": summary.get("pca_mode"),
             "subroutine": summary.get("subroutine"),
-            
+
             "flipping_mode": FLIPPING_MODE,
             "subset_method": SUBSET_METHOD,
 
-            "started_at": started_at,      
-            "finished_at": finished_at,    
+            "started_at": started_at,
+            "finished_at": finished_at,
             "duration_seconds": duration_s,
         }
         _write_json(os.path.join(model_dir, "kappa_probe.json"), probe_json)
@@ -209,8 +211,8 @@ def main():
             "model_name": model_name_used,
             "frames_used": frames_used,
             "model_dir": model_dir,
-            "started_at": started_at,      
-            "finished_at": finished_at,    
+            "started_at": started_at,
+            "finished_at": finished_at,
             "duration_seconds": duration_s,
         })
 
@@ -221,7 +223,7 @@ def main():
             f"(target={TARGET_FRAMES}, tol={TOL_FRAMES}, frames_used={frames_used})"
         )
         print(step_msg)
-        
+
         # Send ntfy notification
         try:
             import urllib.request
@@ -292,7 +294,7 @@ def main():
         )
         print(f"\n{chosen_msg}")
         print(f"History saved to {os.path.join(best['model_dir'], 'kappa_scan_history.json')}")
-        
+
         # Send completion notification
         try:
             import urllib.request

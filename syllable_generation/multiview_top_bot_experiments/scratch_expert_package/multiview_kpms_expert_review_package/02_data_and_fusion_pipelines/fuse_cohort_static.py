@@ -7,13 +7,13 @@ Supports both 21kp (default, dorsal + 4 paws) and 23kp (dorsal + 4 paws + bot an
 Uses atomic writing, validation manifests, and multiprocessing for fast parallel fusion.
 """
 
+import argparse
 import sys
 import time
-import argparse
-from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from pathlib import Path
+
 import pandas as pd
-import numpy as np
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 if str(REPO_ROOT) not in sys.path:

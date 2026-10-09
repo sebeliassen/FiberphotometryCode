@@ -19,14 +19,15 @@ Objectives:
 5. Export verified epoch transforms specification: `epoch_arena_transforms.json`.
 """
 
-import sys
-import json
 import glob
+import json
+import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, Tuple
+
+import cv2
 import numpy as np
 import pandas as pd
-import cv2
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
@@ -36,9 +37,10 @@ CORE_DIR = EXP / "core"
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
+from core.camera_correspondence import compute_session_camera_mapping, get_session_mapping
 from core.pair_matching import find_matched_pairs
-from core.camera_correspondence import get_session_mapping, compute_session_camera_mapping
 from core.ttl_sync import find_camera_timestamp_files
+
 
 def get_session_epoch(ts_str: str) -> str:
     """Documented epoch assignment based on experimental recording schedule."""

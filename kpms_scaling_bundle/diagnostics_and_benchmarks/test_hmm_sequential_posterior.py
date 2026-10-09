@@ -9,9 +9,10 @@ Rigorous statistical verification of the Numba parallel FFBS discrete state samp
 4. Compares empirical Monte Carlo distributions against exact analytic forward-backward posteriors.
 """
 
+import os
+import sys
+
 import numpy as np
-from numba import njit
-import sys, os
 
 # Add parent directories
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -101,7 +102,7 @@ def run_temporal_posterior_test():
     # 5. Draw N_samples from Numba FFBS kernel
     N_SAMPLES = 5000
     print(f"Sampling {N_SAMPLES} trajectories from Numba FFBS (T={T}, K={K}, 10 masked frames)...")
-    
+
     samples = np.zeros((N_SAMPLES, T), dtype=np.int32)
     workspace = np.zeros((T, K), dtype=np.float64)
     rng = np.random.default_rng(123)
@@ -123,7 +124,7 @@ def run_temporal_posterior_test():
     mae_marginals = np.max(np.abs(emp_gamma - exact_gamma))
     corr_marginals = np.corrcoef(emp_gamma.flatten(), exact_gamma.flatten())[0, 1]
 
-    print(f"\n[Test 1: Temporal Marginals P(z_t = k | y)]")
+    print("\n[Test 1: Temporal Marginals P(z_t = k | y)]")
     print(f"  * Correlation with exact FB: r = {corr_marginals:.5f}")
     print(f"  * Max Absolute Error:        MAE = {mae_marginals:.4f} (Monte Carlo 99% bound ~ 0.025)")
     assert corr_marginals > 0.99, f"Marginal correlation too low: {corr_marginals}"
@@ -142,7 +143,7 @@ def run_temporal_posterior_test():
     corr_transitions = np.corrcoef(emp_xi.flatten(), exact_xi.flatten())[0, 1]
     mae_transitions = np.max(np.abs(emp_xi - exact_xi))
 
-    print(f"\n[Test 2: Pairwise Transition Structure P(z_{{t-1}}=i, z_t=j | y)]")
+    print("\n[Test 2: Pairwise Transition Structure P(z_{t-1}=i, z_t=j | y)]")
     print(f"  * Correlation with exact FB: r = {corr_transitions:.5f}")
     print(f"  * Max Absolute Error:        MAE = {mae_transitions:.4f}")
     assert corr_transitions > 0.99, f"Transition correlation too low: {corr_transitions}"
@@ -152,7 +153,7 @@ def run_temporal_posterior_test():
     # 8. Masked Frames Gap Analysis
     # Across masked frames 25:35, verify that state transitions obey the transition matrix
     gap_samples = samples[:, 25:35]
-    print(f"\n[Test 3: Occlusion / Masked Frames Propagation (Frames 25:35)]")
+    print("\n[Test 3: Occlusion / Masked Frames Propagation (Frames 25:35)]")
     gap_corr = np.corrcoef(emp_gamma[25:35].flatten(), exact_gamma[25:35].flatten())[0, 1]
     print(f"  * Masked frames distribution correlation: r = {gap_corr:.5f}")
     assert gap_corr > 0.99, f"Masked frames correlation too low: {gap_corr}"

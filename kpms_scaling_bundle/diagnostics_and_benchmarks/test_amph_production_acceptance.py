@@ -13,8 +13,10 @@ Full-dataset production acceptance benchmark on the FULL 30-session AMPH dataset
   5. Strictly read-only against existing scientific checkpoints.
 """
 
-import sys, os, time, gc
 import multiprocessing
+import os
+import sys
+import time
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
@@ -32,16 +34,15 @@ if REPO_ROOT not in sys.path: sys.path.insert(0, REPO_ROOT)
 if KPMS_DIR not in sys.path: sys.path.insert(0, KPMS_DIR)
 
 import numpy as np
+
 if not hasattr(np, "bool8"): np.bool8 = np.bool_
 
-import psutil
-import jax
-import jax.numpy as jnp
 import keypoint_moseq as kpms
-from keypoint_moseq.fitting import check_for_nans
+import psutil
 import utils.resample_batching as rb
+from jax_moseq.models import keypoint_slds
+from keypoint_moseq.fitting import check_for_nans
 from utils.resample_batching import KPMSStateCache
-from jax_moseq.models import arhmm, keypoint_slds
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "amph_project")
 SOURCE_MODEL = "amph_prod_k150k_run_01"
@@ -156,7 +157,7 @@ def run_production_acceptance():
 
     warmed_slds = telemetry[3]
     warmed_ar = telemetry[1]
-    print(f"\nKEY ACCEPTANCE FINDINGS:")
+    print("\nKEY ACCEPTANCE FINDINGS:")
     print(f"  * Warmed AR Iteration:     {warmed_ar['total_sec']:.2f} s (Target: < 6.0 s)")
     print(f"  * Warmed SLDS Iteration:   {warmed_slds['total_sec']:.2f} s (Target: 14-16 s)")
     print(f"  * Isolated NaN Check Time: {warmed_slds['check_sec']*1000:.2f} ms (< 10 ms; 0 repeated PCIe round-trips)")

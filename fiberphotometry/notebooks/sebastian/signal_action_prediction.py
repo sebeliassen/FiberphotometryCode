@@ -1,14 +1,14 @@
 import sys
+
 sys.path.append('../../')
 
+from itertools import product
+
+import numpy as np
+from analysis.timepoint_analysis import sample_signals_and_metrics
+from config import all_brain_regions
 from main import load_and_prepare_sessions
 from processing.session_sampling import MiceAnalysis
-from analysis.timepoint_analysis import sample_signals_and_metrics, sample_low_and_high_signals
-from config import all_brain_regions, all_event_types, all_metrics
-from itertools import product
-import numpy as np
-from utils import mouse_br_events_count
-
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
@@ -25,7 +25,7 @@ labels = []
 for mouse in mouse_analyser.mice_dict.values():
     mouse_sessions = mouse.sessions
     for brain_region, event in product(all_brain_regions, ['hit', 'mistake', 'miss', 'cor_reject']):
-        mouse_signals = [] 
+        mouse_signals = []
         for session in mouse_sessions:
             if session.signal_info.get((brain_region, event)) is None:
                 continue
@@ -68,7 +68,7 @@ event_labels_test = event_labels_encoded[test_mask]
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
-# Assuming all_event_signals_train, br_labels_train, event_labels_train, 
+# Assuming all_event_signals_train, br_labels_train, event_labels_train,
 # all_event_signals_test, br_labels_test, event_labels_test are already defined
 
 # Convert the data to PyTorch tensors
@@ -90,6 +90,7 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 import torch.nn as nn
 
+
 class RNNModel(nn.Module):
     def __init__(self, input_size, hidden_size, br_output_size, event_output_size, num_layers=1):
         super(RNNModel, self).__init__()
@@ -98,14 +99,14 @@ class RNNModel(nn.Module):
         self.rnn = nn.RNN(input_size, hidden_size, num_layers, batch_first=True)
         self.fc_br = nn.Linear(hidden_size, br_output_size)
         self.fc_event = nn.Linear(hidden_size, event_output_size)
-    
+
     def forward(self, x):
         # Set initial hidden state
         h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size)
-        
+
         # Forward propagate RNN
         out, _ = self.rnn(x, h0)
-        
+
         # Decode the hidden state of the last time step for both br and event labels
         br_out = self.fc_br(out[:, -1, :])
         event_out = self.fc_event(out[:, -1, :])
@@ -135,18 +136,18 @@ for epoch in range(num_epochs):
         signals = signals.to(device).unsqueeze(-1)
         br_labels = br_labels.to(device)
         event_labels = event_labels.to(device)
-        
+
         # Forward pass
         br_outputs, event_outputs = model(signals)
         br_loss = criterion_br(br_outputs, br_labels)
         event_loss = criterion_event(event_outputs, event_labels)
         loss = br_loss + event_loss
-        
+
         # Backward and optimize
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-    
+
     print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
 
 
@@ -159,14 +160,14 @@ with torch.no_grad():
         signals = signals.to(device).unsqueeze(-1)
         br_labels = br_labels.to(device)
         event_labels = event_labels.to(device)
-        
+
         br_outputs, event_outputs = model(signals)
         _, br_predicted = torch.max(br_outputs.data, 1)
         _, event_predicted = torch.max(event_outputs.data, 1)
-        
+
         total += br_labels.size(0)
         br_correct += (br_predicted == br_labels).sum().item()
         event_correct += (event_predicted == event_labels).sum().item()
-    
+
     print(f'Test Accuracy for br_labels: {100 * br_correct / total:.2f}%')
     print(f'Test Accuracy for event_labels: {100 * event_correct / total:.2f}%')

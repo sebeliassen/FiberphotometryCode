@@ -11,18 +11,20 @@ Tests Point 2 from reviewer feedback:
   4. Precise workspace memory measurement (~481 MB for T=10,030 frames).
 """
 
-import sys, os, time
+import sys
+import time
+
 sys.path.insert(0, '/home/fsp585/Desktop/FiberphotometryCode')
 sys.path.insert(0, '/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll')
 
 import numpy as np
+
 if not hasattr(np, "bool8"): np.bool8 = np.bool_
 
-import jax
 import jax.numpy as jnp
 import jax.random as jr
-import keypoint_moseq as kpms
 import utils.resample_batching as rb
+
 
 def run_serial_ffbs_reference(seed, x, mask, Ab, Q, pi, nlags=3, num_states=100, batch_size=20):
     """Reference serial single-buffer FFBS."""
@@ -72,7 +74,7 @@ def test_double_buffer():
     T_eff = T - nlags
 
     print(f"Configuration: N={N} sequences, batch_size={bs}, T={T} frames, K={K} states")
-    print(f"Batch partition: Batch 0 (0..20), Batch 1 (20..40), Batch 2 (40..43, partial)")
+    print("Batch partition: Batch 0 (0..20), Batch 1 (20..40), Batch 2 (40..43, partial)")
 
     # 1. Generate synthetic distinct sequences and parameters
     rng = np.random.default_rng(42)

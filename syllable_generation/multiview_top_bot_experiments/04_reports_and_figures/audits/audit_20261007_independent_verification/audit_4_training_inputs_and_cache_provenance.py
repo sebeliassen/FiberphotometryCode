@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-import sys, json, os, pickle
+import json
+import pickle
 from pathlib import Path
-import numpy as np, pandas as pd, h5py
+
+import h5py
+import numpy as np
+import pandas as pd
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
@@ -30,7 +34,7 @@ def audit_cache_provenance():
         "results.h5": res_path,
         "checkpoint.h5": ckpt_path
     }
-    
+
     file_info = {}
     for name, p in files.items():
         if p.exists():
@@ -72,10 +76,10 @@ def audit_cache_provenance():
     # Check per-paw missingness
     paw_names = ["left_front_paw", "right_front_paw", "left_hind_paw", "right_hind_paw"]
     paw_indices = [bps.index(p) for p in paw_names]
-    
+
     paw_missing_counts = {p: 0 for p in paw_names}
     paw_nan_counts = {p: 0 for p in paw_names}
-    
+
     for y_seq, m_seq in zip(Y, mask):
         valid_y = np.array(y_seq)[np.array(m_seq) > 0.5] # (T_valid, K, 2)
         for p_name, p_idx in zip(paw_names, paw_indices):
@@ -98,7 +102,7 @@ def audit_cache_provenance():
     sample_sid = metadata[0][0].decode("utf-8") if isinstance(metadata[0][0], bytes) else str(metadata[0][0])
     base_sid = sample_sid.split("_seg")[0]
     sample_h5 = FUSED_DIR / f"{base_sid}_tandem_21kp.h5"
-    
+
     mismatch_detected = False
     if sample_h5.exists():
         df_sample = pd.read_hdf(sample_h5)

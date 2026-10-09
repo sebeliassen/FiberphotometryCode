@@ -13,11 +13,12 @@ Outputs:
   - audits/seed404_grid_movies_tile_by_tile_audit.md
 """
 
-import sys
-import json
-import time
 import hashlib
+import json
+import sys
+import time
 from pathlib import Path
+
 import h5py
 import numpy as np
 import pandas as pd
@@ -162,7 +163,7 @@ def main():
                     "manifest_file": mf.name,
                 })
 
-    print(f"\n[3/3] Saving audit outputs...", flush=True)
+    print("\n[3/3] Saving audit outputs...", flush=True)
     df_audit = pd.DataFrame(records)
     df_audit.to_csv(AUDIT_CSV, index=False)
     print(f"  ✅ Saved Tile Audit CSV ({len(df_audit)} rows): {AUDIT_CSV}")

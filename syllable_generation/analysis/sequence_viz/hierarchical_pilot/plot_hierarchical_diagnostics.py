@@ -15,13 +15,15 @@ Shared-Subroutine Behavioral Model:
 
 import sys
 from pathlib import Path
+
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 import pickle
-import numpy as np
-import pandas as pd
+
 import matplotlib
+import numpy as np
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns

@@ -14,12 +14,13 @@ Enforces:
 """
 
 import os
-import sys
 import pickle
+import sys
+
 import numpy as np
 import pandas as pd
-from scipy.stats import ttest_ind, mannwhitneyu
 from scipy.optimize import curve_fit
+from scipy.stats import mannwhitneyu, ttest_ind
 from sklearn.decomposition import NMF
 from sklearn.linear_model import Ridge
 
@@ -54,7 +55,7 @@ def main():
     print("=" * 80)
     print("RIGOROUS 4-COHORT PRESENTATION COMPARISON (FIG 1 & FIG 2)")
     print("=" * 80)
-    
+
     # 1. Load Sessions & Metadata
     pkl_path = os.path.join(ROOT_DIR, "syllable_generation/data/jonathan_amph_sessions_v2_w_sylls.pkl")
     with open(pkl_path, "rb") as f:
@@ -66,11 +67,11 @@ def main():
     session_bouts = cache["session_bouts"] if isinstance(cache, dict) and "session_bouts" in cache else cache
 
     cohort_names = ["WT_Saline", "WT_Amphetamine", "KI_Saline", "KI_Amphetamine"]
-    
+
     # 2. Extract clean discrete RLE bouts per session (filtered >= 3 frames)
     print("\nExtracting filtered RLE bouts and sliding evaluation windows...")
     clean_session_data = []
-    
+
     for s_idx, bouts in enumerate(session_bouts):
         s = raw_sessions[s_idx]
         meta = getattr(s, "metadata", {})
@@ -80,51 +81,51 @@ def main():
         inj_f = meta.get("injection_frame", 0)
         entry_f = meta.get("entry_frame", 0)
         sid = getattr(s, "session_id", f"sess_{s_idx}")
-        
+
         # Filter bouts >= MIN_BOUT_FRAMES
         filtered_bouts = [b for b in bouts if (b["end_frame"] - b["start_frame"] + 1) >= MIN_BOUT_FRAMES]
         if len(filtered_bouts) < 100: continue
-        
+
         max_frame = filtered_bouts[-1]["end_frame"]
         N = max_frame + 1
-        
+
         # Discrete onset matrix (1.0 only at start frame of genuine bouts)
         oh_bout = np.zeros((N, NUM_SYLLS), dtype=np.float32)
         frame_sylls = np.zeros(N, dtype=np.int32)
-        
+
         for b in filtered_bouts:
             sf, ef = b["start_frame"], b["end_frame"]
             s_id = min(b["syllable"], NUM_SYLLS - 1)
             frame_sylls[sf : ef + 1] = s_id
             oh_bout[sf, s_id] = 1.0
-            
+
         cum_bout = np.vstack([np.zeros((1, NUM_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
-        
+
         # Extract sliding windows
         max_w_frames = int(max(W_VALUES) * FPS)
-        
+
         for t in range(max_w_frames, N - H_FRAMES, STRIDE_FRAMES):
             # Target future: distinct bouts initiated between [t, t + H_FRAMES]
             y_count = cum_bout[t + H_FRAMES] - cum_bout[t]
             tot_y = np.sum(y_count)
             if tot_y < 5.0: continue  # require at least 5 future bouts
             y_dist = y_count / tot_y
-            
+
             # Current syllable one-hot
             curr_s = frame_sylls[t]
             curr_oh = np.zeros(NUM_SYLLS, dtype=np.float32)
             curr_oh[curr_s] = 1.0
-            
+
             # Past multi-window counts
             past_w = {}
             for w_sec in W_VALUES:
                 w_fr = int(w_sec * FPS)
                 past_w[w_sec] = cum_bout[t] - cum_bout[t - w_fr]
-                
+
             is_post = (t >= inj_f + int(68.3 * FPS))
             is_pre = (t < inj_f and t >= entry_f + max_w_frames)
             t_min_inj = (t - inj_f) / FPS / 60.0
-            
+
             clean_session_data.append({
                 "session_idx": s_idx,
                 "sid": sid,
@@ -171,7 +172,7 @@ def main():
     Z_probs = Z_all / np.clip(np.sum(Z_all, axis=1, keepdims=True), 1e-8, None)
     for k in range(K):
         df_win[f"z_{k+1}"] = Z_probs[:, k]
-    
+
     z_clip = np.clip(Z_probs, 1e-12, None)
     df_win["z_entropy"] = -np.sum(z_clip * np.log2(z_clip), axis=1)
     df_post = df_win[df_win["is_post"]].copy()
@@ -221,38 +222,38 @@ def main():
     print("\n" + "=" * 80)
     print("PART 2: FIG 1B — NMF PREDICTIVE RETENTION ACROSS K IN [1..30]")
     print("=" * 80)
-    
+
     K_LIST = [1, 2, 3, 4, 6, 8, 10, 15, 20, 30]
     wtsal_sub = df_post[df_post["cohort"] == "WT_Saline"]
     X_68_wtsal = np.array([w[68.3] for w in wtsal_sub["past_w"]], dtype=np.float32)
     Y_wtsal = np.array(wtsal_sub["y_dist"].tolist(), dtype=np.float32)
-    
+
     # Evaluate transfer when trained on WT Saline
     retention_results = []
     for k_val in K_LIST:
         nmf_k = NMF(n_components=k_val, init='nndsvda', random_state=42, max_iter=600)
         Z_train = nmf_k.fit_transform(X_68_wtsal)
-        
+
         reg = Ridge(alpha=100.0)
         reg.fit(Z_train, Y_wtsal)
-        
+
         row = {"K": k_val}
         for c in cohort_names:
             c_sub = df_post[df_post["cohort"] == c]
             X_test = np.array([w[68.3] for w in c_sub["past_w"]], dtype=np.float32)
             Y_test = np.array(c_sub["y_dist"].tolist(), dtype=np.float32)
-            
+
             p0 = np.mean(Y_test, axis=0, keepdims=True)
             d_null = np.mean(js_divergence(Y_test, p0))
-            
+
             Z_test = nmf_k.transform(X_test)
             Y_pred = np.clip(reg.predict(Z_test), 1e-12, None)
             Y_pred = Y_pred / np.sum(Y_pred, axis=-1, keepdims=True)
             d_pred = np.mean(js_divergence(Y_test, Y_pred))
-            
+
             row[c] = (d_null - d_pred) / d_null * 100.0
         retention_results.append(row)
-        
+
     df_retention = pd.DataFrame(retention_results)
     print("\nPredictive Gain (% Delta D_JS) vs NMF Components K (Trained on WT Saline):")
     print(df_retention.to_string(index=False))
@@ -265,7 +266,7 @@ def main():
     print("=" * 80)
 
     # Feature: [Current Syllable OH (100-D) + Past Repertoire BoW(W) (100-D)] -> Future Y (100-D)
-    
+
     # Case A: Trained on WT Saline Post-Injection -> Evaluated on 4 Cohorts
     mem_transfer_results = []
     for w_sec in W_VALUES:
@@ -274,22 +275,22 @@ def main():
         d_feat = X_tr.shape[1]
         I_d = np.eye(d_feat, dtype=np.float32)
         beta_wtsal = np.linalg.solve(X_tr.T @ X_tr + 500.0 * I_d, X_tr.T @ Y_wtsal)
-        
+
         for c in cohort_names:
             c_sub = df_post[df_post["cohort"] == c]
             X_te = np.hstack([np.array(c_sub["curr_syll_oh"].tolist()), np.array([w[w_sec] for w in c_sub["past_w"]])])
             Y_te = np.array(c_sub["y_dist"].tolist())
-            
+
             p0 = np.mean(Y_te, axis=0, keepdims=True)
             d_null = np.mean(js_divergence(Y_te, p0))
-            
+
             Y_pr = np.clip(X_te @ beta_wtsal, 1e-12, None)
             Y_pr = Y_pr / np.sum(Y_pr, axis=-1, keepdims=True)
             d_pr = np.mean(js_divergence(Y_te, Y_pr))
-            
+
             row[c] = (d_null - d_pr) / d_null * 100.0
         mem_transfer_results.append(row)
-        
+
     df_mem_trans = pd.DataFrame(mem_transfer_results)
     print("\n--- Memory Curve: Trained on WT Saline Reference ---")
     print(df_mem_trans.to_string(index=False))
@@ -302,32 +303,32 @@ def main():
             c_sub = df_post[df_post["cohort"] == c]
             sess_ids = c_sub["session_idx"].unique()
             c_gains = []
-            
+
             for test_s in sess_ids:
                 tr = c_sub[c_sub["session_idx"] != test_s]
                 te = c_sub[c_sub["session_idx"] == test_s]
                 if len(tr) == 0 or len(te) == 0: continue
-                
+
                 X_tr = np.hstack([np.array(tr["curr_syll_oh"].tolist()), np.array([w[w_sec] for w in tr["past_w"]])])
                 Y_tr = np.array(tr["y_dist"].tolist())
                 X_te = np.hstack([np.array(te["curr_syll_oh"].tolist()), np.array([w[w_sec] for w in te["past_w"]])])
                 Y_te = np.array(te["y_dist"].tolist())
-                
+
                 p0 = np.mean(Y_te, axis=0, keepdims=True)  # test set marginal baseline
                 d_null = np.mean(js_divergence(Y_te, p0))
-                
+
                 d_feat = X_tr.shape[1]
                 I_d = np.eye(d_feat, dtype=np.float32)
                 beta = np.linalg.solve(X_tr.T @ X_tr + 500.0 * I_d, X_tr.T @ Y_tr)
-                
+
                 Y_pr = np.clip(X_te @ beta, 1e-12, None)
                 Y_pr = Y_pr / np.sum(Y_pr, axis=-1, keepdims=True)
                 d_pr = np.mean(js_divergence(Y_te, Y_pr))
-                
+
                 c_gains.append((d_null - d_pr) / d_null * 100.0)
             row[c] = np.mean(c_gains)
         mem_within_results.append(row)
-        
+
     df_mem_within = pd.DataFrame(mem_within_results)
     print("\n--- Memory Curve: Within-Cohort Cross-Validation ---")
     print(df_mem_within.to_string(index=False))
@@ -338,9 +339,9 @@ def main():
     print("\n" + "=" * 80)
     print("PART 4: BATEMAN BIEXPONENTIAL FIT PARAMETERS (WITHIN-COHORT CV)")
     print("=" * 80)
-    
+
     w_arr = df_mem_within["W_sec"].values
-    
+
     for c in cohort_names:
         g_arr = df_mem_within[c].values
         try:
@@ -356,13 +357,13 @@ def main():
             g_dense = biexp_func(w_dense, *popt)
             w_peak = w_dense[np.argmax(g_dense)]
             g_peak = np.max(g_dense)
-            
+
             # Compute R^2
             res = g_arr - biexp_func(w_arr, *popt)
             ss_res = np.sum(res**2)
             ss_tot = np.sum((g_arr - np.mean(g_arr))**2)
             r2 = 1.0 - (ss_res / ss_tot)
-            
+
             print(f"\nCohort: {c}")
             print(f"  P0 (Instantaneous Gain at W=0s) : {p0_fit:5.2f}%")
             print(f"  P_max (Peak Predictive Gain)     : {g_peak:5.2f}%")

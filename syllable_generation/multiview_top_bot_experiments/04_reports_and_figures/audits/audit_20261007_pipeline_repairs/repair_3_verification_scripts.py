@@ -11,12 +11,12 @@ Repaired and hardened static fusion invariants audit with:
 5. Anatomical left/right convention verification.
 """
 
-import sys
 import json
-import tempfile
 import shutil
+import sys
+import tempfile
 from pathlib import Path
-from typing import Dict, List, Tuple
+
 import numpy as np
 import pandas as pd
 
@@ -27,9 +27,9 @@ AUDIT_DIR = EXP / "04_reports_and_figures/audits/audit_20261007_pipeline_repairs
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-from core.pair_matching import find_matched_pairs
-from core.static_fusion_engine import fuse_single_pair_static, PAW_MAP
 from core.camera_correspondence import get_session_mapping
+from core.pair_matching import find_matched_pairs
+from core.static_fusion_engine import PAW_MAP, fuse_single_pair_static
 from core.ttl_sync import find_camera_timestamp_files
 
 PAW_LIST = ["left_front_paw", "right_front_paw", "left_hind_paw", "right_hind_paw"]

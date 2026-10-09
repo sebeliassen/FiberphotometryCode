@@ -1,8 +1,7 @@
-import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
 import logging
-from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 logger = logging.getLogger("Panel1z.Utils")
 
@@ -12,7 +11,7 @@ def save_plot(fig, name, config):
     """
     out_dir = config['output_dir'] / "plots"
     out_dir.mkdir(parents=True, exist_ok=True)
-    
+
     path = out_dir / f"{name}.png"
     fig.savefig(path, bbox_inches='tight', dpi=150)
     plt.close(fig)
@@ -24,7 +23,7 @@ def save_stats(df, name, config):
     """
     out_dir = config['output_dir'] / "stats"
     out_dir.mkdir(parents=True, exist_ok=True)
-    
+
     path = out_dir / f"{name}.csv"
     df.to_csv(path, index=False)
     logger.info(f"   Saved Stats: {path}")
@@ -37,11 +36,11 @@ def bootstrap_ci(arr, n_boot=1000):
     means = []
     n = len(arr)
     rng = np.random.default_rng()
-    
+
     for _ in range(n_boot):
         sample = rng.choice(arr, size=n, replace=True, axis=0)
         means.append(np.mean(sample, axis=0))
-        
+
     means = np.array(means)
     low = np.percentile(means, 2.5, axis=0)
     high = np.percentile(means, 97.5, axis=0)

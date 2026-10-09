@@ -1,11 +1,13 @@
 import os
+
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 os.environ["JAX_PLATFORMS"] = "cpu"
 
 import json
 from pathlib import Path
-import numpy as np
+
 import keypoint_moseq as kpms
+import numpy as np
 from keypoint_moseq.viz import get_durations
 
 PROJECT_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/multiview_kappa_search/project")
@@ -63,13 +65,13 @@ with open(summary_path, "w") as f:
     json.dump(summary_data, f, indent=2)
 
 print("\n" + "=" * 65)
-print(f"FULL MODEL EVALUATION SUCCESS:")
+print("FULL MODEL EVALUATION SUCCESS:")
 print(f"  Model: {MODEL_NAME}")
 print(f"  Total Iterations: {current_iter}")
 print(f"  Median Dwell: {final_median_frames:.2f} frames ({final_median_ms:.1f} ms @ 60 FPS)")
 print(f"  Active Syllables: {num_active_sylls}")
 print(f"  Total Valid Frames Modeled: {total_frames:,}")
-print(f"  Top 5 Syllables by Usage:")
+print("  Top 5 Syllables by Usage:")
 for s in top_sylls[:5]:
     print(f"    Syllable {s['syllable']}: {s['usage_pct']:.2f}% ({s['count']:,} frames)")
 print("=" * 65)

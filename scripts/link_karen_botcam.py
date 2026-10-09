@@ -7,11 +7,9 @@ Matches each BotCam video against the corresponding TopCam in karen_project/vide
 to automatically determine if an animal was present in that chamber.
 """
 
-import os
-import sys
 import argparse
+import os
 import re
-import glob
 from pathlib import Path
 
 HDD_BASE = Path("/mnt/hdd/karen_project")
@@ -58,11 +56,11 @@ def find_all_botcam_videos():
 
 def create_symlinks(dry_run=True, filter_empty=False):
     mode_str = "DRY RUN (no files linked)" if dry_run else "REAL RUN (creating symlinks)"
-    print(f"==================================================")
+    print("==================================================")
     print(f" BotCam Symlinking: {mode_str}")
     print(f" Target Directory: {TARGET_DIR}")
     print(f" Filter Empty Chambers via TopCam match: {filter_empty}")
-    print(f"==================================================\n")
+    print("==================================================\n")
 
     if not dry_run:
         TARGET_DIR.mkdir(parents=True, exist_ok=True)
@@ -117,13 +115,13 @@ def create_symlinks(dry_run=True, filter_empty=False):
                 symlink_dest.unlink()
             symlink_dest.symlink_to(vid_path)
 
-    print(f"\n==================================================")
+    print("\n==================================================")
     print(f" Finished {mode_str}!")
     print(f" Total BotCam on HDD: {len(videos)}")
     print(f" Total Linked: {total_linked}")
     if filter_empty:
         print(f" Total Skipped (Empty Chambers): {total_skipped}")
-    print(f"==================================================")
+    print("==================================================")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Symlink Karen Project BotCam Videos")

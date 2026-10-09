@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-import os, glob, re, argparse, shutil
-import pandas as pd
+import argparse
+import glob
+import os
+import re
+import shutil
 
-from config import RENAME_RULES, REGION_COL_RE, PHOTOWRIT_GLOB, PHOTOWRIT_SETUP_RE, RAW_CSV_RE
+import pandas as pd
+from config import PHOTOWRIT_GLOB, PHOTOWRIT_SETUP_RE, RAW_CSV_RE, REGION_COL_RE, RENAME_RULES
+
 
 # ----------------------------------------------------------------------------
 def rename_ttl(path: str) -> pd.DataFrame:

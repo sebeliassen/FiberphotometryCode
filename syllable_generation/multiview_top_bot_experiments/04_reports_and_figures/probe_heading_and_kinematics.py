@@ -18,13 +18,12 @@ import argparse
 import json
 import time
 from pathlib import Path
-from typing import Dict, List
+from typing import List
 
 import h5py
 import numpy as np
-import yaml
-
 import viz_v2_common as vc
+import yaml
 
 AUDITED_SYLLABLES = [1, 67, 30, 70, 92, 36, 42]
 

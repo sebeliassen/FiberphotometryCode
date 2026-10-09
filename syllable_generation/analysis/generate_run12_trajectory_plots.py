@@ -26,6 +26,7 @@ os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = "platform"
 
 import matplotlib
+
 matplotlib.use("Agg")
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
@@ -33,15 +34,16 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import jax.numpy as jnp
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
 import keypoint_moseq as kpms
-import keypoint_moseq.viz as viz
 import keypoint_moseq.util as util
+import keypoint_moseq.viz as viz
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
 
 # Syllable filter for top 30 syllables (0 to 29)
 orig_get_syllable_instances = util.get_syllable_instances
@@ -148,7 +150,7 @@ def main():
     print("\n" + "=" * 80)
     print("✓ TRAJECTORY PLOTS SUCCESSFULLY GENERATED!")
     print(f"   Output Directory: {output_dir}")
-    
+
     # Verify outputs
     pdf_files = sorted(list(output_dir.glob("*.pdf")))
     gif_files = sorted(list(output_dir.glob("*.gif")))

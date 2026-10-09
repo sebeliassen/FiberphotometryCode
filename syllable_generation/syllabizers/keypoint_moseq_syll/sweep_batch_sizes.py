@@ -9,10 +9,10 @@ Architecture:
     and runs 1 fit iteration.
 """
 import os
-import sys
 import subprocess
-import urllib.request
+import sys
 import time
+import urllib.request
 
 NTFY_URL = "https://ntfy.sh/woody_videos_seb"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -177,9 +177,9 @@ print(f"SUCCESS in {{elapsed:.1f}}s")
 def run_orchestrator(is_test):
     prefix = "[TEST]" if is_test else "[PROD]"
     mem_frac = "1.0"
-    
+
     project_path = os.path.join(SCRIPT_DIR, "karen_project_2")
-    
+
     model_dirs = sorted([
         d for d in os.listdir(project_path)
         if os.path.isfile(os.path.join(project_path, d, "checkpoint.h5"))
@@ -189,27 +189,27 @@ def run_orchestrator(is_test):
         print(msg)
         ntfy(f"{prefix} Error", msg)
         return
-    
+
     model_name = model_dirs[-1]
     print(f"Using checkpoint: {project_path}/{model_name}")
-    
+
     if is_test:
         batch_sizes = [4, 2]
     else:
         batch_sizes = [-1, 1000, 800, 600, 400, 200, 100, 50]
-    
+
     ntfy(f"{prefix} Sweep Started",
          f"Batch sizes: {batch_sizes}\nCheckpoint: {model_name}")
-    
+
     trial_path = os.path.join(SCRIPT_DIR, "_oom_trial.py")
     results = []
-    
+
     for bs in batch_sizes:
         bs_label = "UNBATCHED" if bs == -1 else str(bs)
         print(f"\n{'='*60}")
         print(f"TRIAL: batch_size={bs_label}")
         print(f"{'='*60}")
-        
+
         script_content = TRIAL_SCRIPT_TEMPLATE.format(
             mem_fraction=mem_frac,
             script_dir=SCRIPT_DIR,
@@ -220,7 +220,7 @@ def run_orchestrator(is_test):
         )
         with open(trial_path, "w") as f:
             f.write(script_content)
-        
+
         t0 = time.time()
         proc = subprocess.run(
             [sys.executable, "-u", trial_path],
@@ -228,7 +228,7 @@ def run_orchestrator(is_test):
             timeout=600
         )
         elapsed = time.time() - t0
-        
+
         if proc.returncode == 0:
             msg = f"SUCCESS bs={bs_label} in {elapsed:.1f}s"
             print(msg)
@@ -239,27 +239,27 @@ def run_orchestrator(is_test):
         else:
             is_oom = "RESOURCE_EXHAUSTED" in proc.stderr or "out of memory" in proc.stderr.lower()
             tag = "OOM" if is_oom else "CRASH"
-            
+
             err_lines = [l for l in proc.stderr.splitlines()
                          if "RESOURCE_EXHAUSTED" in l or "Error" in l or "TypeError" in l]
             err_summary = err_lines[0][:200] if err_lines else "Unknown"
-            
+
             msg = f"FAIL ({tag}) bs={bs_label} after {elapsed:.1f}s\n{err_summary}"
             print(msg)
             print(f"STDERR:\n{proc.stderr}")
             ntfy(f"{prefix} {tag} bs={bs_label}", msg)
             results.append((bs, tag, elapsed))
-    
+
     if os.path.exists(trial_path):
         os.remove(trial_path)
-    
+
     print(f"\n{'='*60}")
     print("SWEEP RESULTS")
     print(f"{'='*60}")
     for bs, status, elapsed in results:
         bs_label = "UNBATCHED" if bs == -1 else str(bs)
         print(f"  bs={bs_label:>10s}  {status:>5s}  {elapsed:6.1f}s")
-    
+
     successes = [r for r in results if r[1] == "OK"]
     if successes:
         best = successes[0][0]
@@ -267,7 +267,7 @@ def run_orchestrator(is_test):
         final_msg = f"Max working batch size: {best_label}"
     else:
         final_msg = "All batch sizes failed."
-    
+
     print(f"\n{final_msg}")
     ntfy(f"{prefix} Sweep Done", final_msg + "\n" + "\n".join(
         f"  bs={'UNBATCHED' if bs==-1 else bs}: {status} ({elapsed:.0f}s)"
@@ -280,9 +280,9 @@ if __name__ == "__main__":
     parser.add_argument("--test", action="store_true")
     parser.add_argument("--prod", action="store_true")
     args = parser.parse_args()
-    
+
     if not args.test and not args.prod:
         parser.print_help()
         sys.exit(1)
-    
+
     run_orchestrator(is_test=args.test)

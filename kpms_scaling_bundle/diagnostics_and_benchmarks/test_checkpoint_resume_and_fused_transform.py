@@ -10,20 +10,24 @@ Tests Point 4 from reviewer feedback:
    - Verifies numerical agreement under identical random seed.
 """
 
-import sys, os, time, shutil, tempfile
+import os
+import sys
+import tempfile
+
 sys.path.insert(0, '/home/fsp585/Desktop/FiberphotometryCode')
 sys.path.insert(0, '/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll')
 
 import numpy as np
+
 if not hasattr(np, "bool8"): np.bool8 = np.bool_
 
-import jax
 import jax.numpy as jnp
 import jax.random as jr
 import keypoint_moseq as kpms
-from jax_moseq.models import keypoint_slds
 import utils.resample_batching as rb
+from jax_moseq.models import keypoint_slds
 from utils.resample_batching import KPMSStateCache, _numba_fused_rigid_transform
+
 
 def numpy_transform_reference(Y_c, v_c, h_c):
     N, T = Y_c.shape[:2]
@@ -37,7 +41,7 @@ def numpy_transform_reference(Y_c, v_c, h_c):
 def test_fused_transform_reused_and_partial():
     print(">>> 1. AUDITING FUSED RIGID TRANSFORM (REUSED BUFFER & PARTIAL CHUNK) <<<")
     rng = np.random.default_rng(101)
-    
+
     # Test cases: Full chunk (N=50) and Partial chunk (N=13)
     for N_chunk in [50, 13]:
         T = 1000
@@ -114,10 +118,10 @@ def test_checkpoint_resume_continuity():
     with tempfile.TemporaryDirectory() as tmp_dir:
         ckpt_path = os.path.join(tmp_dir, "test_resume.h5")
         KPMSStateCache.clear()
-        
+
         # Iteration 1
         m1_branch2 = keypoint_slds.resample_model(test_data, **test_model, jitter=1e-3)
-        
+
         # Save snapshot 1 to HDF5
         kpms.save_hdf5(ckpt_path, m1_branch2, "model_snapshots/1", exist_ok=True)
         kpms.save_hdf5(ckpt_path, test_data, "data", exist_ok=True)
@@ -140,7 +144,7 @@ def test_checkpoint_resume_continuity():
 
     # Compare Branch 1 and Branch 2 at Iteration 2
     print("\nComparing Uninterrupted vs Resumed Iteration 2 states:")
-    
+
     # 1. Compare AR parameters (Ab, Q)
     diff_Ab = float(jnp.max(jnp.abs(m2_uninterrupted["params"]["Ab"] - m2_resumed["params"]["Ab"])))
     diff_Q = float(jnp.max(jnp.abs(m2_uninterrupted["params"]["Q"] - m2_resumed["params"]["Q"])))

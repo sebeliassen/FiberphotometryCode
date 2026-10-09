@@ -20,14 +20,16 @@ Assertions:
 import sys
 import tempfile
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.multiview_top_bot_experiments.core.fusion_engine import fuse_single_pair
 from syllable_generation.multiview_top_bot_experiments.audit_cohort_correlations import find_matched_pairs
+from syllable_generation.multiview_top_bot_experiments.core.fusion_engine import fuse_single_pair
+
 
 def run_test():
     print("=" * 80)

@@ -1,12 +1,13 @@
 import numpy as np
 
+
 class TraceAccumulator:
     def __init__(self, window_size):
         self.window_size = window_size
         self.count = 0
         self.sum = np.zeros(window_size, dtype=np.float64)
         self.sum_sq = np.zeros(window_size, dtype=np.float64)
-        
+
     def add(self, trace):
         """
         Add a single trace or batch of traces (N, T).
@@ -15,7 +16,7 @@ class TraceAccumulator:
         # Ensure numpy
         if not isinstance(trace, np.ndarray):
             trace = np.array(trace)
-            
+
         if trace.ndim == 1:
             if len(trace) != self.window_size:
                 raise ValueError(f"Trace length {len(trace)} != window {self.window_size}")
@@ -27,11 +28,11 @@ class TraceAccumulator:
             N, T = trace.shape
             if T != self.window_size:
                  raise ValueError(f"Trace length {T} != window {self.window_size}")
-            
+
             self.sum += np.sum(trace, axis=0)
             self.sum_sq += np.sum(trace**2, axis=0)
             self.count += N
-            
+
     def get_stats(self):
         """
         Returns dictionary with mean, std, sem, ci_95
@@ -45,20 +46,20 @@ class TraceAccumulator:
                 "sem": nan_arr,
                 "ci_95": nan_arr
             }
-            
+
         mean = self.sum / self.count
-        
+
         # Variance = E[X^2] - (E[X])^2
         # Use abs to prevent floating point errors returning negative zeros
         var = np.abs((self.sum_sq / self.count) - (mean ** 2))
         std = np.sqrt(var)
-        
+
         # SEM = Std / sqrt(N)
         sem = std / np.sqrt(self.count)
-        
+
         # 95% CI = 1.96 * SEM (assuming Normal approx for Mean)
         ci_95 = 1.96 * sem
-        
+
         return {
             "n": self.count,
             "mean": mean,

@@ -27,10 +27,10 @@ EXP_DIR = Path(__file__).resolve().parent.parent / "syllable_generation/multivie
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core import camera_correspondence as cc
 from core import cache_manifest as cm
+from core import camera_correspondence as cc
 from core.fusion_engine import fuse_single_pair
-from core.schemas import TOP_USE_BODYPARTS, BOT_RAW_BODYPARTS, BOT_RENAME_MAP, TANDEM_BODYPARTS
+from core.schemas import BOT_RAW_BODYPARTS, BOT_RENAME_MAP, TANDEM_BODYPARTS, TOP_USE_BODYPARTS
 
 SID = "synthetic_session_0001"
 N = 300

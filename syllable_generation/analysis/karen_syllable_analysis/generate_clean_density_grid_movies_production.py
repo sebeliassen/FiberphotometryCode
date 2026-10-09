@@ -12,28 +12,29 @@ Production pipeline for clean density-sampled grid movies:
 7. Automatically packages all 100 movies into a clean master zip deliverable.
 """
 
-import os
+import pickle
 import sys
 import time
 import zipfile
-import pickle
 from pathlib import Path
+
 import numpy as np
+
 np.bool8 = np.bool_
 import cv2
-from tqdm import tqdm
+import jax.numpy as jnp
 from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
-import jax.numpy as jnp
+from tqdm import tqdm
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from vidio.read import OpenCVReader
 import keypoint_moseq as kpms
 from jax_moseq.models.keypoint_slds import estimate_coordinates
 from jax_moseq.utils import unbatch
-from keypoint_moseq.viz import write_video_clip, get_syllable_instances
+from keypoint_moseq.viz import get_syllable_instances, write_video_clip
+from vidio.read import OpenCVReader
 
 # Fast-seek reader
 _original_read = OpenCVReader.read
@@ -175,14 +176,14 @@ for s in range(100):
         sub_inst = [inst_s[i] for i in sub_idx]
     else:
         sub_inst = inst_s
-        
+
     s_trajs = []
     for key, start, end in sub_inst:
         chunk = coordinates[key][start - pre : start + post]
         c = centroids_corr[key][start]
         h = headings_corr[key][start]
         s_trajs.append(kpms.util.np_io(kpms.util.inverse_rigid_transform)(chunk, c, h))
-        
+
     trajectories_dict[s] = (sub_inst, np.array(s_trajs))
     all_trajs_list.extend(s_trajs)
 
@@ -202,37 +203,37 @@ for s in range(100):
     inst_s = all_instances.get(s, [])
     if len(inst_s) == 0:
         continue
-        
+
     if len(inst_s) < num_samples:
         sub_idx = rng.choice(len(inst_s), num_samples, replace=True)
         sampled_instances[s] = [inst_s[i] for i in sub_idx]
         continue
-        
+
     sub_inst, s_trajs = trajectories_dict[s]
     N = len(s_trajs)
     k_nn = min(50, N - 1)
-    
+
     if k_nn < num_samples:
         sub_idx = rng.choice(len(inst_s), num_samples, replace=False)
         sampled_instances[s] = [inst_s[i] for i in sub_idx]
         continue
-        
+
     X_pca = pca.transform(s_trajs.reshape(N, -1))
     nbrs = NearestNeighbors(n_neighbors=k_nn).fit(X_pca)
     distances, indices = nbrs.kneighbors(X_pca)
     local_density = 1.0 / (distances.mean(1) + 1e-12)
-    
+
     g_dist, _ = all_nbrs.kneighbors(X_pca)
     global_density = 1.0 / (g_dist.mean(1) + 1e-12)
-    
+
     exemplar_idx = np.argmax(local_density / global_density)
     chosen_nbrs = indices[exemplar_idx]
-    
+
     if len(chosen_nbrs) >= num_samples:
         ch_idx = rng.choice(chosen_nbrs, num_samples, replace=False)
     else:
         ch_idx = chosen_nbrs[:num_samples]
-        
+
     sampled_instances[s] = [sub_inst[i] for i in ch_idx]
 
 print(f"      Density-sampled {len(sampled_instances)} syllables using purely non-pilot bouts.", flush=True)
@@ -245,7 +246,7 @@ for syl in tqdm(range(100), desc="Rendering Clean Movies", ncols=80):
     if syl not in sampled_instances:
         continue
     insts = sampled_instances[syl]
-    
+
     tiles_clean = []
     for key, start, end in insts:
         cs = centroids_corr[key][start - pre : start + post]
@@ -272,7 +273,7 @@ for syl in tqdm(range(100), desc="Rendering Clean Movies", ncols=80):
 
     tc = np.stack(tiles_clean).reshape(rows, cols, post + pre, window_size, window_size, 3)
     clean_frames = np.concatenate(np.concatenate(tc, axis=2), axis=2)
-    
+
     out_path = OUT_DIR / f"syllable{syl}.mp4"
     write_video_clip(clean_frames, str(out_path), fps=fps)
 

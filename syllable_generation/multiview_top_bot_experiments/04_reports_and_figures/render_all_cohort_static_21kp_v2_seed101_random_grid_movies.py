@@ -9,18 +9,17 @@ Renders publication-grade 3x4 dual-view Random Grid Movies for Cohort Static 21k
 - Output directory: visualizations_cohort_static_21kp_v2_seed101_v4/grid_movies_random/
 """
 
+import argparse
+import json
 import os
 import sys
-import json
-import time
-import argparse
 from pathlib import Path
-from typing import Dict, Any, List, Tuple
-import numpy as np
-import h5py
-import pandas as pd
+
 import cv2
+import h5py
 import imageio.v2 as imageio
+import numpy as np
+import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 EXP_DIR = SCRIPT_DIR.parent
@@ -30,6 +29,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 import viz_v2_common as vc
+
 from core.camera_correspondence import top_to_bot_frame_continuous
 from core.pair_matching import find_matched_pairs
 

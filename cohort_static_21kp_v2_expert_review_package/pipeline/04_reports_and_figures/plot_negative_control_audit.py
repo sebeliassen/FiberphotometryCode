@@ -15,7 +15,6 @@ Environment: kpms_gpu_cuml
 =============================================================================
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -25,11 +24,13 @@ if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
 import re
+
 import cv2
-import numpy as np
 import h5py
-import pandas as pd
 import matplotlib
+import numpy as np
+import pandas as pd
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from vidio.read import OpenCVReader
@@ -254,7 +255,7 @@ def main():
     axes[0].fill_between(xs_1, np.array(means_1) - np.array(se_1), np.array(means_1) + np.array(se_1), color="#2B6CB0", alpha=0.20)
     axes[0].axvline(0, color="#E53E3E", ls="--", lw=1.5, label="True Centroid (0 px)")
     axes[0].set_title("A. Spatial Translation Error (TopCam)", fontsize=11, fontweight="bold", pad=8)
-    axes[0].set_xlabel("Centroid Offset $\Delta x$ (pixels)", fontsize=10, fontweight="semibold")
+    axes[0].set_xlabel(r"Centroid Offset $\Delta x$ (pixels)", fontsize=10, fontweight="semibold")
     axes[0].set_ylabel("Centroid Pixel Intensity (0 = Dark, 255 = Bright)", fontsize=10, fontweight="semibold")
     axes[0].legend(loc="upper center", fontsize=8.5, frameon=True)
 
@@ -266,7 +267,7 @@ def main():
     axes[1].fill_between(xs_2, np.array(means_2) - np.array(se_2), np.array(means_2) + np.array(se_2), color="#319795", alpha=0.20)
     axes[1].axvline(0, color="#E53E3E", ls="--", lw=1.5, label="Syllable Onset ($t=0$)")
     axes[1].set_title("B. Temporal Misalignment (TopCam)", fontsize=11, fontweight="bold", pad=8)
-    axes[1].set_xlabel("Time Lag $\Delta t$ (frames @ 60fps)", fontsize=10, fontweight="semibold")
+    axes[1].set_xlabel(r"Time Lag $\Delta t$ (frames @ 60fps)", fontsize=10, fontweight="semibold")
     axes[1].legend(loc="upper center", fontsize=8.5, frameon=True)
 
     # Panel 3: BotCam Hardware TTL Corruption
@@ -277,7 +278,7 @@ def main():
     axes[2].fill_between(xs_3, np.array(means_3) - np.array(se_3), np.array(means_3) + np.array(se_3), color="#DD6B20", alpha=0.20)
     axes[2].axvline(0, color="#E53E3E", ls="--", lw=1.5, label="True TTL Master Clock")
     axes[2].set_title("C. BotCam TTL Synchronization Error", fontsize=11, fontweight="bold", pad=8)
-    axes[2].set_xlabel("TTL Offset Corruption $\Delta_{\mathrm{TTL}}$ (frames)", fontsize=10, fontweight="semibold")
+    axes[2].set_xlabel(r"TTL Offset Corruption $\Delta_{\mathrm{TTL}}$ (frames)", fontsize=10, fontweight="semibold")
     axes[2].legend(loc="upper center", fontsize=8.5, frameon=True)
 
     for ax in axes:

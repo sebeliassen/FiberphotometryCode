@@ -8,18 +8,14 @@ or pandas DataFrames.
 =============================================================================
 """
 
-import os
-import sys
-import json
 import pickle
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Dict, Tuple, Optional, Any, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
+import h5py
 import numpy as np
 import pandas as pd
-import h5py
-from scipy.spatial.distance import cdist
 
 
 @dataclass
@@ -49,33 +45,33 @@ class ChainOccurrence:
     animal_id: str
     genotype: str
     condition: str
-    
+
     # Timing
     start_frame: int
     end_frame: int
     duration_s: float
     fps: float
-    
+
     # Token execution details
     observed_tokens: List[int]
     stage_frame_durations: List[int]
     stage_durations_s: List[float]
     is_complete: bool
-    
+
     stage_frame_intervals: List[Tuple[int, int]] = field(default_factory=list)
     stage_mean_speeds: List[float] = field(default_factory=list)
     stage_peak_speeds: List[float] = field(default_factory=list)
-    
+
     # Execution status
     abort_stage: Optional[int] = None  # None if complete; else index of stage reached before exit
     exit_syllable: Optional[int] = None # Syllable transitioned to after exit/abort
-    
+
     # Structural variations vs canonical template
     edit_distance: int = 0
     insertions: List[int] = field(default_factory=list)
     deletions: List[int] = field(default_factory=list)
     repetitions: List[int] = field(default_factory=list)
-    
+
     # Continuous Kinematics (if available)
     mean_speed: float = np.nan
     peak_speed: float = np.nan
@@ -83,7 +79,7 @@ class ChainOccurrence:
     trajectory_x: Optional[np.ndarray] = None
     trajectory_y: Optional[np.ndarray] = None
     speed_profile: Optional[np.ndarray] = None
-    
+
     # Inter-chain context
     is_lead: bool = True               # True if first in a repeated burst; False if repetition
     bout_cycle_index: int = 1          # 1 for first execution, 2 for second in burst, etc.
@@ -169,7 +165,7 @@ class CohortDataAdapter:
                 vel = df["velocity"].values
             else:
                 vel = np.zeros(len(sylls))
-            
+
             # Centroid
             if "centroid_x" in df.columns and "centroid_y" in df.columns:
                 centroid = np.column_stack([df["centroid_x"].values, df["centroid_y"].values])
@@ -349,10 +345,10 @@ class ChainFinder:
             observed = [target[0]]
             stage_starts = [starts[s_idx]]
             stage_ends = [ends[s_idx]]
-            
+
             insertions = []
             repetitions = []
-            
+
             b_idx = s_idx + 1
             aborted = False
             abort_stage = None
@@ -361,7 +357,7 @@ class ChainFinder:
             while curr_target_stage < L and b_idx < len(tokens):
                 tok = tokens[b_idx]
                 gap_bouts = (starts[b_idx] - stage_ends[-1])  # in frames, continuous
-                
+
                 if tok == target[curr_target_stage]:
                     # Target advanced!
                     observed.append(tok)
@@ -470,7 +466,7 @@ class ChainFinder:
                 gap_s = (occurrences[i].start_frame - prev.end_frame) / fps
                 occurrences[i].prev_chain_id = prev.chain_id
                 occurrences[i].prev_chain_gap_s = float(gap_s)
-                
+
                 # Enforce strictly non-negative gap and complete executions to prevent phantom suffix bouts
                 if prev.chain_id == occurrences[i].chain_id and (0.0 <= gap_s <= 1.0) and prev.is_complete and occurrences[i].is_complete:
                     occurrences[i].is_lead = False

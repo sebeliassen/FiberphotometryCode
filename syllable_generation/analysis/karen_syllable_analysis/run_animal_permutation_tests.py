@@ -18,8 +18,9 @@ Comprehensive Animal-Level Permutation Testing for Karen Project (kappa=240k):
 
 import os
 import sys
-from pathlib import Path
 import warnings
+from pathlib import Path
+
 warnings.simplefilter("ignore")
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -29,13 +30,14 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import pickle
+from collections import defaultdict
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from scipy import stats
 from scipy.spatial.distance import jensenshannon
-from collections import defaultdict, Counter
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.decomposition import PCA
 
 # Set publication style
@@ -53,7 +55,7 @@ with open(DATA_PKL, "rb") as f:
 
 # Filter for main cohort (exclude pilot)
 main_sessions = [
-    s for s in sessions 
+    s for s in sessions
     if s.metadata.get("genotype") in ["PFF", "Monomer"] and not str(s.metadata.get("animal_id", "")).startswith("pilot")
 ]
 
@@ -93,35 +95,35 @@ for i, aid in enumerate(animals):
     sess_list = animal_sessions[aid]
     total_valid_frames = 0
     total_duration_min = 0.0
-    
+
     syll_counts = np.zeros(K, dtype=np.float64)
     bout_counts = np.zeros(K, dtype=np.float64)
-    
+
     for s in sess_list:
         if isinstance(s.syllables, pd.DataFrame):
             raw_s = s.syllables["syllable"].fillna(-5).to_numpy()
         else:
             raw_s = np.array(s.syllables)
-            
+
         sylls = pd.to_numeric(raw_s, errors="coerce")
         sylls = np.nan_to_num(sylls, nan=-5).astype(np.int32)
-            
+
         valid_mask = (sylls >= 0) & (sylls < K)
         total_valid_frames += np.sum(valid_mask)
         total_duration_min += len(sylls) / 80.0 / 60.0
-        
+
         valid_sylls = sylls[valid_mask]
         if len(valid_sylls) > 0:
             counts = np.bincount(valid_sylls, minlength=K)[:K]
             syll_counts += counts
-            
+
         diffs = np.diff(sylls, prepend=-999)
         bout_mask = (diffs != 0) & valid_mask
         bout_sylls = sylls[bout_mask]
         if len(bout_sylls) > 0:
             bcounts = np.bincount(bout_sylls, minlength=K)[:K]
             bout_counts += bcounts
-            
+
     if total_valid_frames > 0:
         animal_occupancy[i, :] = syll_counts / total_valid_frames
     if total_duration_min > 0:
@@ -195,7 +197,7 @@ def compute_permanova_f_fast(mask1, mask2):
             if group_labels[i] == group_labels[j]:
                 H[i, j] = 1.0 / (n1 if group_labels[i] == 1 else n2)
     H = H - 1.0 / n_animals
-    
+
     SS_between = np.trace(H @ G_gower)
     SS_within = SS_total - SS_between
     if SS_within <= 0:
@@ -250,19 +252,19 @@ for b in range(N_PERMS):
     perm_pff_mask = np.zeros(n_animals, dtype=bool)
     perm_pff_mask[perm_idx[:n_pff]] = True
     perm_mono_mask = ~perm_pff_mask
-    
+
     # Test A: Max t-statistic across all 100 syllables
     t_perm_occ = compute_t_stats(animal_occupancy, perm_pff_mask, perm_mono_mask)
     t_perm_rate = compute_t_stats(animal_bout_rate, perm_pff_mask, perm_mono_mask)
-    
+
     perm_max_t_occ[b] = np.max(np.abs(t_perm_occ))
     perm_max_t_rate[b] = np.max(np.abs(t_perm_rate))
-    
+
     # Test B: Global divergence
     perm_jsd[b] = compute_jsd(animal_occupancy, perm_pff_mask, perm_mono_mask)
     perm_aitchison[b] = compute_aitchison_distance(animal_occupancy, perm_pff_mask, perm_mono_mask)
     perm_permanova_f[b] = compute_permanova_f_fast(perm_pff_mask, perm_mono_mask)
-    
+
     if (b + 1) % 5000 == 0:
         print(f"  Completed {b+1:,} / {N_PERMS:,} permutations...", flush=True)
 
@@ -279,11 +281,11 @@ p_global_jsd = (np.sum(perm_jsd >= jsd_obs) + 1) / (N_PERMS + 1)
 p_global_aitchison = (np.sum(perm_aitchison >= aitchison_obs) + 1) / (N_PERMS + 1)
 p_global_permanova = (np.sum(perm_permanova_f >= permanova_f_obs) + 1) / (N_PERMS + 1)
 
-print(f"\n🅰️  TEST A: MAX-STATISTIC PERMUTATION TEST (Family-Wise Across All 100 Syllables):", flush=True)
+print("\n🅰️  TEST A: MAX-STATISTIC PERMUTATION TEST (Family-Wise Across All 100 Syllables):", flush=True)
 print(f"   • Occupancy Max-|t|:     M_obs = {max_t_obs_occ:.4f}  |  p_global = {p_global_max_t_occ:.5f} ({np.sum(perm_max_t_occ >= max_t_obs_occ)} / {N_PERMS} null splits >= obs)", flush=True)
 print(f"   • Bout Rate Max-|t|:     M_obs = {max_t_obs_rate:.4f}  |  p_global = {p_global_max_t_rate:.5f} ({np.sum(perm_max_t_rate >= max_t_obs_rate)} / {N_PERMS} null splits >= obs)", flush=True)
 
-print(f"\n🅱️  TEST B: GLOBAL REPERTOIRE PERMUTATION TEST (Multivariate 100-D Behavioral Divergence):", flush=True)
+print("\n🅱️  TEST B: GLOBAL REPERTOIRE PERMUTATION TEST (Multivariate 100-D Behavioral Divergence):", flush=True)
 print(f"   • Jensen-Shannon Div:    JSD_obs = {jsd_obs:.4f}     |  p_global = {p_global_jsd:.5f} ({np.sum(perm_jsd >= jsd_obs)} / {N_PERMS} null splits >= obs)", flush=True)
 print(f"   • Aitchison (CLR) Dist:  Dist_obs = {aitchison_obs:.4f}    |  p_global = {p_global_aitchison:.5f} ({np.sum(perm_aitchison >= aitchison_obs)} / {N_PERMS} null splits >= obs)", flush=True)
 print(f"   • PERMANOVA Pseudo-F:    F_obs = {permanova_f_obs:.4f}       |  p_global = {p_global_permanova:.5f} ({np.sum(perm_permanova_f >= permanova_f_obs)} / {N_PERMS} null splits >= obs)", flush=True)
@@ -403,7 +405,7 @@ results_df = pd.DataFrame({
     "t_statistic": t_obs_occ,
     "pff_mean_pct": np.mean(animal_occupancy[pff_mask], axis=0) * 100,
     "mono_mean_pct": np.mean(animal_occupancy[mono_mask], axis=0) * 100,
-    "fold_change_pct": np.where(np.mean(animal_occupancy[mono_mask], axis=0) > 0, 
+    "fold_change_pct": np.where(np.mean(animal_occupancy[mono_mask], axis=0) > 0,
                                 (np.mean(animal_occupancy[pff_mask], axis=0) - np.mean(animal_occupancy[mono_mask], axis=0)) / np.mean(animal_occupancy[mono_mask], axis=0) * 100, 0),
     "nominal_p": 2 * (1 - stats.t.cdf(np.abs(t_obs_occ), df=n_animals-2)),
     "maxt_adjusted_p": maxt_adjusted_p,

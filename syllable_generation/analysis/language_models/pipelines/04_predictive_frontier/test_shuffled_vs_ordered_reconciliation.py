@@ -9,15 +9,14 @@ Investigates the exact mechanism behind the ~0.9 pp difference between:
 """
 
 import os
-import sys
-import time
 import pickle
+import sys
+
 import numpy as np
-import pandas as pd
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import GroupKFold
+from torch.utils.data import DataLoader, TensorDataset
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
@@ -132,15 +131,15 @@ for s in sessions_data:
     t_tgt_start = t_tgt_start[no_straddle]
     M = len(t_anchors)
     if M == 0: continue
-    
+
     f_cnt = s["cum_bout"][t_tgt_start + H_FRAMES] - s["cum_bout"][t_tgt_start]
     target = (f_cnt + 1e-4) / (np.sum(f_cnt, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     seq_toks = np.full((M, max_l), NUM_ACTIVE_SYLLS, dtype=np.int64)
     seq_durs = np.zeros((M, max_l), dtype=np.float32)
     seq_masks = np.ones((M, max_l), dtype=bool)
     seq_lens = np.zeros(M, dtype=np.int64)
-    
+
     b_onsets, b_tokens, b_durs = s["onsets"], s["tokens"], s["durs"]
     for i, t_anc in enumerate(t_anchors):
         t_min = t_anc - W_FRAMES
@@ -153,7 +152,7 @@ for s in sessions_data:
             seq_durs[i, :L_i] = b_durs[idx_b]
             seq_masks[i, :L_i] = False
             seq_lens[i] = L_i
-            
+
     for i in range(M):
         raw_windows.append({
             "sess_idx": s["sess_idx"],
@@ -186,7 +185,7 @@ for fold, (tr, te) in enumerate(gkf.split(X_toks, groups=sess_ids)):
     Y_tr = Y_targets[tr]
     te_t = Y_t[te]
     null_fold = float(np.mean(null_js[te]))
-    
+
     tr_ds = TensorDataset(
         torch.tensor(X_toks[tr], dtype=torch.long),
         torch.tensor(X_durs[tr], dtype=torch.float32),
@@ -194,7 +193,7 @@ for fold, (tr, te) in enumerate(gkf.split(X_toks, groups=sess_ids)):
         torch.tensor(Y_tr, dtype=torch.float32)
     )
     tr_loader = DataLoader(tr_ds, batch_size=256, shuffle=True)
-    
+
     # 1. Shuffled Architecture (use_pos=False)
     m_shuff = SequenceTransformer(vocab_size=NUM_ACTIVE_SYLLS, num_targets=NUM_ACTIVE_SYLLS, use_pos=False).to(DEVICE)
     opt1 = torch.optim.AdamW(m_shuff.parameters(), lr=1e-3, weight_decay=1e-4)
@@ -211,7 +210,7 @@ for fold, (tr, te) in enumerate(gkf.split(X_toks, groups=sess_ids)):
         r1 = float(js_divergence_pt(te_t, p1).mean().cpu().numpy())
         g1 = ((null_fold - r1) / null_fold) * 100.0
         gains_shuff_arch.append(g1)
-        
+
     # 2. Ordered Architecture (use_pos=True)
     m_ord = SequenceTransformer(vocab_size=NUM_ACTIVE_SYLLS, num_targets=NUM_ACTIVE_SYLLS, use_pos=True).to(DEVICE)
     opt2 = torch.optim.AdamW(m_ord.parameters(), lr=1e-3, weight_decay=1e-4)
@@ -229,7 +228,7 @@ for fold, (tr, te) in enumerate(gkf.split(X_toks, groups=sess_ids)):
         r2 = float(js_divergence_pt(te_t, p2).mean().cpu().numpy())
         g2 = ((null_fold - r2) / null_fold) * 100.0
         gains_ord_arch.append(g2)
-        
+
         # Test-Time Shuffle on Ordered Model
         tok_te_shuf = torch.tensor(X_toks[te], dtype=torch.long, device=DEVICE)
         dur_te_shuf = torch.tensor(X_durs[te], dtype=torch.float32, device=DEVICE)
@@ -243,11 +242,11 @@ for fold, (tr, te) in enumerate(gkf.split(X_toks, groups=sess_ids)):
         r3 = float(js_divergence_pt(te_t, p3).mean().cpu().numpy())
         g3 = ((null_fold - r3) / null_fold) * 100.0
         gains_ord_test_shuffled.append(g3)
-        
+
     print(f"Fold {fold+1}: Shuffled Arch = +{g1:.2f}% | Ordered Arch = +{g2:.2f}% | Ordered Model w/ Test Shuffled = +{g3:.2f}%")
 
 print("\n" + "=" * 70)
-print(f"SUMMARY RECONCILIATION:")
+print("SUMMARY RECONCILIATION:")
 print(f"  1. Order-Agnostic Transformer (Trained without Pos Embeds): +{np.mean(gains_shuff_arch):.2f}% ± {1.96*np.std(gains_shuff_arch)/np.sqrt(5):.2f}%")
 print(f"  2. Ordered Transformer (Trained with Pos Embeds):          +{np.mean(gains_ord_arch):.2f}% ± {1.96*np.std(gains_ord_arch)/np.sqrt(5):.2f}%")
 print(f"  3. Ordered Transformer with TEST-TIME Token Scrambling:     +{np.mean(gains_ord_test_shuffled):.2f}% ± {1.96*np.std(gains_ord_test_shuffled)/np.sqrt(5):.2f}%")

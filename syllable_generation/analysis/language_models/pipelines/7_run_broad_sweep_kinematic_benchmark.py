@@ -1,7 +1,8 @@
 import os
+import pickle
 import sys
 import time
-import pickle
+
 import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr, spearmanr
@@ -13,24 +14,24 @@ if ROOT_DIR not in sys.path:
     sys.path.append(os.path.join(ROOT_DIR, "syllable_generation"))
 
 from analysis.language_models.lib.data.dataset import SessionDataset
-from analysis.language_models.lib.models.strategies import StrategyBERTopic
 from analysis.language_models.lib.evaluation.kinematic_encoding import evaluate_session_kinematic_encoding
+from analysis.language_models.lib.models.strategies import StrategyBERTopic
 from sklearn.cluster import AgglomerativeClustering
-from sklearn.mixture import GaussianMixture
-from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score, f1_score
+from sklearn.mixture import GaussianMixture
+from sklearn.model_selection import StratifiedKFold
+
 
 def compute_entropy_and_keff(proportions_matrix: np.ndarray):
     mean_props = np.mean(proportions_matrix, axis=0)
     p = mean_props[mean_props > 0]
     p = p / np.sum(p)
-    
+
     K_active = len(p)
     if K_active <= 1:
         return K_active, 0.0, 1.0
-        
+
     H = -np.sum(p * np.log2(p))
     H_norm = H / np.log2(K_active)
     K_eff = 2 ** H
@@ -40,19 +41,19 @@ def evaluate_classification(X_features: np.ndarray, y_labels: np.ndarray):
     unique_classes, counts = np.unique(y_labels, return_counts=True)
     n_splits = min(5, np.min(counts))
     skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42)
-    
+
     accs, f1s = [], []
     for train_idx, test_idx in skf.split(X_features, y_labels):
         X_train, X_test = X_features[train_idx], X_features[test_idx]
         y_train, y_test = y_labels[train_idx], y_labels[test_idx]
-        
+
         clf = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
         clf.fit(X_train, y_train)
         y_pred = clf.predict(X_test)
-        
+
         accs.append(accuracy_score(y_test, y_pred))
         f1s.append(f1_score(y_test, y_pred, average='weighted', zero_division=0))
-        
+
     return np.mean(accs), np.mean(f1s)
 
 def main():
@@ -60,31 +61,31 @@ def main():
     out_dir = os.path.join(ROOT_DIR, "syllable_generation/analysis/language_models/output/strategies_extended")
     cache_path = os.path.join(out_dir, "cache/prep_amph_postural_gmm_k3_transition.pkl")
     os.makedirs(log_dir, exist_ok=True)
-    
+
     log_file = os.path.join(log_dir, "broad_sweep_kinematic_benchmark.log")
     with open(log_file, "w") as f:
         f.write("=== 45-Run Broad Strategy Scale Sweep Benchmark ===\n")
-        
+
     def log_msg(msg: str):
         print(msg)
         with open(log_file, "a") as f:
             f.write(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {msg}\n")
-            
+
     log_msg("=== Starting 45-Run Broad Strategy Scale Sweep (Kinematic Encoding & Correlation Benchmark) ===")
-    
+
     dataset = SessionDataset(cache_path=cache_path)
     all_win_inputs = dataset.get_window_inputs()
     labels = dataset.get_cohort_labels()
     n_windows_per_session = dataset.n_windows_per_session
-    
+
     # Load raw session dataframes
     pkl_path = os.path.join(ROOT_DIR, "syllable_generation/data/jonathan_amph_sessions_v2_w_sylls.pkl")
     if not os.path.exists(pkl_path):
         pkl_path = os.path.join(ROOT_DIR, "syllable_generation/data/jonathan_amph_sessions_w_sylls.pkl")
-        
+
     with open(pkl_path, "rb") as f:
         raw_sessions = pickle.load(f)
-        
+
     session_id_list = [meta_tuple[6] for meta_tuple in dataset.session_window_meta]
     session_dfs = {}
     for s in raw_sessions:
@@ -93,9 +94,9 @@ def main():
             if s_id.startswith(exact_id) or exact_id.startswith(s_id):
                 session_dfs[s_id] = s.all_data_df
                 break
-                
+
     results = []
-    
+
     # ---------------------------------------------------------
     # APPROACH A: 2-Tier Hierarchical Merging (15 Runs)
     # ---------------------------------------------------------
@@ -105,7 +106,7 @@ def main():
     base_strat_ids, _ = base_model.transform(all_win_inputs)
     n_base_topics = base_model.n_topics
     X_vec = base_model._prepare_vectors(all_win_inputs)
-    
+
     base_topic_vectors = []
     for t in range(n_base_topics):
         mask = (base_strat_ids == t)
@@ -114,7 +115,7 @@ def main():
         else:
             base_topic_vectors.append(np.zeros(X_vec.shape[1]))
     base_topic_vectors = np.array(base_topic_vectors) + 1e-9
-    
+
     for k_super in [4, 6, 8, 10, 12]:
         for metric in ["cosine", "euclidean", "average"]:
             run_name = f"ApproachA_Hierarchy_K{k_super}_{metric}"
@@ -125,10 +126,10 @@ def main():
                     agg = AgglomerativeClustering(n_clusters=k_super, metric="cosine", linkage="complete")
                 else:
                     agg = AgglomerativeClustering(n_clusters=k_super, metric="euclidean", linkage="ward")
-                    
+
                 super_map = agg.fit_predict(base_topic_vectors)
                 super_win_ids = np.array([super_map[t] if t < len(super_map) else 0 for t in base_strat_ids])
-                
+
                 session_props = []
                 frame_strat_dict = {}
                 win_offset = 0
@@ -143,12 +144,12 @@ def main():
                     p = [counts.get(t, 0) / n_win for t in range(k_super)]
                     session_props.append(p)
                     frame_strat_dict[s_id] = np.repeat(w_ids, 800)
-                    
+
                 X_props = np.array(session_props)
                 acc, f1 = evaluate_classification(X_props, labels)
                 k_act, h_norm, k_eff = compute_entropy_and_keff(X_props)
                 kin_metrics = evaluate_session_kinematic_encoding(session_dfs, frame_strat_dict)
-                
+
                 results.append({
                     "approach": "Approach A (Hierarchy)",
                     "run_name": run_name,
@@ -179,7 +180,7 @@ def main():
                 b_model.fit(all_win_inputs)
                 b_ids, _ = b_model.transform(all_win_inputs)
                 n_b_topics = b_model.n_topics
-                
+
                 session_props = []
                 frame_strat_dict = {}
                 win_offset = 0
@@ -194,12 +195,12 @@ def main():
                     p = [counts.get(t, 0) / n_win for t in range(n_b_topics)]
                     session_props.append(p)
                     frame_strat_dict[s_id] = np.repeat(w_ids, 800)
-                    
+
                 X_props = np.array(session_props)
                 acc, f1 = evaluate_classification(X_props, labels)
                 k_act, h_norm, k_eff = compute_entropy_and_keff(X_props)
                 kin_metrics = evaluate_session_kinematic_encoding(session_dfs, frame_strat_dict)
-                
+
                 results.append({
                     "approach": "Approach B (HDBSCAN Scale)",
                     "run_name": run_name,
@@ -227,7 +228,7 @@ def main():
         try:
             gmm = GaussianMixture(n_components=k_fixed, random_state=42, covariance_type="diag")
             win_probs_gmm = gmm.fit_predict(X_vec)
-            
+
             session_props = []
             frame_strat_dict = {}
             win_offset = 0
@@ -242,12 +243,12 @@ def main():
                 p = [counts.get(t, 0) / n_win for t in range(k_fixed)]
                 session_props.append(p)
                 frame_strat_dict[s_id] = np.repeat(w_ids, 800)
-                
+
             X_props = np.array(session_props)
             acc, f1 = evaluate_classification(X_props, labels)
             k_act, h_norm, k_eff = compute_entropy_and_keff(X_props)
             kin_metrics = evaluate_session_kinematic_encoding(session_dfs, frame_strat_dict)
-            
+
             results.append({
                 "approach": "Approach C (Fixed-K GMM)",
                 "run_name": run_name_gmm,
@@ -270,7 +271,7 @@ def main():
     master_csv = os.path.join(out_dir, "broad_sweep_kinematic_benchmark.csv")
     df_res.to_csv(master_csv, index=False)
     print(f"\nSaved Broad Sweep Kinematic Benchmark to: {master_csv}")
-    
+
     # ---------------------------------------------------------
     # CORRELATION ANALYSIS
     # ---------------------------------------------------------
@@ -278,25 +279,25 @@ def main():
     speed_arr = df_res["eta2_speed"].values
     dist_arr = df_res["eta2_dist_center"].values
     k_arr = df_res["active_k"].values
-    
+
     r_speed, p_speed = pearsonr(acc_arr, speed_arr)
     r_dist, p_dist = pearsonr(acc_arr, dist_arr)
     rho_speed, _ = spearmanr(acc_arr, speed_arr)
     rho_dist, _ = spearmanr(acc_arr, dist_arr)
-    
+
     r_k_acc, _ = pearsonr(k_arr, acc_arr)
     r_k_speed, _ = pearsonr(k_arr, speed_arr)
-    
+
     print("\n" + "="*80)
     print("=== CORRELATION ANALYSIS ACROSS 45 BROAD SWEEP MODELS ===")
     print("="*80)
-    print(f"1. Group Decodability Acc vs Locomotion Speed Encoding (eta2_speed):")
+    print("1. Group Decodability Acc vs Locomotion Speed Encoding (eta2_speed):")
     print(f"   - Pearson Correlation  r = {r_speed:+.3f} (p = {p_speed:.4e})")
     print(f"   - Spearman Correlation r = {rho_speed:+.3f}")
-    print(f"\n2. Group Decodability Acc vs Thigmotaxis Encoding (eta2_dist_center):")
+    print("\n2. Group Decodability Acc vs Thigmotaxis Encoding (eta2_dist_center):")
     print(f"   - Pearson Correlation  r = {r_dist:+.3f} (p = {p_dist:.4e})")
     print(f"   - Spearman Correlation r = {rho_dist:+.3f}")
-    print(f"\n3. Number of Active Vibes (K) Correlations:")
+    print("\n3. Number of Active Vibes (K) Correlations:")
     print(f"   - Active K vs Decodability Acc: r = {r_k_acc:+.3f}")
     print(f"   - Active K vs Speed Encoding:   r = {r_k_speed:+.3f}")
     print("="*80)

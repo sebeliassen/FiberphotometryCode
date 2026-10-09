@@ -4,7 +4,10 @@ Lightweight P2 -> P2.5 (Continuous Pose) -> P3 (Discrete Syllable) Dissection
 Uses EXACT canonical P2 construction (6-D spatial: x,y,v,dist,height,curvature -> mean+std -> 14-D)
 Adds instantaneous 30-D pose vector at anchor (no cumsum over full session -> no OOM).
 """
-import sys, pickle, numpy as np
+import pickle
+import sys
+
+import numpy as np
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GroupKFold
 
@@ -113,7 +116,7 @@ ci = lambda g: 1.96*np.std(g)/np.sqrt(5)
 print("\n" + "="*85)
 print("EXACT DISSECTION: CANONICAL P2 vs CONTINUOUS POSE vs DISCRETE SYLLABLE")
 print("="*85)
-print(f"P_0 (Blind Null):                                     +  0.00% ± 0.00%")
+print("P_0 (Blind Null):                                     +  0.00% ± 0.00%")
 print(f"P_1 (Time Drift):                        [{X1.shape[1]:3d}-D]  + {np.mean(g1):5.2f}% ± {ci(g1):4.2f}%")
 print(f"P_2 (Space+Height+Curvature over W):     [{X2.shape[1]:3d}-D]  + {np.mean(g2):5.2f}% ± {ci(g2):4.2f}%")
 print(f"P_2.5 (P2 + Instantaneous 30-D Pose):    [{X25.shape[1]:3d}-D]  + {np.mean(g25):5.2f}% ± {ci(g25):4.2f}%")

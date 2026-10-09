@@ -1,16 +1,17 @@
-from collections import defaultdict
 import warnings
-import pandas as pd
-from fiberphotometry.data.data_loading import DataContainer
-from fiberphotometry.config import SESSION_CONFIG
+from collections import defaultdict
 
+import pandas as pd
+
+from fiberphotometry.config import SESSION_CONFIG
+from fiberphotometry.data.data_loading import DataContainer
 from fiberphotometry.data.handlers import (
     SPECIAL_PROCESSORS,
-    split_event_suffix,
+    _ensure_columns,
+    base_event_name,
     get_event_key,
     is_reward_event,
-    base_event_name,
-    _ensure_columns
+    split_event_suffix,
 )
 
 _sorted_processors = sorted(

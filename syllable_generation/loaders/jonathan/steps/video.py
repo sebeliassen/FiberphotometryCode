@@ -2,12 +2,15 @@
 from __future__ import annotations
 
 from typing import List
+
 import pandas as pd
 
 from syllable_generation.datamodel import SessionRecord
-from ..context import BuildContext
+
 from ..config import JCFG
-from ..utils.files import parse_video_path, gather_video_paths, choose_role, sort_video_row_key
+from ..context import BuildContext
+from ..utils.files import choose_role, gather_video_paths, parse_video_path, sort_video_row_key
+
 
 def attach_video_refs(ctx: BuildContext, sessions: List[SessionRecord]) -> List[SessionRecord]:
     """
@@ -58,7 +61,8 @@ def attach_video_refs(ctx: BuildContext, sessions: List[SessionRecord]) -> List[
         # ffprobe fallback (metadata-only)
         if fps is None or n_frames is None or duration_s is None:
             try:
-                import subprocess, json
+                import json
+                import subprocess
                 cmd = [
                     "ffprobe", "-v", "error",
                     "-select_streams", "v:0",

@@ -1,9 +1,10 @@
-import os
 import multiprocessing
-import sys
+import os
 import pickle
-import numpy as np
+import sys
 from pathlib import Path
+
+import numpy as np
 
 # Disable CUDA for child workers
 if multiprocessing.current_process().name != 'MainProcess':
@@ -18,13 +19,12 @@ if multiprocessing.current_process().name != 'MainProcess':
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
-import keypoint_moseq as kpms
-import matplotlib.pyplot as plt
 import jax
 import jax.numpy as jnp
-from jax_moseq.utils import set_mixed_map_iters
-from jax_moseq.models.keypoint_slds.initialize import init_states, estimate_error
+import keypoint_moseq as kpms
 from jax_moseq.models.keypoint_slds.alignment import preprocess_for_pca
+from jax_moseq.models.keypoint_slds.initialize import estimate_error, init_states
+from jax_moseq.utils import set_mixed_map_iters
 
 # Set iterations
 set_mixed_map_iters(64)
@@ -32,9 +32,7 @@ set_mixed_map_iters(64)
 # ===== Memory Patches: Batched Resamplers =====
 # Prevents RESOURCE_EXHAUSTED OOMs on large 64-bit datasets.
 
-import jax
 import jax.random as jr
-import jax.numpy as jnp
 from tqdm import tqdm
 
 BATCH_SIZE = 100
@@ -42,6 +40,7 @@ SCALES_BS = min(BATCH_SIZE, 50)
 
 # 1. Patch resample_discrete_stateseqs (Gibbs step for Z)
 from jax_moseq.models.arhmm import gibbs as arhmm_gibbs
+
 _orig_resample_discrete = arhmm_gibbs.resample_discrete_stateseqs
 
 def _batched_resample_discrete_stateseqs(seed, x, mask, Ab, Q, pi, **kwargs):
@@ -65,6 +64,7 @@ print(f"[Patch] batched resample_discrete_stateseqs active (batch_size={BATCH_SI
 from jax_moseq.models.keypoint_slds import gibbs as slds_gibbs
 from jax_moseq.models.keypoint_slds import slds
 from jax_moseq.models.keypoint_slds.gibbs import compute_squared_error
+
 
 @jax.jit
 def _resample_scales_kernel(seed, Y, x, v, h, Cd, sigmasq, nu_s, s_0):
@@ -140,8 +140,8 @@ DOWNSAMPLE = 2
 NEW_FPS = 40
 
 def make_masks(confidences):
-    from utils.trimming import presence_mask_from_conf
     from tqdm import tqdm
+    from utils.trimming import presence_mask_from_conf
     masks = {}
     for name, conf in tqdm(confidences.items(), desc="Generating presence masks"):
         masks[name] = presence_mask_from_conf(
@@ -167,14 +167,14 @@ def batched_init_model_by_video(data, pca, config, params_subset_size=5, batch_s
         'conf': data['conf'][subset_slice] if 'conf' in data else None
     }
     model = kpms.init_model(subset_data, pca=pca, **config)
-    
+
     print(f"Step 2: Initializing States for {N_videos} videos (Batch size: {batch_size})...")
     params = model['params']
     hypparams = model['hypparams']
     obs_hypparams = hypparams['obs_hypparams']
     seed = model['seed']
     error_estimator = config.get('error_estimator', None)
-    
+
     anterior_idxs = config.get('anterior_idxs')
     posterior_idxs = config.get('posterior_idxs')
     conf_threshold = config.get('conf_threshold', 0.5)
@@ -182,15 +182,15 @@ def batched_init_model_by_video(data, pca, config, params_subset_size=5, batch_s
 
     full_states = {'x': [], 'v': [], 'h': [], 's': [], 'z': []}
     num_batches = int(np.ceil(N_videos / batch_size))
-    
+
     for i in range(num_batches):
         start_idx = i * batch_size
         end_idx = min((i + 1) * batch_size, N_videos)
-        
+
         Y_chunk = jnp.array(data['Y'][start_idx:end_idx])
         mask_chunk = jnp.array(data['mask'][start_idx:end_idx])
         conf_chunk = jnp.array(data['conf'][start_idx:end_idx]) if 'conf' in data else None
-        
+
         Y_flat_chunk, v_chunk, h_chunk = preprocess_for_pca(
             Y_chunk,
             anterior_idxs=anterior_idxs,
@@ -198,7 +198,7 @@ def batched_init_model_by_video(data, pca, config, params_subset_size=5, batch_s
             conf=conf_chunk,
             conf_threshold=conf_threshold,
             fix_heading=fix_heading,
-            verbose=False 
+            verbose=False
         )
 
         if conf_chunk is not None and error_estimator is not None:
@@ -213,15 +213,15 @@ def batched_init_model_by_video(data, pca, config, params_subset_size=5, batch_s
             params,
             batch_noise_prior,
             obs_hypparams,
-            Y_flat=Y_flat_chunk, 
-            v=v_chunk, 
-            h=h_chunk, 
+            Y_flat=Y_flat_chunk,
+            v=v_chunk,
+            h=h_chunk,
         )
-        
+
         for k in ['x', 'v', 'h', 's', 'z']:
             if k in chunk_states:
                 full_states[k].append(jax.device_put(chunk_states[k], jax.devices('cpu')[0]))
-        
+
         print(f"  Batch {i+1}/{num_batches} (Videos {start_idx}-{end_idx}) done.")
         del Y_chunk, mask_chunk, conf_chunk, Y_flat_chunk, v_chunk, h_chunk, chunk_states, batch_noise_prior
 
@@ -230,9 +230,9 @@ def batched_init_model_by_video(data, pca, config, params_subset_size=5, batch_s
     for k in ['x', 'v', 'h', 's', 'z']:
         if full_states[k]:
             final_states[k] = jnp.concatenate(full_states[k], axis=0)
-            
+
     model['states'] = final_states
-    
+
     if 'conf' in data and error_estimator is not None:
         print("Recalculating full noise_prior (on CPU)...")
         with jax.default_device(jax.devices("cpu")[0]):
@@ -309,7 +309,7 @@ def main():
     all_masks = make_masks(confidences)
 
     # Filter with masks
-    from utils.trimming import filter_with_masks, clamp_conf_nonneg
+    from utils.trimming import clamp_conf_nonneg, filter_with_masks
     filtered_coords, filtered_confs, video_frame_indexes = filter_with_masks(
         coordinates, confidences, all_masks, PROJECT_DIR,
         return_video_frame_indexes=True, **kpms.load_config(PROJECT_DIR)
@@ -348,7 +348,7 @@ def main():
         else:
             sub_Y = filtered_coords
             sub_C = filtered_confs
-            
+
         sub_data, _ = kpms.format_data(sub_Y, sub_C, **kpms.load_config(PROJECT_DIR))
         pca = kpms.fit_pca(**sub_data, **kpms.load_config(PROJECT_DIR))
         kpms.save_pca(pca, PROJECT_DIR)
@@ -371,10 +371,10 @@ def main():
 
     # Initialize model
     model = batched_init_model_by_video(
-        data, 
-        pca, 
-        kpms.load_config(PROJECT_DIR), 
-        params_subset_size=5, 
+        data,
+        pca,
+        kpms.load_config(PROJECT_DIR),
+        params_subset_size=5,
         batch_size=20
     )
 
@@ -387,7 +387,7 @@ def main():
         model, data, metadata, PROJECT_DIR,
         ar_only=True, num_iters=1, parallel_message_passing=False
     )
-    
+
     print("--- Fitting Full model ---")
     model, data, metadata, current_iter = kpms.load_checkpoint(PROJECT_DIR, model_name, iteration=1)
     model = kpms.update_hypparams(model, kappa=1e4)

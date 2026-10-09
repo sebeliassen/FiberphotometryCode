@@ -27,19 +27,19 @@ Generates the Unified Syllable Selection Manifest for Cohort Static 21kp V2:
   - Saved to `unified_syllable_selection_manifest.json`
 """
 
-import os
-import sys
-import json
-import time
-import re
 import argparse
-from pathlib import Path
-import numpy as np
-import h5py
+import json
 import pickle
+import re
+import sys
+import time
+from pathlib import Path
+
+import h5py
+import numpy as np
 from sklearn.decomposition import PCA
-from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics import pairwise_distances
+from sklearn.neighbors import NearestNeighbors
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -60,8 +60,9 @@ EXPERIMENT_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 if str(EXPERIMENT_DIR) not in sys.path:
     sys.path.insert(0, str(EXPERIMENT_DIR))
 
-from core.pair_matching import find_matched_pairs
 from jax_moseq.utils import unbatch
+
+from core.pair_matching import find_matched_pairs
 
 COHORT_DIR = EXPERIMENT_DIR / "cohort_static_21kp_v2"
 MODEL_DIR = COHORT_DIR / "model_21kp_static_50ar_300slds_seed101"
@@ -272,7 +273,7 @@ def main():
         "grid_size": G,
         "trajectory_window": {"pre": pre, "post": post, "clip_len": clip_len},
         "tiers_definition": {
-            "tier_1": f"N > 50: Built-in KPMS density sampling (4D PCA, exemplar mode)",
+            "tier_1": "N > 50: Built-in KPMS density sampling (4D PCA, exemplar mode)",
             "tier_2": f"{G} < N <= 50: Compact-neighborhood selection (lowest mean pairwise distance)",
             "tier_3": f"N <= {G}: Complete bout enumeration (medoid first, remaining ordered, unused blank)"
         },

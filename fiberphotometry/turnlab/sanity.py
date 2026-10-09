@@ -2,7 +2,8 @@ def detector_percentile_sanity(df, method='omega', bins=(50,60,70,80,85,90,92,95
                                speed_col='velocity_px_s', omega_col='angular_velocity',
                                kappa_col='curvature', speed_floor_omega=2.0, speed_floor_kappa=10.0,
                                sessions_to_show=5):
-    import numpy as np, pandas as pd
+    import numpy as np
+    import pandas as pd
     sids = df['session_idx'].unique().tolist()
     print(f"Sessions: {len(sids)}  | method={method}  | bins={bins}")
     shown = 0

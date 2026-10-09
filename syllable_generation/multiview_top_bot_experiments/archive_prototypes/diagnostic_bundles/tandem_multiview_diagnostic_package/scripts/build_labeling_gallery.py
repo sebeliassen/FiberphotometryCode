@@ -12,7 +12,6 @@ for Champion Seed 101 syllables, linking:
 =============================================================================
 """
 
-import os
 import json
 from pathlib import Path
 

@@ -4,11 +4,12 @@ Test 2 AR + 2 SLDS iterations on the full calibrated cohort.
 Logs memory, step timings, and catches any errors.
 """
 import os
+import pickle
+import shutil
 import sys
 import time
-import shutil
-import pickle
 from pathlib import Path
+
 import numpy as np
 
 if not hasattr(np, "bool8"):
@@ -22,9 +23,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["USE_MEMORY_PATCH"] = "1"
 
 import jax
-import jax.numpy as jnp
 import keypoint_moseq as kpms
-from jax_moseq.utils.debugging import convert_data_precision
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
@@ -32,7 +31,6 @@ KPMS_UTILS_DIR = REPO_ROOT / "syllable_generation/syllabizers/keypoint_moseq_syl
 sys.path.insert(0, str(KPMS_UTILS_DIR))
 
 import utils.resample_batching as rb
-from utils.batch_init import batched_init_model_by_video
 
 PROD_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments/kpms_tandem_cohort_continuous_calibrated"
 TEST_RUN_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments/test_2ar_2slds_cohort"

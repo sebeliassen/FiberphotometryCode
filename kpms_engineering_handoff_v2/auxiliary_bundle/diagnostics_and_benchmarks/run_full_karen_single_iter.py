@@ -1,13 +1,13 @@
 import os
+import shutil
+import subprocess
 import sys
 import time
-import subprocess
-import shutil
 import urllib.request
+
 import numpy as np
+
 np.bool8 = np.bool_
-import jax
-import pandas as pd
 import psutil
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -67,7 +67,7 @@ def main():
         sessions = get_sessions()
         num_sessions = len(sessions)
         print(f"[1/4] Loaded {num_sessions} valid sessions for full Karen project.", flush=True)
-        
+
         send_ntfy(f"🚀 Starting Full Karen Dataset Benchmark ({num_sessions} sessions, 1,004 videos, 10.07M frames) with Memory-Safe Kernels...", title="Full Karen Benchmark Started")
 
         # 3. Pipeline Arguments (Non-destructive)
@@ -95,12 +95,12 @@ def main():
             "save_every_n_iters": None,
         }
 
-        print(f"\n[2/4] Executing Optimized KPMS Pipeline (SLDS-ONLY, 1 iteration)...", flush=True)
+        print("\n[2/4] Executing Optimized KPMS Pipeline (SLDS-ONLY, 1 iteration)...", flush=True)
         t0 = time.perf_counter()
-        
+
         results = run_pipeline(sessions, **pipeline_kwargs)
         total_time = time.perf_counter() - t0
-        
+
         vram_peak = get_vram_gb()
         ram_peak = get_ram_gb()
 
@@ -111,7 +111,7 @@ def main():
         print(f"Total Single-Iteration Runtime : {total_time:.2f} s ({total_time/60.0:.2f} min)")
         print(f"Peak GPU VRAM Footprint        : {vram_peak:.2f} GB / 24.00 GB")
         print(f"Peak Host CPU RAM Footprint    : {ram_peak:.2f} GB / 125.00 GB")
-        print(f"Watchdog Status                : Clean (RAM remained well below 90%)")
+        print("Watchdog Status                : Clean (RAM remained well below 90%)")
         print("=" * 95)
 
         summary_msg = (

@@ -15,14 +15,9 @@ Environment: kpms_gpu_cuml
 =============================================================================
 """
 
-import os
-import sys
 import argparse
-import time
+import sys
 from pathlib import Path
-import numpy as np
-import pandas as pd
-import pickle
 
 REPO_ROOT = Path('/home/fsp585/Desktop/FiberphotometryCode')
 if str(REPO_ROOT) not in sys.path:
@@ -36,8 +31,9 @@ KPMS_UTILS_DIR = REPO_ROOT / 'syllable_generation/syllabizers/keypoint_moseq_syl
 if str(KPMS_UTILS_DIR) not in sys.path:
     sys.path.insert(0, str(KPMS_UTILS_DIR))
 
-from core.fusion_engine import fuse_single_pair
 from audit_cohort_correlations import find_matched_pairs
+
+from core.fusion_engine import fuse_single_pair
 
 # Benchmark 10 representative sessions covering all 4 arenas and critical dates
 BENCHMARK_SESSIONS = [

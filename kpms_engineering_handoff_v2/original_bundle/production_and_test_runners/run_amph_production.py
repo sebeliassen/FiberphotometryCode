@@ -15,13 +15,15 @@ Usage:
 """
 
 import os
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.75"
 
-import sys
 import multiprocessing
+import sys
+
 if multiprocessing.current_process().name != 'MainProcess':
     os.environ["CUDA_VISIBLE_DEVICES"] = ""
     os.environ["JAX_PLATFORMS"] = "cpu"
@@ -35,13 +37,15 @@ sys.path.insert(0, "/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import numpy as np
+
 np.bool8 = np.bool_
 
 import json
 import time
 from pathlib import Path
-from kpms_pipeline import run_pipeline
+
 import pandas as pd
+from kpms_pipeline import run_pipeline
 
 # ========= AMPH CONFIG =========
 PROJECT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "amph_project")

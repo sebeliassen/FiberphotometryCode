@@ -52,7 +52,7 @@ def make_turn_syllable_series(
         if idx >= len(s): idx = len(s)-1
         return s[idx]
 
-    def to_frames(ms): 
+    def to_frames(ms):
         return int(round((ms * fps) / 1000.0))
 
     min_bout_frames = to_frames(min_bout_ms)

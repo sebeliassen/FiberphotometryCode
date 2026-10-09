@@ -1,8 +1,11 @@
 # fiberphotometry/data/syncer.py
 
 import warnings
+
 import pandas as pd
+
 from fiberphotometry import config
+
 
 class SyncError(Exception):
     """Raised when synchronization cannot proceed due to invalid or missing data."""
@@ -28,7 +31,7 @@ def sync_session(session) -> None:
     cpt_idx = calculate_cpt_index(raw_df)
     if cpt_idx < 0:
         return  # no sync event found
-    
+
     # validate raw time column
     RAW_TIME = config.SYNC["raw_time_col"]
     if RAW_TIME not in raw_df.columns:
@@ -97,7 +100,7 @@ def sync_all_streams(session) -> None:
     raw_df[sec_zero_col]        = raw_series + offset
     raw_df[sec_trial_col] = raw_df[raw_time] - session.sync_time
 
-    
+
     # 7) Stamp each photometry stream (optional)
     #for freq in cfg["frequencies"]:
     for freq in FREQS_USED:

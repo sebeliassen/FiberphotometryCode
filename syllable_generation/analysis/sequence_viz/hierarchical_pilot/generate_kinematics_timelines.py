@@ -19,23 +19,22 @@ Outputs:
 """
 
 import sys
-import json
-import pickle
-import time
 from pathlib import Path
-import numpy as np
-import pandas as pd
+
 import matplotlib
+import numpy as np
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 import matplotlib.colors as mcolors
+import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.hierarchical_pilot.test_continuous_emissions import (
-    load_cohort_with_kinematics, ContinuousHierarchicalModel
+    ContinuousHierarchicalModel,
+    load_cohort_with_kinematics,
 )
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/hierarchical_pilot"

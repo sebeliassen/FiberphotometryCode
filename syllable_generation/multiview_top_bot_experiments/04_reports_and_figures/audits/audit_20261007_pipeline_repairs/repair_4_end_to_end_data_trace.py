@@ -19,14 +19,14 @@ Also audits:
 - Segment eligibility & frame count reconciliation (source vs segment vs batch vs results)
 """
 
-import sys
 import json
 import pickle
+import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+
+import h5py
 import numpy as np
 import pandas as pd
-import h5py
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
@@ -37,9 +37,8 @@ MODEL_DIR = COHORT_DIR / "model_21kp_static_50ar_200slds_seed101"
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-from core.pair_matching import find_matched_pairs
 from core.camera_correspondence import get_session_mapping
-from core.ttl_sync import find_camera_timestamp_files
+from core.pair_matching import find_matched_pairs
 
 PAW_LIST = ["left_front_paw", "right_front_paw", "left_hind_paw", "right_hind_paw"]
 BODYPARTS_21KP = [

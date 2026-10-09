@@ -9,10 +9,11 @@ aligns TopCam and BotCam kinematics using crystal-clock continuous correspondenc
 and serializes sessions_karen_project_tandem_cohort_seed404.pkl.
 """
 
+import pickle
 import sys
 import time
-import pickle
 from pathlib import Path
+
 import h5py
 import numpy as np
 import pandas as pd
@@ -25,8 +26,8 @@ if str(REPO_ROOT) not in sys.path:
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.pair_matching import find_matched_pairs
 from core.camera_correspondence import top_to_bot_frame_continuous
+from core.pair_matching import find_matched_pairs
 from syllable_generation.analysis.replications.datta_utils import combined_photometry_and_syllables
 
 DIRTY_PKL = REPO_ROOT / "syllable_generation/data/sessions_karen_project_dirty.pkl"
@@ -263,7 +264,7 @@ def main():
                     df_comb = combined_photometry_and_syllables(s, kind="dff")
                     if df_comb is not None and len(df_comb) > 0:
                         phot_aligned = df_comb[[c for c in TEMPLATE_PHOT_COLS if c in df_comb.columns]].iloc[:n_frames]
-                except Exception as e:
+                except Exception:
                     pass
 
             if phot_aligned is not None and len(phot_aligned) > 0:

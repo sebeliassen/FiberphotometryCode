@@ -13,10 +13,11 @@ Systematically "un-monkeypatches" components of the KPMS pipeline to determine:
 =============================================================================
 """
 
-import sys
 import os
-import time
+import sys
 import tempfile
+import time
+
 import numpy as np
 
 if not hasattr(np, "bool8"):
@@ -29,12 +30,10 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import jax
-import jax.numpy as jnp
 import jax.random as jr
 import keypoint_moseq as kpms
-from jax_moseq.models import keypoint_slds
 import utils.resample_batching as rb
+from jax_moseq.models import keypoint_slds
 
 
 def compute_syllable_stats(z_seqs):
@@ -53,11 +52,11 @@ def compute_syllable_stats(z_seqs):
         ends = np.r_[idx, len(seq)]
         lens = ends - starts
         bouts.extend(lens.tolist())
-    
+
     bouts = np.array(bouts)
     if len(bouts) == 0:
         return {"median": 0, "mean": 0, "p10": 0, "p25": 0, "p75": 0, "p90": 0, "active": 0, "n_bouts": 0}
-    
+
     return {
         "median": float(np.median(bouts)),
         "mean": float(np.mean(bouts)),
@@ -83,14 +82,14 @@ def generate_synthetic_session_data(seed=42, N=4, T=1200, K=17, D=10):
         t = np.linspace(0, 4 * np.pi, T)
         base_x = 200 + 100 * np.cos(t * (0.5 + 0.1 * i))
         base_y = 200 + 100 * np.sin(t * (0.5 + 0.1 * i))
-        
+
         c = np.zeros((T, K, 2), dtype=np.float64)
         for bp in range(K):
             offset_x = (bp - K // 2) * 5.0
             offset_y = (bp % 3 - 1) * 3.0
             c[:, bp, 0] = base_x + offset_x + rng.normal(0, 0.5, size=T)
             c[:, bp, 1] = base_y + offset_y + rng.normal(0, 0.5, size=T)
-        
+
         conf = rng.uniform(0.85, 1.0, size=(T, K))
         coords[key] = c
         confs[key] = conf
@@ -138,7 +137,7 @@ def run_experiment():
             current_model = keypoint_slds.resample_model(
                 data, **current_model, ar_only=True, jitter=1e-3, parallel_message_passing=False
             )
-        
+
         init_stats = compute_syllable_stats(current_model["states"]["z"])
         print(f"  Base AR State (Iter 10): Median={init_stats['median']}f ({init_stats['median']/0.06:.1f}ms) | "
               f"Mean={init_stats['mean']:.1f}f | Sylls={init_stats['active']} | Bouts={init_stats['n_bouts']}")

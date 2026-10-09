@@ -1,12 +1,15 @@
 import os
 import sys
 import time
+
 import numpy as np
+
 np.bool8 = np.bool_
+from functools import partial
+
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-from functools import partial
 import pandas as pd
 
 REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -16,15 +19,14 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import keypoint_moseq as kpms
 import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
-import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from utils.paths import ref_pairs_from_sessions
-from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg
-from utils.batch_init import batched_init_model_by_video
-from utils.resample_batching import fast_banded_gmrf_resample_x, fast_resample_discrete_stateseqs
-from jax_moseq.utils.autoregression import get_lags, get_nlags
+import keypoint_moseq as kpms
 from jax_moseq.utils import pad_affine, psd_inv
+from jax_moseq.utils.autoregression import get_lags, get_nlags
+from utils.batch_init import batched_init_model_by_video
+from utils.paths import ref_pairs_from_sessions
+from utils.resample_batching import fast_banded_gmrf_resample_x, fast_resample_discrete_stateseqs
+from utils.trimming import clamp_conf_nonneg, filter_with_masks, presence_mask_from_conf
 
 SCRATCH_DIR = os.path.join(KPMS_DIR, "scratch_profiling_project")
 DIRTY_PKL = os.path.join(REPO_ROOT, "syllable_generation/data/sessions_karen_project_dirty.pkl")
@@ -38,18 +40,18 @@ def associative_scan_hmm_filter(log_initial, log_transitions, log_likelihoods, m
     Span complexity: O(log T) parallel GPU steps.
     """
     N, T_eff, K = log_likelihoods.shape
-    
+
     # Mask log-likelihoods
     masked_ll = log_likelihoods * mask[:, nlags:, None]
-    
+
     # Build transition-emission potential elements: E[n, t, i, j] = log_trans[i, j] + ll[n, t, j]
     # Shape: (N, T_eff, K, K)
     potentials = log_transitions[None, None, :, :] + masked_ll[:, :, None, :]
-    
+
     # First time-step includes initial distribution
     first_step = log_initial[None, :, None] + potentials[:, 0:1, :, :]
     all_elements = jnp.concatenate([first_step, potentials[:, 1:]], axis=1)
-    
+
     # Define the associative binary operator: (A ⊗ B)(i, k) = logsumexp_j (A(i, j) + B(j, k))
     def log_matmul_scan_op(elem_left, elem_right):
         # elem_left: (..., K, K), elem_right: (..., K, K)
@@ -60,7 +62,7 @@ def associative_scan_hmm_filter(log_initial, log_transitions, log_likelihoods, m
     # Run parallel associative scan across time dimension (axis=1)
     # Temporal depth collapses from T to log2(T) steps on GPU Tensor Cores!
     scanned_potentials = jax.lax.associative_scan(log_matmul_scan_op, all_elements, axis=1)
-    
+
     # Marginal forward log-probabilities: alpha_t(k) = logsumexp_i (scanned[i, k])
     forward_alphas = jax.nn.logsumexp(scanned_potentials, axis=-2)
     return forward_alphas
@@ -81,34 +83,34 @@ def gpu_papandreou_yuille_pcg_resample_x(seed, Y, mask, v, h, s, z, Cd, sigmasq,
     C_mat = Cd_vanilla[:, :-1]  # (obs_dim, D)
     d_off = Cd_vanilla[:, -1]   # (obs_dim,)
     obs_dim = C_mat.shape[0]
-    
+
     s_keys = jr.split(seed, 3)
-    
+
     # Observation precision: W_obs = 1 / (s * sigmasq)
     W_obs = 1.0 / (s_vanilla * sigmasq_vanilla[None, None, :] + 1e-8)
     W_obs = W_obs * mask[:, :, None]
-    
+
     # Linear RHS from observation: g_obs = C^T * W_obs * (Y - d)
     g_obs = jnp.einsum("od,nto,nto->ntd", C_mat, W_obs, Y_vanilla - d_off)
-    
+
     # Dynamics parameters
     A_mats = Ab[:, :, :nlags*D].reshape(-1, D, nlags, D)  # (K, D, nlags, D)
     b_vecs = Ab[:, :, -1]  # (K, D)
     L_Q = jnp.linalg.cholesky(Q)  # (K, D, D)
     Q_inv = jax.vmap(psd_inv)(Q)
-    
+
     # 2. Local Perturbations (Embarrassingly parallel in O(1) time on GPU!)
     # Perturbation 1: Observation noise eta_obs ~ N(0, I)
     eta_obs = jr.normal(s_keys[0], (N, T, obs_dim), dtype=jnp.float64)
     pert_obs = jnp.einsum("od,nto,nto->ntd", C_mat, jnp.sqrt(W_obs), eta_obs)
-    
+
     # Perturbation 2: Dynamics noise eta_prior ~ N(0, I)
     eta_prior = jr.normal(s_keys[1], (N, T - nlags, D), dtype=jnp.float64)
     # Scale by Q_inv^(1/2) = L_Q^-T
     L_Q_inv = jax.vmap(lambda L: jnp.linalg.inv(L).T)(L_Q)
     L_Q_inv_z = L_Q_inv[z]  # (N, T - nlags, D, D)
     pert_prior_scaled = jnp.einsum("ntde,nte->ntd", L_Q_inv_z, eta_prior)
-    
+
     # Accumulate perturbed RHS b* = g + pert_obs + pert_prior
     b_star = g_obs
     b_star = b_star.at[:, nlags:].add(pert_prior_scaled)
@@ -124,23 +126,23 @@ def gpu_papandreou_yuille_pcg_resample_x(seed, Y, mask, v, h, s, z, Cd, sigmasq,
         # A. Observation contribution: C^T * W_obs * C * x
         Cx = jnp.einsum("od,ntd->nto", C_mat, x_vec)
         y_obs = jnp.einsum("od,nto,nto->ntd", C_mat, W_obs, Cx)
-        
+
         # B. Prior AR contribution: (x_t - sum A_l x_t-l)^T Q^-1 (x_t - sum A_l x_t-l)
         x_target = x_vec[:, nlags:]
         x_pred = jnp.zeros_like(x_target)
         for l in range(nlags):
             A_l = A_mats[z, :, l, :]
             x_pred = x_pred + jnp.einsum("ntde,nte->ntd", A_l, x_vec[:, nlags - 1 - l: T - 1 - l])
-        
+
         diff = x_target - x_pred
         Q_inv_diff = jnp.einsum("ntde,nte->ntd", Q_inv[z], diff)
-        
+
         y_prior = jnp.zeros_like(x_vec)
         y_prior = y_prior.at[:, nlags:].add(Q_inv_diff)
         for l in range(nlags):
             A_l = A_mats[z, :, l, :]
             y_prior = y_prior.at[:, nlags - 1 - l: T - 1 - l].add(-jnp.einsum("ntde,ntd->nte", A_l, Q_inv_diff))
-            
+
         return y_obs + y_prior + 1e-4 * x_vec
 
     # 4. Deterministic Preconditioned Conjugate Gradient (PCG) on GPU
@@ -150,7 +152,7 @@ def gpu_papandreou_yuille_pcg_resample_x(seed, Y, mask, v, h, s, z, Cd, sigmasq,
     p = r
     r_dot_r = jnp.sum(r * r, axis=(1, 2), keepdims=True)
     x = x_init
-    
+
     for _ in range(max_cg_iters):
         Ap = matvec_omega(p)
         alpha = r_dot_r / (jnp.sum(p * Ap, axis=(1, 2), keepdims=True) + 1e-12)
@@ -169,7 +171,7 @@ def main():
     print("=" * 95)
     print("      BENCHMARKING NOVEL PAPER FRONTIERS (PAPANDREOU-YUILLE PCG & ASSOCIATIVE HMM)")
     print("=" * 95)
-    
+
     jax.config.update("jax_enable_x64", True)
 
     # 1. Load Data
@@ -199,7 +201,7 @@ def main():
     hypparams = model["hypparams"]
     Y = data["Y"]
     mask = data["mask"]
-    
+
     N, T, k, d = Y.shape
     D = states["x"].shape[-1]
     nlags = get_nlags(params["Ab"])
@@ -211,7 +213,7 @@ def main():
     # PART A: Benchmark Continuous Latent (x) Solvers
     # -------------------------------------------------------------------------
     print("--- PART A: Continuous Latents (x) Solver Comparison ---")
-    
+
     # 1. Banded GMRF (LAPACK CPU Cholesky)
     t0 = time.perf_counter()
     x_banded = fast_banded_gmrf_resample_x(
@@ -248,7 +250,7 @@ def main():
     # PART B: Benchmark Discrete Syllable (z) Parallel Associative Scan
     # -------------------------------------------------------------------------
     print("\n--- PART B: Discrete Syllables (z) Forward Filtering Comparison ---")
-    
+
     # Prepare LL
     L_Q = jnp.linalg.cholesky(params["Q"])
     half_log_det_Q = jnp.sum(jnp.log(jnp.diagonal(L_Q, axis1=-2, axis2=-1)), axis=-1)
@@ -275,7 +277,7 @@ def main():
     @jax.jit
     def jit_assoc_scan(ll):
         return associative_scan_hmm_filter(log_init, log_pi, ll, mask, nlags=nlags)
-    
+
     # Warmup
     _ = jit_assoc_scan(log_likelihoods)
     t0 = time.perf_counter()

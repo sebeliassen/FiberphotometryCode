@@ -10,24 +10,25 @@ Mathematical 2D tracking fusion engine implementing the 4 Golden Rules:
 
 import time
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 import numpy as np
 import pandas as pd
 from scipy.ndimage import median_filter
 
 try:
     from .schemas import (
-        TOP_USE_BODYPARTS,
         BOT_RENAME_MAP,
         DEFAULT_ARENA_WIDTH,
+        TOP_USE_BODYPARTS,
         PathConfig,
     )
     from .ttl_sync import get_session_ttl_offset
 except ImportError:
     from schemas import (
-        TOP_USE_BODYPARTS,
         BOT_RENAME_MAP,
         DEFAULT_ARENA_WIDTH,
+        TOP_USE_BODYPARTS,
         PathConfig,
     )
     from ttl_sync import get_session_ttl_offset

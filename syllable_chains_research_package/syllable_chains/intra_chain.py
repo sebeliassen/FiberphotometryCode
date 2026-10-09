@@ -16,15 +16,14 @@ Quantifies:
 =============================================================================
 """
 
-import math
 import itertools
-from typing import List, Dict, Any, Tuple, Optional
+from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 import pandas as pd
 from scipy import stats
-from scipy.spatial.distance import cdist
 
-from .core import ChainDefinition, ChainOccurrence, ChainBout, ChainFinder
+from .core import ChainDefinition, ChainFinder, ChainOccurrence
 
 
 def fast_dtw_1d(x: np.ndarray, y: np.ndarray) -> float:
@@ -83,7 +82,7 @@ class IntraChainAnalyzer:
 
         for cid in self.chain_ids:
             c_occs = [o for o in self.occurrences if o.chain_id == cid and o.is_complete]
-            
+
             for g in groups:
                 g_occs = [o for o in c_occs if o.genotype == g]
                 if len(g_occs) < 3:
@@ -397,7 +396,7 @@ class IntraChainAnalyzer:
 
         target_tokens = sorted(list(set(itertools.chain.from_iterable([c.tokens for c in self.chain_defs.values()]))))
         genotypes = sorted(list(set(o.genotype for o in self.occurrences if o.genotype)))
-        
+
         session_in_chain_spans = {sid: [] for sid in self.session_dict.keys()}
         for occ in self.occurrences:
             if occ.is_complete and occ.session_id in session_in_chain_spans:
@@ -407,7 +406,7 @@ class IntraChainAnalyzer:
             for g in genotypes:
                 in_curves = []
                 out_curves = []
-                
+
                 for sid, sdata in self.session_dict.items():
                     if sdata.get("genotype") != g:
                         continue
@@ -415,10 +414,10 @@ class IntraChainAnalyzer:
                     vel = sdata.get("velocity")
                     if vel is None or len(vel) < len(sylls):
                         continue
-                    
+
                     in_spans = session_in_chain_spans.get(sid, [])
                     toks, starts, ends = ChainFinder.rle_bouts(sylls)
-                    
+
                     for t, sf, ef in zip(toks, starts, ends):
                         if t == tok and (ef - sf) >= min_bout_frames:
                             snippet = vel[sf:ef]
@@ -427,7 +426,7 @@ class IntraChainAnalyzer:
                             orig_x = np.linspace(0, 1, len(snippet))
                             new_x = np.linspace(0, 1, n_bins)
                             resampled = np.interp(new_x, orig_x, snippet)
-                            
+
                             is_in_chain = any(s_sf <= sf and ef <= s_ef for s_sf, s_ef in in_spans)
                             if is_in_chain:
                                 in_curves.append(resampled)
@@ -444,7 +443,7 @@ class IntraChainAnalyzer:
                         peak_speed = float(mean_curve[peak_idx])
                         offset_speed = float(mean_curve[-1])
                         early_accel = float((mean_curve[int(n_bins * 0.3)] - mean_curve[0]) / 0.3)
-                        
+
                         for b_idx in range(n_bins):
                             tau = b_idx / (n_bins - 1)
                             records.append({

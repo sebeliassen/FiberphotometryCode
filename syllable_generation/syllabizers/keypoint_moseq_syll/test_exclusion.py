@@ -9,7 +9,7 @@ with open(SESSIONS_PKL, 'rb') as f:
 stem_to_aid = {}
 for s in sessions:
     if hasattr(s, 'video_refs_df') and not s.video_refs_df.empty:
-        stem = Path(s.video_refs_df.iloc[0]['path']).stem 
+        stem = Path(s.video_refs_df.iloc[0]['path']).stem
         if hasattr(s, 'metadata') and 'is_flipped' in s.metadata:
             # Maybe 'is_flipped' exists? Let's print out what metadata there is
             stem_to_aid[stem] = s.metadata

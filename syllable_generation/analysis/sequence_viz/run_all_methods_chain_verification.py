@@ -17,23 +17,20 @@ End-to-End Multi-Method Verification and Pilot Video Renderer:
 =============================================================================
 """
 
-import os
 import sys
 import time
-import json
 import urllib.request
-import pandas as pd
-import numpy as np
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
-    load_chain_movie_resources,
     generate_chain_grid_movie,
-    standardize_chain_instances,
-    ChainGridMovieGenerator
+    load_chain_movie_resources,
 )
 
 LOG_FILE = REPO_ROOT / "syllable_generation/analysis/sequence_viz/chain_grid_movie.log"
@@ -48,7 +45,7 @@ def log(msg, notify=False, ntfy_title=None):
     print(line, flush=True)
     with open(LOG_FILE, "a") as f:
         f.write(line + "\n")
-        
+
     if notify:
         try:
             req = urllib.request.Request(
@@ -231,7 +228,7 @@ def main():
     # 4. Step 4: Camera Tracking Mode Comparison (follow_centroid vs lock_centroid)
     log("==================================================================")
     log("Step 4/5: Rendering Camera Mode Comparison (follow_centroid vs lock_centroid)...")
-    
+
     p4_path = OUTPUT_DIR / "pilot4_tpl_001_alt3_lock_centroid_legacy.mp4"
     log(f"Rendering Pilot 4 (Lock Centroid Legacy) -> {p4_path.name}")
     generate_chain_grid_movie(

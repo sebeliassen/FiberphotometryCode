@@ -20,16 +20,18 @@ Figures Produced:
 """
 
 import os
-import sys
-import shutil
 import pickle
+import shutil
+import sys
+
+import matplotlib
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
-import matplotlib
+
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 from sklearn.decomposition import NMF
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -171,7 +173,7 @@ def render_fig1_occupancy_and_entropy(df_win):
     Z_probs = Z_all / np.clip(np.sum(Z_all, axis=1, keepdims=True), 1e-8, None)
     for k in range(K):
         df_win[f"z_{k+1}"] = Z_probs[:, k]
-    
+
     z_clip = np.clip(Z_probs, 1e-12, None)
     df_win["z_entropy"] = -np.sum(z_clip * np.log2(z_clip), axis=1)
 
@@ -195,7 +197,7 @@ def render_fig1_occupancy_and_entropy(df_win):
         means = [sub[f"z_{k+1}"].mean() * 100 for k in range(K)]
         sems = [sub[f"z_{k+1}"].sem() * 100 for k in range(K)]
         x_pos = x_base + (i - (n_cohorts - 1) / 2) * bar_width
-        
+
         ax1.bar(x_pos, means, yerr=sems, width=bar_width, label=LABELS[c],
                 color=COLORS[c], edgecolor='white', linewidth=0.8, capsize=3.5, alpha=0.92, zorder=3)
 
@@ -246,7 +248,7 @@ def render_fig1_occupancy_and_entropy(df_win):
 def render_fig1d_continuous_trajectories(df_win):
     print("\nRendering Fig 1d: Continuous 60-Minute Post-Injection Trajectories across 4 Cohorts...")
     cohort_order = ["WT_Saline", "WT_Amphetamine", "KI_Saline", "KI_Amphetamine"]
-    
+
     fig, axes = plt.subplots(2, 2, figsize=(14, 9), dpi=300, sharex=True, sharey=True)
     axes = axes.flatten()
 
@@ -306,22 +308,22 @@ def compute_leak_free_curves(df_win):
     print("\nComputing leak-free memory curves and NMF retention curves across 4 cohorts...")
     df_post = df_win[df_win["is_post"]].copy()
     cohort_order = ["WT_Saline", "WT_Amphetamine", "KI_Saline", "KI_Amphetamine"]
-    
+
     wt_df = df_post[df_post["cohort"] == "WT_Saline"]
     wt_sess = wt_df["session_idx"].unique()
     wt_sess_arr = wt_df["session_idx"].values
-    
+
     # ---------------------------------------------------------
     # 1. Timescale Memory Curves (W in [2..360s])
     # ---------------------------------------------------------
     W_GRID = [2.0, 6.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 68.3, 90.0, 120.0, 160.0, 200.0, 240.0, 300.0, 360.0]
     mem_results = []
-    
+
     for w_sec in W_GRID:
         row = {"W_sec": w_sec}
         wt_X = np.hstack([np.array(wt_df["curr_syll_oh"].tolist()), np.array([w[w_sec] for w in wt_df["past_w"]])])
         wt_Y = np.array(wt_df["y_dist"].tolist())
-        
+
         # WT Saline Leave-One-Session-Out Cross Validation (ZERO data leakage)
         gains_wt = []
         for ts in wt_sess:
@@ -329,85 +331,85 @@ def compute_leak_free_curves(df_win):
             m_tr = ~m_te
             X_tr, Y_tr = wt_X[m_tr], wt_Y[m_tr]
             X_te, Y_te = wt_X[m_te], wt_Y[m_te]
-            
+
             d_feat = X_tr.shape[1]
             I = np.eye(d_feat, dtype=np.float32)
             beta = np.linalg.solve(X_tr.T @ X_tr + 500.0 * I, X_tr.T @ Y_tr)
-            
+
             Y_pr = np.clip(X_te @ beta, 1e-12, None)
             Y_pr /= Y_pr.sum(axis=-1, keepdims=True)
             d_pr = np.mean(js_divergence(Y_te, Y_pr))
-            
+
             p_tr = np.mean(Y_tr, axis=0, keepdims=True)
             d_prior = np.mean(js_divergence(Y_te, p_tr))
             gains_wt.append((d_prior - d_pr) / d_prior * 100.0)
-            
+
         row["WT_Saline"] = np.mean(gains_wt)
-        
+
         # Full WT Saline reference model for transfer evaluation
         d_feat = wt_X.shape[1]
         I = np.eye(d_feat, dtype=np.float32)
         beta_full = np.linalg.solve(wt_X.T @ wt_X + 500.0 * I, wt_X.T @ wt_Y)
         p_wt_prior = np.mean(wt_Y, axis=0, keepdims=True)
-        
+
         for c in ["WT_Amphetamine", "KI_Saline", "KI_Amphetamine"]:
             c_df = df_post[df_post["cohort"] == c]
             X_c = np.hstack([np.array(c_df["curr_syll_oh"].tolist()), np.array([w[w_sec] for w in c_df["past_w"]])])
             Y_c = np.array(c_df["y_dist"].tolist())
-            
+
             Y_pr = np.clip(X_c @ beta_full, 1e-12, None)
             Y_pr /= Y_pr.sum(axis=-1, keepdims=True)
             d_pr = np.mean(js_divergence(Y_c, Y_pr))
-            
+
             d_prior = np.mean(js_divergence(Y_c, p_wt_prior))
             row[c] = (d_prior - d_pr) / d_prior * 100.0
-            
+
         mem_results.append(row)
-        
+
     df_mem = pd.DataFrame(mem_results)
-    
+
     # ---------------------------------------------------------
     # 2. NMF Dimensional Retention (K in [1..30])
     # ---------------------------------------------------------
     K_GRID = [1, 2, 3, 4, 6, 8, 10, 15, 20, 30]
     k_results = []
-    
+
     wt_X_past = np.array(wt_df["past_counts"].tolist())
     wt_curr = np.array(wt_df["curr_syll_oh"].tolist())
-    
+
     for K in K_GRID:
         row = {"K": K}
         nmf = NMF(n_components=K, init="nndsvda", random_state=42, max_iter=400)
         nmf.fit(wt_X_past)
-        
+
         # WT Saline LOSO CV
         gains_wt = []
         for ts in wt_sess:
             m_te = (wt_sess_arr == ts)
             m_tr = ~m_te
-            
+
             Z_tr = nmf.transform(wt_X_past[m_tr])
             X_tr = np.hstack([wt_curr[m_tr], Z_tr])
             Y_tr = wt_Y[m_tr]
-            
+
             Z_te = nmf.transform(wt_X_past[m_te])
             X_te = np.hstack([wt_curr[m_te], Z_te])
             Y_te = wt_Y[m_te]
-            
+
             d_feat = X_tr.shape[1]
             I = np.eye(d_feat, dtype=np.float32)
             beta = np.linalg.solve(X_tr.T @ X_tr + 500.0 * I, X_tr.T @ Y_tr)
-            
+
             Y_pr = np.clip(X_te @ beta, 1e-12, None)
             Y_pr /= Y_pr.sum(axis=-1, keepdims=True)
             d_pr = np.mean(js_divergence(Y_te, Y_pr))
-            
+
             p_tr = np.mean(Y_tr, axis=0, keepdims=True)
             d_prior = np.mean(js_divergence(Y_te, p_tr))
             gains_wt.append((d_prior - d_pr) / d_prior * 100.0)
-            
+
         row["WT_Saline"] = np.mean(gains_wt)
-        
+
         # Transfer models
         Z_wt_full = nmf.transform(wt_X_past)
         X_wt_full = np.hstack([wt_curr, Z_wt_full])
@@ -415,25 +417,25 @@ def compute_leak_free_curves(df_win):
         I = np.eye(d_feat, dtype=np.float32)
         beta_full = np.linalg.solve(X_wt_full.T @ X_wt_full + 500.0 * I, X_wt_full.T @ wt_Y)
         p_wt_prior = np.mean(wt_Y, axis=0, keepdims=True)
-        
+
         for c in ["WT_Amphetamine", "KI_Saline", "KI_Amphetamine"]:
             c_df = df_post[df_post["cohort"] == c]
             X_past_c = np.array(c_df["past_counts"].tolist())
             curr_c = np.array(c_df["curr_syll_oh"].tolist())
             Y_c = np.array(c_df["y_dist"].tolist())
-            
+
             Z_c = nmf.transform(X_past_c)
             X_c = np.hstack([curr_c, Z_c])
-            
+
             Y_pr = np.clip(X_c @ beta_full, 1e-12, None)
             Y_pr /= Y_pr.sum(axis=-1, keepdims=True)
             d_pr = np.mean(js_divergence(Y_c, Y_pr))
-            
+
             d_prior = np.mean(js_divergence(Y_c, p_wt_prior))
             row[c] = (d_prior - d_pr) / d_prior * 100.0
-            
+
         k_results.append(row)
-        
+
     df_k = pd.DataFrame(k_results)
     return df_mem, df_k
 

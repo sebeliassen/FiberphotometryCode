@@ -19,7 +19,6 @@ SAFETY:
 """
 
 import os
-import sys
 import shutil
 from pathlib import Path
 
@@ -29,11 +28,10 @@ os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
-import pandas as pd
-import yaml
 import keypoint_moseq as kpms
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
@@ -88,7 +86,7 @@ def main():
     # Convert any jax arrays in data/config to standard Python/numpy types if needed
     pca = kpms.fit_pca(**data, **config)
     kpms.save_pca(pca, str(TEST_PROJ_DIR))
-    
+
     var_exp = pca.explained_variance_ratio_
     cum_var = np.cumsum(var_exp)
     print(f"  Top 10 PCs Cumulative Variance Explained: {cum_var[-1]*100:.2f}%")
@@ -111,10 +109,10 @@ def main():
 
     print("  --> Executing 2 test AR-HMM iterations on CPU...")
     kpms.fit_model(
-        model, data, metadata, 
-        project_dir=str(TEST_PROJ_DIR), 
-        model_name="test_model", 
-        num_iters=2, 
+        model, data, metadata,
+        project_dir=str(TEST_PROJ_DIR),
+        model_name="test_model",
+        num_iters=2,
         start_iter=0,
         ar_only=True,
         generate_progress_plots=False,

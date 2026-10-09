@@ -1,32 +1,29 @@
+from functools import partial
+
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-from functools import partial
-from jax.tree_util import tree_flatten_with_path
 import numpy as np
+from jax.tree_util import tree_flatten_with_path
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
-import scipy.linalg as sla
-from numba import njit, prange
-import concurrent.futures
+import contextlib
+from dataclasses import dataclass
+from typing import Optional
 
-from jax_moseq.models.keypoint_slds import slds
-from jax_moseq.models import keypoint_slds
-from jax_moseq.models.keypoint_slds.gibbs import compute_squared_error
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
-import jax_moseq.models.keypoint_slds.alignment as slds_alignment
-import jax_moseq.models.slds.gibbs as vanilla_slds_gibbs
-import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
 import jax_moseq.models.arhmm as arhmm_model
-from jax_moseq.models.arhmm.gibbs import sample_mniw
+import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
+import jax_moseq.models.keypoint_slds.alignment as slds_alignment
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+from dynamax.hidden_markov_model.inference import hmm_posterior_sample
+from jax_moseq.models import keypoint_slds
+from jax_moseq.models.keypoint_slds import slds
+from jax_moseq.models.keypoint_slds.gibbs import compute_squared_error
 from jax_moseq.utils import pad_affine, psd_inv, psd_solve
 from jax_moseq.utils.autoregression import get_lags
-from dynamax.hidden_markov_model.inference import hmm_posterior_sample
-from tqdm import tqdm
+from numba import njit, prange
 
-from dataclasses import dataclass
-from typing import Optional, Union, Dict, Any
-import contextlib
 
 @dataclass
 class BatchConfig:
@@ -412,7 +409,7 @@ def fast_resample_discrete_stateseqs(seed, x, mask, Ab, Q, pi, nlags=None, num_s
         nlags = (Ab.shape[-1] - 1) // D
     if batch_size is None:
         batch_size = CONFIG.discrete_bs
-        
+
     N, T = x.shape[:2]
     T_eff = T - nlags
 
@@ -426,7 +423,7 @@ def fast_resample_discrete_stateseqs(seed, x, mask, Ab, Q, pi, nlags=None, num_s
 
         base_seed = int(jr.randint(seed, (), 0, 2**31 - 1))
         rng = np.random.default_rng(base_seed)
-        
+
         z_out_all = np.empty((N, T_eff), dtype=np.int32)
 
         batch_workspace_size = min(batch_size, N)
@@ -491,7 +488,7 @@ def fast_resample_discrete_stateseqs(seed, x, mask, Ab, Q, pi, nlags=None, num_s
     # Pure JAX GPU fallback
     if N <= batch_size:
         return _jit_resample_discrete_batch(seed, x, mask, Ab, Q, pi, nlags=nlags, num_states=num_states)
-    
+
     z_all = []
     for i in range(0, N, batch_size):
         end = min(i + batch_size, N)
@@ -520,7 +517,7 @@ def batched_resample_scales(seed, Y, x, v, h, Cd, sigmasq, nu_s, s_0, **kwargs):
     N = Y.shape[0]
     if N <= bs:
         return _resample_scales_kernel(seed, Y, x, v, h, Cd, sigmasq, nu_s, s_0)
-    
+
     Y_np = KPMSStateCache.get_Y(Y)
     s_0_is_arr = hasattr(s_0, 'shape') and len(s_0.shape) >= 3 and s_0.shape[0] == N
     s_0_np = np.asarray(s_0) if s_0_is_arr else s_0
@@ -552,7 +549,7 @@ def batched_resample_heading(seed, Y, x, v, s, Cd, sigmasq, **kwargs):
     N = Y.shape[0]
     if N <= bs:
         return _resample_heading_kernel(seed, Y, x, v, s, Cd, sigmasq)
-    
+
     Y_np = KPMSStateCache.get_Y(Y)
     s_np = np.asarray(s)
     cpu_device = jax.devices('cpu')[0]
@@ -583,27 +580,27 @@ def _zero_alloc_accumulate_ar_stats(x_np, z_np, mask_np, nlags, num_states):
     N, T, D = x_np.shape
     D_in = nlags * D + 1
     D_out = D
-    
+
     n_threads = 8
     S_in_in_threads = np.zeros((n_threads, num_states, D_in, D_in), dtype=np.float64)
     S_out_in_threads = np.zeros((n_threads, num_states, D_out, D_in), dtype=np.float64)
     S_out_out_threads = np.zeros((n_threads, num_states, D_out, D_out), dtype=np.float64)
     counts_threads = np.zeros((n_threads, num_states), dtype=np.float64)
-    
+
     chunk_size = (N + n_threads - 1) // n_threads
-    
+
     for thread_id in prange(n_threads):
         start_seq = thread_id * chunk_size
         end_seq = min(start_seq + chunk_size, N)
-        
+
         S_ii = S_in_in_threads[thread_id]
         S_oi = S_out_in_threads[thread_id]
         S_oo = S_out_out_threads[thread_id]
         cnt = counts_threads[thread_id]
-        
+
         x_in_buf = np.zeros(D_in, dtype=np.float64)
         x_in_buf[D_in - 1] = 1.0  # affine bias
-        
+
         for seq_i in range(start_seq, end_seq):
             for t in range(nlags, T):
                 if not mask_np[seq_i, t]:
@@ -612,13 +609,13 @@ def _zero_alloc_accumulate_ar_stats(x_np, z_np, mask_np, nlags, num_states):
                 if k < 0 or k >= num_states:
                     continue
                 cnt[k] += 1.0
-                
+
                 # Fill local lag buffer in chronological order
                 for l in range(nlags):
                     t_lag = t - nlags + l
                     for d in range(D):
                         x_in_buf[l * D + d] = x_np[seq_i, t_lag, d]
-                
+
                 # S_ii
                 for r in range(D_in):
                     val_r = x_in_buf[r]
@@ -627,7 +624,7 @@ def _zero_alloc_accumulate_ar_stats(x_np, z_np, mask_np, nlags, num_states):
                         S_ii[k, r, c] += prod
                         if r != c:
                             S_ii[k, c, r] += prod
-                            
+
                 # S_oi & S_oo
                 for r in range(D_out):
                     val_out = x_np[seq_i, t, r]
@@ -638,18 +635,18 @@ def _zero_alloc_accumulate_ar_stats(x_np, z_np, mask_np, nlags, num_states):
                         S_oo[k, r, c] += prod
                         if r != c:
                             S_oo[k, c, r] += prod
-                            
+
     S_in_in = np.zeros((num_states, D_in, D_in), dtype=np.float64)
     S_out_in = np.zeros((num_states, D_out, D_in), dtype=np.float64)
     S_out_out = np.zeros((num_states, D_out, D_out), dtype=np.float64)
     counts = np.zeros(num_states, dtype=np.float64)
-    
+
     for t in range(n_threads):
         S_in_in += S_in_in_threads[t]
         S_out_in += S_out_in_threads[t]
         S_out_out += S_out_out_threads[t]
         counts += counts_threads[t]
-        
+
     return counts, S_in_in, S_out_in, S_out_out
 
 # Keep alias for backwards compatibility
@@ -704,7 +701,7 @@ def vectorized_resample_ar_params(seed, *args, **kwargs):
     mask_np = KPMSStateCache.get_mask(mask)
 
     counts, S_ii, S_oi, S_oo = _zero_alloc_accumulate_ar_stats(x_np, z_np, mask_np, nlags, num_states)
-    
+
     seeds = jr.split(seed, num_states)
     Ab, Q = _jit_solve_mniw_posteriors(
         seeds, jnp.array(counts), jnp.array(S_ii), jnp.array(S_oi), jnp.array(S_oo),
@@ -788,7 +785,7 @@ def _numba_assemble_and_solve_all_parallel(
         g = g_all[seq_i]
         eta = eta_all[seq_i]
         x_flat = x_all[seq_i]
-        
+
         # 1. Initial state prior on first nlags frames (S0 = 10 * I -> precision = 0.1)
         for d in range(nlags * D):
             ab[0, d] += 0.1
@@ -884,7 +881,7 @@ def pure_numba_resample_continuous_stateseqs(
 ):
     N, T, k, d = Y.shape
     assert d == 2, f"pure_numba_resample_continuous_stateseqs only supports 2D keypoints (got d={d})"
-    
+
     num_states, D, ar_dim_plus_1 = Ab.shape
     nlags = (ar_dim_plus_1 - 1) // D
     bandwidth = (nlags + 1) * D - 1
@@ -909,7 +906,7 @@ def pure_numba_resample_continuous_stateseqs(
         Q_inv_k = np.linalg.inv(Q_np[k_idx])
         A_k = Ab_np[k_idx, :, :-1]
         b_k = Ab_np[k_idx, :, -1]
-        
+
         M_k = np.zeros((D, block_dim), dtype=np.float64)
         M_k[:, :-D] = -A_k
         M_k[:, -D:] = np.eye(D)
@@ -1003,7 +1000,7 @@ def batched_gpu_resample_location(seed, Y, mask, x, h, s, Cd, sigmasq, sigmasq_l
     N = Y.shape[0]
     if N <= bs:
         return _jit_resample_v_batch(seed, Y, mask, x, h, s, Cd, sigmasq, sigmasq_loc)
-    
+
     Y_np = KPMSStateCache.get_Y(Y)
     mask_np = KPMSStateCache.get_mask(mask)
     s_np = np.asarray(s)
@@ -1104,12 +1101,12 @@ def fast_consolidated_check_for_nans(data):
 
 def apply_optimizations():
     """Install high-performance monkeypatches into jax_moseq keypoint models."""
-    print(f"--- Applying High-Performance MoSeq Kernels (Numba Banded GMRF + GPU Kernels) ---")
+    print("--- Applying High-Performance MoSeq Kernels (Numba Banded GMRF + GPU Kernels) ---")
     arhmm_gibbs.resample_discrete_stateseqs = fast_resample_discrete_stateseqs
     arhmm_gibbs.resample_ar_params = vectorized_resample_ar_params
     arhmm_model.resample_discrete_stateseqs = fast_resample_discrete_stateseqs
     arhmm_model.resample_ar_params = vectorized_resample_ar_params
-    
+
     slds_gibbs.resample_scales = batched_resample_scales
     slds_gibbs.resample_heading = batched_resample_heading
     if CONFIG.use_banded_continuous:
@@ -1126,7 +1123,7 @@ def apply_optimizations():
         print(f"[Kernel] Pure Numba Parallel Banded Cholesky 'resample_continuous_stateseqs' active (Chunk={CONFIG.continuous_chunk_size})")
     else:
         keypoint_slds.resample_continuous_stateseqs = _ORIGINAL_FUNCTIONS["kp_slds_resample_x"]
-        print(f"[Kernel] Upstream JAX Kalman 'resample_continuous_stateseqs' active (Banded Cholesky fallback)")
+        print("[Kernel] Upstream JAX Kalman 'resample_continuous_stateseqs' active (Banded Cholesky fallback)")
     keypoint_slds.resample_location = batched_gpu_resample_location
 
     # Patch consolidated check_for_nans in fitting module
@@ -1134,16 +1131,16 @@ def apply_optimizations():
         import keypoint_moseq.fitting as kp_fitting
         _ORIGINAL_FUNCTIONS["check_for_nans"] = kp_fitting.check_for_nans
         kp_fitting.check_for_nans = fast_consolidated_check_for_nans
-        print(f"[Kernel] Consolidated NaN check active (Single GPU reduction + CPU inspection)")
+        print("[Kernel] Consolidated NaN check active (Single GPU reduction + CPU inspection)")
     except Exception as ex:
         print(f"[Kernel] Note: could not patch fitting.check_for_nans: {ex}")
 
     print(f"[Kernel] Batched GPU 'resample_location' active (bs={CONFIG.gpu_loc_bs})")
-    print(f"[Kernel] Zero-Allocation 'resample_ar_params' active (Pure FP64, 0 temporary copies)")
+    print("[Kernel] Zero-Allocation 'resample_ar_params' active (Pure FP64, 0 temporary copies)")
     print(f"[Kernel] Double-Buffered 'resample_discrete_stateseqs' active (bs={CONFIG.discrete_bs})")
     print(f"[Kernel] Batched GPU 'resample_scales' active (bs={CONFIG.scales_bs})")
     print(f"[Kernel] Batched GPU 'resample_heading' active (bs={CONFIG.heading_bs})")
-    print(f"[Kernel] Fused Rigid Transform active (Parallel Numba in-place)")
+    print("[Kernel] Fused Rigid Transform active (Parallel Numba in-place)")
     print("-------------------------------------------------------------------------")
 
 
@@ -1157,7 +1154,7 @@ def restore_original_kernels():
     slds_gibbs.resample_heading = _ORIGINAL_FUNCTIONS["kp_slds_resample_heading"]
     slds_gibbs.resample_continuous_stateseqs = _ORIGINAL_FUNCTIONS["kp_slds_resample_x"]
     slds_gibbs.resample_location = _ORIGINAL_FUNCTIONS["kp_slds_resample_loc"]
-    
+
     keypoint_slds.resample_scales = _ORIGINAL_FUNCTIONS["kp_slds_resample_scales"]
     keypoint_slds.resample_heading = _ORIGINAL_FUNCTIONS["kp_slds_resample_heading"]
     keypoint_slds.resample_continuous_stateseqs = _ORIGINAL_FUNCTIONS["kp_slds_resample_x"]

@@ -15,16 +15,18 @@ Quantifies:
 """
 
 import os
-import sys
 import pickle
+import sys
+
+import matplotlib
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import RidgeCV
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler, normalize
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.impute import SimpleImputer
-import matplotlib
+from sklearn.linear_model import RidgeCV
+from sklearn.preprocessing import StandardScaler, normalize
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -96,11 +98,11 @@ for i, (w, s) in enumerate(zip(meta, scalars_raw)):
     v_sub = session_kin[sid]["vel"][sf:ef:2]
     dc_sub = session_kin[sid]["dist_center"][sf:ef:2]
     av_sub = session_kin[sid]["ang_vel"][sf:ef:2]
-    
+
     valid = ~np.isnan(v_sub) & ~np.isnan(dc_sub)
     if np.sum(valid) < 10:
         continue
-        
+
     v_vals = v_sub[valid]
     v_mean = float(np.mean(v_vals))
     v_std = float(np.std(v_vals))
@@ -108,12 +110,12 @@ for i, (w, s) in enumerate(zip(meta, scalars_raw)):
     pause = float(np.mean(v_vals < 5.0))
     dc_mean = float(np.mean(dc_sub[valid]))
     av_mean = float(np.mean(av_sub[valid]))
-    
+
     spat_ent = float(s["spatial_entropy"]) if not np.isnan(s["spatial_entropy"]) else 0.0
     cad = float(s["cadence"]) if not np.isnan(s["cadence"]) else 0.0
     seq_ent = float(s["sequence_entropy"]) if not np.isnan(s["sequence_entropy"]) else 0.0
     chir = float(s["chirality"]) if not np.isnan(s["chirality"]) else 0.0
-    
+
     X_list.append([
         v_mean, v_cv, pause, av_mean, dc_mean,
         spat_ent, cad, seq_ent, chir
@@ -165,10 +167,10 @@ for k in range(5):
     var_err = np.var(Z_pca[1::2, k] - rf_pred)
     rf_r2_list.append(float(1.0 - var_err / var_test))
 
-print(f"\n=======================================================")
+print("\n=======================================================")
 print(f"LINEAR VARIANCE OF STRATEGY SPACE EXPLAINED BY 9 SCALARS: {r2_linear*100:.2f}%")
 print(f"TOP PC NON-LINEAR VARIANCE EXPLAINED (Random Forest):     {np.mean(rf_r2_list)*100:.2f}%")
-print(f"=======================================================")
+print("=======================================================")
 
 # Per-PC Breakdown
 pc_rows = []
@@ -205,16 +207,16 @@ residual_corrs = []
 
 for r_i in range(5):
     r_vec = Z_res_pca[:, r_i]
-    
+
     # Syllable correlations
     syll_corrs = np.array([np.corrcoef(r_vec, raw_sylls_sub[:, s_idx])[0, 1] for s_idx in range(100)])
-    
+
     top_pos_sylls = np.argsort(syll_corrs)[-3:][::-1]
     top_neg_sylls = np.argsort(syll_corrs)[:3]
-    
+
     pos_desc = ", ".join([f"Syllable {s} (r={syll_corrs[s]:+.2f})" for s in top_pos_sylls])
     neg_desc = ", ".join([f"Syllable {s} (r={syll_corrs[s]:+.2f})" for s in top_neg_sylls])
-    
+
     residual_corrs.append({
         "residual_pc": f"Residual PC{r_i+1}",
         "variance_pct": float(pca_res.explained_variance_ratio_[r_i] * 100.0),

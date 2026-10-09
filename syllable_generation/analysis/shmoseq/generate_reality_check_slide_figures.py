@@ -21,17 +21,16 @@ Generates the core figures for the presentation slide:
 =============================================================================
 """
 
-import os
-import shutil
-import pickle
 import itertools
-import numpy as np
-import pandas as pd
+import os
+import pickle
+
 import matplotlib
+import numpy as np
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from matplotlib.gridspec import GridSpec
+import matplotlib.pyplot as plt
 
 BASE_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 SHMOSEQ_DIR = os.path.join(BASE_DIR, "syllable_generation", "analysis", "shmoseq")

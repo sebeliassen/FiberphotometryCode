@@ -16,14 +16,15 @@ Produces:
 =============================================================================
 """
 
+import pickle
 import sys
 import time
-import json
-import pickle
 from pathlib import Path
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -35,10 +36,15 @@ sys.path.insert(0, str(REPO_ROOT))
 
 # Compatibility bridge for NumPy unpickling
 import numpy.core.numeric as _numeric
+
 sys.modules['numpy._core.numeric'] = _numeric
 
 from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
-    EXP_DIR, DATA_DIR, PLOTS_DIR, THEMES, TRAIN_ANIMALS, VAL_ANIMALS
+    DATA_DIR,
+    PLOTS_DIR,
+    THEMES,
+    TRAIN_ANIMALS,
+    VAL_ANIMALS,
 )
 
 

@@ -10,18 +10,22 @@ Evaluates the static affine transforms across:
   4. Sensitivity to body length / elevation proxies.
 """
 
-import sys, json
+import json
+import sys
 from pathlib import Path
-import numpy as np, pandas as pd
+
+import numpy as np
+import pandas as pd
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-from core.pair_matching import find_matched_pairs
 from core.camera_correspondence import get_session_mapping
+from core.pair_matching import find_matched_pairs
 from core.static_fusion_engine import STATIC_ARENA_TRANSFORMS
+
 
 def evaluate_session_residuals(pair, A, b, arena_width=972.0):
     sid = pair["sid"]

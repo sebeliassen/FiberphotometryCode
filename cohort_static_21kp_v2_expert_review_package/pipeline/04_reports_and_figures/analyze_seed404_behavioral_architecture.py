@@ -36,18 +36,20 @@ Outputs:
 """
 
 import os
+
 os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
 
 import re
 import time
 from pathlib import Path
-from collections import Counter
+
 import h5py
+import matplotlib
 import numpy as np
 import pandas as pd
-from scipy.stats import mannwhitneyu, wilcoxon
 from scipy.spatial.distance import jensenshannon
-import matplotlib
+from scipy.stats import mannwhitneyu, wilcoxon
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -703,7 +705,7 @@ $$O_s = \\text{{Bout Frequency}} \\times \\text{{Mean Dwell Duration}}$$
 | Transition Metric | Monomer Baseline | PFF Baseline | Genotype Delta | Uncorrected $p$ | FDR $q$ | Drug Effect in PFF |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Sequence Transitions Support** | {df_stats.loc[df_stats['metric']=='total_transitions_support', 'monomer_baseline_mean'].values[0]:,.0f} | {df_stats.loc[df_stats['metric']=='total_transitions_support', 'pff_baseline_mean'].values[0]:,.0f} | {df_stats.loc[df_stats['metric']=='total_transitions_support', 'genotype_delta'].values[0]:+,.0f} | $p = {df_stats.loc[df_stats['metric']=='total_transitions_support', 'genotype_p'].values[0]:.4f}$ | $q = {df_stats.loc[df_stats['metric']=='total_transitions_support', 'genotype_fdr_q'].values[0]:.4f}$ | {df_stats.loc[df_stats['metric']=='total_transitions_support', 'pff_drug_delta'].values[0]:+,.0f} ($p = {df_stats.loc[df_stats['metric']=='total_transitions_support', 'pff_drug_p'].values[0]:.4f}$) |
-| **Conditional Next-State Entropy $H(S_{{t+1}} \mid S_t)$** | {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'monomer_baseline_mean'].values[0]:.2f} bits | {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'pff_baseline_mean'].values[0]:.2f} bits | {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'genotype_delta'].values[0]:+.2f} bits | $p = {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'genotype_p'].values[0]:.4f}$ | $q = {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'genotype_fdr_q'].values[0]:.4f}$ | {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'pff_drug_delta'].values[0]:+.2f} ($p = {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'pff_drug_p'].values[0]:.4f}$) |
+| **Conditional Next-State Entropy $H(S_{{t+1}} \\mid S_t)$** | {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'monomer_baseline_mean'].values[0]:.2f} bits | {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'pff_baseline_mean'].values[0]:.2f} bits | {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'genotype_delta'].values[0]:+.2f} bits | $p = {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'genotype_p'].values[0]:.4f}$ | $q = {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'genotype_fdr_q'].values[0]:.4f}$ | {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'pff_drug_delta'].values[0]:+.2f} ($p = {df_stats.loc[df_stats['metric']=='conditional_next_state_entropy_bits', 'pff_drug_p'].values[0]:.4f}$) |
 | **Predictability Gain $I(S_t; S_{{t+1}})$** | {df_stats.loc[df_stats['metric']=='sequence_predictability_gain_bits', 'monomer_baseline_mean'].values[0]:.2f} bits | {df_stats.loc[df_stats['metric']=='sequence_predictability_gain_bits', 'pff_baseline_mean'].values[0]:.2f} bits | {df_stats.loc[df_stats['metric']=='sequence_predictability_gain_bits', 'genotype_delta'].values[0]:+.2f} bits | $p = {df_stats.loc[df_stats['metric']=='sequence_predictability_gain_bits', 'genotype_p'].values[0]:.4f}$ | $q = {df_stats.loc[df_stats['metric']=='sequence_predictability_gain_bits', 'genotype_fdr_q'].values[0]:.4f}$ | {df_stats.loc[df_stats['metric']=='sequence_predictability_gain_bits', 'pff_drug_delta'].values[0]:+.2f} ($p = {df_stats.loc[df_stats['metric']=='sequence_predictability_gain_bits', 'pff_drug_p'].values[0]:.4f}$) |
 
 ### Syntax Insights:

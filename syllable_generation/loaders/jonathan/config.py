@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional, Tuple, Dict
+from typing import Dict, Optional, Tuple
+
 
 @dataclass()
 class JonathanConfig:
@@ -52,7 +53,7 @@ class JonathanConfig:
     r"^(?:.*_)?(?P<arena>Arena[0-9and]+)_(?P<camset>[^_]+)_(?P<ts>\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2})_"
     r"(?P<token>.+?)\.(?P<ext>avi|mp4)$"
     )
-    
+
     # Canonical chambers we recognize
     canon_chambers: Tuple[str, ...] = ("top_left", "top_right", "bottom_left", "bottom_right")
 
@@ -107,7 +108,7 @@ class JonathanConfig:
         t = (token or "").lower()
         # explicit mapping wins
         m = self.camera_token_map.get(c)
-        if m and t in m: 
+        if m and t in m:
             return m[t]
         # center cams accept canonical names directly
         if c == "centertopcamvid" and t in self.canon_chambers:

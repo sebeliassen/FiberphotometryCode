@@ -16,8 +16,9 @@ Features:
 
 import os
 import sys
-from pathlib import Path
 import warnings
+from pathlib import Path
+
 warnings.simplefilter("ignore")
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -29,19 +30,21 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import pickle
+
 import cv2
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 import jax.numpy as jnp
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
 import keypoint_moseq as kpms
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
 from keypoint_moseq.viz import (
-    overlay_keypoints_on_image,
     get_edges,
-    write_video_clip,
     get_syllable_instances,
+    overlay_keypoints_on_image,
+    write_video_clip,
 )
 from tqdm import tqdm
 
@@ -49,6 +52,7 @@ from tqdm import tqdm
 # 1. FAST-SEEK OPENCVREADER MONKEYPATCH
 # ==============================================================================
 from vidio.read import OpenCVReader
+
 _original_read = OpenCVReader.read
 
 def _fast_read(self, framenum):
@@ -86,15 +90,15 @@ OUT_WITHOUT_TRAJ.mkdir(parents=True, exist_ok=True)
 print(f"[INFO] Loading checkpoint for {MODEL_NAME}...", flush=True)
 model, data, metadata, current_iter = kpms.load_checkpoint(str(PROJECT_DIR), MODEL_NAME)
 
-print(f"[INFO] Loading config...", flush=True)
+print("[INFO] Loading config...", flush=True)
 config = kpms.load_config(str(PROJECT_DIR))
 bodyparts = config.get("use_bodyparts", config.get("bodyparts"))
 config["bodyparts"] = bodyparts
 
-print(f"[INFO] Loading results.h5...", flush=True)
+print("[INFO] Loading results.h5...", flush=True)
 results = kpms.load_results(str(PROJECT_DIR), MODEL_NAME)
 
-print(f"[INFO] Estimating coordinates, centroids, and headings...", flush=True)
+print("[INFO] Estimating coordinates, centroids, and headings...", flush=True)
 Y_est = estimate_coordinates(
     jnp.array(model["states"]["x"]),
     jnp.array(model["states"]["v"]),
@@ -148,7 +152,7 @@ already_rendered = existing_traj.intersection(existing_clean)
 all_100_sylls = list(range(100))
 target_sylls = [s for s in all_100_sylls if s not in already_rendered]
 
-print(f"[INFO] Total repertoire: 100 syllables (0 to 99)", flush=True)
+print("[INFO] Total repertoire: 100 syllables (0 to 99)", flush=True)
 print(f"[INFO] Already rendered in both folders ({len(already_rendered)}): {sorted(list(already_rendered))}", flush=True)
 print(f"[INFO] Target syllables to generate ({len(target_sylls)}): {target_sylls}", flush=True)
 

@@ -10,11 +10,14 @@ Logic:
 """
 
 from __future__ import annotations
-from pathlib import Path
-import sys
+
 import pickle
-import pandas as pd
+import sys
+from pathlib import Path
+
 import numpy as np
+import pandas as pd
+
 np.bool8 = np.bool_
 import warnings
 
@@ -28,21 +31,21 @@ if str(REPO_ROOT) not in sys.path:
 
 # === IMPORTS ===
 # Helper A tools
-from syllable_generation.analysis.utils.syll_results import (
-    load_kpms_results_and_vfi,
-    build_result_to_session_map,
-    compute_actual_lengths_from_sessions,
-)
-from syllable_generation.analysis.utils.sampling import (
-    flatten_results_to_timeline,
-    build_aligned_dfs,
-)
-from syllable_generation.analysis.utils.legacy_support import migrate_legacy_vfi
-from syllable_generation.analysis.attach_kpms import _attach_kpms_full_to_sessions
-
 # Helper B tools
 import keypoint_moseq as kpms
-from syllable_generation.analysis.replications.datta_utils import build_fixed_moseq_dfs, build_aligned_moseq_phot
+
+from syllable_generation.analysis.attach_kpms import _attach_kpms_full_to_sessions
+from syllable_generation.analysis.replications.datta_utils import build_aligned_moseq_phot
+from syllable_generation.analysis.utils.legacy_support import migrate_legacy_vfi
+from syllable_generation.analysis.utils.sampling import (
+    build_aligned_dfs,
+    flatten_results_to_timeline,
+)
+from syllable_generation.analysis.utils.syll_results import (
+    build_result_to_session_map,
+    compute_actual_lengths_from_sessions,
+    load_kpms_results_and_vfi,
+)
 
 # === CONSTANTS ===
 PATH_PREFIX = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/"
@@ -58,7 +61,7 @@ def get_args():
     parser.add_argument("--output", default=DEFAULT_SESSIONS_OUT, help="Path to output sessions pkl")
     parser.add_argument("--kpms", default=DEFAULT_KPMS, help="Path to KPMS checkpoint.h5 or results.h5")
     parser.add_argument("--vfi", default=None, help="Explicit path to video_frame_indexes.npz")
-    parser.add_argument("--legacy-rate", type=float, default=2.0, 
+    parser.add_argument("--legacy-rate", type=float, default=2.0,
                         help="Factor to scale Legacy VFIs by if detected (default 2.0).")
     parser.add_argument("--results-upsample-rate", type=int, default=1,
                         help="Factor to tile/upsample results arrays (e.g. 2). Default 1 (no change).")
@@ -70,7 +73,7 @@ def get_args():
 
 def main():
     args = get_args()
-    
+
     # --- STEP 1: LOAD ---
     print(f"Loading sessions from: {args.input}")
     try:
@@ -98,13 +101,13 @@ def main():
     # Determine which VFI path to use
     if args.vfi:
         vfi_path = Path(args.vfi)
-        results, _ = load_kpms_results_and_vfi(args.kpms, use_cpu=True) 
+        results, _ = load_kpms_results_and_vfi(args.kpms, use_cpu=True)
         print(f"Loading explicit VFI from {vfi_path}...")
         with np.load(vfi_path) as z:
             vfi = {k: z[k].astype(int) for k in z.files}
     else:
         results, vfi = load_kpms_results_and_vfi(args.kpms, use_cpu=True)
-    
+
     # --- SUBSET FILTERING (for debugging) ---
     if args.first_n_sessions is not None:
         kept_sids = [s.session_id for s in sessions]
@@ -115,7 +118,7 @@ def main():
 
     # Mapping must happen early so sessions get 'results_dict_key' for rate detection
     r2s = build_result_to_session_map(sessions, list(results.keys()), strict=True, verbose=args.verbose)
-    
+
     # Filter sessions to only those that actually have a matching key in results
     matched_sessions = [s for s in sessions if getattr(s, "results_dict_key", "")]
     if len(matched_sessions) < len(sessions):
@@ -127,18 +130,18 @@ def main():
     exp_len = compute_actual_lengths_from_sessions(sessions, r2s)
 
     # --- VFI MIGRATION / SCALING CHECK ---
-    print(f"Checking VFI for legacy downsampled indices...")
+    print("Checking VFI for legacy downsampled indices...")
     vfi = migrate_legacy_vfi(vfi, exp_len, scale_factor=args.legacy_rate if hasattr(args, 'legacy_rate') else 2.0, verbose=args.verbose)
-    
+
     print("Flattening results...")
     full_dfs = flatten_results_to_timeline(results, vfi, actual_lengths=exp_len)
 
     # --- STEP 2: KPMS COMPUTE (For Kinematics/all_data_df) ---
     print("Computing moseq_df via standard library...")
-    project_dir = Path(args.kpms).parents[1] 
+    project_dir = Path(args.kpms).parents[1]
     model_name = Path(args.kpms).parent.name
     moseq_df = kpms.compute_moseq_df(str(project_dir), model_name, smooth_heading=True)
-    
+
     # Add group metadata
     index_csv = project_dir / "index.csv"
     if index_csv.exists():
@@ -167,9 +170,9 @@ def main():
     print("Building fixed moseq dfs for Helper B (Upsampling & Densifying)...")
     # Use the new utility logic
     ordered_dfs = build_aligned_dfs(
-        sessions, 
-        moseq_df, 
-        vfi, 
+        sessions,
+        moseq_df,
+        vfi,
         verbose=args.verbose
     )
 
@@ -178,7 +181,7 @@ def main():
 
     for i, s in enumerate(sessions):
         s.all_data_df = all_data_dfs[i]
-        
+
         # Debug: Detailed cardinality check
         if args.verbose:
             rk = getattr(s, "results_dict_key", None)
@@ -211,7 +214,7 @@ def main():
     print(f"Saving recreated sessions to {args.output}")
     with open(args.output, 'wb') as f:
         pickle.dump(sessions, f)
-    
+
     print("Done.")
 
 if __name__ == "__main__":

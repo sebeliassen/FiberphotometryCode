@@ -12,9 +12,13 @@ and PCA variance distribution across:
 Evaluated strictly on the 10 shared pilot sessions.
 """
 
-import sys, re, json, gc
+import json
+import re
 from pathlib import Path
-import numpy as np, pandas as pd, h5py
+
+import h5py
+import numpy as np
+import pandas as pd
 from sklearn.cluster import MiniBatchKMeans
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")

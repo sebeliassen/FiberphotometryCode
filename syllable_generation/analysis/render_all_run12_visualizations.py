@@ -21,7 +21,6 @@ Features:
 import os
 import sys
 from pathlib import Path
-import warnings
 
 # Force CPU execution & headless operation
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -33,24 +32,25 @@ REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-import cv2
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import jax.numpy as jnp
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
 import keypoint_moseq as kpms
-import keypoint_moseq.viz as viz
 import keypoint_moseq.util as util
-from vidio.read import OpenCVReader
+import keypoint_moseq.viz as viz
+import tqdm
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
 from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
-import tqdm
+from vidio.read import OpenCVReader
 
 # ---------------------------------------------------------------------------
 # Patches & Optimizations
@@ -119,7 +119,7 @@ def robust_sample_instances(
 
     elif mode == "density":
         assert not (coordinates is None or headings is None or centroids is None)
-        
+
         # Clean coordinates
         clean_coords = {}
         for key in coordinates.keys():
@@ -150,7 +150,7 @@ def robust_sample_instances(
 
         pca = PCA(n_components=min(pca_dim, X_all.shape[0], X_all.shape[1])).fit(X_all.reshape(X_all.shape[0], -1))
         Xpca_all = pca.transform(X_all.reshape(X_all.shape[0], -1))
-        
+
         eff_all_k = min(n_neighbors, len(Xpca_all) - 1) if len(Xpca_all) > 1 else 1
         all_nbrs = NearestNeighbors(n_neighbors=eff_all_k, algorithm="kd_tree").fit(Xpca_all)
 
@@ -373,7 +373,7 @@ def main():
     if missing_traj:
         traj_pre = 5
         traj_post = 15
-        
+
         # Sample exemplar instances for trajectory
         subset_instances = {s: all_instances[s] for s in missing_traj if s in all_instances}
         sampled_traj = robust_sample_instances(
@@ -415,7 +415,7 @@ def main():
 
         # Coordinate flip for display
         Xs_dict = {s: arr * np.array([1, -1]) for s, arr in traj_data.items()}
-        
+
         # Compute global limits
         all_stacked = np.stack(list(Xs_dict.values()))
         lims = viz.get_limits(all_stacked, pctl=0, left=0.1, right=0.1, top=0.2, bottom=0.2)

@@ -8,13 +8,7 @@ and Intra-chain execution (consistency, completion, variations, pacing, context)
 =============================================================================
 """
 
-from .core import (
-    ChainDefinition,
-    ChainOccurrence,
-    ChainBout,
-    CohortDataAdapter,
-    ChainFinder
-)
+from .core import ChainBout, ChainDefinition, ChainFinder, ChainOccurrence, CohortDataAdapter
 from .inter_chain import InterChainAnalyzer
 from .intra_chain import IntraChainAnalyzer
 from .visualizer import ChainVisualizer

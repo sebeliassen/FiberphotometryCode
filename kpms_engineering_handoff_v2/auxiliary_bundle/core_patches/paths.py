@@ -1,5 +1,6 @@
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 # --- core helpers ---
 
@@ -65,7 +66,7 @@ def get_key_to_aid_mapping(sessions, coordinates):
     key_to_aid_stem = {}
     for s in sessions:
         if hasattr(s, 'video_refs_df') and not s.video_refs_df.empty:
-            stem = Path(s.video_refs_df.iloc[0]['path']).stem 
+            stem = Path(s.video_refs_df.iloc[0]['path']).stem
             aid = None
             if hasattr(s, 'metadata') and 'animal_id' in s.metadata:
                 aid = s.metadata['animal_id']
@@ -80,5 +81,5 @@ def get_key_to_aid_mapping(sessions, coordinates):
         found_stem = next((stem for stem in key_to_aid_stem if stem in k), None)
         if found_stem:
             final_key_to_aid[k] = key_to_aid_stem[found_stem]
-            
+
     return final_key_to_aid

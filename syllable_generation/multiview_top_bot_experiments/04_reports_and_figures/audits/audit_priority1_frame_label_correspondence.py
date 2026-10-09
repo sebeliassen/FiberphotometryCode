@@ -12,18 +12,22 @@ Asserts:
   - Exact onset alignment invariant: frame_ixs[pre] == vfi[start].
 """
 
-import sys, re, json
+import json
+import re
+import sys
 from pathlib import Path
-import numpy as np, pandas as pd, h5py
-import cv2
+
+import h5py
+import numpy as np
+import pandas as pd
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
+from core.camera_correspondence import get_session_mapping, top_to_bot_frame_continuous
 from core.pair_matching import find_matched_pairs
-from core.camera_correspondence import top_to_bot_frame_continuous, get_session_mapping
 
 PILOT_DIR = EXP / "pilot_static_21kp"
 MODEL_DIR = PILOT_DIR / "pilot_static_21kp_k12_seed404"

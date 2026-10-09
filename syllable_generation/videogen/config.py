@@ -6,7 +6,6 @@ Includes dimensions, file paths, project-specific overrides, and visual settings
 """
 
 from pathlib import Path
-import numpy as np
 
 # --- Dimension Settings ---
 # Final video layouts:
@@ -30,7 +29,7 @@ TARGET_FPS = 30  # Output FPS
 PROJECT_SAMPLING_RATES = {
     "IFDN": 80,
     "demo_project": 80,
-    "jonathan_amph": 80, 
+    "jonathan_amph": 80,
     "amph_project": 80,
 }
 

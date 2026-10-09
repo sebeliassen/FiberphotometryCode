@@ -19,18 +19,20 @@ Experimental Matrix:
 """
 
 import os
+import pickle
 import sys
 import time
-import pickle
+
+import matplotlib
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import TensorDataset, DataLoader
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GroupKFold
-import matplotlib
+from torch.utils.data import DataLoader, TensorDataset
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
@@ -219,7 +221,7 @@ def main():
     results_summary = []
 
     for w_sec in PAST_WINDOWS_SEC:
-        log(f"\n" + "-" * 60)
+        log("\n" + "-" * 60)
         log(f"EVALUATING PAST MEMORY WINDOW W = {w_sec:.1f}s (Target H = 120s)")
         log("-" * 60)
 

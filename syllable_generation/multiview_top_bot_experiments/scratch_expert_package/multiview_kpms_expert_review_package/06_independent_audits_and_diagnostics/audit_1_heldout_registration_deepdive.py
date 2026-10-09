@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-import sys, json, os
+import json
+import sys
 from pathlib import Path
-import numpy as np, pandas as pd
+
+import numpy as np
+import pandas as pd
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
@@ -10,8 +13,8 @@ AUDIT_DIR = EXP / "04_reports_and_figures/audits/audit_20261007_independent_veri
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-from core.pair_matching import find_matched_pairs
 from core.camera_correspondence import get_session_mapping
+from core.pair_matching import find_matched_pairs
 from core.static_fusion_engine import STATIC_ARENA_TRANSFORMS
 
 CHAMBER_TO_ARENA = {
@@ -26,24 +29,24 @@ def analyze_all_sessions():
     print(f"Total matched pairs in cohort: {len(pairs)}")
 
     all_results = []
-    
+
     for idx, pair in enumerate(pairs):
         sid = pair["sid"]
         quadrant = pair["quadrant"]
         arena = pair["arena"]
         if arena not in STATIC_ARENA_TRANSFORMS:
             continue
-        
+
         t_info = STATIC_ARENA_TRANSFORMS[arena]
         A = np.array(t_info["matrix_2x2"], dtype=np.float32)
         b = np.array(t_info["translation_2d"], dtype=np.float32)
         cal_sessions = t_info.get("calibration_sessions", [])
         is_cal = sid in cal_sessions
-        
+
         mapping = get_session_mapping(sid, strict=True)
         if mapping is None:
             continue
-            
+
         try:
             top_df = pd.read_hdf(pair["top_h5"])
             bot_df = pd.read_hdf(pair["bot_h5"])

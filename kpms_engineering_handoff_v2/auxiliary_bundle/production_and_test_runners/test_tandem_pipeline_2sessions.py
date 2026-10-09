@@ -38,12 +38,12 @@ sessions (Mouse 6 [PFF] vs Mouse 2 [Monomer]):
 =============================================================================
 """
 
-import os
-import sys
 import copy
-import time
-import shutil
+import os
 import pickle
+import shutil
+import sys
+import time
 from pathlib import Path
 
 # Setup JAX and GPU environment
@@ -51,14 +51,14 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
-import pandas as pd
-from scipy.ndimage import median_filter
-import cv2
 import keypoint_moseq as kpms
+import pandas as pd
 from jax_moseq.utils.debugging import convert_data_precision
+from scipy.ndimage import median_filter
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 if str(REPO_ROOT) not in sys.path:
@@ -68,10 +68,10 @@ if str(KPMS_UTILS_DIR) not in sys.path:
     sys.path.insert(0, str(KPMS_UTILS_DIR))
 
 from utils.resample_batching import apply_optimizations
+
 apply_optimizations()
 
 from syllable_generation.analysis.replications.datta_utils import combined_photometry_and_syllables
-from syllable_generation.datamodel import SessionRecord
 
 EXPERIMENT_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 DIRTY_PKL_IN = REPO_ROOT / "syllable_generation/data/sessions_karen_project_dirty.pkl"
@@ -262,7 +262,7 @@ def main():
     # STEP 2: Enrich Video & Tracking Refs (Superset Specification)
     # -------------------------------------------------------------------------
     print("\n[Step 2/5] Enriching video and tracking references (Superset)...")
-    
+
     session_configs = {
         "2026-03-05T11_01_01_top_left": {
             "arena": "Arena1",
@@ -283,7 +283,7 @@ def main():
     scale_factors = {}
     for s in selected_sessions:
         cfg = session_configs[s.session_id]
-        
+
         # Fuse full 208,016 frames
         fused_path, s_factor = fuse_full_session(cfg["top_h5"], cfg["bot_h5"], cfg["fused_h5"])
         scale_factors[s.session_id] = s_factor
@@ -413,7 +413,7 @@ def main():
     # STEP 4: Compute Kinematics & Weave Multi-View Syllables & Photometry
     # -------------------------------------------------------------------------
     print("\n[Step 4/5] Computing Top/Bottom kinematics and weaving multi-view timeline...")
-    
+
     # Also load reference K240K baseline syllables for comparison if available
     k240k_map = {}
     if K240K_PKL_REF.exists():
@@ -559,7 +559,7 @@ def main():
     for s in loaded_sessions:
         sid = s.session_id
         print(f"\n  Checking session: '{sid}'")
-        
+
         # 2. Metadata Check
         assert str(s.metadata.get("animal_id")) in ["6", "2"], f"Unexpected animal_id: {s.metadata.get('animal_id')}"
         assert s.metadata.get("genotype") in ["PFF", "Monomer"], f"Unexpected genotype: {s.metadata.get('genotype')}"
@@ -587,7 +587,7 @@ def main():
             "SystemTimestamp", "signal_0", "signal_0_dff", "signal_0_zscore"
         ]:
             assert required_col in cols, f"Missing required column: {required_col}"
-        
+
         # Velocity sanity: both must be non-zero and non-NaN
         v_top = s.all_data_df["velocity_px_s_top"].to_numpy()
         v_bot = s.all_data_df["velocity_px_s_bot"].to_numpy()
@@ -610,7 +610,7 @@ def main():
     print("\n" + "=" * 80)
     print(f"🏆 ALL TESTS PASSED SUCCESSFULLY IN {total_time:.1f}s ({total_time/60:.2f}m)!")
     print(f"   Output saved to: {OUTPUT_TEST_PKL}")
-    print(f"   Production pickles remain 100% UNTOUCHED.")
+    print("   Production pickles remain 100% UNTOUCHED.")
     print("=" * 80)
 
 if __name__ == "__main__":

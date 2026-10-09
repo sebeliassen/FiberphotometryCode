@@ -1,7 +1,7 @@
 # %% [markdown]
 # # Theoretical Network Validation
-# 
-# This notebook rigorously compares our empirical VARLiNGAM causal weights against 
+#
+# This notebook rigorously compares our empirical VARLiNGAM causal weights against
 # established neurobiological theories (Haber's Spirals, NE arousal, 5HT/DA inhibition)
 # across long periods of baseline brain states.
 #
@@ -11,27 +11,28 @@
 # 3. Excludes all NaN/hardware-artifact frames natively using sanitized data.
 
 # %%
+import pickle
 import sys
 from pathlib import Path
-import pickle
+
+import joblib
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from tqdm import tqdm
-import matplotlib.pyplot as plt
 import seaborn as sns
-import joblib
+from tqdm import tqdm
 
 # Add project root to path
 try:
     project_root = Path(__file__).resolve().parents[2]
 except NameError:
     project_root = Path("../../").resolve()
-    
+
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
-from monoamine_interactions.notebooks.utils.photometry import motion_correct_biexponential
 from monoamine_interactions.analysis.phase_1_causality import varlingam
+from monoamine_interactions.notebooks.utils.photometry import motion_correct_biexponential
 
 # %%
 # 1. Configuration
@@ -63,13 +64,13 @@ EXPECTED_CAUSALITY = {
     ("lNAc_DA", "rNAc_5HT"): 0,   # DA does not drive 5HT
     ("rNAc_5HT", "lNAc_DA"): -1,
     ("rNAc_DA", "lNAc_5HT"): 0,
-    
+
     # 2. Arousal (NE)
     ("DRN_NE", "NAc_5HT"): 1,     # NE drives Raphe
     ("NAc_5HT", "DRN_NE"): 0,
     ("VTA_NE", "NAc_DA"): 1,      # NE drives VTA
     ("NAc_DA", "VTA_NE"): 0,
-    
+
     # 3. Striatal Spirals
     ("VS", "DMS"): 1,             # Ventral to Medial
     ("DMS", "DLS"): 1,            # Medial to Lateral
@@ -83,12 +84,12 @@ CATEGORY_MAP = {
     ("lNAc_DA", "rNAc_5HT"): "5HT/DA Inhibition",
     ("rNAc_5HT", "lNAc_DA"): "5HT/DA Inhibition",
     ("rNAc_DA", "lNAc_5HT"): "5HT/DA Inhibition",
-    
+
     ("DRN_NE", "NAc_5HT"): "NE Arousal",
     ("NAc_5HT", "DRN_NE"): "NE Arousal",
     ("VTA_NE", "NAc_DA"): "NE Arousal",
     ("NAc_DA", "VTA_NE"): "NE Arousal",
-    
+
     ("VS", "DMS"): "Haber's Spirals",
     ("DMS", "DLS"): "Haber's Spirals",
     ("DMS", "VS"): "Haber's Spirals",
@@ -119,11 +120,11 @@ print(f"Loaded {len(sessions)} unique biological animals.")
 def run_chunk(chunk_df, valid_regs):
     clean_chunk = chunk_df.dropna()
     if len(clean_chunk) < 100: return None
-    
+
     try:
         res = varlingam.run_varlingam(clean_chunk, lags=LAG)
         adj = res["adjacency_matrices"][0]
-        
+
         chunk_res = {}
         for i, r1 in enumerate(valid_regs):
             for j, r2 in enumerate(valid_regs):
@@ -145,40 +146,40 @@ for s in tqdm(sessions, desc="Analyzing Baseline States"):
     region_map = {k: v.get("region") or v.get("brain_reg") for k, v in sm.items() if v.get("region") or v.get("brain_reg")}
     regions = list(set(region_map.values())) # Deduplicate
     if len(regions) < 2: continue
-        
+
     df = getattr(s, 'all_data_df', None)
     if df is None or len(df) == 0:
         # Fallback to photometry dict if all_data_df isn't merged
         if '470' in s.photometry:
             df = s.photometry['470']
-            
+
     if 'SystemTimestamp' not in df.columns: continue
-        
+
     # Apply Social Epoch Slicing if necessary
     ts_array = df['SystemTimestamp'].values
     start_idx = 0
     end_idx = len(df)
-    
+
     if DATASET == "social":
         tm = s.metadata.get("timing_meta", {})
         t_in = tm.get('inarena_min')
         t_hc = tm.get('home_cage_min')
         if pd.isna(t_in) or pd.isna(t_hc): continue
-        
+
         t0 = ts_array[0]
         start_idx = np.abs(ts_array - (t0 + t_in * 60)).argmin()
         end_idx = np.abs(ts_array - (t0 + t_hc * 60)).argmin()
-        
+
     if end_idx <= start_idx: continue
-        
+
     # Extract DFF using either the precomputed or manually correcting
     dff_dict = {}
     valid_regs = []
-    
+
     for r in regions:
         try:
             col = next((k for k, v in region_map.items() if v == r))
-            
+
             # Use precomputed if available
             dff_col = f"{col}_dff"
             if dff_col in df.columns:
@@ -187,35 +188,35 @@ for s in tqdm(sessions, desc="Analyzing Baseline States"):
                 raw = df[col].values[start_idx:end_idx]
                 iso = s.photometry['415'][col].values[start_idx:end_idx]
                 trace = motion_correct_biexponential(raw, iso)
-                
+
             dff_dict[r] = trace
             valid_regs.append(r)
-        except Exception as e:
+        except Exception:
             pass
-            
+
     if len(valid_regs) < 2: continue
-        
+
     # Build dataframe for chunking
     df_epoch = pd.DataFrame(dff_dict)
-    
+
     # Calculate chunk size based on framerate
     fs = s.metadata.get('fs', 20.0) # default to 20 if missing
     frames_per_chunk = int(CHUNK_DUR_SEC * fs)
-    
+
     # Split into chunks
     chunks = []
     for i in range(0, len(df_epoch), frames_per_chunk):
         chunk = df_epoch.iloc[i:i+frames_per_chunk]
         if len(chunk) >= frames_per_chunk * 0.8: # Must be at least 80% full
             chunks.append(chunk)
-            
+
     if not chunks: continue
-        
+
     # Run VARLiNGAM in parallel
     chunk_results = joblib.Parallel(n_jobs=N_JOBS)(
         joblib.delayed(run_chunk)(c, valid_regs) for c in chunks
     )
-    
+
     # Aggregate over the whole epoch to find the "Base State" for this session
     session_edges = {}
     for res in chunk_results:
@@ -223,7 +224,7 @@ for s in tqdm(sessions, desc="Analyzing Baseline States"):
         for pair, weight in res.items():
             if pair not in session_edges: session_edges[pair] = []
             session_edges[pair].append(weight)
-            
+
     for pair, weights in session_edges.items():
         all_empirical_edges.append({
             'source': pair[0],
@@ -275,10 +276,10 @@ if len(categories) == 1: axes = [axes]
 
 for ax, cat in zip(axes, categories):
     cat_df = df_plot[df_plot['Category'] == cat].copy()
-    
+
     # Define color palette for genotypes
     palette = {'WT': '#3498db', 'KI': '#e74c3c', 'Unknown': '#95a5a6'}
-    
+
     # Create the grouped bar plot
     sns.barplot(
         data=cat_df,
@@ -290,7 +291,7 @@ for ax, cat in zip(axes, categories):
         edgecolor='black',
         errorbar=None # We plot our own error bars manually
     )
-    
+
     # Add custom error bars
     # (sns doesn't handle custom pre-computed errors well in grouped plots easily)
     # We iterate over the patches to find x positions
@@ -298,13 +299,13 @@ for ax, cat in zip(axes, categories):
     x_coords = []
     for p in ax.patches:
         x_coords.append(p.get_x() + p.get_width() / 2.)
-    
+
     # Sort cat_df to match seaborn's internal plotting order (Genotype then Pair)
     # Seaborn plots hue first, then x. So it's KI(Pair1), KI(Pair2)... then WT(Pair1), WT(Pair2)...
     # Actually it's Hue1(X1, X2...), Hue2(X1, X2...)
     hue_order = [h for h in ['WT', 'KI'] if h in cat_df['Genotype'].unique()]
     x_order = sorted(cat_df['Pair'].unique())
-    
+
     ordered_errors = []
     ordered_expected = []
     for h in hue_order:
@@ -312,15 +313,15 @@ for ax, cat in zip(axes, categories):
             sub = cat_df[(cat_df['Genotype'] == h) & (cat_df['Pair'] == x)]
             ordered_errors.append(sub['Empirical_Error'].values[0] if len(sub) > 0 else 0)
             ordered_expected.append(sub['Expected_Direction'].values[0] if len(sub) > 0 else 0)
-    
+
     for i, (x, err, expected) in enumerate(zip(x_coords, ordered_errors, ordered_expected)):
         if i < len(ax.patches):
             p = ax.patches[i]
             y = p.get_height()
             if np.isnan(y): continue # Skip empty bars
-            
+
             ax.errorbar(x, y, yerr=err, fmt='none', c='black', capsize=5)
-            
+
             # Add expectation text
             text = "Expected:\nPositive" if expected == 1 else "Expected:\nNegative" if expected == -1 else "Expected:\nZero"
             offset = 0.015 if y >= 0 else -0.015

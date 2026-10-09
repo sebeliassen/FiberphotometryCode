@@ -1,9 +1,10 @@
 import jax
 import jax.numpy as jnp
-import numpy as np
 import keypoint_moseq as kpms
-from jax_moseq.models.keypoint_slds.initialize import init_states, estimate_error
+import numpy as np
 from jax_moseq.models.keypoint_slds.alignment import preprocess_for_pca
+from jax_moseq.models.keypoint_slds.initialize import estimate_error, init_states
+
 
 def batched_init_model_by_video(data, pca, config, params_subset_size=5, batch_size=None, seed=None):
     """
@@ -40,16 +41,16 @@ def batched_init_model_by_video(data, pca, config, params_subset_size=5, batch_s
     params = model['params']
     hypparams = model['hypparams']
     obs_hypparams = hypparams['obs_hypparams']
-    
+
     # Use model's seed if it returned one; otherwise keep the input seed
     current_seed = model.get('seed', seed)
-    
+
     # Setup for incremental seeding
     prior = current_seed
 
     num_batches = int(np.ceil(N_videos / batch_size))
     full_states = {'x': [], 'v': [], 'h': [], 's': [], 'z': []}
-    
+
     print(f"[Batch Init] Initializing states for {N_videos} videos in {num_batches} batches...")
 
     for i in range(num_batches):

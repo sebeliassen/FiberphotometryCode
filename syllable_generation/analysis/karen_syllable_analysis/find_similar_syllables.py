@@ -13,8 +13,9 @@ High-speed Syllable Similarity Finder & Video Generator for Nominal Starred Hits
 
 import os
 import sys
-from pathlib import Path
 import warnings
+from pathlib import Path
+
 warnings.simplefilter("ignore")
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -26,27 +27,30 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import pickle
+
 import cv2
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
+from collections import Counter
+
 import jax.numpy as jnp
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
 import keypoint_moseq as kpms
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
 from keypoint_moseq.viz import (
     filter_centroids_headings,
     get_edges,
+    get_syllable_instances,
     overlay_keypoints_on_image,
     write_video_clip,
-    get_syllable_instances,
 )
 from scipy.spatial.distance import pdist, squareform
-from collections import Counter
-from tqdm import tqdm
 
 # Fast-seek monkeypatch
 from vidio.read import OpenCVReader
+
 _original_read = OpenCVReader.read
 
 def _fast_read(self, framenum):
@@ -78,7 +82,7 @@ config["bodyparts"] = bodyparts
 
 results = kpms.load_results(str(PROJECT_DIR), MODEL_NAME)
 
-print(f"[INFO] Estimating coordinates, centroids, and headings...", flush=True)
+print("[INFO] Estimating coordinates, centroids, and headings...", flush=True)
 Y_est = estimate_coordinates(
     jnp.array(model["states"]["x"]),
     jnp.array(model["states"]["v"]),
@@ -88,7 +92,7 @@ Y_est = estimate_coordinates(
 coordinates = unbatch(Y_est, *metadata)
 raw_centroids, raw_headings = kpms.get_centroids_headings(coordinates, **config)
 
-print(f"[INFO] Precomputing filtered centroids and headings...", flush=True)
+print("[INFO] Precomputing filtered centroids and headings...", flush=True)
 centroids, headings = filter_centroids_headings(raw_centroids, raw_headings, filter_size=config.get("filter_size", 9))
 
 # ==============================================================================
@@ -112,19 +116,19 @@ for syl, insts in all_instances.items():
     np.random.seed(0)
     sample_n = min(len(insts), 100)
     idx = np.random.choice(len(insts), sample_n, replace=False)
-    
+
     syl_trajs = []
     for i in idx:
         key, start, end = insts[i]
         cs = centroids[key][start - pre : start + post]
         h, c = headings[key][start], cs[pre]
         r = np.float32([[np.cos(h), np.sin(h)], [-np.sin(h), np.cos(h)]])
-        
+
         # Egocentric keypoints aligned to heading at start and centered at centroid
         coords = coordinates[key][start - pre : start + post] # (T, K, 2)
         ego_coords = (coords - c) @ r.T # (T, K, 2)
         syl_trajs.append(ego_coords)
-        
+
     mean_trajectories[syl] = np.mean(syl_trajs, axis=0) # (T, K, 2)
 
 syllable_ixs = sorted(mean_trajectories.keys())
@@ -166,17 +170,17 @@ for star_syl in STARRED_SYLLS:
     dists = cosine_dists[idx].copy()
     dists[idx] = np.inf # Exclude self
     sorted_order = np.argsort(dists)
-    
+
     top2_idx = sorted_order[:2]
     top2_sylls = [syllable_ixs[i] for i in top2_idx]
     top2_dists = [dists[i] for i in top2_idx]
     top2_sims = [1.0 - d for d in top2_dists]
-    
+
     similarity_results[star_syl] = [
         {"syllable": top2_sylls[0], "similarity": top2_sims[0], "distance": top2_dists[0], "bouts": bout_counts[top2_sylls[0]]},
         {"syllable": top2_sylls[1], "similarity": top2_sims[1], "distance": top2_dists[1], "bouts": bout_counts[top2_sylls[1]]}
     ]
-    
+
     print(f"\n🌟 Target Syllable {star_syl} (Bouts: {bout_counts[star_syl]}):", flush=True)
     for rank, item in enumerate(similarity_results[star_syl], 1):
         s = item['syllable']
@@ -251,7 +255,7 @@ if needed_sylls:
         if syl not in sampled_instances:
             continue
         insts = sampled_instances[syl]
-        
+
         dot_color = (255, 255, 255)
         dot_radius = 4
         scaled_window_size = window_size

@@ -14,11 +14,12 @@ create_and_compare_mini_pkl.py
 
 import copy
 import pickle
+import sys
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
-import sys
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -85,7 +86,7 @@ def verify_containment():
         missing_from_mini = ref_cols - mini_cols
         new_in_mini = mini_cols - ref_cols
 
-        print(f"  Structural Subsumption:")
+        print("  Structural Subsumption:")
         print(f"    - Original K240K columns: {len(ref_cols)}")
         print(f"    - Missing columns:        {len(missing_from_mini)} (all 35 original columns preserved)")
         print(f"    - New multi-view columns: {list(new_in_mini)}")
@@ -118,7 +119,7 @@ def verify_containment():
                     if match:
                         zero_delta_count += 1
 
-        print(f"  Numerical Parity on Reference Columns:")
+        print("  Numerical Parity on Reference Columns:")
         print(f"    - 100.000% Bit-for-Bit Identical Columns: {zero_delta_count}/{len(ref_cols)} (delta = 0.000000)")
         max_abs_err = max(max_deltas.values())
         print(f"    - Max Absolute Discrepancy (all columns & rows): {max_abs_err:.10e}")
@@ -129,7 +130,7 @@ def verify_containment():
         base_sylls = df_ref_slice["syllable"].values
         identity_fraction = np.mean(mv_sylls == base_sylls)
 
-        print(f"  Multi-View Additions Check:")
+        print("  Multi-View Additions Check:")
         print(f"    - 'multiview_syllable' non-null entries: {pd.Series(mv_sylls).notna().sum()}/{len(mv_sylls)}")
         print(f"    - Multi-view unique syllable states:     {len(np.unique(mv_sylls))}")
         print(f"    - TopCam baseline unique syllable states: {len(np.unique(base_sylls))}")

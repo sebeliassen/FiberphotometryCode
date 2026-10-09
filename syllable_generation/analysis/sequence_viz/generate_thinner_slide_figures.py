@@ -18,10 +18,11 @@ Generates updated slide-friendly figures:
 
 import itertools
 from pathlib import Path
+
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 from scipy import stats
 
 DATA_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/data")
@@ -135,11 +136,11 @@ def make_slide_figure(metric_type="rate"):
     fig_title = ("Level 3 Behavioral Chains: Cohort Usage Rates & Genotype Separation"
                  if is_rate else
                  "Level 3 Behavioral Chains: Session Duration & Genotype Separation")
-    
+
     # Thinner aspect ratio (width=12.0, height=12.2)
     fig = plt.figure(figsize=(12.0, 12.2), dpi=300)
     gs = gridspec.GridSpec(2, 2, figure=fig, height_ratios=[1.35, 0.95], hspace=0.46, wspace=0.22)
-    
+
     # -------------------------------------------------------------------------
     # TOP PANEL
     # -------------------------------------------------------------------------
@@ -164,13 +165,13 @@ def make_slide_figure(metric_type="rate"):
         "WT_Amphetamine": "WT Amphetamine",
         "KI_Amphetamine": "DAT-KI Amphetamine",
     }
-    
+
     for cohort in ["WT_Saline", "KI_Saline", "WT_Amphetamine", "KI_Amphetamine"]:
         sub = df_cohort[df_cohort["cohort"] == cohort].sort_values("factor_id")
         means = sub[val_col].values
         sems = sub[sem_col].values
         x_pos = chain_indices + offsets[cohort]
-        
+
         ax_top.bar(x_pos, means, yerr=sems, width=bar_w, color=cohort_colors[cohort],
                    capsize=2.8, edgecolor="#1A202C", linewidth=0.9, alpha=0.92,
                    label=cohort_labels[cohort], zorder=3)
@@ -192,15 +193,15 @@ def make_slide_figure(metric_type="rate"):
         ki_sal_row = sub_k[sub_k["cohort"] == "KI_Saline"].iloc[0]
         sal_max = max(wt_sal_row[val_col] + wt_sal_row[sem_col],
                       ki_sal_row[val_col] + ki_sal_row[sem_col])
-        
+
         wt_amph_row = sub_k[sub_k["cohort"] == "WT_Amphetamine"].iloc[0]
         ki_amph_row = sub_k[sub_k["cohort"] == "KI_Amphetamine"].iloc[0]
         amph_max = max(wt_amph_row[val_col] + wt_amph_row[sem_col],
                        ki_amph_row[val_col] + ki_amph_row[sem_col])
-        
+
         p_sal_k = df_uni[(df_uni["factor_id"] == k) & (df_uni["drug"] == "Saline")]["p_val"].values[0]
         p_amph_k = df_uni[(df_uni["factor_id"] == k) & (df_uni["drug"] == "Amphetamine")]["p_val"].values[0]
-        
+
         if p_sal_k < 0.05:
             star_sal = "***" if p_sal_k < 0.001 else ("**" if p_sal_k < 0.01 else "*")
             x1 = k + offsets["WT_Saline"]
@@ -211,7 +212,7 @@ def make_slide_figure(metric_type="rate"):
             ax_top.text((x1 + x2) / 2, star_pos_y, star_sal,
                         ha="center", va="bottom", fontsize=11.5, fontweight="bold", color="#C05621", zorder=5)
             max_star_y = max(max_star_y, star_pos_y + 0.05 * scale_factor)
-            
+
         if p_amph_k < 0.05:
             star_amph = "***" if p_amph_k < 0.001 else ("**" if p_amph_k < 0.01 else "*")
             x1 = k + offsets["WT_Amphetamine"]
@@ -233,15 +234,15 @@ def make_slide_figure(metric_type="rate"):
     # Clean horizontal legend positioned above plot
     ax_top.legend(bbox_to_anchor=(0.5, 1.25), loc="upper center", ncol=4,
                   frameon=True, facecolor="white", edgecolor="#CBD5E0", framealpha=0.95, fontsize=11)
-    
+
     y_top_limit = max(6.2 if is_rate else 660.0, max_star_y * 1.08)
     ax_top.set_ylim(0, y_top_limit)
-    
+
     # -------------------------------------------------------------------------
     # BOTTOM PANELS (NO REDUNDANT BANNERS)
     # -------------------------------------------------------------------------
     n_bins = 30
-    
+
     # B1: Saline
     ax_b1 = fig.add_subplot(gs[1, 0])
     counts, bins, patches = ax_b1.hist(null_sal, bins=n_bins, density=True, color="#CBD5E0",
@@ -250,7 +251,7 @@ def make_slide_figure(metric_type="rate"):
         if bins[b_idx] >= tv_obs_sal:
             patches[b_idx].set_facecolor("#ED8936")
             patches[b_idx].set_alpha(0.95)
-            
+
     ax_b1.axvline(tv_obs_sal, color="#C05621", linestyle="--", linewidth=2.6, zorder=4,
                   label=f"Observed TV = {tv_obs_sal:.3f}\nExact p = {p_sal:.4f} *")
     ax_b1.set_xlabel("Total Variation Distance (TV)", fontweight="bold", fontsize=11.5)
@@ -260,7 +261,7 @@ def make_slide_figure(metric_type="rate"):
     ax_b1.grid(axis="y", linestyle="--", alpha=0.35, zorder=0)
     ax_b1.legend(loc="upper right", frameon=True, facecolor="white", edgecolor="#CBD5E0", fontsize=10.5)
     ax_b1.set_ylim(0, 11.0)
-    
+
     # B2: Amphetamine
     ax_b2 = fig.add_subplot(gs[1, 1])
     counts_a, bins_a, patches_a = ax_b2.hist(null_amph, bins=n_bins, density=True, color="#CBD5E0",
@@ -269,7 +270,7 @@ def make_slide_figure(metric_type="rate"):
         if bins_a[b_idx] >= tv_obs_amph:
             patches_a[b_idx].set_facecolor("#E53E3E")
             patches_a[b_idx].set_alpha(0.95)
-            
+
     ax_b2.axvline(tv_obs_amph, color="#9B2C2C", linestyle="--", linewidth=2.6, zorder=4,
                   label=f"Observed TV = {tv_obs_amph:.3f}\nExact p = {p_amph:.4f} ***")
     ax_b2.set_xlabel("Total Variation Distance (TV)", fontweight="bold", fontsize=11.5)
@@ -279,9 +280,9 @@ def make_slide_figure(metric_type="rate"):
     ax_b2.grid(axis="y", linestyle="--", alpha=0.35, zorder=0)
     ax_b2.legend(loc="upper right", frameon=True, facecolor="white", edgecolor="#CBD5E0", fontsize=10.5)
     ax_b2.set_ylim(0, 11.0)
-    
+
     fig.suptitle(fig_title, fontweight="bold", fontsize=14.5, y=0.99)
-    
+
     out_name = f"fig_level3_slide_{metric_type}_vertical.png"
     for d in [PRESENTATION_DIR, FIGURES_DIR, ARTIFACTS_DIR]:
         fig.savefig(d / out_name, dpi=300, bbox_inches="tight")

@@ -1,15 +1,15 @@
-import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
-from pathlib import Path
-from tqdm import tqdm
 from scipy.stats import pearsonr
+from tqdm import tqdm
 
 # --- SETUP ---
 this_file = Path(__file__).resolve()
-repo_root = this_file.parents[3] 
+repo_root = this_file.parents[3]
 
 # --- CONFIGURATION ---
 DATA_DIR = repo_root / "syllable_generation" / "data"
@@ -43,27 +43,27 @@ sns.set(style="whitegrid", context="talk", font_scale=0.8)
 def get_base_records(peth_df):
     print("Melt to long format...")
     long_records = []
-    
+
     for idx, row in peth_df.iterrows():
         n_points = len(row['trace'])
         syll_physical_dir = SYLLABLE_DIRECTIONS.get(row['syllable'], 'UNK')
         hemi = row['hemisphere'] # 'L' or 'R'
-        
+
         if row['true_direction'] == 'Original':
             current_turn_dir = syll_physical_dir
         else:
             current_turn_dir = 'Right' if syll_physical_dir == 'Left' else 'Left'
-            
+
         if current_turn_dir == 'UNK' or hemi == 'UNK':
             bio_direction = 'Unknown'
-        elif current_turn_dir[0] == hemi: 
+        elif current_turn_dir[0] == hemi:
             bio_direction = 'Ipsilateral'
         else:
             bio_direction = 'Contralateral'
 
         raw_cond = row.get('condition', row['genotype'])
         drug_cond = raw_cond.rsplit('-', 1)[0] if '-' in raw_cond else raw_cond
-        
+
         base_dict = {
             'session_id': row['session_id'],
             'genotype': row['genotype'],
@@ -78,7 +78,7 @@ def get_base_records(peth_df):
             'time_axis': row['time_axis']
         }
         long_records.append(base_dict)
-            
+
     return pd.DataFrame(long_records)
 
 def process_and_plot(peth_meta_df, average_by, share_y_axis):
@@ -86,7 +86,7 @@ def process_and_plot(peth_meta_df, average_by, share_y_axis):
     out_dir = BASE_OUTPUT_DIR / out_dir_name
     out_dir.mkdir(parents=True, exist_ok=True)
     print(f"\n--- Generating {out_dir_name} ---")
-    
+
     if average_by == "session":
         print("Averaging traces by session...")
         group_cols = ['session_id', 'genotype', 'drug_cond', 'brain_reg', 'hemisphere', 'syllable', 'bio_direction', 'syllable_name']
@@ -96,13 +96,13 @@ def process_and_plot(peth_meta_df, average_by, share_y_axis):
 
     print(f"Melt to long format (n={len(agg_df)} base traces)...")
     final_long_records = []
-    
+
     # Fast unpacking
     for idx, row in agg_df.iterrows():
         n_points = len(row['trace_data'])
         times = row['time_axis']
         traces = row['trace_data']
-        
+
         base_dict = {
             'session_id': row['session_id'],
             'genotype': row['genotype'],
@@ -112,7 +112,7 @@ def process_and_plot(peth_meta_df, average_by, share_y_axis):
             'bio_direction': row['bio_direction'],
             'syllable_name': row['syllable_name']
         }
-        
+
         for i in range(n_points):
             rec = base_dict.copy()
             rec['time'] = times[i]
@@ -124,22 +124,22 @@ def process_and_plot(peth_meta_df, average_by, share_y_axis):
 
     direction_palette = {"Contralateral": "red", "Ipsilateral": "blue"}
     regions = plot_df['brain_reg'].unique()
-    
+
     for reg in regions:
         if reg == 'UNK': continue
         reg_dir = out_dir / f"Region_{reg}"
         reg_dir.mkdir(parents=True, exist_ok=True)
-        
+
         reg_df = plot_df[(plot_df['brain_reg'] == reg) & (plot_df['bio_direction'] != 'Unknown')]
         unique_sylls = reg_df['syllable'].unique()
-        
+
         for syll in tqdm(unique_sylls, desc=f"Syllables in {reg} ({out_dir_name})"):
             syll_df = reg_df[reg_df['syllable'] == syll]
             syll_name = syll_df['syllable_name'].iloc[0]
-            
+
             row_order = ["WT", "KI"]
             col_order = ["Saline", "Amph-Pre", "Amph-Post"]
-            
+
             g = sns.relplot(
                 data=syll_df,
                 x="time", y="zdFF", hue="bio_direction", style="bio_direction",
@@ -148,27 +148,27 @@ def process_and_plot(peth_meta_df, average_by, share_y_axis):
                 height=3.5, aspect=1.2, palette=direction_palette,
                 facet_kws={'sharey': share_y_axis}
             )
-            
+
             avg_type = "Sessions Averaged" if average_by == "session" else "All Events Averaged"
             y_axis_type = "Shared Y-Axis" if share_y_axis else "Local Y-Axis"
             g.fig.suptitle(f"Lateralized DA ({avg_type} | {y_axis_type}) - {syll_name} | {reg}", y=1.05)
             g.set_axis_labels("Time from Onset (s)", "Z-Scored dF/F (Baseline Subtracted)")
-            
+
             for ax in g.axes.flat:
                 title = ax.get_title()
                 parts = title.split('|')
                 geno_val = "WT"
                 drug_val = "Saline"
-                
+
                 for p in parts:
                     if "genotype" in p: geno_val = p.split('=')[-1].strip()
                     elif "drug_cond" in p: drug_val = p.split('=')[-1].strip()
-                        
+
                 n_contra = len(agg_df[(agg_df['syllable']==syll) & (agg_df['genotype']==geno_val) & (agg_df['drug_cond']==drug_val) & (agg_df['bio_direction']=='Contralateral') & (agg_df['brain_reg']==reg)])
                 n_ipsi = len(agg_df[(agg_df['syllable']==syll) & (agg_df['genotype']==geno_val) & (agg_df['drug_cond']==drug_val) & (agg_df['bio_direction']=='Ipsilateral') & (agg_df['brain_reg']==reg)])
-                
+
                 ax.set_title(f"{geno_val} | {drug_val}\n(Contra n={n_contra} | Ipsi n={n_ipsi})")
-                
+
                 sub_df = syll_df[(syll_df['genotype']==geno_val) & (syll_df['drug_cond']==drug_val)]
                 if not sub_df.empty:
                     try:
@@ -185,10 +185,10 @@ def process_and_plot(peth_meta_df, average_by, share_y_axis):
                                         verticalalignment='top', bbox=props)
                     except Exception as e:
                         print(f"Error calculating correlation: {e}")
-                
+
                 ax.axvline(0, color='gray', linestyle='--', zorder=0)
                 ax.axhline(0, color='gray', linewidth=0.8, zorder=0)
-                
+
             out_path = reg_dir / f"Syllable_{syll}_lateralized_da.png"
             g.fig.savefig(out_path, dpi=300, bbox_inches="tight")
             plt.close(g.fig)
@@ -207,10 +207,10 @@ def plot_peths():
         return
 
     BASE_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    
+
     # 1. Parse into base long-records ONCE
     peth_meta_df = get_base_records(peth_df)
-    
+
     # 2. Iterate through all 4 variations
     for avg_by in ["event", "session"]:
         for share_y in [True, False]:

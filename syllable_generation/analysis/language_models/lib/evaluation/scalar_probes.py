@@ -1,9 +1,11 @@
+from typing import Dict
+
 import numpy as np
 import pandas as pd
-from typing import Dict, List, Tuple
 from sklearn.linear_model import Ridge
-from sklearn.model_selection import KFold
 from sklearn.metrics import r2_score
+from sklearn.model_selection import KFold
+
 
 def compute_window_scalars(session, start_frame: int, end_frame: int, n_grid: int = 8) -> Dict[str, float]:
     """
@@ -15,22 +17,22 @@ def compute_window_scalars(session, start_frame: int, end_frame: int, n_grid: in
     """
     df = session.all_data_df
     syll_df = session.syllables
-    
+
     sub_df = df.loc[start_frame:end_frame]
     sub_syll = syll_df.loc[start_frame:end_frame]
-    
+
     # 1. Spatial Exploration Entropy
     cx = sub_df['centroid_x'].values
     cy = sub_df['centroid_y'].values
     valid_coords = ~np.isnan(cx) & ~np.isnan(cy)
-    
+
     if np.sum(valid_coords) > 10:
         x_clean = cx[valid_coords]
         y_clean = cy[valid_coords]
-        
+
         x_min, x_max = np.min(x_clean), np.max(x_clean)
         y_min, y_max = np.min(y_clean), np.max(y_clean)
-        
+
         if x_max > x_min and y_max > y_min:
             x_bins = np.linspace(x_min, x_max, n_grid + 1)
             y_bins = np.linspace(y_min, y_max, n_grid + 1)
@@ -42,7 +44,7 @@ def compute_window_scalars(session, start_frame: int, end_frame: int, n_grid: in
             h_spatial = 0.0
     else:
         h_spatial = 0.0
-        
+
     # 2. Switch Cadence (switches per second)
     sylls = sub_syll['syllable'].values
     valid_sylls = sylls[~pd.isna(sylls)]
@@ -52,7 +54,7 @@ def compute_window_scalars(session, start_frame: int, end_frame: int, n_grid: in
         cadence = float(switches / max(duration_sec, 1e-3))
     else:
         cadence = 0.0
-        
+
     # 3. Turning Chirality Ratio (|omega| / (v + eps))
     vel = sub_df['velocity_px_s'].values
     omega = np.abs(sub_df['angular_velocity'].values)
@@ -61,7 +63,7 @@ def compute_window_scalars(session, start_frame: int, end_frame: int, n_grid: in
         chirality = float(np.mean(omega[valid_kin] / (vel[valid_kin] + 10.0)))
     else:
         chirality = 0.0
-        
+
     # 4. Sequence Transition Entropy
     if len(valid_sylls) > 2:
         unique_sylls, syll_indices = np.unique(valid_sylls, return_inverse=True)
@@ -78,7 +80,7 @@ def compute_window_scalars(session, start_frame: int, end_frame: int, n_grid: in
             h_seq = 0.0
     else:
         h_seq = 0.0
-        
+
     return {
         "spatial_entropy": h_spatial,
         "cadence": cadence,
@@ -88,9 +90,9 @@ def compute_window_scalars(session, start_frame: int, end_frame: int, n_grid: in
 
 
 def evaluate_linear_probes(
-    X_features: np.ndarray, 
-    y_targets: np.ndarray, 
-    n_splits: int = 5, 
+    X_features: np.ndarray,
+    y_targets: np.ndarray,
+    n_splits: int = 5,
     random_state: int = 42
 ) -> float:
     """
@@ -98,21 +100,21 @@ def evaluate_linear_probes(
     """
     if len(X_features) < n_splits * 2:
         return 0.0
-        
+
     kf = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
     y_preds = np.zeros_like(y_targets)
-    
+
     for train_idx, test_idx in kf.split(X_features):
         clf = Ridge(alpha=1.0)
         clf.fit(X_features[train_idx], y_targets[train_idx])
         y_preds[test_idx] = clf.predict(X_features[test_idx])
-        
+
     return float(r2_score(y_targets, y_preds))
 
 
 def run_scalar_probing_battery(
-    X_strategy_props: np.ndarray, 
-    X_raw_sylls: np.ndarray, 
+    X_strategy_props: np.ndarray,
+    X_raw_sylls: np.ndarray,
     scalar_dict: Dict[str, np.ndarray]
 ) -> Dict[str, Dict[str, float]]:
     """
@@ -122,20 +124,20 @@ def run_scalar_probing_battery(
       - Random Null Control (Permuted features)
     """
     results = {}
-    
+
     # Random Null Features
     X_null = np.random.randn(*X_strategy_props.shape)
-    
+
     for scalar_name, y in scalar_dict.items():
         r2_null = evaluate_linear_probes(X_null, y)
         r2_raw = evaluate_linear_probes(X_raw_sylls, y)
         r2_strat = evaluate_linear_probes(X_strategy_props, y)
-        
+
         results[scalar_name] = {
             "r2_null": r2_null,
             "r2_raw_syllables": r2_raw,
             "r2_strategy": r2_strat,
             "compression_advantage": r2_strat - r2_raw
         }
-        
+
     return results

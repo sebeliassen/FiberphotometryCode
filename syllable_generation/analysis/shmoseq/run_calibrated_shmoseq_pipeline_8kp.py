@@ -20,22 +20,22 @@ Key Objectives:
 =============================================================================
 """
 
+import argparse
 import os
+import pickle
 import sys
 import time
-import pickle
-import argparse
+from pathlib import Path
+
+import matplotlib
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from scipy.spatial.distance import jensenshannon
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
-import jax
 import jax.numpy as jnp
 import jax.random as jr
 import state_moseq as sm

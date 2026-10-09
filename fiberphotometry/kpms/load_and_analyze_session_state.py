@@ -41,8 +41,8 @@ def merge_syllables_into_sync_df(sessions, *, sanity_check=True, sync_key="synch
 
 def select_model(project_dir, model_names, *, sanity_check=True, strategy="first"):
     # strategies: "first" | "eml_best"
-    import numpy as np
     import keypoint_moseq as kpms
+    import numpy as np
     if strategy == "eml_best":
         eml_scores, eml_std_errs = kpms.expected_marginal_likelihoods(str(project_dir), model_names)
         idx = int(np.argmax(eml_scores))
@@ -77,8 +77,8 @@ def load_model_and_extract(project_dir, model_name, *, sanity_check=True):
 
 def estimate_coordinates_from_checkpoint(model, metadata):
     import jax.numpy as jnp
-    from jax_moseq.utils import unbatch
     from jax_moseq.models.keypoint_slds import estimate_coordinates
+    from jax_moseq.utils import unbatch
     Y_est = estimate_coordinates(
         jnp.array(model['states']['x']),
         jnp.array(model['states']['v']),
@@ -187,7 +187,9 @@ def generate_grid_movies_aligned(project_dir, model_name, results_common, video_
 
 
 def assign_groups_and_write_index_csv(sessions, metadata, project_dir, *, sanity_check=True):
-    import re, os
+    import os
+    import re
+
     import pandas as pd
     names = metadata[0]  # name per recording
     for sess in sessions:
@@ -210,7 +212,9 @@ def assign_groups_and_write_index_csv(sessions, metadata, project_dir, *, sanity
 
 
 def compute_moseq_tables(project_dir, model_name, *, fps=60, min_frequency=0.005, sanity_check=True):
-    import keypoint_moseq as kpms, os
+    import os
+
+    import keypoint_moseq as kpms
     results_h5 = os.path.join(str(project_dir), model_name, "results.h5")
     if not os.path.exists(results_h5):
         # create it on the fly
@@ -242,9 +246,10 @@ def apply_plotting_setup_to_sessions(sessions, *, sanity_check=True):
 
 
 def plot_data_availability(sessions, project_dir, *, sanity_check=True):
-    import numpy as np
-    import matplotlib.pyplot as plt
     from pathlib import Path
+
+    import matplotlib.pyplot as plt
+    import numpy as np
 
     save_dir = Path(project_dir) / "availability_plots"
     save_dir.mkdir(exist_ok=True)

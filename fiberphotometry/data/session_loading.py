@@ -1,13 +1,14 @@
-from pathlib import Path
-from io import StringIO
 import re
 import traceback
-from typing import TextIO, Union
 import warnings
+from io import StringIO
+from pathlib import Path
+from typing import TextIO, Union
+
 import pandas as pd
 
+from fiberphotometry.config import COMBINED_SPLIT, DATA_PATTERNS
 from fiberphotometry.data.data_loading import DataContainer
-from fiberphotometry.config import DATA_PATTERNS, COMBINED_SPLIT
 
 FIBER_RE = re.compile(r'^([A-Za-z])(\d+)$')
 

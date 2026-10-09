@@ -1,7 +1,6 @@
-import time
-import subprocess
 import os
-import sys
+import subprocess
+import time
 import urllib.request
 
 NTFY_URL = "https://ntfy.sh/woody_videos_seb"
@@ -38,23 +37,23 @@ def is_limited_sweep_running() -> bool:
 
 def main():
     print("[auto-launcher] Monitoring run_limited_sweep.py. Will launch run_extended_sweep.py upon completion...")
-    
+
     while True:
         if is_limited_sweep_finished():
             print("[auto-launcher] Confirmed: run_limited_sweep.py output completed! Launching run_extended_sweep.py now...")
             break
         time.sleep(30)
-        
+
     print("[auto-launcher] run_limited_sweep.py has finished! Launching run_extended_sweep.py now...")
     send_notification("Limited sweep finished! Automatically launching Extended Strategy Sweep now.")
-    
+
     python_bin = "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python"
     script_path = "syllable_generation/analysis/language_models/run_extended_sweep.py"
     log_path = "syllable_generation/analysis/language_models/extended_sweep.log"
-    
+
     cmd = f"{python_bin} -u {script_path} --workers 1 > {log_path} 2>&1"
     subprocess.run(cmd, shell=True)
-    
+
     print("[auto-launcher] run_extended_sweep.py completed successfully!")
     send_notification("Extended Strategy Sweep has completed successfully!")
 

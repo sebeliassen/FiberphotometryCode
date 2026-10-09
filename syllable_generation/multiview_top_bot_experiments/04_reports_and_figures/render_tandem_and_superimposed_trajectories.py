@@ -19,27 +19,30 @@ Key Features:
 """
 
 import os
+
 os.environ["JAX_PLATFORMS"] = "cpu"
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 
 from pathlib import Path
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import imageio
+import jax.numpy as jnp
+import keypoint_moseq as kpms
+import keypoint_moseq.util as util
+import keypoint_moseq.viz as viz
+import matplotlib.pyplot as plt
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
 from PIL import Image
 
-import jax.numpy as jnp
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
-
-import keypoint_moseq as kpms
-import keypoint_moseq.viz as viz
-import keypoint_moseq.util as util
 
 # --- 1. Modern Matplotlib Rasterize Patch (ensuring deep buffer copy for animations) ---
 def modern_rasterize_figure(fig):
@@ -220,7 +223,7 @@ def main():
             alpha=0.15,
             plot_width=5.2,
         )
-        
+
         # Save vector PDF
         pdf_super = SUPER_DIR / f"syllable_{s:02d}_superimposed.pdf"
         fig_s.savefig(str(pdf_super), bbox_inches="tight", dpi=300)
@@ -236,7 +239,7 @@ def main():
         # =========================================================================
         # Render Dorsal TopCam Panel
         fig_d, ax_d, rasters_d = viz.plot_trajectories(
-            [f"Dorsal View (TopCam 17 KPs)"],
+            ["Dorsal View (TopCam 17 KPs)"],
             traj[:, dorsal_idxs][None],
             lims_dorsal,
             edges=edges_dorsal,
@@ -251,7 +254,7 @@ def main():
 
         # Render Ventral BotCam Panel (with zoomed lims_ventral)
         fig_v, ax_v, rasters_v = viz.plot_trajectories(
-            [f"Ventral Paws (BotCam 6 KPs)"],
+            ["Ventral Paws (BotCam 6 KPs)"],
             traj[:, ventral_idxs][None],
             lims_ventral,
             edges=edges_ventral,
@@ -271,7 +274,7 @@ def main():
         ax_left.imshow(rasters_d[-1])
         ax_right.imshow(rasters_v[-1])
         fig_combo.suptitle(desc, fontsize=13, fontweight="bold", y=0.98)
-        
+
         pdf_tandem = SIDE_DIR / f"syllable_{s:02d}_tandem_side_by_side.pdf"
         fig_combo.savefig(str(pdf_tandem), bbox_inches="tight", dpi=300)
         plt.close(fig_combo)

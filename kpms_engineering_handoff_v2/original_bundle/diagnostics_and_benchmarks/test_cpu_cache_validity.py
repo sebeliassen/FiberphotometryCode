@@ -9,16 +9,17 @@ Correctness test for CPU-Cache validity across:
 4. After loading a checkpoint / switching models (verify cache clean-switch and no state leakage).
 """
 
-import sys, os
+import os
+import sys
+
 sys.path.insert(0, '/home/fsp585/Desktop/FiberphotometryCode')
 sys.path.insert(0, '/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll')
 
 import numpy as np
+
 if not hasattr(np, "bool8"): np.bool8 = np.bool_
 
-import jax
 import jax.numpy as jnp
-import jax.random as jr
 import keypoint_moseq as kpms
 import utils.resample_batching as rb
 from utils.resample_batching import KPMSStateCache

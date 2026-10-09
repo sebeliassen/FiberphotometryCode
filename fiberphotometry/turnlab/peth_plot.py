@@ -1,9 +1,11 @@
-from .config import *
-from .utils import _collect_regions_hemis, _prefix_for, _interp_then_smooth, _region_hemi_for
+import os
 
-import os 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+
+from .config import *
+from .utils import _collect_regions_hemis, _interp_then_smooth, _prefix_for, _region_hemi_for
+
 
 def compute_turn_peths_from_merged(
     merged_all,

@@ -1,9 +1,10 @@
 # FILE: monoamine_interactions/jonathan_oft_baseline/enrich.py
-import pandas as pd
-from pathlib import Path
-import numpy as np
-import os
 import re
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
 
 def _val(row, name):
     target = name.lower().replace(" ", "").replace("-", "")
@@ -24,15 +25,15 @@ def load_animal_map(ctx):
     """
     enrich_dir = Path(__file__).resolve().parent
     target = enrich_dir / "overrides" / "animals.csv"
-    
+
     if not target.exists():
         print(f"[Enrich] ERROR: animals.csv NOT found at {target}")
         return {}
-    
+
     print(f"[Enrich] Loaded map from: {target}")
     df = pd.read_csv(target, dtype=str).fillna("")
     mapping = {}
-    
+
     for _, row in df.iterrows():
         aid = _val(row, "mouse_id")
         if aid:
@@ -78,13 +79,13 @@ def load_exclusions(ctx):
     """
     enrich_dir = Path(__file__).resolve().parent
     target = enrich_dir / "overrides" / "exclusions.csv"
-    
+
     if not target.exists():
         return {}
-    
+
     df = pd.read_csv(target, dtype=str).fillna("")
     exclusions = {}
-    
+
     for _, row in df.iterrows():
         # Prefer SessionID column (written by GUI), fall back to ID
         sid = _val(row, "SessionID")
@@ -92,12 +93,12 @@ def load_exclusions(ctx):
         key = sid if sid else aid  # session_id takes priority
         reg = _val(row, "Region")
         intervals_raw = _val(row, "Intervals")
-        
+
         if key and reg and intervals_raw:
             if key not in exclusions: exclusions[key] = {}
             if reg not in exclusions[key]: exclusions[key][reg] = []
             exclusions[key][reg].append(intervals_raw)
-            
+
     return exclusions
 
 def get_region_to_cols_map(session):
@@ -106,33 +107,33 @@ def get_region_to_cols_map(session):
     """
     df = session.photometry.get("combined_filtered")
     if df is None: return {}
-    
+
     region_to_cols = {}
     sm = session.metadata.get("signal_meta", {})
-    
+
     # Iterate through logical signals 0..3
-    for i in range(4): 
+    for i in range(4):
         sig_key = f"signal_{i}"
         if sig_key not in sm: continue
-        
+
         meta = sm[sig_key]
         reg = meta.get("region", session.metadata.get(sig_key))
         if not reg: continue
-        
+
         hemi = meta.get("hemisphere", "")
         label = f"{reg}-{hemi}" if hemi else reg
-        
+
         # Identify Columns by LOGICAL KEY
         # Logic: direct match or prefix match (e.g. signal_0_dff)
         relevant_cols = [
-            c for c in df.columns 
+            c for c in df.columns
             if c == sig_key or c.startswith(f"{sig_key}_")
         ]
-        
-        if label not in region_to_cols: 
+
+        if label not in region_to_cols:
             region_to_cols[label] = []
         region_to_cols[label].extend(relevant_cols)
-                    
+
     return region_to_cols
 
 def apply_manual_exclusions_to_session(session, exclusions):
@@ -147,7 +148,7 @@ def apply_manual_exclusions_to_session(session, exclusions):
     if df is None or getattr(df, "empty", True): return
 
     region_to_cols = get_region_to_cols_map(session)
-    
+
     # Get column vectors for indexing
     # We assume standard column names for now
     ts_col_name = "SystemTimestamp"
@@ -155,11 +156,11 @@ def apply_manual_exclusions_to_session(session, exclusions):
 
     ts_vec = df[ts_col_name].values if ts_col_name in df.columns else None
     idx_vec = df[idx_col_name].values if idx_col_name in df.columns else df.index.values
-    
+
     for reg_name, intervals_list in exclusions.items():
         target_cols = region_to_cols.get(reg_name)
         if not target_cols: continue
-        
+
         for raw_item in intervals_list:
             for raw in raw_item.split(";"):
                 raw = raw.strip()
@@ -172,18 +173,18 @@ def apply_manual_exclusions_to_session(session, exclusions):
                     mode = "ts"; part = part.replace("ts:", "")
                 elif "idx:" in part:
                     mode = "idx"; part = part.replace("idx:", "")
-                
+
                 try:
                     start, end = map(float, part.split('-'))
                 except ValueError:
                     continue
-    
+
                 mask = None
                 if mode == "ts" and ts_vec is not None:
                     mask = (ts_vec >= start) & (ts_vec <= end)
                 elif mode == "idx":
                     mask = (idx_vec >= start) & (idx_vec <= end)
-                
+
                 if mask is not None and mask.any():
                     valid_cols = [c for c in target_cols if c in df.columns]
                     if valid_cols:
@@ -201,11 +202,11 @@ def enrich(ctx, sessions, overrides_dir=None, skip_exclusions=False):
     print(f"[DEBUG] enrich() called with {len(sessions)} sessions.")
     animal_map = load_animal_map(ctx)
     exclusion_map = load_exclusions(ctx) if not skip_exclusions else {}
-    
+
     count = 0
     for s in sessions:
         md = s.metadata
-        
+
         # --- PASS 0: Animal ID Resolving (Always) ---
         aid = md.get("animal_id")
         if not aid:
@@ -227,13 +228,13 @@ def enrich(ctx, sessions, overrides_dir=None, skip_exclusions=False):
                 info = animal_map[aid]
                 if not _is_unknown(info['geno']):
                     md["genotype"] = info['geno']
-                
+
                 used_indices = []
                 for f_id in [info['f1'], info['f2']]:
                     if f_id and not _is_unknown(f_id):
                         m = re.search(r"\d+", f_id)
                         if m: used_indices.append(int(m.group()))
-                
+
                 if used_indices:
                     md["fiber_indices_effective"] = sorted(list(set(used_indices)))
             count += 1
@@ -266,12 +267,12 @@ def enrich(ctx, sessions, overrides_dir=None, skip_exclusions=False):
                     md[sig_key] = region
                     entry["region"] = region
                     entry["brain_reg"] = region
-                    
+
                     # Add Hemisphere based on Fiber 1 (Left) or Fiber 2 (Right)
                     # We match fiber_num to info['f1'] or info['f2']
                     f1_num = int(re.search(r"(\d+)", info['f1']).group(1)) if info['f1'] else -1
                     f2_num = int(re.search(r"(\d+)", info['f2']).group(1)) if info['f2'] else -1
-                    
+
                     if fiber_num == f1_num:
                         entry["hemisphere"] = "Left"
                     elif fiber_num == f2_num:
@@ -283,13 +284,13 @@ def enrich(ctx, sessions, overrides_dir=None, skip_exclusions=False):
             if excl_key:
                 sess_excl = exclusion_map[excl_key]
                 if "exclusions" not in md: md["exclusions"] = {}
-                
+
                 # Store metadata
                 for sig_key, meta in sm.items():
                     reg = meta.get("region", md.get(sig_key))
                     hemi = meta.get("hemisphere", "")
                     full_label = f"{reg}-{hemi}" if hemi else reg
-                    
+
                     if full_label and full_label in sess_excl:
                         md["exclusions"][sig_key] = sess_excl[full_label]
 
@@ -299,7 +300,7 @@ def enrich(ctx, sessions, overrides_dir=None, skip_exclusions=False):
 
         elif aid:
              print(f"[DEBUG] WARNING: Mouse {aid} not found in animals.csv")
-        
+
         count += 1
 
     print(f"[Enrich] Enriched {count} sessions.")

@@ -21,18 +21,20 @@ Tests the hypotheses raised in the expert review:
 """
 
 import os
+
 os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
 os.environ["CUDA_VISIBLE_DEVICES"] = ""  # Pure CPU for analysis, zero GPU contention
 
-import sys
-import pickle
 import itertools
+import pickle
+
 import h5py
+import matplotlib
 import numpy as np
 import pandas as pd
 from scipy import stats
 from sklearn.linear_model import RidgeCV
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -53,8 +55,8 @@ os.makedirs(FIG_DIR, exist_ok=True)
 
 print("=" * 80)
 print("  CONTROLLED PIPELINE EVALUATION: 8-KEYPOINT VS. 17-KEYPOINT KPMS")
-print(f"  17KP Candidate: amph_prod_k150k_run_12 (Seed 41, D=10)")
-print(f"  8KP Candidate:  amph_8kp_k150k_run_03  (Seed 202, D=6)")
+print("  17KP Candidate: amph_prod_k150k_run_12 (Seed 41, D=10)")
+print("  8KP Candidate:  amph_8kp_k150k_run_03  (Seed 202, D=6)")
 print("=" * 80, flush=True)
 
 # -----------------------------------------------------------------------------
@@ -278,22 +280,22 @@ res_8kp = analyze_latents(os.path.join(RUN_8KP, "results.h5"), 6, "8KP (run_03, 
 res_8kp_01 = analyze_latents(os.path.join(KPMS_8KP_DIR, "amph_8kp_k150k_run_01", "results.h5"), 6, "8KP (run_01, D=6)")
 res_8kp_02 = analyze_latents(os.path.join(KPMS_8KP_DIR, "amph_8kp_k150k_run_02", "results.h5"), 6, "8KP (run_02, D=6)")
 
-print(f"\n--- CONTINUOUS LATENT EVALUATION SUMMARY ---")
-print(f"17KP Candidate (run_12, D=10):")
+print("\n--- CONTINUOUS LATENT EVALUATION SUMMARY ---")
+print("17KP Candidate (run_12, D=10):")
 print(f"  Mean Between-Animal Variance (eta^2): {res_17kp['mean_eta_squared']:.2f}% (Max: {res_17kp['max_eta_squared']:.2f}% on Dim {np.argmax(res_17kp['eta_squared'])})")
 print(f"  Max Univariate Correlation with Axial Length: r = {res_17kp['max_abs_r_axial']:.4f}")
 print(f"  Max Univariate Correlation with Width:        r = {res_17kp['max_abs_r_width']:.4f}")
 print(f"  Multivariate LOO Prediction R^2 (Length):     R^2 = {res_17kp['r2_loo_axial']:.4f} (MAE: {res_17kp['mae_axial']:.2f} px)")
 print(f"  Multivariate LOO Prediction R^2 (Width):      R^2 = {res_17kp['r2_loo_width']:.4f} (MAE: {res_17kp['mae_width']:.2f} px)")
 
-print(f"\n8KP Selected Candidate (run_03, D=6):")
+print("\n8KP Selected Candidate (run_03, D=6):")
 print(f"  Mean Between-Animal Variance (eta^2): {res_8kp['mean_eta_squared']:.2f}% (Max: {res_8kp['max_eta_squared']:.2f}% on Dim {np.argmax(res_8kp['eta_squared'])})")
 print(f"  Max Univariate Correlation with Axial Length: r = {res_8kp['max_abs_r_axial']:.4f}")
 print(f"  Max Univariate Correlation with Width:        r = {res_8kp['max_abs_r_width']:.4f}")
 print(f"  Multivariate LOO Prediction R^2 (Length):     R^2 = {res_8kp['r2_loo_axial']:.4f} (MAE: {res_8kp['mae_axial']:.2f} px)")
 print(f"  Multivariate LOO Prediction R^2 (Width):      R^2 = {res_8kp['r2_loo_width']:.4f} (MAE: {res_8kp['mae_width']:.2f} px)")
 
-print(f"\n8KP Multi-Seed Ensemble (Length Prediction R^2):")
+print("\n8KP Multi-Seed Ensemble (Length Prediction R^2):")
 print(f"  Run 01: R^2 = {res_8kp_01['r2_loo_axial']:.4f}, Run 02: R^2 = {res_8kp_02['r2_loo_axial']:.4f}, Run 03: R^2 = {res_8kp['r2_loo_axial']:.4f}")
 
 # Save prediction table
@@ -421,8 +423,8 @@ syll_8kp = analyze_syllables(os.path.join(RUN_8KP, "results.h5"), "8KP (run_03)"
 syll_8kp_01 = analyze_syllables(os.path.join(KPMS_8KP_DIR, "amph_8kp_k150k_run_01", "results.h5"), "8KP (run_01)")
 syll_8kp_02 = analyze_syllables(os.path.join(KPMS_8KP_DIR, "amph_8kp_k150k_run_02", "results.h5"), "8KP (run_02)")
 
-print(f"\n--- SYLLABLE DYNAMICS & ANIMAL-ASSOCIATED VARIATION ---")
-print(f"17KP Candidate (run_12):")
+print("\n--- SYLLABLE DYNAMICS & ANIMAL-ASSOCIATED VARIATION ---")
+print("17KP Candidate (run_12):")
 print(f"  Median Duration:            {syll_17kp['median_duration_frames']:.1f} frames ({syll_17kp['median_duration_ms']:.0f} ms), IQR={syll_17kp['iqr_duration_frames']:.1f}")
 print(f"  Flickering (<3 frames):     {syll_17kp['flicker_pct']:.2f}% | Locked (>100 frames): {syll_17kp['locked_pct']:.2f}%")
 print(f"  Within-Animal Cross-Day r:  r = {syll_17kp['within_animal_r']:.4f}")
@@ -430,7 +432,7 @@ print(f"  Between-Animal Cross-Day r: r = {syll_17kp['between_animal_r']:.4f}")
 print(f"  Animal Individuality Index: Delta-r = {syll_17kp['individuality_index']:.4f}")
 print(f"  Syllable Size Spread (SD):  {syll_17kp['syll_size_dispersion_std']:.2f} px (Cohort Mean: {syll_17kp['cohort_mean_axial']:.1f} px)")
 
-print(f"\n8KP Selected Candidate (run_03):")
+print("\n8KP Selected Candidate (run_03):")
 print(f"  Median Duration:            {syll_8kp['median_duration_frames']:.1f} frames ({syll_8kp['median_duration_ms']:.0f} ms), IQR={syll_8kp['iqr_duration_frames']:.1f}")
 print(f"  Flickering (<3 frames):     {syll_8kp['flicker_pct']:.2f}% | Locked (>100 frames): {syll_8kp['locked_pct']:.2f}%")
 print(f"  Within-Animal Cross-Day r:  r = {syll_8kp['within_animal_r']:.4f}")
@@ -459,7 +461,7 @@ def run_exact_permutation_test(saline_dict, amph_dict, model_label):
 
     X = np.array(animal_occupancies)  # (15, 100)
     N = len(aids_in_order)
-    
+
     # Ground truth labels: 1 for WT (8 animals), 0 for KI (7 animals)
     y_true = np.array([1 if "WT" in animals_dict[aid] else 0 for aid in aids_in_order])
     n_wt = int(np.sum(y_true == 1))
@@ -508,18 +510,18 @@ perm_8kp = run_exact_permutation_test(syll_8kp["saline_sylls"], syll_8kp["amph_s
 perm_8kp_01 = run_exact_permutation_test(syll_8kp_01["saline_sylls"], syll_8kp_01["amph_sylls"], "8KP (run_01)")
 perm_8kp_02 = run_exact_permutation_test(syll_8kp_02["saline_sylls"], syll_8kp_02["amph_sylls"], "8KP (run_02)")
 
-print(f"\n--- EXHAUSTIVE GENOTYPE PERMUTATION TEST (6,435 Assignments) ---")
-print(f"17KP Candidate (run_12):")
+print("\n--- EXHAUSTIVE GENOTYPE PERMUTATION TEST (6,435 Assignments) ---")
+print("17KP Candidate (run_12):")
 print(f"  Observed F-statistic:  F = {perm_17kp['f_observed']:.3f}")
 print(f"  Genotype Variance:     R^2 = {perm_17kp['r2_observed_pct']:.2f}%")
 print(f"  Exact Permutation p:   p = {perm_17kp['p_exact_permutation']:.4f} ({np.sum(perm_17kp['perm_f_null'] >= perm_17kp['f_observed'])} / 6,435 permutations)")
 
-print(f"\n8KP Selected Candidate (run_03):")
+print("\n8KP Selected Candidate (run_03):")
 print(f"  Observed F-statistic:  F = {perm_8kp['f_observed']:.3f}")
 print(f"  Genotype Variance:     R^2 = {perm_8kp['r2_observed_pct']:.2f}%")
 print(f"  Exact Permutation p:   p = {perm_8kp['p_exact_permutation']:.4f} ({np.sum(perm_8kp['perm_f_null'] >= perm_8kp['f_observed'])} / 6,435 permutations)")
 
-print(f"\n8KP Multi-Seed Ensemble (Exact Permutation p-values):")
+print("\n8KP Multi-Seed Ensemble (Exact Permutation p-values):")
 print(f"  Run 01: p = {perm_8kp_01['p_exact_permutation']:.4f}, Run 02: p = {perm_8kp_02['p_exact_permutation']:.4f}, Run 03: p = {perm_8kp['p_exact_permutation']:.4f}")
 
 # Save permutation summary

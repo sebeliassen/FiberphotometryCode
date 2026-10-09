@@ -4,15 +4,16 @@ Unified Driver for Panel 1f (Event-Triggered Snippet Extraction)
 Supports both IFDN (Baseline) and AMPH (Expansion) projects.
 """
 
-import sys
 import argparse
-import time
 import pickle
-import psutil
-import pandas as pd
-import numpy as np
 import re
+import sys
+import time
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import psutil
 from joblib import Parallel, delayed
 from scipy.ndimage import uniform_filter1d
 from scipy.signal import find_peaks
@@ -45,14 +46,14 @@ def get_project_config(project_name):
         pkl_pattern = "*ifdn*w_sylls.pkl"
         output_subfolder = "panel_1f_ifdn"
     elif prj == "amph":
-        pkl_pattern = "*amph*w_sylls_final.pkl" 
+        pkl_pattern = "*amph*w_sylls_final.pkl"
         output_subfolder = "panel_1f_amph"
     else:
         raise ValueError(f"Unknown project: {project_name}")
     return {
         "pkl_pattern": pkl_pattern,
         "output_subfolder": output_subfolder,
-        "fs": 80.0 
+        "fs": 80.0
     }
 
 def detect_syllable_onsets(df, syllable_col="syllable"):
@@ -111,7 +112,7 @@ def process_session(s, fs, output_dir, use_signals, memory_limit_bytes=None):
                 syl_onsets = syl_onsets[500:500+event_limit]
             if len(mov_onsets) > event_limit:
                 mov_onsets = mov_onsets[500:500+event_limit]
-        
+
         if len(syl_onsets) == 0 and len(mov_onsets) == 0:
             return None
         meta = s.metadata or {}
@@ -122,7 +123,7 @@ def process_session(s, fs, output_dir, use_signals, memory_limit_bytes=None):
              return None
         signal_meta = meta.get("signal_meta", {})
         valid_signals = []
-        sig_details = [] 
+        sig_details = []
         for sig_name in use_signals:
             if sig_name not in df.columns:
                  continue
@@ -155,9 +156,9 @@ def process_session(s, fs, output_dir, use_signals, memory_limit_bytes=None):
         total_rows = total_events * len(valid_signals) * win_size
         arr_val = np.zeros(total_rows, dtype=np.float32)
         arr_snip_id = np.zeros(total_rows, dtype=np.int32)
-        snippet_map = [] 
-        arr_init_type = np.zeros(total_rows, dtype=np.int8) 
-        arr_sig_idx = np.zeros(total_rows, dtype=np.int8)   
+        snippet_map = []
+        arr_init_type = np.zeros(total_rows, dtype=np.int8)
+        arr_sig_idx = np.zeros(total_rows, dtype=np.int8)
         df_sigs = [df[s].to_numpy(dtype=np.float32) for s in valid_signals]
         start_offset = int(lw_start * fs)
         stop_offset = int(lw_stop * fs)
@@ -170,7 +171,7 @@ def process_session(s, fs, output_dir, use_signals, memory_limit_bytes=None):
                  start = pos + start_offset
                  stop = pos + stop_offset + 1
                  if start < 0 or stop > max_len or (stop - start) != win_size:
-                     continue 
+                     continue
                  snip_str = f"{s.session_id}_{type_str}_{i}"
                  snippet_map.append(snip_str)
                  current_snip_idx = snip_counter
@@ -235,7 +236,7 @@ def main():
         out_dir = config.REPO_ROOT / "analysis/replications/datta/output" / p_config["output_subfolder"]
     snippets_dir = out_dir / "datta_1f_SNIPPETS.parquet"
     snippets_dir.mkdir(parents=True, exist_ok=True)
-    log_path = out_dir.parent / f"status_{args.project}_unified.log" 
+    log_path = out_dir.parent / f"status_{args.project}_unified.log"
     log_status(f"--- Unified Extraction: {args.project.upper()} ---", log_path)
     data_dir = config.REPO_ROOT / "data"
     candidates = list(data_dir.glob(p_config["pkl_pattern"]))
@@ -245,7 +246,7 @@ def main():
     sessions = [s for s in sessions if hasattr(s, "all_data_df") and not s.all_data_df.empty]
     if args.test:
         sessions = sessions[:2]
-    
+
     if args.event_limit:
         for s in sessions:
             s.event_limit = args.event_limit

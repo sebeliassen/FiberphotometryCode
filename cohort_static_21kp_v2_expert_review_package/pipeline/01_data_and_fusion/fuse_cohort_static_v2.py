@@ -11,14 +11,15 @@ Uses atomic writing, validation manifests, and multiprocessing for fast parallel
 Includes comprehensive post-fusion pre-flight verification across all 118 sessions.
 """
 
+import argparse
+import json
 import sys
 import time
-import json
-import argparse
-from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
-import pandas as pd
+from pathlib import Path
+
 import numpy as np
+import pandas as pd
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 if str(REPO_ROOT) not in sys.path:
@@ -30,7 +31,6 @@ if str(EXP_DIR) not in sys.path:
 
 from core.pair_matching import find_matched_pairs
 from core.static_fusion_engine import fuse_single_pair_static, get_session_epoch
-from core.cache_manifest import verify_manifest, OK as CACHE_OK
 
 
 def _fuse_worker(args):
@@ -120,7 +120,7 @@ def verify_fused_cohort(out_dir: Path, pairs: list, mode: str = "21kp") -> dict:
         for err in errors[:5]:
             print(f"     - {err}")
     else:
-        print(f"  ✅ ALL 118 SESSIONS PASSED PRE-FLIGHT VERIFICATION WITH EXACT EPOCH TRANSFORMS!")
+        print("  ✅ ALL 118 SESSIONS PASSED PRE-FLIGHT VERIFICATION WITH EXACT EPOCH TRANSFORMS!")
 
     return report
 
@@ -145,7 +145,7 @@ def main():
     print(f"🚀 FUSING FULL COHORT WITH EPOCH-AWARE STATIC REGISTRATION (V2, {mode.upper()})")
     print(f"Destination: {out_dir}")
     print(f"Parallel Workers: {args.workers}")
-    print(f"Epoch routing: epoch_arena_transforms.json")
+    print("Epoch routing: epoch_arena_transforms.json")
     print("=" * 80)
 
     pairs = find_matched_pairs()

@@ -3,9 +3,12 @@
 Exact Pose Dissection Fast Benchmark
 Logs all progress to exact_pose_dissection.log
 """
-import os, sys, time, pickle
+import os
+import pickle
+import sys
+import time
+
 import numpy as np
-import pandas as pd
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GroupKFold
 
@@ -196,7 +199,7 @@ ci = lambda arr: float(1.96 * np.std(arr) / np.sqrt(len(arr)))
 log("\n" + "=" * 85)
 log("FINAL VERIFIED RESULTS: CANONICAL P2 vs. CONTINUOUS POSE vs. DISCRETE SYLLABLES")
 log("=" * 85)
-log(f"P_0 (Blind Null):                                      +  0.00% ± 0.00%")
+log("P_0 (Blind Null):                                      +  0.00% ± 0.00%")
 log(f"P_1 (Time Drift):                        [{X_p1.shape[1]:3d}-D]   + {np.mean(g_p1):5.2f}% ± {ci(g_p1):4.2f}%")
 log(f"P_2 (Canonical Space + Height + Curv):   [{X_p2.shape[1]:3d}-D]   + {np.mean(g_p2):5.2f}% ± {ci(g_p2):4.2f}%")
 log(f"P_2.5 (P2 + Continuous 30-D Pose):       [{X_p25.shape[1]:3d}-D]   + {np.mean(g_p25):5.2f}% ± {ci(g_p25):4.2f}%")

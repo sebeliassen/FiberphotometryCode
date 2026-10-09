@@ -15,29 +15,31 @@ Generates presentation-ready slide figures using the unified Sniff representatio
 =============================================================================
 """
 
-import os
-import sys
-import pickle
 import itertools
+import os
+import pickle
+import sys
 from pathlib import Path
+
+import matplotlib
 import numpy as np
 import pandas as pd
 from scipy import stats
-import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.optimized_seqnmf.convolutional_seqnmf import ConvolutionalSeqNMF
 from syllable_generation.analysis.sequence_viz.extract_level3_chain_quantitative_results import (
-    decode_episodes_in_session
+    decode_episodes_in_session,
 )
+from syllable_generation.analysis.sequence_viz.optimized_seqnmf.convolutional_seqnmf import ConvolutionalSeqNMF
 
 DATA_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/data"
 PRESENTATION_DIR = REPO_ROOT / "syllable_generation/presentations"
@@ -161,20 +163,20 @@ for s_idx, sess in enumerate(sessions):
     drug = sess["drug"]
     cohort = f"{gt}_{drug}"
     inj_f = meta_inj.get((int(aid), drug), 0)
-    
+
     sylls = sess["bouts_df"]["syllable"].values
     durs = sess["bouts_df"]["duration_sec"].values
     starts = sess["bouts_df"]["start_frame"].values
-    
+
     valid_mask = (sylls >= 0) & (sylls < 100) & (starts >= inj_f)
     sylls_v = sylls[valid_mask]
     durs_v = durs[valid_mask]
     starts_v = starts[valid_mask]
-    
+
     T_s = len(sylls_v)
     X_sess = np.zeros((S_m, T_s), dtype=np.float32)
     X_sess[map_merged[sylls_v], np.arange(T_s)] = 1.0
-    
+
     ep = decode_episodes_in_session(X_sess, durs_v, starts_v, W, L=L)
     ep.sort(key=lambda x: x["start_bout"])
     for item in ep:
@@ -184,7 +186,7 @@ for s_idx, sess in enumerate(sessions):
         item["drug"] = drug
         item["cohort"] = cohort
     all_episodes.extend(ep)
-    
+
     factors = [x["factor_id"] for x in ep]
     n_ep = len(factors)
     sess_trans = np.zeros((K, K), dtype=np.float64)
@@ -193,7 +195,7 @@ for s_idx, sess in enumerate(sessions):
             f_curr = factors[i] - 1
             f_next = factors[i+1] - 1
             sess_trans[f_curr, f_next] += 1.0
-            
+
     cohort_trans_counts[cohort] += sess_trans
     row_sums = sess_trans.sum(axis=1)
     for k in range(K):
@@ -279,7 +281,7 @@ for k in range(1, K + 1):
         ki_d = sub_d[(sub_d["genotype"] == "KI") & (sub_d["drug"] == drug)]["total_duration_sec"].values
         _, p_d = stats.mannwhitneyu(wt_d, ki_d, alternative="two-sided")
         dur_pvals[(k, drug)] = p_d
-        
+
         # Self-trans
         wt_s = sub_s[(sub_s["genotype"] == "WT") & (sub_s["drug"] == drug)]["self_trans_prob"].values
         ki_s = sub_s[(sub_s["genotype"] == "KI") & (sub_s["drug"] == drug)]["self_trans_prob"].values
@@ -344,7 +346,7 @@ plt.rcParams.update({
 
 def draw_bottom_permutation_panels(fig, gs_row):
     n_bins = 30
-    
+
     # Saline
     ax_b1 = fig.add_subplot(gs_row[0])
     counts, bins, patches_s = ax_b1.hist(null_sal, bins=n_bins, density=True, color="#CBD5E0",
@@ -362,7 +364,7 @@ def draw_bottom_permutation_panels(fig, gs_row):
     ax_b1.grid(axis="y", linestyle="--", alpha=0.35, zorder=0)
     ax_b1.legend(loc="upper right", frameon=True, facecolor="white", edgecolor="#CBD5E0", fontsize=10.5)
     ax_b1.set_ylim(0, 11.0)
-    
+
     # Amphetamine
     ax_b2 = fig.add_subplot(gs_row[1])
     counts_a, bins_a, patches_a = ax_b2.hist(null_amph, bins=n_bins, density=True, color="#CBD5E0",
@@ -420,14 +422,14 @@ for k in range(1, K + 1):
     wt_sal_row = sub_k[sub_k["cohort"] == "WT_Saline"].iloc[0]
     ki_sal_row = sub_k[sub_k["cohort"] == "KI_Saline"].iloc[0]
     sal_max = max(wt_sal_row["mean"] + wt_sal_row["sem"], ki_sal_row["mean"] + ki_sal_row["sem"])
-    
+
     wt_amph_row = sub_k[sub_k["cohort"] == "WT_Amphetamine"].iloc[0]
     ki_amph_row = sub_k[sub_k["cohort"] == "KI_Amphetamine"].iloc[0]
     amph_max = max(wt_amph_row["mean"] + wt_amph_row["sem"], ki_amph_row["mean"] + ki_amph_row["sem"])
-    
+
     p_sal_k = dur_pvals.get((k, "Saline"), 1.0)
     p_amph_k = dur_pvals.get((k, "Amphetamine"), 1.0)
-    
+
     if p_sal_k < 0.05:
         star_sal = "***" if p_sal_k < 0.001 else ("**" if p_sal_k < 0.01 else "*")
         x1 = k + offsets["WT_Saline"]
@@ -438,7 +440,7 @@ for k in range(1, K + 1):
         ax_top_d.text((x1 + x2) / 2, star_pos_y, star_sal,
                       ha="center", va="bottom", fontsize=11.5, fontweight="bold", color="#C05621", zorder=5)
         max_star_y = max(max_star_y, star_pos_y + 0.04 * scale_factor)
-        
+
     if p_amph_k < 0.05:
         star_amph = "***" if p_amph_k < 0.001 else ("**" if p_amph_k < 0.01 else "*")
         x1 = k + offsets["WT_Amphetamine"]
@@ -501,14 +503,14 @@ for k in range(1, K + 1):
     wt_sal_row = sub_k[sub_k["cohort"] == "WT_Saline"].iloc[0]
     ki_sal_row = sub_k[sub_k["cohort"] == "KI_Saline"].iloc[0]
     sal_max = max(wt_sal_row["mean"] + wt_sal_row["sem"], ki_sal_row["mean"] + ki_sal_row["sem"])
-    
+
     wt_amph_row = sub_k[sub_k["cohort"] == "WT_Amphetamine"].iloc[0]
     ki_amph_row = sub_k[sub_k["cohort"] == "KI_Amphetamine"].iloc[0]
     amph_max = max(wt_amph_row["mean"] + wt_amph_row["sem"], ki_amph_row["mean"] + ki_amph_row["sem"])
-    
+
     p_sal_k = self_pvals.get((k, "Saline"), 1.0)
     p_amph_k = self_pvals.get((k, "Amphetamine"), 1.0)
-    
+
     if p_sal_k < 0.05:
         star_sal = "***" if p_sal_k < 0.001 else ("**" if p_sal_k < 0.01 else "*")
         x1 = k + offsets["WT_Saline"]
@@ -519,7 +521,7 @@ for k in range(1, K + 1):
         ax_top_s.text((x1 + x2) / 2, star_pos_y, star_sal,
                       ha="center", va="bottom", fontsize=11.5, fontweight="bold", color="#C05621", zorder=5)
         max_star_y = max(max_star_y, star_pos_y + 0.04 * scale_factor)
-        
+
     if p_amph_k < 0.05:
         star_amph = "***" if p_amph_k < 0.001 else ("**" if p_amph_k < 0.01 else "*")
         x1 = k + offsets["WT_Amphetamine"]
@@ -597,14 +599,14 @@ for k in range(1, K + 1):
     wt_sal_row = sub_k[sub_k["cohort"] == "WT_Saline"].iloc[0]
     ki_sal_row = sub_k[sub_k["cohort"] == "KI_Saline"].iloc[0]
     sal_max = max(wt_sal_row["mean"] + wt_sal_row["sem"], ki_sal_row["mean"] + ki_sal_row["sem"])
-    
+
     wt_amph_row = sub_k[sub_k["cohort"] == "WT_Amphetamine"].iloc[0]
     ki_amph_row = sub_k[sub_k["cohort"] == "KI_Amphetamine"].iloc[0]
     amph_max = max(wt_amph_row["mean"] + wt_amph_row["sem"], ki_amph_row["mean"] + ki_amph_row["sem"])
-    
+
     p_sal_k = self_pvals.get((k, "Saline"), 1.0)
     p_amph_k = self_pvals.get((k, "Amphetamine"), 1.0)
-    
+
     if p_sal_k < 0.05:
         star_sal = "***" if p_sal_k < 0.001 else ("**" if p_sal_k < 0.01 else "*")
         x1 = k + offsets["WT_Saline"]
@@ -615,7 +617,7 @@ for k in range(1, K + 1):
         ax_top_sv.text((x1 + x2) / 2, star_pos_y, star_sal,
                        ha="center", va="bottom", fontsize=11.5, fontweight="bold", color="#C05621", zorder=5)
         max_star_y = max(max_star_y, star_pos_y + 0.04 * scale_factor)
-        
+
     if p_amph_k < 0.05:
         star_amph = "***" if p_amph_k < 0.001 else ("**" if p_amph_k < 0.01 else "*")
         x1 = k + offsets["WT_Amphetamine"]

@@ -14,14 +14,12 @@ Safety Guarantees for Non-Backed-Up Data:
 =============================================================================
 """
 
-import os
+import csv
 import sys
 import time
-import shutil
 import urllib.request
-import csv
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Tuple
 
 import h5py
 import numpy as np
@@ -189,7 +187,7 @@ def safe_compact_single_model(
         # Step 3: Strict Mathematical Verification Gate
         print(f"  Verifying {model_name} against original (all tensors at iter {max_iter})...", flush=True)
         deep_verify_tensors(ckpt_path, compact_sidecar, max_iter)
-        print(f"  ✅ VERIFICATION PASSED: 100% bit-for-bit identical!", flush=True)
+        print("  ✅ VERIFICATION PASSED: 100% bit-for-bit identical!", flush=True)
 
         # Step 4: Quarantine Rename (Original -> raw_backup.h5, Compact -> checkpoint.h5)
         if raw_backup_path.exists():

@@ -17,17 +17,18 @@ Output:
 """
 
 import os
-import sys
 import pickle
+import sys
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
+from scipy.spatial.distance import cosine as cosine_dist
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
-from scipy.spatial.distance import cosine as cosine_dist
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
 if ROOT_DIR not in sys.path:
@@ -153,7 +154,7 @@ def compute_bout_representativeness(frame_df):
         # Convert to float numpy, coerce NA to NaN
         vibe_sylls = pd.to_numeric(pd.Series(vibe_sylls_raw), errors="coerce").values
         vibe_sylls_clean = vibe_sylls[~np.isnan(vibe_sylls)]
-        
+
         # Cluster prototype histogram
         proto_hist = np.zeros(len(all_sylls))
         for i, s in enumerate(all_sylls):

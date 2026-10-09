@@ -9,11 +9,14 @@ Outputs mirror the original rich_tokens/ plots:
 import os
 import sys
 import warnings
-import numpy as np
+
 import matplotlib
+import numpy as np
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 from collections import defaultdict
+
+import matplotlib.pyplot as plt
 
 warnings.filterwarnings('ignore')
 
@@ -22,10 +25,12 @@ if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
     sys.path.append(os.path.join(ROOT_DIR, "syllable_generation"))
 
-from analysis.ulrik_kinematics.lib import loader
 from analysis.language_models.lib.fusion.clustering import (
-    KinematicSyllableClustered, extract_bouts_from_session, _LOG1P_COLS
+    _LOG1P_COLS,
+    KinematicSyllableClustered,
+    extract_bouts_from_session,
 )
+from analysis.ulrik_kinematics.lib import loader
 from sklearn.decomposition import PCA
 
 OUT_DIR = os.path.join(
@@ -80,8 +85,6 @@ for b in all_bouts:
     syllable_bouts[b["syllable"]].append(b)
 
 # Assign substates using fitted model
-from sklearn.preprocessing import StandardScaler
-import numpy as np
 
 def get_labels_for_syllable(syll_id):
     bouts = syllable_bouts.get(syll_id, [])

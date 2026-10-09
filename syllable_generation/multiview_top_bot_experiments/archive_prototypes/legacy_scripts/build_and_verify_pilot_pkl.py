@@ -13,14 +13,15 @@ build_and_verify_pilot_pkl.py
 5. Reports status to https://ntfy.sh/woody_videos_seb.
 """
 
-import os
-import sys
 import copy
-import time
 import pickle
+import sys
+import time
 import urllib.request
 from pathlib import Path
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 import pandas as pd
@@ -113,7 +114,7 @@ def main():
         "width": 972,
         "height": 972
     }
-    
+
     # Fill any missing columns from existing video_refs_df
     for col in s_mv.video_refs_df.columns:
         if col not in ventral_video_row:

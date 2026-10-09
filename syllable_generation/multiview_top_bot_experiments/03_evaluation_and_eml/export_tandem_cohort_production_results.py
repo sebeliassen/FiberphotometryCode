@@ -8,10 +8,11 @@ attaches canonical photometry (with NaN fallback for behavioral-only sessions), 
 `sessions_karen_project_tandem_cohort_production.pkl`.
 """
 
+import pickle
 import sys
 import time
-import pickle
 from pathlib import Path
+
 import h5py
 import numpy as np
 import pandas as pd
@@ -20,8 +21,8 @@ from scipy.ndimage import median_filter
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.multiview_top_bot_experiments.audit_cohort_correlations import find_matched_pairs
 from syllable_generation.analysis.replications.datta_utils import combined_photometry_and_syllables
+from syllable_generation.multiview_top_bot_experiments.audit_cohort_correlations import find_matched_pairs
 
 DIRTY_PKL = REPO_ROOT / "syllable_generation/data/sessions_karen_project_dirty.pkl"
 K240K_PKL_REF = REPO_ROOT / "syllable_generation/data/sessions_karen_project_w_sylls_k240k.pkl"

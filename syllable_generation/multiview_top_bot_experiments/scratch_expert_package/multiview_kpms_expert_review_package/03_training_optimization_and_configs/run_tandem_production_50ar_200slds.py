@@ -43,24 +43,25 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["USE_MEMORY_PATCH"] = "1"
 
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import copy
-import time
-import signal
-import shutil
 import pickle
+import shutil
+import signal
+import time
 import traceback
 import urllib.request
 from datetime import datetime, timedelta
 from pathlib import Path
-import pandas as pd
-from scipy.ndimage import median_filter
 
 import jax
 import keypoint_moseq as kpms
+import pandas as pd
 from jax_moseq.utils.debugging import convert_data_precision
+from scipy.ndimage import median_filter
 
 # Setup repository paths
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
@@ -74,7 +75,6 @@ import utils.resample_batching as rb
 from utils.batch_init import batched_init_model_by_video
 
 from syllable_generation.analysis.replications.datta_utils import combined_photometry_and_syllables
-from syllable_generation.datamodel import SessionRecord
 
 # Configuration constants
 EXPERIMENT_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
@@ -310,7 +310,7 @@ def main():
     print(f"  Date & Time:         {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", flush=True)
     print(f"  Process PID:         {pid}", flush=True)
     print(f"  Model Name:          {model_name}", flush=True)
-    print(f"  Hardware:            RTX 4090 (24.5 GB VRAM) with Amdahl 27x Optimizations", flush=True)
+    print("  Hardware:            RTX 4090 (24.5 GB VRAM) with Amdahl 27x Optimizations", flush=True)
     print(f"  AR Iterations:       {num_ar_iters}", flush=True)
     print(f"  SLDS Iterations:     {num_slds_iters} (Total: {total_iters})", flush=True)
     print(f"  Init Kappa:          {init_kappa:.2e} (SLDS Kappa: {slds_kappa:.2e})", flush=True)
@@ -556,7 +556,7 @@ def main():
 
     # TRANSITION: 10x Kappa reduction for SLDS
     print("\n" + "=" * 70, flush=True)
-    print(f"  TRANSITION: Applying 10x Kappa Reduction for Phase 2 SLDS", flush=True)
+    print("  TRANSITION: Applying 10x Kappa Reduction for Phase 2 SLDS", flush=True)
     old_kappa = float(model['hypparams']['trans_hypparams']['kappa'])
     model = kpms.update_hypparams(model, kappa=float(slds_kappa))
     new_kappa = float(model['hypparams']['trans_hypparams']['kappa'])

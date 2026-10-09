@@ -11,14 +11,13 @@ Quantifies:
 =============================================================================
 """
 
-import itertools
-from typing import List, Dict, Any, Tuple, Optional
+from typing import Dict, List
+
 import numpy as np
 import pandas as pd
 from scipy import stats
-from scipy.spatial.distance import jensenshannon
 
-from .core import ChainDefinition, ChainOccurrence, ChainBout, ChainFinder
+from .core import ChainBout, ChainDefinition, ChainFinder, ChainOccurrence
 
 
 class InterChainAnalyzer:

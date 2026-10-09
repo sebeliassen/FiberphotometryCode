@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
+import argparse
 import os
+import re
 import sys
 import time
-import re
-import argparse
 import urllib.request
+
 
 def parse_time_str(t_str):
     if not t_str:
@@ -36,7 +37,7 @@ def send_ntfy(topic, message, title=None, tags=None, priority=3):
     }
     if tags:
         headers["Tags"] = tags
-        
+
     req = urllib.request.Request(
         url,
         data=message.encode("utf-8"),
@@ -62,7 +63,7 @@ def main():
 
     print(f"Monitoring log: {filepath}")
     print(f"Sending notifications to ntfy.sh/{topic}")
-    
+
     send_ntfy(topic, f"Started monitoring log file: {os.path.basename(filepath)}", title="Monitor Started", tags="loudspeaker", priority=3)
 
     # Patterns to match
@@ -71,18 +72,18 @@ def main():
     skipping_pattern = re.compile(r"\[(\d+/\d+)\] Skipping completed run:\s*(\S+)")
     fitting_pattern = re.compile(r"Fitting\s+(\w+)")
     status_pattern = re.compile(r"Status:\s*(Success|Failed).*")
-    
+
     # Marginal estimation batch patterns
     batches_info_pattern = re.compile(r"Divided\s+(\d+)\s+uncomputed sessions into\s+(\d+)\s+batches")
     batch_start_pattern = re.compile(r"Estimating marginals for batch\s+(\d+)/(\d+)")
-    
+
     # Progress bar with details
     progress_bar_pattern = re.compile(
         r"Applying model:\s*(\d+)%.*?(\d+)/(\d+)\s*\[(\d+:\d+(?::\d+)?)(?:<(\d+:\d+(?::\d+)?))?,\s*([\d\.]+)(?:s/it|it/s)\]"
     )
     # Fallback standard progress pattern
     progress_pattern = re.compile(r"Applying model:\s*(\d+)%")
-    
+
     # State tracking to avoid notification spam
     last_running_run = None
     last_progress = -1
@@ -90,28 +91,28 @@ def main():
     total_batches = 0
     current_batch = 0
     last_notified_iteration = -1
-    
+
     # Open file and monitor
     # Wait until file exists
     while not os.path.exists(filepath):
         print(f"Waiting for log file to be created: {filepath}...")
         time.sleep(2)
-        
+
     with open(filepath, "r", errors="ignore") as f:
         if not args.start_from_beginning:
             # Go to end of file
             f.seek(0, os.SEEK_END)
-            
+
         while True:
             line = f.readline()
             if not line:
                 time.sleep(1.0)
                 continue
-                
+
             line = line.strip()
             if not line:
                 continue
-                
+
             # Match rules
             # 1. Divided uncomputed sessions
             m = batches_info_pattern.search(line)
@@ -121,7 +122,7 @@ def main():
                 print(msg)
                 send_ntfy(topic, msg, title="Estimation Started", tags="hourglass", priority=3)
                 continue
-                
+
             # 2. Estimating marginals batch start
             m = batch_start_pattern.search(line)
             if m:
@@ -132,7 +133,7 @@ def main():
                 print(msg)
                 send_ntfy(topic, msg, title="Session Start", tags="arrows_counterclockwise", priority=3)
                 continue
-                
+
             # 3. Running next configuration
             m = running_pattern.search(line)
             if m:
@@ -144,7 +145,7 @@ def main():
                     print(msg)
                     send_ntfy(topic, msg, title="MoSeq Sweep Running", tags="runner", priority=3)
                 continue
-                
+
             m = testing_pattern.search(line)
             if m:
                 step, run_details = m.groups()
@@ -156,7 +157,7 @@ def main():
                     print(msg)
                     send_ntfy(topic, msg, title="MoSeq Benchmark Running", tags="runner", priority=3)
                 continue
-                
+
             # 4. Skipping run
             m = skipping_pattern.search(line)
             if m:
@@ -165,7 +166,7 @@ def main():
                 print(msg)
                 send_ntfy(topic, msg, title="MoSeq Sweep Skip", priority=2)
                 continue
-                
+
             # 5. Fitting
             m = fitting_pattern.search(line)
             if m:
@@ -174,7 +175,7 @@ def main():
                 print(msg)
                 send_ntfy(topic, msg, title="MoSeq Fitting", tags="tools", priority=3)
                 continue
-                
+
             # 6. Detailed progress bar (notifies every 50 epochs / iterations)
             m = progress_bar_pattern.search(line)
             if m:
@@ -182,12 +183,12 @@ def main():
                 current_it = int(current_it)
                 total_it = int(total_it)
                 speed = float(speed_str)
-                
+
                 # Check if multiple of 50
                 if current_it > 0 and current_it % 50 == 0 and current_it != last_notified_iteration:
                     last_notified_iteration = current_it
                     remaining_sec = parse_time_str(remaining_str)
-                    
+
                     if total_batches > 0 and current_batch > 0:
                         remaining_batches = total_batches - current_batch
                         time_per_batch = total_it * speed
@@ -195,9 +196,9 @@ def main():
                         all_eta_str = format_seconds(remaining_all_sec)
                     else:
                         all_eta_str = "Unknown"
-                        
+
                     session_eta_str = format_seconds(remaining_sec)
-                    
+
                     msg = (
                         f"Progress: {current_it}/{total_it} epochs ({percent}%)\n"
                         f"Session ETA: {session_eta_str}\n"
@@ -205,14 +206,14 @@ def main():
                     )
                     print(msg)
                     send_ntfy(
-                        topic, 
-                        msg, 
-                        title=f"Progress: Session {current_batch}/{total_batches}", 
-                        tags="chart_with_upwards_trend", 
+                        topic,
+                        msg,
+                        title=f"Progress: Session {current_batch}/{total_batches}",
+                        tags="chart_with_upwards_trend",
                         priority=3
                     )
                 continue
-                
+
             # 7. Fallback progress bar percent
             m = progress_pattern.search(line)
             if m:
@@ -225,7 +226,7 @@ def main():
                     print(msg)
                     send_ntfy(topic, msg, title="Fitting Progress", tags="chart_with_upwards_trend", priority=2)
                 continue
-                
+
             # 5. Status line (Success/Failure)
             m = status_pattern.search(line)
             if m:

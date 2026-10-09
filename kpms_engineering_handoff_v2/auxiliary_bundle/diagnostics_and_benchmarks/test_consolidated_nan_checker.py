@@ -12,18 +12,22 @@ Tests Point 3 from reviewer feedback:
   6. Integration with _wrapped_resample ensuring StopResampling is raised cleanly.
 """
 
-import sys, os, warnings
+import sys
+import warnings
+
 sys.path.insert(0, '/home/fsp585/Desktop/FiberphotometryCode')
 sys.path.insert(0, '/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll')
 
 import numpy as np
+
 if not hasattr(np, "bool8"): np.bool8 = np.bool_
 
 import jax
 import jax.numpy as jnp
-from keypoint_moseq.fitting import _wrapped_resample, StopResampling
 import utils.resample_batching as rb
+from keypoint_moseq.fitting import StopResampling, _wrapped_resample
 from utils.resample_batching import fast_consolidated_check_for_nans
+
 
 def create_mock_pytree():
     cpu_device = jax.devices("cpu")[0]
@@ -103,7 +107,7 @@ def test_nan_checker():
     any_nans, nan_info, messages = fast_consolidated_check_for_nans(tree_multi)
     assert any_nans is True
     assert len(nan_info) == 3, f"Expected 3 NaN records, got {len(nan_info)}"
-    print(f"--> Case 3E Passed: All 3 simultaneous paths detected:")
+    print("--> Case 3E Passed: All 3 simultaneous paths detected:")
     for m in messages:
         print(f"     * {m}")
 

@@ -10,29 +10,28 @@ Bayesian Hyperparameter Optimization for Strategy Models on the Karen Dataset.
 - Includes background RAM Memory Watchdog (auto-safeguard at 90%).
 """
 
-import os
-import sys
-import time
 import json
+import os
 import pickle
+import sys
 import threading
+import time
 import urllib.request
-import psutil
 from pathlib import Path
+
 import numpy as np
+import psutil
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
-import pandas as pd
 import optuna
-from sklearn.decomposition import TruncatedSVD
-from sklearn.preprocessing import normalize, StandardScaler
 from sklearn.cluster import KMeans
-from sklearn.mixture import GaussianMixture
-from sklearn.linear_model import Ridge
+from sklearn.decomposition import TruncatedSVD
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score
-from scipy.spatial.distance import jensenshannon
+from sklearn.mixture import GaussianMixture
+from sklearn.model_selection import StratifiedKFold
+from sklearn.preprocessing import StandardScaler, normalize
 
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
@@ -119,7 +118,7 @@ for s in sessions:
     g = md.get("genotype", "Unknown")
     aid = str(md.get("animal_id", ""))
     cond = md.get("condition", "Unknown")
-    
+
     if g not in ["PFF", "Monomer"] or cond == "L_dopa":
         continue
     df = s.all_data_df.dropna(subset=["syllable"])
@@ -128,7 +127,7 @@ for s in sessions:
     sylls = df["syllable"].values.astype(int)
     changes = np.concatenate(([True], sylls[1:] != sylls[:-1]))
     collapsed = sylls[changes]
-    
+
     if len(collapsed) > WIN_BOUTS + 130:
         session_bouts.append({
             "session_id": s.session_id,
@@ -147,22 +146,22 @@ for s_idx, s in enumerate(session_bouts):
     g = s["genotype"]
     b = s["bouts"]
     N = len(b)
-    
+
     for t in range(WIN_BOUTS, N - 120, 10):
         past_b = b[t - WIN_BOUTS : t]
         curr_b = b[t]
-        
+
         src = past_b[:-1]
         dst = past_b[1:]
         mat = np.zeros((NUM_SYLLABLES, NUM_SYLLABLES), dtype=np.float32)
         np.add.at(mat, (src, dst), 1.0)
-        
+
         targets = {}
         for h in HORIZONS:
             fut_seq = b[t + 1 : t + 1 + h]
             f_counts = np.bincount(fut_seq, minlength=NUM_SYLLABLES)
             targets[h] = (f_counts + 1e-4) / np.sum(f_counts + 1e-4)
-            
+
         samples.append({
             "session_idx": s_idx,
             "session_id": s["session_id"],
@@ -217,15 +216,15 @@ def objective(trial: optuna.Trial) -> float:
     # 1. Model Choice & Hyperparameters
     model_family = trial.suggest_categorical("model_family", ["KMeans", "GMM"])
     k_clusters = trial.suggest_categorical("k_clusters", [8, 12, 16])
-    
+
     svd_dim = trial.suggest_categorical("svd_dim", [16, 24, 32, 48, 64, 96])
     norm_type = trial.suggest_categorical("norm_type", ["l2", "l1", "standard", "log1p", "none"])
     laplace_smooth = trial.suggest_float("laplace_smooth", 1e-5, 1.0, log=True)
-    
+
     # 2. Preprocessing
     mat_tr = X_train_raw + laplace_smooth
     mat_te = X_test_raw + laplace_smooth
-    
+
     if norm_type == "log1p":
         mat_tr = np.log1p(mat_tr)
         mat_te = np.log1p(mat_te)
@@ -235,11 +234,11 @@ def objective(trial: optuna.Trial) -> float:
     elif norm_type == "l2":
         mat_tr = normalize(mat_tr, norm="l2")
         mat_te = normalize(mat_te, norm="l2")
-        
+
     svd = TruncatedSVD(n_components=svd_dim, random_state=42)
     feats_tr = svd.fit_transform(mat_tr)
     feats_te = svd.transform(mat_te)
-    
+
     if norm_type == "standard":
         scaler = StandardScaler()
         feats_tr = scaler.fit_transform(feats_tr)
@@ -247,18 +246,18 @@ def objective(trial: optuna.Trial) -> float:
     elif norm_type in ["l2", "log1p"]:
         feats_tr = normalize(feats_tr, norm="l2")
         feats_te = normalize(feats_te, norm="l2")
-        
+
     # 3. Fit Model
     if model_family == "KMeans":
         spherical = trial.suggest_categorical("spherical", [False, True])
         init_method = trial.suggest_categorical("init", ["k-means++", "random"])
         n_init = trial.suggest_int("n_init", 5, 20)
         max_iter = trial.suggest_int("max_iter", 100, 300)
-        
+
         if spherical:
             feats_tr = normalize(feats_tr, norm="l2")
             feats_te = normalize(feats_te, norm="l2")
-            
+
         km = KMeans(n_clusters=k_clusters, init=init_method, n_init=n_init, max_iter=max_iter, random_state=42)
         lbl_tr = km.fit_predict(feats_tr)
         lbl_te = km.predict(feats_te)
@@ -268,7 +267,7 @@ def objective(trial: optuna.Trial) -> float:
         init_params = trial.suggest_categorical("init_params", ["kmeans", "random", "k-means++"])
         gmm_n_init = trial.suggest_int("gmm_n_init", 1, 3)
         gmm_max_iter = trial.suggest_int("gmm_max_iter", 50, 200)
-        
+
         gmm = GaussianMixture(
             n_components=k_clusters,
             covariance_type=cov_type,
@@ -280,13 +279,13 @@ def objective(trial: optuna.Trial) -> float:
         )
         lbl_tr = gmm.fit_predict(feats_tr)
         lbl_te = gmm.predict(feats_te)
-        
+
     # 4. Evaluate Future Action Budget Forecast (H=60 bouts Primary Objective)
     gains = {}
     for h in HORIZONS:
         Y_tr = Y_targets[h][train_indices]
         Y_te = Y_targets[h][test_indices]
-        
+
         strat_means = np.zeros((k_clusters, NUM_SYLLABLES), dtype=np.float32)
         for k_id in range(k_clusters):
             mask = (lbl_tr == k_id)
@@ -295,34 +294,34 @@ def objective(trial: optuna.Trial) -> float:
                 strat_means[k_id] = m_vec / np.sum(m_vec)
             else:
                 strat_means[k_id] = p_global_targets[h]
-                
+
         preds_te = strat_means[lbl_te]
         js_val = float(np.mean([compute_js_divergence(y, p) for y, p in zip(Y_te, preds_te)]))
         gains[h] = float((js_blind_targets[h] - js_val) / js_blind_targets[h] * 100.0)
-        
+
     gain_60b = gains[60]
-    
+
     # 5. Evaluate Secondary Genotype Classification (Monomer vs PFF)
     all_labels = np.zeros(len(samples), dtype=int)
     all_labels[train_indices] = lbl_tr
     all_labels[test_indices] = lbl_te
-    
+
     session_strat_occupancy = np.zeros((len(session_bouts), k_clusters), dtype=np.float32)
     for s_i in range(len(session_bouts)):
         s_win_mask = np.array([s["session_idx"] == s_i for s in samples])
         if np.sum(s_win_mask) > 0:
             counts = np.bincount(all_labels[s_win_mask], minlength=k_clusters)
             session_strat_occupancy[s_i] = counts / np.sum(counts)
-            
+
     acc_genotype = eval_rf(session_strat_occupancy, session_genotypes) * 100.0
-    
+
     # Store attributes
     trial.set_user_attr("gain_30b", gains[30])
     trial.set_user_attr("gain_60b", gains[60])
     trial.set_user_attr("gain_90b", gains[90])
     trial.set_user_attr("gain_120b", gains[120])
     trial.set_user_attr("acc_genotype", acc_genotype)
-    
+
     return gain_60b
 
 
@@ -336,12 +335,12 @@ def main():
     )
     print(start_msg, flush=True)
     send_notification(start_msg, title="🚀 Karen Optuna Search Started")
-    
+
     study = optuna.create_study(
         direction="maximize",
         sampler=optuna.samplers.TPESampler(seed=42)
     )
-    
+
     def callback(study, trial):
         t_num = trial.number
         if t_num > 0 and (t_num % 25 == 0 or trial.value == study.best_value):
@@ -351,7 +350,7 @@ def main():
             k = b_params.get("k_clusters", "N/A")
             svd = b_params.get("svd_dim", "N/A")
             norm = b_params.get("norm_type", "N/A")
-            
+
             update_msg = (
                 f"📊 Trial {t_num}/{N_TRIALS} Complete\n"
                 f"🏆 Best 60-Bout Gain: +{b_val:.2f}%\n"
@@ -360,15 +359,15 @@ def main():
             print(update_msg, flush=True)
             if t_num % 50 == 0 or trial.value == study.best_value:
                 send_notification(update_msg, title="📊 Karen Optuna Progress")
-                
+
     study.optimize(objective, n_trials=N_TRIALS, callbacks=[callback], n_jobs=1)
-    
+
     # Save Full Study Results
     df_trials = study.trials_dataframe()
     csv_path = OUT_DIR / "bayes_opt_karen_results.csv"
     df_trials.to_csv(csv_path, index=False)
     print(f"\nSaved full trials CSV to: {csv_path}")
-    
+
     # Save Best Parameters
     best_t = study.best_trial
     champion_data = {
@@ -381,7 +380,7 @@ def main():
     with open(json_path, "w") as f:
         json.dump(champion_data, f, indent=2)
     print(f"Saved champion configs to: {json_path}")
-    
+
     elapsed = time.time() - start_time
     summary_msg = (
         f"🏁 Karen Bayesian Optimization Complete in {elapsed/60:.1f} min!\n"

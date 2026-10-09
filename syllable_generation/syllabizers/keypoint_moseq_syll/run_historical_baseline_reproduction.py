@@ -21,6 +21,7 @@ import sys
 
 # Crucial numpy compatibility patch before importing bokeh/panel/kpms
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
@@ -31,6 +32,7 @@ os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.75"
 
 import multiprocessing
+
 if multiprocessing.current_process().name != 'MainProcess':
     os.environ["CUDA_VISIBLE_DEVICES"] = ""
     os.environ["JAX_PLATFORMS"] = "cpu"
@@ -41,15 +43,15 @@ KPMS_DIR = os.path.join(REPO_ROOT, "syllable_generation", "syllabizers", "keypoi
 sys.path.insert(0, REPO_ROOT)
 sys.path.insert(0, KPMS_DIR)
 
-import time
 import json
 import shutil
+import time
 import urllib.request
-import pandas as pd
+from datetime import datetime
+
 import h5py
-from datetime import datetime, timedelta
+import pandas as pd
 from kpms_pipeline import run_pipeline
-import utils.resample_batching as rb
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "amph_project")
 MODEL_NAME = "amph_full_run_monkeypatched_reproduction"
@@ -111,12 +113,12 @@ def main():
     print("=" * 85, flush=True)
     print(f"Timestamp:          {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", flush=True)
     print(f"Dataset:            {SESSIONS_PKL}", flush=True)
-    print(f"Workload:           50 AR iters + 200 SLDS iters (Total: 250 iterations)", flush=True)
-    print(f"Seed:               42 (Exact historical match)", flush=True)
-    print(f"Downsample:         x2 (FPS -> 40)", flush=True)
-    print(f"Init Kappa:         15000 (SLDS Kappa: 1500.0, matching pipeline_log.txt)", flush=True)
+    print("Workload:           50 AR iters + 200 SLDS iters (Total: 250 iterations)", flush=True)
+    print("Seed:               42 (Exact historical match)", flush=True)
+    print("Downsample:         x2 (FPS -> 40)", flush=True)
+    print("Init Kappa:         15000 (SLDS Kappa: 1500.0, matching pipeline_log.txt)", flush=True)
     print(f"Model Directory:    {OUTPUT_DIR}", flush=True)
-    print(f"Historical Ref:     AR: 48m 39s | SLDS: 17h 18m 46s | Total: ~18.1 hours", flush=True)
+    print("Historical Ref:     AR: 48m 39s | SLDS: 17h 18m 46s | Total: ~18.1 hours", flush=True)
     print("=" * 85, flush=True)
 
     if os.path.exists(OUTPUT_DIR):
@@ -127,9 +129,9 @@ def main():
     print(f"[data] Loaded {len(sessions)} full experimental sessions.", flush=True)
 
     send_ntfy(
-        f"🚀 Started exact historical reproduction benchmark (50 AR + 200 SLDS = 250 iters) on full 5.5M frame cohort.\n"
-        f"Historical baseline: 18.1 hours (310 s/iter).\n"
-        f"Projected monkeypatched runtime: ~42-45 minutes.",
+        "🚀 Started exact historical reproduction benchmark (50 AR + 200 SLDS = 250 iters) on full 5.5M frame cohort.\n"
+        "Historical baseline: 18.1 hours (310 s/iter).\n"
+        "Projected monkeypatched runtime: ~42-45 minutes.",
         title="KPMS Benchmark Launch"
     )
 

@@ -11,25 +11,24 @@ Generates all 100 clean grid movies (without trajectory overlay) using:
 - Universal H.264 (yuv420p) encoding via write_video_clip
 """
 
-import os
+import pickle
 import sys
 import time
-import pickle
 from pathlib import Path
+
 import numpy as np
+
 np.bool8 = np.bool_
 import cv2
-from tqdm import tqdm
-from sklearn.decomposition import PCA
-from sklearn.neighbors import NearestNeighbors
 import jax.numpy as jnp
-
-import vidio
-from vidio.read import OpenCVReader
 import keypoint_moseq as kpms
 from jax_moseq.models.keypoint_slds import estimate_coordinates
 from jax_moseq.utils import unbatch
-from keypoint_moseq.viz import write_video_clip, get_syllable_instances
+from keypoint_moseq.viz import get_syllable_instances, write_video_clip
+from sklearn.decomposition import PCA
+from sklearn.neighbors import NearestNeighbors
+from tqdm import tqdm
+from vidio.read import OpenCVReader
 
 # ==============================================================================
 # 1. OPTIMIZED VIDEO READER MONKEYPATCH
@@ -73,7 +72,7 @@ dot_color = (255, 255, 255)
 dot_radius = 4
 
 print("=" * 80)
-print(f"🎬 GENERATING ALL 100 DENSITY-SAMPLED CLEAN GRID MOVIES (VFI-ALIGNED, H.264)")
+print("🎬 GENERATING ALL 100 DENSITY-SAMPLED CLEAN GRID MOVIES (VFI-ALIGNED, H.264)")
 print(f"   Grid: {rows}x{cols} ({num_samples} tiles) | Window: {window_size}px | pre={pre}f, post={post}f")
 print(f"   Destination: {OUT_DIR}")
 print("=" * 80)
@@ -156,14 +155,14 @@ for s in range(100):
         sub_inst = [inst_s[i] for i in sub_idx]
     else:
         sub_inst = inst_s
-        
+
     s_trajs = []
     for key, start, end in sub_inst:
         chunk = coordinates[key][start - pre : start + post]
         c = centroids[key][start]
         h = headings[key][start]
         s_trajs.append(kpms.util.np_io(kpms.util.inverse_rigid_transform)(chunk, c, h))
-        
+
     trajectories_dict[s] = (sub_inst, np.array(s_trajs))
     all_trajs_list.extend(s_trajs)
 
@@ -183,38 +182,38 @@ for s in range(100):
     inst_s = all_instances.get(s, [])
     if len(inst_s) == 0:
         continue
-        
+
     if len(inst_s) < num_samples:
         # Fewer than 24 instances: sample with replacement
         sub_idx = rng.choice(len(inst_s), num_samples, replace=True)
         sampled_instances[s] = [inst_s[i] for i in sub_idx]
         continue
-        
+
     sub_inst, s_trajs = trajectories_dict[s]
     N = len(s_trajs)
     k_nn = min(50, N - 1)
-    
+
     if k_nn < num_samples:
         sub_idx = rng.choice(len(inst_s), num_samples, replace=False)
         sampled_instances[s] = [inst_s[i] for i in sub_idx]
         continue
-        
+
     X_pca = pca.transform(s_trajs.reshape(N, -1))
     nbrs = NearestNeighbors(n_neighbors=k_nn).fit(X_pca)
     distances, indices = nbrs.kneighbors(X_pca)
     local_density = 1.0 / (distances.mean(1) + 1e-12)
-    
+
     g_dist, _ = all_nbrs.kneighbors(X_pca)
     global_density = 1.0 / (g_dist.mean(1) + 1e-12)
-    
+
     exemplar_idx = np.argmax(local_density / global_density)
     chosen_nbrs = indices[exemplar_idx]
-    
+
     if len(chosen_nbrs) >= num_samples:
         ch_idx = rng.choice(chosen_nbrs, num_samples, replace=False)
     else:
         ch_idx = chosen_nbrs[:num_samples]
-        
+
     sampled_instances[s] = [sub_inst[i] for i in ch_idx]
 
 print(f"[INFO] Prepared density-sampled instances for {len(sampled_instances)} syllables.", flush=True)

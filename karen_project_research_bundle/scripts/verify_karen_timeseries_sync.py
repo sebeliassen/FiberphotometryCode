@@ -11,9 +11,10 @@ Comprehensive validation suite for Karen final model syllable extraction and att
 6. Behavioral & Syllable Distribution Sanity Metrics
 """
 
-import sys
 import pickle
+import sys
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
@@ -37,7 +38,7 @@ def run_checks():
 
     # 1. FILE EXISTENCE
     total_tests += 1
-    print(f"\n[Test 1] Checking file existence...")
+    print("\n[Test 1] Checking file existence...")
     if not KAREN_RESULTS_H5.exists():
         print(f"  FAILED: Missing {KAREN_RESULTS_H5}")
         return False
@@ -59,7 +60,7 @@ def run_checks():
 
     # 2. SESSION COUNT CHECK
     total_tests += 1
-    print(f"\n[Test 2] Session count & VFI match check...")
+    print("\n[Test 2] Session count & VFI match check...")
     if len(karen_sessions) < 110:
         print(f"  FAILED: Only matched {len(karen_sessions)} sessions (< 110 expected).")
     else:
@@ -68,7 +69,7 @@ def run_checks():
 
     # 3. SCHEMA & DTYPE COMPARISON AGAINST AMPH V2
     total_tests += 1
-    print(f"\n[Test 3] Schema & Dtype Parity vs AMPH v2 reference...")
+    print("\n[Test 3] Schema & Dtype Parity vs AMPH v2 reference...")
     if AMPH_V2_PKL.exists():
         with open(AMPH_V2_PKL, "rb") as f:
             amph_sessions = pickle.load(f)
@@ -82,7 +83,7 @@ def run_checks():
         if missing_core:
             print(f"  FAILED: Missing core columns in all_data_df: {missing_core}")
         else:
-            print(f"  PASSED: All core kinematic & syllable columns present in all_data_df.")
+            print("  PASSED: All core kinematic & syllable columns present in all_data_df.")
 
         # Syllables DF columns
         syll_core = ['syllable', 'latent_state_0', 'centroid_0', 'centroid_1', 'heading']
@@ -90,11 +91,11 @@ def run_checks():
         if missing_syll:
             print(f"  FAILED: Missing columns in session.syllables: {missing_syll}")
         else:
-            print(f"  PASSED: All latent & syllable columns present in session.syllables.")
+            print("  PASSED: All latent & syllable columns present in session.syllables.")
 
         # Syllable dtype
         if k_s0.all_data_df['syllable'].dtype == 'Int64' and k_s0.syllables['syllable'].dtype == 'Int64':
-            print(f"  PASSED: Syllable columns are nullable 'Int64' matching AMPH v2.")
+            print("  PASSED: Syllable columns are nullable 'Int64' matching AMPH v2.")
             passed_tests += 1
         else:
             print(f"  FAILED: Syllable dtype mismatch: all_data_df={k_s0.all_data_df['syllable'].dtype}, syllables={k_s0.syllables['syllable'].dtype}")
@@ -125,7 +126,7 @@ def run_checks():
             print(f"  FAIL: Session {s.session_id}: frame_index is not sequential 0..N-1")
 
     if length_mismatches == 0:
-        print(f"  PASSED: 100% of sessions have identical all_data_df and syllables lengths with strictly sequential 0..N-1 frame_index.")
+        print("  PASSED: 100% of sessions have identical all_data_df and syllables lengths with strictly sequential 0..N-1 frame_index.")
         print(f"  Total Master Timeline Frames: {total_frames:,} | Total Valid Syllable Frames: {total_valid_syll_frames:,} ({total_valid_syll_frames/total_frames*100:.1f}% coverage)")
         passed_tests += 1
     else:
@@ -133,7 +134,7 @@ def run_checks():
 
     # 5. TIMESERIES SYNC & 40Hz -> 80Hz FFILL VERIFICATION
     total_tests += 1
-    print(f"\n[Test 5] Timeseries Sync (40Hz Model -> 80Hz Timeline Weaving Check)...")
+    print("\n[Test 5] Timeseries Sync (40Hz Model -> 80Hz Timeline Weaving Check)...")
     sync_errors = 0
     samples_checked = 0
 
@@ -163,7 +164,7 @@ def run_checks():
 
     # 6. BOUNDARY & GAP INTEGRITY CHECK
     total_tests += 1
-    print(f"\n[Test 6] Boundary & Gap Integrity Check (No bleed into unmodeled frames)...")
+    print("\n[Test 6] Boundary & Gap Integrity Check (No bleed into unmodeled frames)...")
     boundary_errors = 0
     for s in karen_sessions[:15]:
         rk = s.results_dict_key
@@ -189,14 +190,14 @@ def run_checks():
                 print(f"  FAIL: Session {s.session_id} has {trailing_notna} non-NaN frames after last VFI index {max_vfi}.")
 
     if boundary_errors == 0:
-        print(f"  PASSED: Boundary frames before tracking start and after tracking end remain strictly NaN.")
+        print("  PASSED: Boundary frames before tracking start and after tracking end remain strictly NaN.")
         passed_tests += 1
     else:
         print(f"  FAILED: Found {boundary_errors} boundary bleed violations.")
 
     # 7. SYLLABLE VOCABULARY & USAGE METRICS
     total_tests += 1
-    print(f"\n[Test 7] Syllable Vocabulary & Usage Distribution...")
+    print("\n[Test 7] Syllable Vocabulary & Usage Distribution...")
     all_sylls = pd.concat([s.all_data_df['syllable'].dropna() for s in karen_sessions])
     unique_sylls = np.sort(all_sylls.unique())
     print(f"  Number of Unique Active Syllables: {len(unique_sylls)}")
@@ -205,7 +206,7 @@ def run_checks():
     print(f"  Top 5 Syllables by Frequency:\n{top5}")
 
     if len(unique_sylls) > 10 and unique_sylls.min() >= 0:
-        print(f"  PASSED: Syllable vocabulary is healthy and non-degenerate.")
+        print("  PASSED: Syllable vocabulary is healthy and non-degenerate.")
         passed_tests += 1
     else:
         print(f"  FAILED: Syllable vocabulary appears degenerate ({len(unique_sylls)} unique).")

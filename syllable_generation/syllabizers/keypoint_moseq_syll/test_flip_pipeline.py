@@ -5,6 +5,7 @@ import sys
 os.environ["JAX_PLATFORMS"] = "cpu"
 
 import pickle
+
 sys.path.append('/home/fsp585/Desktop/FiberphotometryCode')
 from syllable_generation.syllabizers.keypoint_moseq_syll.kpms_pipeline import run_pipeline
 

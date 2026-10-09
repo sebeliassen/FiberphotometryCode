@@ -1,11 +1,8 @@
 import os
+import shutil
 import sys
 import time
-import json
-import gc
-import shutil
 from pathlib import Path
-from typing import Dict, Any, List, Tuple
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
@@ -19,25 +16,25 @@ if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
 import numpy as np
+
 np.bool8 = np.bool_
-import pandas as pd
-import scipy.linalg as sla
-from numba import njit, prange
 import concurrent.futures
 
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-import keypoint_moseq as kpms
-
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from jax_moseq.utils.autoregression import get_lags, get_nlags
-from jax_moseq.utils import pad_affine, psd_inv, psd_solve, symmetrize
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+import keypoint_moseq as kpms
+import pandas as pd
+import scipy.linalg as sla
 from dynamax.hidden_markov_model.inference import hmm_posterior_sample
-from utils.paths import ref_pairs_from_sessions
-from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg
+from jax_moseq.utils import pad_affine, psd_inv, psd_solve
+from jax_moseq.utils.autoregression import get_lags
+from numba import njit, prange
 from utils.batch_init import batched_init_model_by_video
+from utils.paths import ref_pairs_from_sessions
+from utils.trimming import clamp_conf_nonneg, filter_with_masks, presence_mask_from_conf
 
 SCRATCH_DIR = os.path.join(KPMS_DIR, "scratch_profiling_project")
 DIRTY_PKL = os.path.join(REPO_ROOT, "syllable_generation/data/sessions_karen_project_dirty.pkl")
@@ -64,7 +61,7 @@ def hybrid_vectorized_ar_sample(seed, mask, x, z, **ar_hypparams):
     nlags = ar_hypparams.get("nlags", mask.shape[1] - z.shape[1])
     num_states = ar_hypparams.get("num_states", 100)
     seeds = jr.split(seed, num_states)
-    
+
     # FP32 Tensor reduction on Tensor Cores
     x_f32 = x.astype(jnp.float32)
     mask_f32 = mask.astype(jnp.float32)
@@ -100,7 +97,7 @@ def pure_fp64_vectorized_ar_sample(seed, mask, x, z, **ar_hypparams):
     nlags = ar_hypparams.get("nlags", mask.shape[1] - z.shape[1])
     num_states = ar_hypparams.get("num_states", 100)
     seeds = jr.split(seed, num_states)
-    
+
     mask_flat = mask[..., nlags:].reshape(-1).astype(jnp.float64)
     z_flat = z.reshape(-1)
     x_in = pad_affine(get_lags(x, nlags)).reshape(-1, nlags * x.shape[-1] + 1).astype(jnp.float64)
@@ -165,12 +162,12 @@ def build_and_sample_banded_gmrf(seed, Y, mask, v, h, s, z, Cd, sigmasq, Ab, Q, 
 
     # Convert to vanilla SLDS format (centered & rotated observations)
     Y_vanilla, s_vanilla, Cd_vanilla, sigmasq_vanilla = slds_gibbs.to_vanilla_slds(Y, v, h, s, Cd, sigmasq)
-    
+
     # Cd: (obs_dim, D+1) -> C is (obs_dim, D), d_offset is (obs_dim,)
     C_mat = np.array(Cd_vanilla[:, :-1], dtype=np.float64)
     d_off = np.array(Cd_vanilla[:, -1], dtype=np.float64)
     sigmasq_np = np.array(sigmasq_vanilla, dtype=np.float64)
-    
+
     Y_np = np.array(Y_vanilla, dtype=np.float64)
     mask_np = np.array(mask, dtype=bool)
     s_np = np.array(s_vanilla, dtype=np.float64)
@@ -203,17 +200,17 @@ def build_and_sample_banded_gmrf(seed, Y, mask, v, h, s, z, Cd, sigmasq, Ab, Q, 
                 # R_t is diagonal
                 R_diag_t = sigmasq_np * s_np[seq_i, t]
                 R_inv_t = 1.0 / (R_diag_t + 1e-8)
-                
+
                 # C^T R_inv C (D x D)
                 C_T_Rinv = C_mat.T * R_inv_t[None, :]
                 C_T_Rinv_C = C_T_Rinv @ C_mat
-                
+
                 # Add to diagonal block (t, t)
                 t_idx = t * D
                 for r in range(D):
                     for c in range(r, D):
                         ab[c - r, t_idx + r] += C_T_Rinv_C[r, c]
-                
+
                 # Add to linear term g_t: C^T R_inv (y_t - d)
                 y_res = Y_np[seq_i, t] - d_off
                 g_joint[t_idx : t_idx + D] += C_T_Rinv @ y_res
@@ -256,10 +253,10 @@ def build_and_sample_banded_gmrf(seed, Y, mask, v, h, s, z, Cd, sigmasq, Ab, Q, 
 
         # 3. Factor and Sample via Banded Cholesky
         c_band = sla.cholesky_banded(ab, lower=True, overwrite_ab=False)
-        
+
         # Sample standard normal vector
         eta = np.random.randn(n_total)
-        
+
         # Solve L w = g
         w = sla.solve_banded((bandwidth, 0), c_band, g_joint)
         c_band_upper = np.zeros_like(c_band)
@@ -269,7 +266,7 @@ def build_and_sample_banded_gmrf(seed, Y, mask, v, h, s, z, Cd, sigmasq, Ab, Q, 
                 c_band_upper[bandwidth, :] = c_band[0, :]
             else:
                 c_band_upper[bandwidth - diag_i, diag_i:] = c_band[diag_i, :-diag_i]
-        
+
         x_sample = sla.solve_banded((0, bandwidth), c_band_upper, w + eta)
         sampled_x_all[seq_i] = x_sample.reshape(T, D)
 
@@ -288,7 +285,7 @@ def _fast_numba_assemble_banded_system(
     for seq_i in prange(N):
         ab = ab_all[seq_i]
         g = g_all[seq_i]
-        
+
         # Prior for initial frames
         for d in range(nlags * D):
             ab[0, d] += 1.0
@@ -297,7 +294,7 @@ def _fast_numba_assemble_banded_system(
         for t in range(T):
             if mask_np[seq_i, t]:
                 t_idx = t * D
-                
+
                 # C^T R_inv C
                 for r in range(D):
                     for c in range(r, D):
@@ -305,7 +302,7 @@ def _fast_numba_assemble_banded_system(
                         for o_i in range(obs_dim):
                             val += C_mat[o_i, r] * (1.0 / (sigmasq_np[o_i] * s_np[seq_i, t, o_i] + 1e-8)) * C_mat[o_i, c]
                         ab[c - r, t_idx + r] += val
-                
+
                 # C^T R_inv (y - d)
                 for r in range(D):
                     val = 0.0
@@ -358,11 +355,11 @@ def fast_compiled_banded_gmrf(seed, Y, mask, v, h, s, z, Cd, sigmasq, Ab, Q, nla
 
     # Convert to vanilla SLDS format (centered & rotated observations)
     Y_vanilla, s_vanilla, Cd_vanilla, sigmasq_vanilla = slds_gibbs.to_vanilla_slds(Y, v, h, s, Cd, sigmasq)
-    
+
     C_mat = np.array(Cd_vanilla[:, :-1], dtype=np.float64)
     d_off = np.array(Cd_vanilla[:, -1], dtype=np.float64)
     sigmasq_np = np.array(sigmasq_vanilla, dtype=np.float64)
-    
+
     Y_np = np.array(Y_vanilla, dtype=np.float64)
     mask_np = np.array(mask, dtype=bool)
     s_np = np.array(s_vanilla, dtype=np.float64)
@@ -374,7 +371,7 @@ def fast_compiled_banded_gmrf(seed, Y, mask, v, h, s, z, Cd, sigmasq, Ab, Q, nla
     # Precomputed 100-Syllable Process Blocks
     A_mats = Ab_np[:, :, :-1]
     b_vecs = Ab_np[:, :, -1]
-    
+
     Q_inv_all = np.zeros_like(Q_np)
     K_blocks = np.zeros((K, block_dim, block_dim), dtype=np.float64)
     g_priors = np.zeros((K, block_dim), dtype=np.float64)
@@ -414,7 +411,7 @@ def fast_compiled_banded_gmrf(seed, Y, mask, v, h, s, z, Cd, sigmasq, Ab, Q, nla
 def _numba_cpu_kalman_single_seq(Y_t, mask_t, v_t, h_t, s_t, z_t, C_mat, d_off, sigmasq_np, A_mats, b_vecs, Q_np, Q_inv_all, T, D_state, D_obs, nlags):
     filt_m = np.zeros((T, D_state))
     filt_P = np.zeros((T, D_state, D_state))
-    
+
     m = np.zeros(D_state)
     P = np.eye(D_state) * 10.0
     latent_dim = D_state // nlags
@@ -427,14 +424,14 @@ def _numba_cpu_kalman_single_seq(Y_t, mask_t, v_t, h_t, s_t, z_t, C_mat, d_off, 
             R_inv = np.zeros((D_obs, D_obs))
             for i in range(D_obs):
                 R_inv[i, i] = 1.0 / (sigmasq_np[i] * s_t[t, i] + 1e-8)
-            
+
             H = np.zeros((D_obs, D_state))
             H[:, :latent_dim] = C_mat
-            
+
             H_T_Rinv = H.T @ R_inv
             P_inv = np.linalg.inv(P) + H_T_Rinv @ H
             P_filt = np.linalg.inv(P_inv)
-            
+
             y_meas = Y_t[t] - d_off
             residual = y_meas - H @ m
             K_gain = P_filt @ H_T_Rinv
@@ -499,7 +496,7 @@ def _numba_cpu_kalman_single_seq(Y_t, mask_t, v_t, h_t, s_t, z_t, C_mat, d_off, 
         m_t = filt_m[t]
         pred_P = A_comp @ P_t @ A_comp.T + Q_comp
         J = P_t @ A_comp.T @ np.linalg.inv(pred_P)
-        
+
         smooth_m = m_t + J @ (curr_x_full - (A_comp @ m_t + b_comp))
         smooth_P = P_t - J @ pred_P @ J.T + np.eye(D_state) * 1e-3
         L_smooth = np.linalg.cholesky(smooth_P)
@@ -519,7 +516,7 @@ def numba_cpu_kalman_sampler(seed, Y, mask, v, h, s, z, Cd, sigmasq, Ab, Q, nlag
     d_off = np.array(Cd_vanilla[:, -1], dtype=np.float64)
     sigmasq_np = np.array(sigmasq_vanilla, dtype=np.float64)
     D_obs = C_mat.shape[0]
-    
+
     Y_np = np.array(Y_vanilla, dtype=np.float64)
     mask_np = np.array(mask, dtype=bool)
     v_np = np.array(v, dtype=np.float64)
@@ -671,14 +668,14 @@ def main():
 
     for m_cfg in models_to_test:
         if m_cfg["name"] in cached_data:
-            print(f"\n" + "=" * 80)
+            print("\n" + "=" * 80)
             print(f">>> [CACHE HIT] Loaded saved benchmark results for: [{m_cfg['name']}]")
             print(f"    Avg Iter Time: {cached_data[m_cfg['name']]['iter_time']:.3f} s (x: {cached_data[m_cfg['name']]['x_time']:.3f} s | Ab: {cached_data[m_cfg['name']]['ab_time']:.3f} s)")
             print("=" * 80)
             benchmark_results.append(cached_data[m_cfg["name"]])
             continue
 
-        print(f"\n" + "=" * 80)
+        print("\n" + "=" * 80)
         print(f">>> Running: [{m_cfg['name']}]")
         print(f"    {m_cfg['description']}")
         print("=" * 80)
@@ -861,7 +858,7 @@ def main():
         print(f"    - AR Dynamics Frobenius Norm ||Ab||      : {r['mean_dynamics_norm']:6.4f} (Baseline: {benchmark_results[0]['mean_dynamics_norm']:6.4f})")
         print(f"    - Latent Trajectory Max Bound            : {r['max_latent_x']:6.2f} (Baseline: {benchmark_results[0]['max_latent_x']:6.2f})")
         print(f"    - Active Syllable States Retained        : {r['unique_sylls']:d} states (Baseline: {benchmark_results[0]['unique_sylls']:d})")
-        print(f"    - Numerical Stability Status             : STABLE & BOUNDED (Zero NaNs, Zero Runoff)")
+        print("    - Numerical Stability Status             : STABLE & BOUNDED (Zero NaNs, Zero Runoff)")
     print("=" * 95)
 
 

@@ -16,15 +16,16 @@ Evaluates:
 """
 
 import os
-import sys
 import pickle
+import sys
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from sklearn.mixture import GaussianMixture
-from scipy.stats import skew, kurtosis
+from scipy.stats import kurtosis, skew
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
 if ROOT_DIR not in sys.path:
@@ -53,14 +54,14 @@ session_kinematics = {}
 for session in raw_sessions:
     sid = session.session_id
     df = session.all_data_df
-    
+
     vel = df["velocity_px_s"].values if "velocity_px_s" in df.columns else np.zeros(len(df))
     cx = df["centroid_x"].values if "centroid_x" in df.columns else np.zeros(len(df))
     cy = df["centroid_y"].values if "centroid_y" in df.columns else np.zeros(len(df))
     c_mean_x, c_mean_y = np.nanmean(cx), np.nanmean(cy)
     dist_center = np.sqrt((cx - c_mean_x)**2 + (cy - c_mean_y)**2)
     ang_vel = np.abs(df["angular_velocity"].values) if "angular_velocity" in df.columns else np.zeros(len(df))
-    
+
     session_kinematics[sid] = {
         "velocity": vel.astype(np.float32),
         "dist_center": dist_center.astype(np.float32),
@@ -75,30 +76,30 @@ for w_i, (w, s) in enumerate(zip(win_meta, win_scalars)):
     sid = w["session_id"]
     sf = int(w["start_frame"])
     ef = min(int(w["end_frame"]), session_kinematics[sid]["len"])
-    
+
     if ef <= sf:
         continue
-        
+
     v_arr = session_kinematics[sid]["velocity"][sf:ef:2]
     dc_arr = session_kinematics[sid]["dist_center"][sf:ef:2]
     av_arr = session_kinematics[sid]["angular_vel"][sf:ef:2]
-    
+
     valid = ~np.isnan(v_arr) & ~np.isnan(dc_arr)
     if np.sum(valid) < 10:
         continue
-        
+
     v_val = v_arr[valid]
     dc_val = dc_arr[valid]
     av_val = av_arr[valid]
-    
+
     mean_v = float(np.mean(v_val))
     std_v = float(np.std(v_val))
     speed_cv = float(std_v / (mean_v + 1e-3)) # Coefficient of Variation (dashing vs walking)
     pause_frac = float(np.mean(v_val < 5.0)) # Fraction of time stationary
-    
+
     mean_av = float(np.mean(av_val))
     mean_dc = float(np.mean(dc_val))
-    
+
     window_records.append({
         "window_idx": w_i,
         "session_id": sid,
@@ -131,44 +132,44 @@ def calc_bimodality_coeff(x):
 MODELS = ["kmeans_k16", "kmeans_k8", "gmm_k16", "gmm_k8"]
 
 for model_name in MODELS:
-    print(f"\n=======================================================")
+    print("\n=======================================================")
     print(f"Running 4-Pillar Contextual Modality Audit on: {model_name}")
-    print(f"=======================================================")
-    
+    print("=======================================================")
+
     model_path = os.path.join(OUT_DIR, "production_models", f"{model_name}.pkl")
     with open(model_path, "rb") as f:
         m_data = pickle.load(f)
     win_labels = m_data["window_labels"]
-    
+
     df_win_features["strategy_id"] = win_labels[:len(df_win_features)]
     unique_strats = np.sort(df_win_features["strategy_id"].unique())
     K = len(unique_strats)
-    
+
     audit_rows = []
-    
+
     for s_id in unique_strats:
         sub = df_win_features[df_win_features["strategy_id"] == s_id]
         n_w = len(sub)
         pct_occ = float(n_w / len(df_win_features) * 100.0)
-        
+
         # Pillar 1: Locomotion (Speed, CV, Pause Fraction)
         bc_speed = calc_bimodality_coeff(sub["mean_speed"].values)
         bc_cv = calc_bimodality_coeff(sub["speed_cv"].values)
         bc_pause = calc_bimodality_coeff(sub["pause_frac"].values)
-        
+
         # Pillar 2: Steering & Turning
         bc_turn = calc_bimodality_coeff(sub["angular_vel"].values)
-        
+
         # Pillar 3: Spatial Geometry
         bc_center = calc_bimodality_coeff(sub["dist_center"].values)
         bc_spat = calc_bimodality_coeff(sub["spatial_entropy"].values)
-        
+
         # Pillar 4: Grammar & Pacing
         bc_cadence = calc_bimodality_coeff(sub["cadence"].values)
         bc_seq = calc_bimodality_coeff(sub["sequence_entropy"].values)
-        
+
         max_bc = max(bc_speed, bc_cv, bc_pause, bc_turn, bc_center, bc_spat, bc_cadence, bc_seq)
-        
+
         # Flag bimodal dimensions if any
         bimodal_dims = []
         if bc_speed > 0.555: bimodal_dims.append("Speed")
@@ -179,9 +180,9 @@ for model_name in MODELS:
         if bc_spat > 0.555: bimodal_dims.append("Spatial_Entropy")
         if bc_cadence > 0.555: bimodal_dims.append("Cadence")
         if bc_seq > 0.555: bimodal_dims.append("Sequence_Entropy")
-        
+
         verdict = "Unimodal (Coherent)" if len(bimodal_dims) == 0 else f"Bimodal ({', '.join(bimodal_dims)})"
-        
+
         audit_rows.append({
             "strategy_id": s_id,
             "occupancy_pct": pct_occ,
@@ -194,58 +195,58 @@ for model_name in MODELS:
             "max_bc": float(max_bc),
             "verdict": verdict
         })
-        
+
     df_audit = pd.DataFrame(audit_rows)
     csv_out = os.path.join(AUDIT_DIR, f"contextual_modality_summary_{model_name}.csv")
     df_audit.to_csv(csv_out, index=False)
     print(f"Saved contextual audit CSV to: {csv_out}")
-    
+
     print("\n--- Contextual Strategy Audit Table ---")
     print(df_audit[["strategy_id", "occupancy_pct", "mean_speed", "mean_speed_cv", "mean_turn_vel", "mean_dist_center", "verdict"]].to_string(index=False))
-    
+
     # 3. Multi-Pillar Diagnostic Scatter & Density Plot
     fig, axes = plt.subplots(2, 2, figsize=(14, 11), dpi=200)
-    
+
     # Panel A: Speed vs Speed CV (Dashing/Pausing vs Steady Walking)
     ax = axes[0, 0]
-    scatter = ax.scatter(df_win_features["mean_speed"], df_win_features["speed_cv"], 
-                         c=df_win_features["strategy_id"], cmap="tab20" if K > 10 else "tab10", 
+    scatter = ax.scatter(df_win_features["mean_speed"], df_win_features["speed_cv"],
+                         c=df_win_features["strategy_id"], cmap="tab20" if K > 10 else "tab10",
                          alpha=0.4, s=8)
     ax.set_title("Locomotion Mode: Mean Speed vs. Speed Bursty-ness (CV)", fontsize=11, fontweight="bold")
     ax.set_xlabel("Mean Speed (px/s)", fontsize=9)
     ax.set_ylabel("Speed CV (σ/μ) [High = Dashing+Pausing]", fontsize=9)
     ax.grid(True, linestyle="--", alpha=0.3)
-    
+
     # Panel B: Speed vs Angular Velocity (Steering / Banking vs Straight Darts)
     ax = axes[0, 1]
-    ax.scatter(df_win_features["mean_speed"], df_win_features["angular_vel"], 
-               c=df_win_features["strategy_id"], cmap="tab20" if K > 10 else "tab10", 
+    ax.scatter(df_win_features["mean_speed"], df_win_features["angular_vel"],
+               c=df_win_features["strategy_id"], cmap="tab20" if K > 10 else "tab10",
                alpha=0.4, s=8)
     ax.set_title("Steering Mode: Speed vs. Turning Velocity", fontsize=11, fontweight="bold")
     ax.set_xlabel("Mean Speed (px/s)", fontsize=9)
     ax.set_ylabel("Angular Velocity (rad/s) [High = Turning]", fontsize=9)
     ax.grid(True, linestyle="--", alpha=0.3)
-    
+
     # Panel C: Distance-to-Center vs Spatial Entropy (Arena Zone Anchoring)
     ax = axes[1, 0]
-    ax.scatter(df_win_features["dist_center"], df_win_features["spatial_entropy"], 
-               c=df_win_features["strategy_id"], cmap="tab20" if K > 10 else "tab10", 
+    ax.scatter(df_win_features["dist_center"], df_win_features["spatial_entropy"],
+               c=df_win_features["strategy_id"], cmap="tab20" if K > 10 else "tab10",
                alpha=0.4, s=8)
     ax.set_title("Arena Geography: Center Distance vs. Spatial Dispersion", fontsize=11, fontweight="bold")
     ax.set_xlabel("Distance to Center (px) [Low = Open Center, High = Wall]", fontsize=9)
     ax.set_ylabel("Spatial Exploration Entropy", fontsize=9)
     ax.grid(True, linestyle="--", alpha=0.3)
-    
+
     # Panel D: Cadence vs Sequence Entropy (Motor Rhythm & Grammar)
     ax = axes[1, 1]
-    ax.scatter(df_win_features["cadence"], df_win_features["sequence_entropy"], 
-               c=df_win_features["strategy_id"], cmap="tab20" if K > 10 else "tab10", 
+    ax.scatter(df_win_features["cadence"], df_win_features["sequence_entropy"],
+               c=df_win_features["strategy_id"], cmap="tab20" if K > 10 else "tab10",
                alpha=0.4, s=8)
     ax.set_title("Grammar & Pacing: Switch Cadence vs. Sequence Entropy", fontsize=11, fontweight="bold")
     ax.set_xlabel("Switch Cadence (transitions / sec)", fontsize=9)
     ax.set_ylabel("Sequence Transition Entropy", fontsize=9)
     ax.grid(True, linestyle="--", alpha=0.3)
-    
+
     plt.suptitle(f"4-Pillar Contextual Strategy Space: {model_name.upper()} (K={K})", fontsize=14, fontweight="bold", y=0.99)
     plt.tight_layout()
     plot_out = os.path.join(AUDIT_DIR, f"contextual_modality_4pillar_{model_name}.png")

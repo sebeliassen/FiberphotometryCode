@@ -1,11 +1,13 @@
 # analysis/attach_kpms.py
 
 from __future__ import annotations
-from pathlib import Path
+
 import pickle
-import pandas as pd
-import numpy as np
 import sys
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
 
 # === user-editable constants ===
 PATH_PREFIX = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/"
@@ -25,12 +27,13 @@ try:
 except ImportError:
     kpms = None
 
+from syllable_generation.analysis.utils.sampling import flatten_results_to_timeline
 from syllable_generation.analysis.utils.syll_results import (
-    load_kpms_results_and_vfi,
     build_result_to_session_map,
     compute_actual_lengths_from_sessions,
+    load_kpms_results_and_vfi,
 )
-from syllable_generation.analysis.utils.sampling import flatten_results_to_timeline
+
 
 def get_sessions(pkl_path: str | Path):
     sess = pd.read_pickle(pkl_path)
@@ -72,7 +75,7 @@ def _attach_kpms_full_to_sessions(
             continue
         si = result_to_session[rec_key]
         exp = expected_lengths.get(rec_key, None)
-        
+
         # Length check (Skip if mismatch allows, e.g. upsampling)
         if exp is not None and len(df) != int(exp):
              # print(f"Warning: {rec_key} length mismatch. DF={len(df)}, Expected={exp}")
@@ -94,14 +97,14 @@ def _attach_kpms_full_to_sessions(
 
 
 def run_attach(
-    sessions_pkl, 
-    results_path, 
+    sessions_pkl,
+    results_path,
     model_name=None,
-    *, 
-    overwrite=True, 
-    use_cpu=True, 
+    *,
+    overwrite=True,
+    use_cpu=True,
     key_prefix="kpms",
-    use_kpms_lib=False, 
+    use_kpms_lib=False,
     downsample_rate=1.0,
     out_path=None
 ):
@@ -117,23 +120,23 @@ def run_attach(
     results_path = Path(results_path)
 
     sessions = pd.read_pickle(sessions_pkl)
-    
+
     # 1. LOAD RESULTS & VFI
     moseq_df = None
-    results = None 
+    results = None
     vfi = None
-    
+
     if use_kpms_lib:
         if kpms is None:
              raise ImportError("keypoint_moseq library not installed")
-        
+
         print(f"Loading via KPMS lib from {results_path} / {model_name}...")
         moseq_df = kpms.compute_moseq_df(str(results_path), model_name, smooth_heading=True)
-        
+
         vfi_path = results_path / model_name / "video_frame_indexes.npz"
         vf_data = np.load(vfi_path)
         vfi = {k: vf_data[k].astype(int) for k in vf_data.files}
-        
+
     else:
         print(f"Loading raw results from {results_path}...")
         results, vfi = load_kpms_results_and_vfi(results_path, use_cpu=use_cpu)
@@ -157,39 +160,39 @@ def run_attach(
         full_dfs = {}
         for rk in results_keys:
             if rk not in vfi: continue
-            
+
             # Filter rows for this recording
             group = moseq_df[moseq_df.name == rk].copy()
             # Sort by frame_index just in case
             group = group.sort_values("frame_index")
-            
+
             # Use VFI to map to absolute time (which we might have just upsampled)
             # CAUTION: 'group.frame_index' is 0..N-1. We need to map it via VFI.
             raw_indices = group["frame_index"].values.astype(int)
-            
+
             # Clip if out of bounds (shouldn't happen if VFI matches)
             current_vfi = vfi[rk]
             valid_mask = raw_indices < len(current_vfi)
             raw_indices = raw_indices[valid_mask]
             group = group[valid_mask]
-            
+
             abs_indices = current_vfi[raw_indices]
-            
+
             # Create the full timeline DF
             # If scaling > 1, the timeline is defined by min(vfi)..max(vfi)
             # We reindex to filling gaps
             start, end = abs_indices.min(), abs_indices.max()
             full_index = np.arange(start, end + 1)
-            
+
             # Set index to abs_indices
             group = group.set_index(pd.Index(abs_indices, name="frame_index"))
-            
+
             # Reindex to full range and FFILL to handle upsampling (e.g. 40Hz -> 80Hz)
             # This ensures we don't have NaNs on the odd frames
             group = group.reindex(full_index).ffill()
-            
-            full_dfs[rk] = group 
-            
+
+            full_dfs[rk] = group
+
     else:
         full_dfs = flatten_results_to_timeline(results, vfi, actual_lengths=expected)
 
@@ -201,25 +204,26 @@ def run_attach(
         result_to_session=r2s,
         expected_lengths=expected,
         key_prefix=key_prefix,
-        single_df=True # Always attach as main DF for this pipeline? 
+        single_df=True # Always attach as main DF for this pipeline?
                        # Or use 'key_prefix' arg to decide?
                        # User script passes key_prefix="kpms"
                        # Let's use single_df=True if use_kpms_lib is True (AMPH mode)
                        # and single_df=False if Legacy keys are used?
                        # Actually, let's default single_df=True if overwrite is True (Standardizing)
     )
-    
+
     save_path = Path(out_path) if out_path else sessions_pkl
     if save_path.exists() and not overwrite:
         raise FileExistsError(f"{save_path} exists and overwrite=False")
 
     with open(save_path, "wb") as f:
         pickle.dump(sessions, f)
-        
+
     return {"attached": attached, "save_path": str(save_path)}
 
 if __name__ == "__main__":
-    import argparse, json
+    import argparse
+    import json
     ap = argparse.ArgumentParser()
     ap.add_argument("--sessions", required=True)
     ap.add_argument("--results", required=True)
@@ -230,12 +234,12 @@ if __name__ == "__main__":
     ap.add_argument("--use-lib", action="store_true")
     ap.add_argument("--downsample", type=float, default=1.0)
     ap.add_argument("--out", type=str, default=None, help="Output PKL path")
-    
+
     args = ap.parse_args()
     out = run_attach(
-        args.sessions, args.results, 
+        args.sessions, args.results,
         model_name=args.model_name,
-        overwrite=args.overwrite, 
+        overwrite=args.overwrite,
         use_cpu=args.cpu,
         key_prefix=args.key_prefix,
         use_kpms_lib=args.use_lib,

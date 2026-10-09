@@ -27,8 +27,10 @@ Strictly measured, empirical per-function granular profiling on the FULL 30-sess
 - Strictly read-only against existing checkpoints.
 """
 
-import os, sys, time, gc
 import multiprocessing
+import os
+import sys
+import time
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
@@ -46,16 +48,16 @@ if REPO_ROOT not in sys.path: sys.path.insert(0, REPO_ROOT)
 if KPMS_DIR not in sys.path: sys.path.insert(0, KPMS_DIR)
 
 import numpy as np
+
 if not hasattr(np, "bool8"): np.bool8 = np.bool_
-import psutil
-import jax
 import jax.numpy as jnp
 import jax.random as jr
-import keypoint_moseq as kpms
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from jax_moseq.models.arhmm.gibbs import resample_hdp_transitions
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+import keypoint_moseq as kpms
+import psutil
 import utils.resample_batching as rb
+from jax_moseq.models.arhmm.gibbs import resample_hdp_transitions
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "amph_project")
 SOURCE_MODEL = "amph_prod_k150k_run_01"
@@ -122,7 +124,7 @@ def instrumented_resample_discrete(seed, x, mask, Ab, Q, pi, nlags=None, num_sta
 
     base_seed = int(jr.randint(seed, (), 0, 2**31 - 1))
     rng = np.random.default_rng(base_seed)
-    
+
     z_out_all = np.empty((N, T_eff), dtype=np.int32)
 
     batch_workspace_size = min(batch_size, N)
@@ -236,7 +238,7 @@ def instrumented_resample_continuous(seed, Y, mask, v, h, s, z, Cd, sigmasq, Ab,
         Q_inv_k = np.linalg.inv(Q_np[k_idx])
         A_k = Ab_np[k_idx, :, :-1]
         b_k = Ab_np[k_idx, :, -1]
-        
+
         M_k = np.zeros((D, block_dim), dtype=np.float64)
         M_k[:, :-D] = -A_k
         M_k[:, -D:] = np.eye(D)
@@ -395,11 +397,11 @@ def run_profiler():
         phase_name = "AR"
         status = "Cold JIT" if it == 1 else "Warmed Steady State"
         print(f"\n>>> Running AR Iteration {it} ({status}) <<<", flush=True)
-        
+
         reset_sub_timings()
         ram_start = get_process_ram_gb()
         vram_start = get_gpu_vram_gb()
-        
+
         t0_iter = time.perf_counter()
         model = arhmm.resample_model(data, **model)
         sync(model)
@@ -450,7 +452,7 @@ def run_profiler():
         phase_name = "SLDS"
         status = "Cold JIT" if it == 1 else "Warmed Steady State"
         print(f"\n>>> Running SLDS Iteration {it} ({status}) <<<", flush=True)
-        
+
         reset_sub_timings()
         t0_iter = time.perf_counter()
         model = keypoint_slds.resample_model(data, **model, jitter=1e-3)
@@ -502,7 +504,7 @@ def run_profiler():
     with open(report_path, "w") as f:
         f.write("# Empirically Measured Full-Dataset Granular Profiling Report\n\n")
         f.write("**Dataset:** Jonathan AMPH 30 Sessions (562 sequences, 5,516,954 active frames)\n")
-        f.write(f"**Hardware:** NVIDIA GeForce RTX 4090 (24 GB VRAM) + 32-core Host CPU (125.6 GB RAM)\n")
+        f.write("**Hardware:** NVIDIA GeForce RTX 4090 (24 GB VRAM) + 32-core Host CPU (125.6 GB RAM)\n")
         f.write(f"**Execution Timestamp:** {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n")
         f.write("---\n\n")
         f.write("## 1. Measured Steady-State Sub-Component Breakdown (Warmed Iteration)\n\n")
@@ -521,7 +523,7 @@ def run_profiler():
         f.write(f"| **Discrete: H2D Transfer** | Syllables ($z$) | {ar_t['z_h2d']:.2f} s | {ar_t['z_h2d']/ar_tot*100:.1f}% | {slds_t['z_h2d']:.2f} s | {slds_t['z_h2d']/slds_tot*100:.1f}% | PCIe Host-to-Device Copy |\n")
         f.write(f"| **AR: Streaming Statistics** | Dynamics ($Ab, Q$) | {ar_t['ar_stats']:.2f} s | {ar_t['ar_stats']/ar_tot*100:.1f}% | {slds_t['ar_stats']:.2f} s | {slds_t['ar_stats']/slds_tot*100:.1f}% | CPU Zero-Alloc Accumulator |\n")
         f.write(f"| **AR: MNIW Posterior Solve** | Dynamics ($Ab, Q$) | {ar_t['ar_solve']:.2f} s | {ar_t['ar_solve']/ar_tot*100:.1f}% | {slds_t['ar_solve']:.2f} s | {slds_t['ar_solve']/slds_tot*100:.1f}% | GPU Vectorized Solve |\n")
-        f.write(f"| **Transitions ($\pi, \\beta$)** | Markov Transitions | {ar_t['transitions']:.2f} s | {ar_t['transitions']/ar_tot*100:.1f}% | {slds_t['transitions']:.2f} s | {slds_t['transitions']/slds_tot*100:.1f}% | GPU Dirichlet-HDP Sampler |\n")
+        f.write(f"| **Transitions ($\\pi, \\beta$)** | Markov Transitions | {ar_t['transitions']:.2f} s | {ar_t['transitions']/ar_tot*100:.1f}% | {slds_t['transitions']:.2f} s | {slds_t['transitions']/slds_tot*100:.1f}% | GPU Dirichlet-HDP Sampler |\n")
         f.write(f"| **Continuous: Rigid Rotations** | Trajectory ($x$) | *N/A* | *N/A* | {slds_t['x_rigid_rot']:.2f} s | {slds_t['x_rigid_rot']/slds_tot*100:.1f}% | CPU Vectorized Frame Rotation |\n")
         f.write(f"| **Continuous: Banded Cholesky** | Trajectory ($x$) | *N/A* | *N/A* | {slds_t['x_banded_solve']:.2f} s | {slds_t['x_banded_solve']/slds_tot*100:.1f}% | Native Numba OpenMP Solver |\n")
         f.write(f"| **Continuous: H2D Transfer** | Trajectory ($x$) | *N/A* | *N/A* | {slds_t['x_h2d']:.2f} s | {slds_t['x_h2d']/slds_tot*100:.1f}% | PCIe Host-to-Device Copy |\n")

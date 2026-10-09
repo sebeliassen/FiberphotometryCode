@@ -1,33 +1,34 @@
+import pickle
 import sys
 from pathlib import Path
-import pickle
+
+import joblib
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-import joblib
 
 # Add project root to path
 try:
     project_root = Path(__file__).resolve().parents[2]
 except NameError:
     project_root = Path("../../").resolve()
-    
+
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
-from monoamine_interactions.notebooks.utils.photometry import motion_correct_biexponential
 from monoamine_interactions.analysis.phase_1_causality import varlingam
+from monoamine_interactions.notebooks.utils.photometry import motion_correct_biexponential
 
 # %%
 # CONFIGURATION
-EVENT_KEY = "all" 
+EVENT_KEY = "all"
 PRE_SEC = 20
 POST_SEC = 40
 
-SLIDING_WINDOW_SEC = 10 
-STRIDE_SEC = 0.5       
-N_JOBS = -1            
-LAG = 5                
+SLIDING_WINDOW_SEC = 10
+STRIDE_SEC = 0.5
+N_JOBS = -1
+LAG = 5
 FPS = 20
 
 frames_calc_window = int(SLIDING_WINDOW_SEC * FPS)
@@ -81,13 +82,13 @@ def run_windowed_metrics(chunk, regs):
     except:
         adj = None
         success_var = False
-        
+
     for i, r1 in enumerate(regs):
         for j, r2 in enumerate(regs):
             if i == j: continue
             metrics['corr'][(r1, r2)] = corr_matrix[i, j]
             if success_var:
-                metrics['causal'][(r2, r1)] = adj[i, j] 
+                metrics['causal'][(r2, r1)] = adj[i, j]
             else:
                 metrics['causal'][(r2, r1)] = np.nan
     return metrics
@@ -95,39 +96,39 @@ def run_windowed_metrics(chunk, regs):
 # %%
 # 3. Extract Sliding Windows
 all_results = []
-metadata_per_event = {} 
+metadata_per_event = {}
 
 for event in events_to_process:
     print(f"\nExtracting data for event: {event}")
     expected_length = None
     time_vec = None
-    
+
     for s in tqdm(sessions, desc=f"Extracting {event}"):
         tm = s.metadata.get("timing_meta", {})
         t_event_min = tm.get(event)
         if pd.isna(t_event_min): continue
         if '470' not in s.photometry: continue
-            
+
         df_470 = s.photometry['470']
         df_415 = s.photometry['415']
         ts_array = df_470['SystemTimestamp'].values
         t_start_sys = ts_array[0]
         target_ts_event = t_start_sys + (t_event_min * 60)
-        
+
         start_idx = np.abs(ts_array - (target_ts_event - PRE_SEC)).argmin()
         end_idx = np.abs(ts_array - (target_ts_event + POST_SEC)).argmin()
         if end_idx <= start_idx: continue
-            
+
         curr_len = end_idx - start_idx
         if expected_length is None: expected_length = curr_len
         if curr_len != expected_length:
             end_idx = start_idx + expected_length
-            if end_idx > len(ts_array): continue 
+            if end_idx > len(ts_array): continue
 
         genotype = s.metadata.get('genotype', 'Unknown')
         sm = s.metadata.get("signal_meta", {})
         region_map = {k: v.get("region") for k, v in sm.items() if v.get("region")}
-        
+
         dff_dict = {}
         for r in region_map.values():
             try:
@@ -135,19 +136,19 @@ for event in events_to_process:
                 full_dff = motion_correct_biexponential(df_470[col].values, df_415[col].values)
                 dff_dict[r] = full_dff
             except: pass
-            
+
         valid_regs = list(dff_dict.keys())
         if len(valid_regs) < 2: continue
-        
+
         chunks = []
         peth_times = []
         for i in range(start_idx + frames_calc_window, end_idx, frames_stride):
             chunk_center_idx = i - (frames_calc_window // 2)
-            rel_time_sec = (ts_array[chunk_center_idx] - target_ts_event) / 60.0 * 60.0 
+            rel_time_sec = (ts_array[chunk_center_idx] - target_ts_event) / 60.0 * 60.0
             chunk = pd.DataFrame({r: dff_dict[r][i-frames_calc_window:i] for r in valid_regs})
             chunks.append(chunk)
             peth_times.append(rel_time_sec)
-            
+
         if time_vec is None:
             time_vec = np.array(peth_times)
             metadata_per_event[event] = {'time_vec': time_vec}
@@ -155,7 +156,7 @@ for event in events_to_process:
         chunk_results = joblib.Parallel(n_jobs=N_JOBS)(
             joblib.delayed(run_windowed_metrics)(c, valid_regs) for c in chunks
         )
-        
+
         for pair in SELECTED_PAIRS:
             if pair[0] not in valid_regs or pair[1] not in valid_regs: continue
             corr_series = []
@@ -170,10 +171,10 @@ for event in events_to_process:
                 else:
                     corr_series.append(np.nan)
                     causal_series.append(np.nan)
-                    
+
             interp_corr = np.interp(time_vec, peth_times, corr_series)
             interp_causal = np.interp(time_vec, peth_times, causal_series)
-            
+
             all_results.append({
                 'event': event,
                 'genotype': genotype,
@@ -195,49 +196,49 @@ def extract_landmarks(time_vec, trace, metric_name, event, name, threshold=0.01)
     # Masks for different time periods
     pre_mask = (time_vec >= -20) & (time_vec < 0)
     post_mask = (time_vec > 0) & (time_vec <= 40)
-    
+
     # 1. Baseline Stats
     baseline_mean = np.nanmean(trace[pre_mask])
     baseline_var = np.nanvar(trace[pre_mask])
-    
+
     # 2. Kinetics at t=0
     idx_0 = np.abs(time_vec).argmin()
     t0_val = trace[idx_0]
-    
+
     # Initial slope (derivative over the first 2 seconds after t=0)
     idx_2s = np.abs(time_vec - 2.0).argmin()
     t0_slope = (trace[idx_2s] - trace[idx_0]) / (time_vec[idx_2s] - time_vec[idx_0])
-    
+
     # 3. Peaks and Valleys
     post_trace = trace[post_mask]
     post_times = time_vec[post_mask]
-    
+
     if len(post_trace) > 0:
         idx_max = np.nanargmax(post_trace)
         max_y = post_trace[idx_max]
         max_t = post_times[idx_max]
-        
+
         idx_min = np.nanargmin(post_trace)
         min_y = post_trace[idx_min]
         min_t = post_times[idx_min]
-        
+
         first_ext = "Peak" if max_t < min_t else "Valley"
-        
+
         # Area Under Curve
         auc = np.trapz(post_trace, post_times)
     else:
         max_y = max_t = min_y = min_t = auc = np.nan
         first_ext = "Unknown"
-        
+
     # 4. Snapshots
     idx_10 = np.abs(time_vec - 10.0).argmin()
     idx_20 = np.abs(time_vec - 20.0).argmin()
     idx_40 = np.abs(time_vec - 40.0).argmin()
-    
+
     val_10 = trace[idx_10]
     val_20 = trace[idx_20]
     val_40 = trace[idx_40]
-    
+
     return {
         "Event": event,
         "Group": name,
@@ -265,20 +266,20 @@ for event in events_to_process:
     df_ev = df_results[df_results['event'] == event]
     if len(df_ev) == 0: continue
     time_vec = metadata_per_event[event]['time_vec']
-    
+
     for name, group in df_ev.groupby(['genotype', 'source', 'target']):
         group_name = f"{name[0]} | {name[1]} -> {name[2]}"
-        
+
         corr_arrays = np.vstack(group['corr_array'].values)
         caus_arrays = np.vstack(group['causal_array'].values)
-        
+
         mean_corr = np.nanmean(corr_arrays, axis=0)
         mean_caus = np.nanmean(caus_arrays, axis=0)
-        
+
         # Extract Correlation Landmarks
         corr_landmarks = extract_landmarks(time_vec, mean_corr, "Correlation", event, group_name)
         if corr_landmarks: landmark_data.append(corr_landmarks)
-            
+
         # Extract Causality Landmarks
         caus_landmarks = extract_landmarks(time_vec, mean_caus, "Causality", event, group_name)
         if caus_landmarks: landmark_data.append(caus_landmarks)

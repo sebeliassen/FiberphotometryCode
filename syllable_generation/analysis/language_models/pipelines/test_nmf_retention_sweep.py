@@ -1,11 +1,11 @@
 import os
-import sys
 import pickle
+import sys
+
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import NMF
 from sklearn.linear_model import Ridge
-from scipy.spatial.distance import jensenshannon
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
@@ -39,28 +39,28 @@ for sess_idx, bouts in enumerate(session_bouts):
     if len(bouts) < 100: continue
     max_frame = bouts[-1]["end_frame"]
     N = max_frame + 1
-    
+
     frame_sylls = np.zeros(N, dtype=np.int32)
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = min(b["syllable"], NUM_SYLLS - 1)
         frame_sylls[sf:ef+1] = s_id
-        
+
     start_f = W_FRAMES
     end_f = N - H_FRAMES
     for center_f in range(start_f, end_f, STRIDE_FRAMES):
         w_sylls = frame_sylls[center_f - W_FRAMES : center_f]
         h_sylls = frame_sylls[center_f : center_f + H_FRAMES]
-        
+
         # Past counts
         w_counts = np.bincount(w_sylls, minlength=NUM_SYLLS)[:NUM_SYLLS].astype(np.float32)
         # normalize to frequencies
         w_freq = w_counts / (np.sum(w_counts) + 1e-8)
-        
+
         # Future distribution
         h_counts = np.bincount(h_sylls, minlength=NUM_SYLLS)[:NUM_SYLLS].astype(np.float32)
         h_dist = h_counts / (np.sum(h_counts) + 1e-8)
-        
+
         X_list.append(w_freq)
         Y_list.append(h_dist)
         sess_ids.append(sess_idx)
@@ -80,7 +80,7 @@ def compute_js_div(y_true, y_pred):
     eps = 1e-8
     y_pred_clipped = np.clip(y_pred, eps, None)
     y_pred_norm = y_pred_clipped / np.sum(y_pred_clipped, axis=1, keepdims=True)
-    
+
     js_vals = []
     for i in range(len(y_true)):
         m = 0.5 * (y_true[i] + y_pred_norm[i])
@@ -106,11 +106,11 @@ def evaluate_features_cv(F):
     for fold_idx, test_sess in enumerate(folds):
         train_mask = ~np.isin(sess_ids, test_sess)
         test_mask = np.isin(sess_ids, test_sess)
-        
+
         reg = Ridge(alpha=100.0)
         reg.fit(F[train_mask], Y[train_mask])
         y_pred = reg.predict(F[test_mask])
-        
+
         d_pred = compute_js_div(Y[test_mask], y_pred)
         d_null_test = compute_js_div(Y[test_mask], np.tile(p_global, (np.sum(test_mask), 1)))
         gain = (d_null_test - d_pred) / d_null_test * 100.0
@@ -136,20 +136,20 @@ for K in K_sweep:
     W = nmf.fit_transform(X)
     H = nmf.components_
     X_recon = W @ H
-    
+
     # 1. Reconstruction Metrics
     recon_err_sq = np.sum((X - X_recon) ** 2)
     # Variance Explained (R^2 on matrix)
     var_explained = 1.0 - (recon_err_sq / total_var)
     # Relative Frobenius Error
     frob_retention = 1.0 - np.sqrt(recon_err_sq) / np.sqrt(total_frob)
-    
+
     # 2. Predictive Retention (using W as features to predict future Y)
     # Normalize W as mixture distribution
     W_norm = W / np.clip(np.sum(W, axis=1, keepdims=True), 1e-8, None)
     pred_gain, pred_std = evaluate_features_cv(W_norm)
     retention_pct = (pred_gain / gain_full) * 100.0
-    
+
     print(f"K = {K:2d} | Variance Explained: {var_explained*100:5.1f}% | Frob Retention: {frob_retention*100:5.1f}% | Pred Gain: {pred_gain:5.2f}% (Retention of 100-D: {retention_pct:5.1f}%)")
     results.append({
         "K": K,

@@ -1,12 +1,14 @@
 import os
+
 # Force EGL for offscreen rendering.
 os.environ["PYOPENGL_PLATFORM"] = "egl"
 
 from vispy import app, scene
+
 app.use_app('egl')
 
-import numpy as np
 import imageio
+import numpy as np
 
 
 def create_video_from_positions(positions, video_filename='rotation_video_precomputed.mp4',

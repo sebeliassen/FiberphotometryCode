@@ -1,6 +1,6 @@
 import os
 import sys
-import time
+
 import numpy as np
 
 # Numpy 2.x compatibility
@@ -14,22 +14,20 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import jax
 import jax.numpy as jnp
 import jax.random as jr
-import keypoint_moseq as kpms
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.keypoint_slds.alignment as slds_alignment
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 from numba import njit, prange
 from utils.resample_batching import (
-    pure_numba_resample_continuous_stateseqs,
+    CONFIG,
+    _numba_banded_backward_solve,
     _numba_banded_cholesky_inplace,
     _numba_banded_forward_solve_inplace,
-    _numba_banded_backward_solve,
     _numba_fused_rigid_transform,
-    KPMSStateCache,
-    CONFIG,
+    pure_numba_resample_continuous_stateseqs,
 )
+
 
 # -----------------------------------------------------------------------------
 # Custom Numba kernel that includes upstream pseudo-observations on masked frames
@@ -344,7 +342,7 @@ def run_diagnostics():
     print(f"{'4. Kalman Matched (cov=1e6 true missing)':<42} | {v4_val:<10.4f} | {v4_gap:<10.4f} | {v4_gap/v4_val:<10.2f}x | {mid_c4:<12.4f}", flush=True)
     print("=" * 90, flush=True)
 
-    print(f"\nTrajectory Correlation to Upstream Kalman (Baseline):", flush=True)
+    print("\nTrajectory Correlation to Upstream Kalman (Baseline):", flush=True)
     print(f"  * Baseline Numba (Condition 2 vs 1):  r = {r_c2_c1:.4f}", flush=True)
     print(f"  * Matched Numba  (Condition 3 vs 1):  r = {r_c3_c1:.4f}", flush=True)
     print("=" * 90, flush=True)

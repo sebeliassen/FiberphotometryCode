@@ -17,11 +17,11 @@ Parallelized across 16 worker processes for maximum throughput.
 """
 
 import os
-import sys
 import re
 import time
-from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from scipy.ndimage import median_filter

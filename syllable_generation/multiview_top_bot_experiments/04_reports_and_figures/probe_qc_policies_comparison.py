@@ -14,20 +14,15 @@ Comprehensive QC Policy Comparison & Rejection Factor Breakdown:
 """
 
 import argparse
-import copy
 import json
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import List
 
 import h5py
 import numpy as np
-import pandas as pd
-import yaml
-from sklearn.decomposition import PCA
-from sklearn.neighbors import NearestNeighbors
-
 import viz_v2_common as vc
+import yaml
 
 AUDITED_SYLLABLES = [1, 67, 30, 70, 92, 36, 42]
 
@@ -35,7 +30,7 @@ AUDITED_SYLLABLES = [1, 67, 30, 70, 92, 36, 42]
 def run_qc_comparison(target_syllables: List[int], out_dir: Path):
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file = out_dir / "qc_policy_comparison.json"
-    
+
     print(f"[QC Comparison] Evaluating target syllables: {target_syllables}")
     print(f"[QC Comparison] Output path: {out_file}")
 

@@ -1,7 +1,9 @@
 
+from typing import Optional, Tuple
+
 import numpy as np
 import pandas as pd
-from typing import Tuple, Optional, List
+
 
 def check_stationarity(timeseries: np.ndarray, threshold: float = 0.05) -> Tuple[bool, float]:
     """
@@ -9,7 +11,7 @@ def check_stationarity(timeseries: np.ndarray, threshold: float = 0.05) -> Tuple
     Returns (is_stationary, p_value).
     """
     from statsmodels.tsa.stattools import adfuller
-    
+
     # Handle NaNs or Infs
     valid = timeseries[np.isfinite(timeseries)]
     if len(valid) < 20:
@@ -24,8 +26,8 @@ def check_stationarity(timeseries: np.ndarray, threshold: float = 0.05) -> Tuple
         return False, 1.0
 
 def get_paired_traces(
-    session, 
-    region_source: str, 
+    session,
+    region_source: str,
     region_target: str,
     signal_key: str = "470", # e.g. '470' or 'dff'
     zscore: bool = True,
@@ -49,20 +51,20 @@ def get_paired_traces(
     """
     if not hasattr(session, "photometry") or signal_key not in session.photometry:
         raise ValueError(f"Session {session.session_id} missing {signal_key} data")
-        
+
     df = session.photometry[signal_key]
     meta = session.metadata
-    
+
     # Resolve region names to dataframe columns
     # We built a map in build_sessions, but let's be robust
     # Map: "VTA_NE" -> "signal_0" (if that's the labeling)
-    
+
     # Helper to find column for a region name
     def resolve_col(region_name):
         # 1. Direct match
         if region_name in df.columns:
             return region_name
-            
+
         # 2. Check metadata keys (e.g. signal_0="VTA_NE")
         # We look for keys starting with 'signal_'
         for k, v in meta.items():
@@ -84,10 +86,10 @@ def get_paired_traces(
     # However, if columns were renamed in previous steps, they might not stick to standard schema across all project types.
     # But in *this* project (monoamine), we kept 'signal_0', 'signal_1' etc and just updated metadata.
     # Let's check if we need to append suffix
-    
+
     col_src = f"{col_src_base}{suffix}"
     col_tgt = f"{col_tgt_base}{suffix}"
-    
+
     if col_src not in df.columns:
         # Fallback: maybe the column IS the region name if renamed?
         # Or maybe zscore isn't there.
@@ -108,7 +110,7 @@ def get_paired_traces(
     # Extract
     src_data = df[col_src].values[trim_start:]
     tgt_data = df[col_tgt].values[trim_start:]
-    
+
     # Time axis (optional, create generic if missing)
     if 'time' in df.columns:
         t_data = df['time'].values[trim_start:]
@@ -127,7 +129,7 @@ def get_paired_traces(
         tgt_data = tgt_data.astype(float)
     except ValueError as e:
         print(f"[ERR] Could not convert to float: {e}")
-        # Try convert objects with 'pd.to_numeric' equivalent if needed, 
+        # Try convert objects with 'pd.to_numeric' equivalent if needed,
         # but let's assume it should be numeric.
         raise
 
@@ -138,7 +140,7 @@ def get_paired_traces(
         # Let's just warn and linearly interpolate for now as a naive fix
         # Real fix: data should be clean coming in.
         # print(f"[WARN] NaNs detected in {session.session_id}, interpolating...")
-        
+
         # Simple pandas interpolation
         tmp_df = pd.DataFrame({'s': src_data, 't': tgt_data})
         tmp_df = tmp_df.interpolate(method='linear').fillna(method='bfill').fillna(method='ffill')

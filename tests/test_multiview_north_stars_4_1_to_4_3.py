@@ -10,22 +10,20 @@ Automated Verification Suite for the Multiview KPMS Pipeline:
 import sys
 import unittest
 from pathlib import Path
+
+import h5py
 import numpy as np
 import pandas as pd
-import h5py
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.multiview_top_bot_experiments.core.schemas import (
-    TOP_USE_BODYPARTS,
-    BOT_USE_BODYPARTS,
-    TANDEM_23KP,
-    CHAMBER_MAP,
-)
-from syllable_generation.multiview_top_bot_experiments.core.pair_matching import find_matched_pairs
 from syllable_generation.multiview_top_bot_experiments.core.evaluation_metrics import extract_syllable_statistics
+from syllable_generation.multiview_top_bot_experiments.core.schemas import (
+    BOT_USE_BODYPARTS,
+    TOP_USE_BODYPARTS,
+)
 
 EXPERIMENT_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 PROD_KPMS_DIR = EXPERIMENT_DIR / "kpms_tandem_cohort_production"

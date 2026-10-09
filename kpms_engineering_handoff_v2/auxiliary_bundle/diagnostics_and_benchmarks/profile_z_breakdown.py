@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+
 import numpy as np
 
 if not hasattr(np, "bool8"):
@@ -16,11 +17,11 @@ if KPMS_DIR not in sys.path:
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-from jax_moseq.utils.autoregression import get_lags
-from jax_moseq.utils import pad_affine, psd_inv
-from dynamax.hidden_markov_model.inference import hmm_filter, hmm_posterior_sample
 import keypoint_moseq as kpms
 import utils.resample_batching as rb
+from dynamax.hidden_markov_model.inference import hmm_filter, hmm_posterior_sample
+from jax_moseq.utils import pad_affine, psd_inv
+from jax_moseq.utils.autoregression import get_lags
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "karen_project_2")
 TEST_MODEL_NAME = "test_2_sessions_model"

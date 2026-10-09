@@ -16,10 +16,11 @@ Evaluates:
 - Compactness ratio (Var_syll / Var_random): ratio < 1.0 indicates stereotypy.
 """
 
-import sys
 import json
+import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Tuple
+
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d

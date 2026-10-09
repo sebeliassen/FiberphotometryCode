@@ -8,12 +8,14 @@ multi-seed Expected Marginal Likelihood (EML) model selection evaluation.
 """
 
 from pathlib import Path
-import pandas as pd
-import numpy as np
+
 import matplotlib
+import numpy as np
+import pandas as pd
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 
 CSV_PATH = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/tandem_cohort_eml_model_rankings.csv")
 OUT_PATH = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/tandem_cohort_eml_detailed_comparison.png")

@@ -1,6 +1,7 @@
 import os
-import sys
 import pickle
+import sys
+
 import pandas as pd
 
 # Path setup
@@ -11,31 +12,32 @@ if ROOT_DIR not in sys.path:
 
 from analysis.language_models.videogen.generator import render_vibe_hud_video
 
+
 def main():
     print("=== Rendering 120s Tri-Vibe Video for WT Saline Mouse ===")
-    
+
     # Load session dataset pkl
     pkl_path = os.path.join(ROOT_DIR, "syllable_generation/data/jonathan_amph_sessions_v2_w_sylls.pkl")
     with open(pkl_path, "rb") as f:
         sessions = pickle.load(f)
-        
+
     # Find WT Saline session
     target_session = None
     for s in sessions:
         if "2025-04-28T14_17_17_bottom_left" in s.session_id:
             target_session = s
             break
-            
+
     if target_session is None:
         raise ValueError("Could not find session 2025-04-28T14_17_17_bottom_left")
-        
+
     print(f"Loaded target WT Saline session: {target_session.session_id}")
-    
+
     intervals_csv = os.path.join(ROOT_DIR, "syllable_generation/analysis/language_models/output/strategies_extended/session_strategy_intervals.csv")
     df_intervals = pd.read_csv(intervals_csv)
-    
+
     out_video_path = os.path.join(ROOT_DIR, "syllable_generation/analysis/language_models/output/strategies_extended/videos/wt_saline_trivibe_120s.mp4")
-    
+
     # Render 120-second clip from 538.8s (frame 43117) to 658.8s (frame 52720)
     render_vibe_hud_video(
         session=target_session,

@@ -1,4 +1,5 @@
 import os
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
@@ -6,8 +7,10 @@ os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.75"
 
 import sys
 import time
-import pandas as pd
+
 import numpy as np
+import pandas as pd
+
 np.bool8 = np.bool_
 
 REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -18,7 +21,6 @@ if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
 from kpms_pipeline import run_pipeline
-import h5py
 
 SESSIONS_PKL = os.path.join(REPO_ROOT, "syllable_generation/data/sessions_karen_project_dirty.pkl")
 PROJECT_DIR = os.path.join(KPMS_DIR, "demo_project")
@@ -40,9 +42,9 @@ def main():
     print("=" * 80)
     print("      FAST PRECISE PIPELINE VERIFICATION RUN (2 SESSIONS, 2 AR + 2 SLDS)")
     print("=" * 80)
-    
+
     sessions = get_2_sessions()
-    
+
     t0 = time.perf_counter()
     run_pipeline(
         sessions=sessions,

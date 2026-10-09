@@ -5,9 +5,10 @@ Provides interface for aligning continuous dLight (dopamine ΔF/F) photometry tr
 from Ventral Striatum (L-VS) and Dorsomedial Striatum (R-DMS) to strategy switch boundaries.
 """
 
-import numpy as np
+from typing import Any, Dict
+
 import pandas as pd
-from typing import Dict, Any, Optional, Tuple
+
 
 def align_photometry_to_strategy_switches(
     intervals_df: pd.DataFrame,

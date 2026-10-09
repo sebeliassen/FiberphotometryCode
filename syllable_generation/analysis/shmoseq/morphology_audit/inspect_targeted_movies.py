@@ -1,9 +1,9 @@
-import os
+from pathlib import Path
+
 import cv2
 import h5py
 import numpy as np
 import pandas as pd
-from pathlib import Path
 
 BASE_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode")
 MOVIE_DIR = BASE_DIR / "syllable_generation" / "analysis" / "shmoseq" / "morphology_audit" / "grid_movies_targeted_8kp"
@@ -39,10 +39,10 @@ with h5py.File(RES_PATH, "r") as f:
         sylls = f[k]["syllable"][:]
         cents = f[k]["centroid"][:]
         heads = f[k]["heading"][:]
-        
+
         vel = np.linalg.norm(np.diff(cents, axis=0), axis=1) * 40.0 # px/s
         h_diff = np.abs(np.diff(np.unwrap(heads))) * 40.0 # rad/s
-        
+
         for s in TARGET_SYLLS:
             mask = (sylls[:-1] == s)
             if np.any(mask):

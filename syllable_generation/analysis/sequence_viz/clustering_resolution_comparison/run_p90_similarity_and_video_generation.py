@@ -19,29 +19,30 @@ Implements the P90 Movement Similarity & Sample-Size Scaling Framework:
 =============================================================================
 """
 
-import sys
-import os
-import time
 import json
+import sys
+import time
 from pathlib import Path
+
+import matplotlib
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
-import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import cv2
+import matplotlib.pyplot as plt
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+    generate_chain_grid_movie,
     load_chain_movie_resources,
-    generate_chain_grid_movie
 )
 from syllable_generation.analysis.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
     get_level_definitions,
-    get_verified_metadata
+    get_verified_metadata,
 )
 
 EXP_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison"

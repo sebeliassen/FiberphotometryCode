@@ -16,19 +16,18 @@ Publication-Grade Dual-View 3x4 Grid Movie Renderer for Cohort Static 21kp V2:
 Environment: kpms_gpu_cuml (pure CPU)
 """
 
+import argparse
+import json
 import os
 import sys
-import json
-import time
-import re
-import argparse
 from pathlib import Path
-from typing import Dict, Any, List, Tuple, Optional
-import numpy as np
-import h5py
-import pandas as pd
+from typing import Any, Dict, List, Tuple
+
 import cv2
+import h5py
 import imageio
+import numpy as np
+import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 EXP_DIR = SCRIPT_DIR.parent
@@ -40,6 +39,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 import viz_v2_common as vc
+
 from core.camera_correspondence import top_to_bot_frame_continuous
 from core.pair_matching import find_matched_pairs
 

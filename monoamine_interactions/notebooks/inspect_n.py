@@ -1,9 +1,10 @@
 import sys
 from pathlib import Path
+
 project_root = Path("../../").resolve()
 sys.path.append(str(project_root))
 import pickle
-import pandas as pd
+
 with open('/home/fsp585/Desktop/FiberphotometryCode/monoamine_interactions/data/sessions_jonathan_juvenile_intruder_dirty.pkl', 'rb') as f: sessions = pickle.load(f)
 
 unique_sessions = []

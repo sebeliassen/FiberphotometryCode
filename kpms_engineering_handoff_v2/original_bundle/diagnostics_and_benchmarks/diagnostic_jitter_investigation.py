@@ -1,7 +1,7 @@
 import os
 import sys
-import inspect
 import time
+
 import h5py
 import numpy as np
 
@@ -20,11 +20,11 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import jax
 import jax.numpy as jnp
 import jax.random as jr
 import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 from utils.resample_batching import pure_numba_resample_continuous_stateseqs
+
 
 def run_jitter_diagnostic():
     print("=" * 80)
@@ -197,18 +197,18 @@ def run_jitter_diagnostic():
     print("\n" + "=" * 90)
     print(f"{'JITTER SENSITIVITY DIAGNOSTIC RESULTS':^90}")
     print("=" * 90)
-    print(f"\n[A] Overall Pooled Variances & Ratios (Valid Frames):")
-    print(f"  * Jitter = 1e-3:")
+    print("\n[A] Overall Pooled Variances & Ratios (Valid Frames):")
+    print("  * Jitter = 1e-3:")
     print(f"      Kalman Mean Var: {mvar_k_1e3:.6f}")
     print(f"      Numba Mean Var:  {mvar_n_1e3:.6f}")
     print(f"      Ratio (Numba / Kalman): {ratio_1e3:.4f}")
-    print(f"  * Jitter = 0.0:")
+    print("  * Jitter = 0.0:")
     print(f"      Kalman Mean Var: {mvar_k_0:.6f}")
     print(f"      Numba Mean Var:  {mvar_n_0:.6f}")
     print(f"      Ratio (Numba / Kalman): {ratio_0:.4f}")
     print(f"  * Ratio Change (Jitter 1e-3 -> 0.0): {ratio_0 - ratio_1e3:+.4f}")
 
-    print(f"\n[B] Per-Dimension Comparison Table:")
+    print("\n[B] Per-Dimension Comparison Table:")
     header = f"{'Dim':<5} | {'Kalman (1e-3)':<14} | {'Numba (1e-3)':<14} | {'Ratio (1e-3)':<12} | {'Kalman (0.0)':<14} | {'Numba (0.0)':<14} | {'Ratio (0.0)':<12}"
     print(header)
     print("-" * 90)

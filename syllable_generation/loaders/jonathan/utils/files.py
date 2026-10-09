@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any, Dict
 import re
+from pathlib import Path
+
 
 def parse_h5_filename(name: str, jcfg):
     m = re.compile(jcfg.h5_filename_regex, re.IGNORECASE).match(name)

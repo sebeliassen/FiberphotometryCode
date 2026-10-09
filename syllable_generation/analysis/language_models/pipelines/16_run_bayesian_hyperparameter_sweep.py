@@ -21,27 +21,27 @@ Located at: syllable_generation/analysis/language_models/pipelines/16_run_bayesi
 """
 
 import os
+import pickle
 import sys
 import time
-import pickle
 import urllib.request
+
 import numpy as np
-import pandas as pd
 import optuna
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import accuracy_score
+import pandas as pd
 from sklearn.decomposition import TruncatedSVD
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import StratifiedKFold
 
 # Detect GPU acceleration via RAPIDS cuML
 HAS_GPU = False
 try:
     import cuml
-    from cuml.manifold import UMAP as GPU_UMAP
     from cuml.cluster import HDBSCAN as GPU_HDBSCAN
+    from cuml.manifold import UMAP as GPU_UMAP
     HAS_GPU = True
 except ImportError:
-    import umap
     from sklearn.cluster import HDBSCAN as CPU_HDBSCAN
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
@@ -102,12 +102,12 @@ def compute_fast_eta2(strat_ids: np.ndarray, win_vels: np.ndarray, n_topics: int
         return 0.0
     valid_ids = strat_ids[valid_mask]
     valid_vels = win_vels[valid_mask]
-    
+
     grand_mean = np.mean(valid_vels)
     ss_total = np.sum((valid_vels - grand_mean) ** 2)
     if ss_total < 1e-9:
         return 0.0
-        
+
     ss_between = 0.0
     for t_id in range(n_topics):
         t_mask = (valid_ids == t_id)
@@ -115,7 +115,7 @@ def compute_fast_eta2(strat_ids: np.ndarray, win_vels: np.ndarray, n_topics: int
         if n_t > 0:
             m_t = np.mean(valid_vels[t_mask])
             ss_between += n_t * ((m_t - grand_mean) ** 2)
-            
+
     return float(ss_between / (ss_total + 1e-12))
 
 def fit_gpu_bertopic(X_vectors: np.ndarray, n_neighbors: int, min_cluster_size: int, min_samples: int, n_components: int, random_state: int = 42):
@@ -149,7 +149,7 @@ def fit_gpu_bertopic(X_vectors: np.ndarray, n_neighbors: int, min_cluster_size: 
         raw_labels = h_model.fit_predict(umap_emb)
 
     raw_labels = np.asarray(raw_labels, dtype=int)
-    
+
     # 4. Resolve Outliers (-1) to nearest UMAP centroid
     unique_clusters = [c for c in set(raw_labels) if c != -1]
     if len(unique_clusters) == 0:
@@ -158,7 +158,7 @@ def fit_gpu_bertopic(X_vectors: np.ndarray, n_neighbors: int, min_cluster_size: 
     centroids = np.array([umap_emb[raw_labels == c].mean(axis=0) for c in unique_clusters])
     resolved_ids = raw_labels.copy()
     outlier_mask = (raw_labels == -1)
-    
+
     if np.any(outlier_mask):
         outlier_coords = umap_emb[outlier_mask]
         dists = np.linalg.norm(outlier_coords[:, np.newaxis, :] - centroids[np.newaxis, :, :], axis=2)
@@ -175,7 +175,7 @@ def main():
     out_dir = os.path.join(ROOT_DIR, "syllable_generation/analysis/language_models/output/strategies_extended")
     log_file = os.path.join(out_dir, "logs/bayesian_sweep_1000.log")
     os.makedirs(os.path.dirname(log_file), exist_ok=True)
-    
+
     def log_msg(msg: str):
         ts = time.strftime('%Y-%m-%d %H:%M:%S')
         print(msg, flush=True)
@@ -186,12 +186,12 @@ def main():
     log_msg("=== 1000-TRIAL BAYESIAN SWEEP (GPU-Accelerated, Post-Injection Sliced, 4-Way Weighted) ===")
     log_msg(f"GPU Acceleration Active: {HAS_GPU} (cuML RAPIDS)")
     send_notification(f"🚀 Starting 1000-Trial GPU Bayesian Sweep (RAPIDS={HAS_GPU})")
-    
+
     cache_path = os.path.join(out_dir, "cache/prep_amph_postural_gmm_k3_transition.pkl")
     dataset = SessionDataset(cache_path=cache_path)
     all_win_inputs = np.array(dataset.get_window_inputs(), dtype=np.float32)
     session_window_meta = dataset.session_window_meta
-    
+
     pkl_path = os.path.join(ROOT_DIR, "syllable_generation/data/jonathan_amph_sessions_v2_w_sylls.pkl")
     if not os.path.exists(pkl_path):
         pkl_path = os.path.join(ROOT_DIR, "syllable_generation/data/jonathan_amph_sessions_w_sylls.pkl")
@@ -210,7 +210,7 @@ def main():
         n_win, abs_start_frame, abs_end_frame, sid = meta[0], meta[1], meta[2], meta[3]
         cohort_4way = meta[5]
         gt, drug = cohort_4way.split("_")[0], cohort_4way.split("_")[1]
-        
+
         labels_4way.append(cohort_4way)
         labels_gt.append(gt)
         labels_drug.append(drug)
@@ -247,9 +247,9 @@ def main():
     log_msg("Pre-computing window velocities...")
     win_vels = precompute_window_velocities(session_window_meta, raw_sessions)
     log_msg("Pre-computation complete.")
-    
+
     results = []
-    
+
     def objective(trial: optuna.Trial) -> float:
         # Sample across 4 core manifold parameters (Expanded Search Ranges)
         nn = trial.suggest_int("n_neighbors", 5, 150)
@@ -260,10 +260,10 @@ def main():
         t0 = time.time()
         # Fit StrategyBERTopic on ALL 14,870 clean windows
         strat_ids, K = fit_gpu_bertopic(all_win_inputs, n_neighbors=nn, min_cluster_size=mcs, min_samples=ms, n_components=nc, random_state=42)
-        
+
         if K <= 1:
             return -1.0
-            
+
         n_sessions = len(session_slices)
         props_full = np.zeros((n_sessions, K))
         props_post = np.zeros((n_sessions, K))
@@ -373,7 +373,7 @@ def main():
     log_msg(f"  Post Genotype Acc    = {best_row['acc_gt_post']*100:.1f}%")
     log_msg(f"  Pre Genotype Acc     = {best_row['acc_gt_pre']*100:.1f}%")
     log_msg(f"  Target Score         = {best_row['target_score']:.4f}")
-    
+
     send_notification(f"🏆 1000-Trial GPU Sweep Complete! Best K={best_row['K']}, 4Way={best_row['acc_4way_post']*100:.1f}%, Drug={best_row['acc_drug_post']*100:.1f}%, GT={best_row['acc_gt_post']*100:.1f}%")
     log_msg("=" * 80)
 

@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
+import seaborn as sns
+
 
 def plot_embeddings_umap(embeddings: np.ndarray, labels: list, title: str, save_path: str):
     """ Plots UMAP/t-SNE layout of syllable embeddings. """

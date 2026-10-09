@@ -14,16 +14,17 @@ Implements:
 =============================================================================
 """
 
-import os
-import sys
-import time
 import json
 import pickle
+import sys
+import time
 import urllib.request
 from pathlib import Path
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy.optimize import linear_sum_assignment

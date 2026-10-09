@@ -15,7 +15,6 @@ Environment: kpms_gpu_cuml
 =============================================================================
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -25,16 +24,17 @@ if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
 import re
+
 import cv2
-import numpy as np
 import h5py
-import pandas as pd
 import imageio
+import numpy as np
+import pandas as pd
+from keypoint_moseq.viz import overlay_keypoints_on_image
 from vidio.read import OpenCVReader
 
 from core.pair_matching import find_matched_pairs
-from core.ttl_sync import top_to_bot_frame, get_session_ttl_offset
-from keypoint_moseq.viz import overlay_keypoints_on_image
+from core.ttl_sync import top_to_bot_frame
 
 # --- Paths & Directories ---
 PROJECT_DIR = EXP_DIR / "kpms_tandem_cohort_production"

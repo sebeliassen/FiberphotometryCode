@@ -60,8 +60,9 @@ def save_placeholder_frame_index_map(frame_index_map, out_dir, filename="frame_i
     Persist the placeholder map as a clearly-named NPZ so downstream code can load it
     *without* mistaking it for the real video_frame_indexes.
     """
-    import numpy as np
     from pathlib import Path
+
+    import numpy as np
 
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)

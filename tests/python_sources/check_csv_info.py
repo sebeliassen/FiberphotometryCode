@@ -1,7 +1,9 @@
-import os
 import glob
-import pandas as pd
+import os
+
 import numpy as np
+import pandas as pd
+
 
 def analyze_csv_average_score(csv_path, num_bins=5):
     # Load the CSV file.

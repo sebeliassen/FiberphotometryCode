@@ -8,11 +8,13 @@ Behavioral Episode Pilot.
 """
 
 import sys
-import numpy.core.numeric as _numeric
-sys.modules['numpy._core.numeric'] = _numeric
-import numpy as np
 
+import numpy.core.numeric as _numeric
+
+sys.modules['numpy._core.numeric'] = _numeric
 from pathlib import Path
+
+import numpy as np
 
 # Paths
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")

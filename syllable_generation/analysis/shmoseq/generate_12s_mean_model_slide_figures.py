@@ -25,15 +25,16 @@ Generates the presentation slide figures for the calibrated 11.98s mean model
 =============================================================================
 """
 
+import itertools
 import os
 import pickle
-import itertools
-import numpy as np
-import pandas as pd
+
 import matplotlib
+import numpy as np
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw, ImageFont
 
 BASE_DIR = "/home/fsp585/Desktop/FiberphotometryCode"

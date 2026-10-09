@@ -1,11 +1,12 @@
 # handlers.py
 
-from abc import ABC, abstractmethod
 import re
+import warnings
+from abc import ABC, abstractmethod
 from typing import Any, Callable, Optional, Tuple
+
 import pandas as pd
 from pandas import DataFrame
-import warnings
 
 # Matches names like "Current_Reward_Delay_RD4" or "Current_ITI_VI300"
 # so we can split off the "_RD4" or "_VI300" suffix.
@@ -94,7 +95,7 @@ class SpecialEventProcessor(ABC):
                 f"[{self.__class__.__name__}] failed to convert "
                 f"Arg1_Value={value!r} for trigger {self.trigger!r}"
             ) from e
-        
+
     def _rename_trigger_rows(self, df: DataFrame, mask: pd.Series) -> None:
         """
         Rename all rows where mask is True by appending
@@ -204,7 +205,7 @@ class RunningProcessor(SpecialEventProcessor):
 
         # Drop all trigger rows in one go, then reset index
         return df.drop(index=to_drop).reset_index(drop=True)
-    
+
 
 class RenameOnlyProcessor(SpecialEventProcessor):
     """
@@ -286,7 +287,7 @@ class CompositeProcessor:
         CompositeProcessor itself does not define a single suffix_prefix.
         """
         return None
-    
+
 
 # your special‐case map
 SPECIAL_PROCESSORS = {
@@ -307,7 +308,7 @@ for key, proc in SPECIAL_PROCESSORS.items():
         triggers_to_check = [proc.trigger]
     elif hasattr(proc, 'triggers'):
         triggers_to_check = proc.triggers
-    
+
     for trig in triggers_to_check:
         base, code, num = split_event_suffix(trig)
         if code is not None:

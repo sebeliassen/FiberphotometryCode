@@ -1,5 +1,6 @@
-import os
 import multiprocessing
+import os
+
 import numpy as np
 
 # If this module is imported inside a child worker process, disable CUDA so JAX defaults to CPU
@@ -102,8 +103,9 @@ def presence_mask_from_conf(conf,
     return on
 
 def _init_worker():
-    import os
     import logging
+    import os
+
     import numpy as np
     os.environ["JAX_PLATFORMS"] = "cpu"
     os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -124,19 +126,19 @@ def _process_outliers_single(args):
     import matplotlib
     matplotlib.use('Agg') # Ensure non-interactive backend for sub-processes
     from keypoint_moseq.util import find_medoid_distance_outliers, interpolate_keypoints, plot_medoid_distance_outliers
-    
+
     raw_coords = np.asarray(raw_coords).copy()
     raw_confs = np.asarray(raw_confs)
     outliers = find_medoid_distance_outliers(raw_coords, outlier_scale_factor=outlier_scale_factor)
     clean_coords = interpolate_keypoints(raw_coords, outliers["mask"])
     clean_confs = np.where(outliers["mask"], 0, raw_confs)
-    
+
     # Avoid duplicate keyword argument conflicts with plot_medoid_distance_outliers parameters
     plot_kwargs = kwargs.copy()
-    for key in ["project_dir", "recording_name", "original_coordinates", "interpolated_coordinates", 
+    for key in ["project_dir", "recording_name", "original_coordinates", "interpolated_coordinates",
                 "outlier_mask", "outlier_thresholds", "bodyparts", "overwrite"]:
         plot_kwargs.pop(key, None)
-        
+
     plot_medoid_distance_outliers(
         project_dir,
         recording_name,
@@ -151,7 +153,7 @@ def _process_outliers_single(args):
     return recording_name, clean_coords, clean_confs
 
 def filter_with_masks(coordinates, confidences, masks, project_dir,
-                      return_video_frame_indexes=False, 
+                      return_video_frame_indexes=False,
                       downsample_rate=1, **kwargs):
     """
     Compress by masks (keep only mask==1 frames), run parallelized outlier_removal on compressed dicts.
@@ -160,11 +162,12 @@ def filter_with_masks(coordinates, confidences, masks, project_dir,
     1. Slices data to [::downsample_rate] BEFORE filtering and outlier removal.
     2. Corrects video_frame_indexes to point to absolute frames in original video.
     """
-    import numpy as np
-    import os
     import multiprocessing
-    from tqdm import tqdm
+    import os
     from concurrent.futures import ProcessPoolExecutor
+
+    import numpy as np
+    from tqdm import tqdm
 
     names = sorted(set(coordinates) & set(confidences) & set(masks))
     if not names:
@@ -242,7 +245,7 @@ def filter_with_masks(coordinates, confidences, masks, project_dir,
     if return_video_frame_indexes:
         # Ground Truth Mapping: Map back to original indices by multiplying by downsample_rate
         video_frame_indexes = {
-            k: (keep[k] * downsample_rate).astype(int) 
+            k: (keep[k] * downsample_rate).astype(int)
             for k in names
         }
         return filtered_coordinates, filtered_confidences, video_frame_indexes
@@ -309,7 +312,6 @@ def subset_after_filter(filtered_coordinates, filtered_confidences, video_frame_
     Apply `subset_spread_blocks` per recording AFTER trimming/outlier removal.
     Returns new (coords, confs, vfi) dictionaries with only the subset frames.
     """
-    import numpy as np
 
     sub_coords, sub_confs, sub_vfi = {}, {}, {}
     for k in filtered_coordinates.keys():
@@ -346,19 +348,19 @@ def subset_by_activity(filtered_coordinates, filtered_confidences, video_frame_i
     import numpy as np
 
     sub_coords, sub_confs, sub_vfi = {}, {}, {}
-    
+
     print(f"[subset] Filtering for high-activity windows (frac={frac})...")
 
     for k in filtered_coordinates.keys():
         coords = filtered_coordinates[k]
         T = len(coords)
-        
+
         if T == 0:
             sub_coords[k] = filtered_coordinates[k][:0]
             sub_confs[k]  = filtered_confidences[k][:0]
             sub_vfi[k]    = video_frame_indexes[k][:0]
             continue
-            
+
         target_len = int(T * frac)
         if target_len >= T:
             # Keep all
@@ -366,7 +368,7 @@ def subset_by_activity(filtered_coordinates, filtered_confidences, video_frame_i
             sub_confs[k]  = filtered_confidences[k]
             sub_vfi[k]    = video_frame_indexes[k]
             continue
-            
+
         if target_len < 1:
              # Keep nothing? Or minimal? Let's keep nothing.
             sub_coords[k] = filtered_coordinates[k][:0]
@@ -377,50 +379,50 @@ def subset_by_activity(filtered_coordinates, filtered_confidences, video_frame_i
         # 1. Calculate Centroid Velocity
         # Centroid per frame: (T, 2)
         centroids = np.nanmean(coords, axis=1)
-        
+
         # Velocity: dist(t, t+1). Pad with 0 at end to match T.
         diffs = np.diff(centroids, axis=0) # (T-1, 2)
         vel = np.linalg.norm(diffs, axis=1) # (T-1,)
         # Pad to length T (velocity at t is movement to t+1, last frame has 0)
         vel = np.pad(vel, (0, 1), mode='constant', constant_values=0)
-        
+
         # 2. Rolling Sum efficiently using cumsum
         # We want window W = target_len
         # Sum[i : i+W] = CumSum[i+W] - CumSum[i]
         cumsum = np.cumsum(vel)
         # We need sum of vel[i ... i+W-1]
-        
+
         # Construct rolling sums array
         # valid start indices are 0 to T - target_len
         valid_starts = T - target_len + 1
-        
+
         # Optimized:
         # window_sums[i] = sum(vel[i : i+W])
         #                = cumsum[i+W-1] - cumsum[i-1]
         # (Handling boundary 0 carefully)
-        
+
         # Let's simply iterate or use convolution if T is small, but cumsum is O(N)
         # window_sum[i] = cumsum[i + W - 1] - cumsum[i - 1]
-        
+
         # Pad cumsum with a 0 at the beginning for easier indexing
         cs_pad = np.pad(cumsum, (1, 0), mode='constant', constant_values=0)
-        
+
         # window_sums[i] is sum of vel[i]...vel[i+W-1]
         # range of i: 0 to T - W
         # sum = cs_pad[i + W] - cs_pad[i]
-        
+
         # Vectorized calculation of all window sums
         # indices i = 0 .. T-W
         idxs = np.arange(T - target_len + 1)
         window_sums = cs_pad[idxs + target_len] - cs_pad[idxs]
-        
+
         # 3. Find Max
         best_start = np.argmax(window_sums)
         best_end = best_start + target_len
-        
+
         # 4. Slice
         sub_coords[k] = filtered_coordinates[k][best_start:best_end]
         sub_confs[k]  = filtered_confidences[k][best_start:best_end]
         sub_vfi[k]    = video_frame_indexes[k][best_start:best_end]
-        
+
     return sub_coords, sub_confs, sub_vfi

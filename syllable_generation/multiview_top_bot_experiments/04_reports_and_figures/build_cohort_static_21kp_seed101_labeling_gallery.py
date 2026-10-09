@@ -15,14 +15,12 @@ Environment: Python 3
 =============================================================================
 """
 
-import os
-import sys
 import json
 import re
 from pathlib import Path
+
 import h5py
 import numpy as np
-import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 VIZ_DIR = SCRIPT_DIR / "visualizations_cohort_static_21kp_seed101"

@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+
 import numpy as np
 
 if not hasattr(np, "bool8"):
@@ -13,11 +14,9 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import jax
-import jax.numpy as jnp
 import keypoint_moseq as kpms
-from utils.resample_batching import apply_optimizations
 from diagnostics.fast_state_cache import load_init_state
+from utils.resample_batching import apply_optimizations
 
 CACHE_FILE = "/tmp/karen_slds_init_state.pkl"
 PROJECT_DIR = os.path.join(KPMS_DIR, "karen_project_2")
@@ -38,7 +37,7 @@ def main():
     print(f"[1/2] Cache loaded in {t_load:.2f}s (Bypassed 3 minutes of preprocessing)!")
 
     # 3. Fit 1 SLDS Iteration
-    print(f"\n[2/2] Running 1 Full SLDS Gibbs Iteration on 1,004 videos...")
+    print("\n[2/2] Running 1 Full SLDS Gibbs Iteration on 1,004 videos...")
     t_fit0 = time.perf_counter()
     model, model_name = kpms.fit_model(
         model, data, metadata, PROJECT_DIR,

@@ -1,7 +1,9 @@
 import os
 import sys
 import time
+
 import numpy as np
+
 np.bool8 = np.bool_
 import jax
 import jax.numpy as jnp
@@ -15,15 +17,19 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import keypoint_moseq as kpms
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from utils.paths import ref_pairs_from_sessions
-from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg
-from utils.batch_init import batched_init_model_by_video
-from utils.resample_batching import fast_banded_gmrf_resample_x, fast_resample_discrete_stateseqs, vectorized_resample_ar_params, _numba_assemble_and_solve_tridiagonal_v
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+import keypoint_moseq as kpms
 from jax_moseq.utils.autoregression import get_nlags
 from jax_moseq.utils.transitions import count_transitions, sample_hdp_transitions
+from utils.batch_init import batched_init_model_by_video
+from utils.paths import ref_pairs_from_sessions
+from utils.resample_batching import (
+    _numba_assemble_and_solve_tridiagonal_v,
+    fast_banded_gmrf_resample_x,
+    fast_resample_discrete_stateseqs,
+)
+from utils.trimming import clamp_conf_nonneg, filter_with_masks, presence_mask_from_conf
 
 SCRATCH_DIR = os.path.join(KPMS_DIR, "scratch_profiling_project")
 DIRTY_PKL = os.path.join(REPO_ROOT, "syllable_generation/data/sessions_karen_project_dirty.pkl")
@@ -54,7 +60,7 @@ def main():
     hypparams = model["hypparams"]
     Y = data["Y"]
     mask = data["mask"]
-    
+
     N, T, k, d = Y.shape
     nlags = get_nlags(params["Ab"])
     num_states = len(params["betas"])
@@ -72,13 +78,13 @@ def main():
     for it in range(1, 4):
         print(f"\n--- Profiling Iteration {it} ---")
         t_tot = time.perf_counter()
-        
+
         # 1. Transitions
         t0 = time.perf_counter()
         counts = count_transitions(num_states, states["z"], mask)
         counts.block_until_ready()
         t_count = (time.perf_counter() - t0) * 1000.0
-        
+
         t0 = time.perf_counter()
         params["betas"], params["pi"] = sample_hdp_transitions(
             jr.fold_in(seed, it * 20 + 1), counts,
@@ -87,7 +93,7 @@ def main():
         )
         params["pi"].block_until_ready()
         t_hdp = (time.perf_counter() - t0) * 1000.0
-        
+
         # 2. AR Dynamics
         t0 = time.perf_counter()
         params["Ab"], params["Q"] = arhmm_gibbs.resample_ar_params(
@@ -95,7 +101,7 @@ def main():
         )
         params["Q"].block_until_ready()
         t_ar = (time.perf_counter() - t0) * 1000.0
-        
+
         # 3. Discrete Syllables (z)
         t0 = time.perf_counter()
         states["z"] = fast_resample_discrete_stateseqs(
@@ -104,7 +110,7 @@ def main():
         )
         states["z"].block_until_ready()
         t_z = (time.perf_counter() - t0) * 1000.0
-        
+
         # 4. Heading (h)
         t0 = time.perf_counter()
         states["h"] = slds_gibbs.resample_heading(
@@ -119,7 +125,7 @@ def main():
         Y_rot = slds_gibbs.apply_rotation(Y_aligned, states["h"])
         Y_rot.block_until_ready()
         t_rot = (time.perf_counter() - t0) * 1000.0
-        
+
         t0 = time.perf_counter()
         v_np = _numba_assemble_and_solve_tridiagonal_v(
             np.array(Y), np.array(mask, dtype=bool), np.array(Y_rot),
@@ -129,7 +135,7 @@ def main():
         states["v"] = jnp.array(v_np)
         states["v"].block_until_ready()
         t_v_solve = (time.perf_counter() - t0) * 1000.0
-        
+
         # 6. Continuous Latents (x)
         t0 = time.perf_counter()
         states["x"] = fast_banded_gmrf_resample_x(
@@ -139,7 +145,7 @@ def main():
         )
         states["x"].block_until_ready()
         t_x = (time.perf_counter() - t0) * 1000.0
-        
+
         # 7. Scales (s)
         t0 = time.perf_counter()
         states["s"] = slds_gibbs.resample_scales(
@@ -149,9 +155,9 @@ def main():
         )
         states["s"].block_until_ready()
         t_s = (time.perf_counter() - t0) * 1000.0
-        
+
         total = (time.perf_counter() - t_tot) * 1000.0
-        
+
         print(f"  1. Transitions count + HDP:  {t_count + t_hdp:6.1f} ms  (count: {t_count:.1f}ms, hdp: {t_hdp:.1f}ms)")
         print(f"  2. AR Dynamics (Ab, Q):      {t_ar:6.1f} ms")
         print(f"  3. Discrete Syllables (z):   {t_z:6.1f} ms")

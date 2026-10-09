@@ -11,8 +11,8 @@ Rigorous empirical test of the 4 principles for TopCam + BotCam alignment:
 =============================================================================
 """
 
-import sys
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from scipy.ndimage import median_filter
@@ -59,7 +59,7 @@ def run_tests():
     print("-" * 70)
     len_top = np.linalg.norm(top_nose - top_tail, axis=1)
     len_bot = np.linalg.norm(bot_nose - bot_tail, axis=1)
-    
+
     reliable = (top_lh > 0.6) & (bot_lh > 0.6) & (len_top > 20) & (len_bot > 40)
     print(f"  Reliable sample frames: {np.sum(reliable):,} / {n_frames:,} ({np.mean(reliable)*100:.1f}%)")
 
@@ -99,7 +99,7 @@ def run_tests():
 
     print(f"  Before Reflection Correction: Corr(X_top, X_bot) = {corr_x_raw:+.4f}, Corr(Y_top, Y_bot) = {corr_y_raw:+.4f}")
     print(f"  After Reflection Correction:  Corr(X_top, X_bot) = {corr_x_corr:+.4f}, Corr(Y_top, Y_bot) = {corr_y_corr:+.4f}")
-    print(f"  [VERDICT]: Horizontal flip mathematically proves coordinates are 99.97% identical.")
+    print("  [VERDICT]: Horizontal flip mathematically proves coordinates are 99.97% identical.")
 
     # -------------------------------------------------------------------------
     # TEST 3: Nose-Tail Midpoint & Direction Alignment

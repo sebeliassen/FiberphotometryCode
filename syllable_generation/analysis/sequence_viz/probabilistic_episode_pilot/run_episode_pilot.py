@@ -16,34 +16,31 @@ Exports:
 =============================================================================
 """
 
+import pickle
 import sys
 import time
-import pickle
 from pathlib import Path
-import numpy as np
 
-import sys
+import numpy as np
 import numpy.core.numeric as _numeric
+
 sys.modules['numpy._core.numeric'] = _numeric
 
 import pandas as pd
-import h5py
 
 # Add repo root to path
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
-    EXP_DIR, DATA_DIR, THEMES, META_NAMES, TRAIN_ANIMALS, VAL_ANIMALS,
-    SEQNMF_RESULTS_PATH, KPMS_RESULTS_PATH
-)
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.probabilistic_episode_model import (
-    ProbabilisticEpisodeModel
-)
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_adapter import (
-    extract_standardized_240d_features, compute_theme_references, score_and_standardize_candidates
-)
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import load_chain_movie_resources
+from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_adapter import (
+    compute_theme_references,
+    score_and_standardize_candidates,
+)
+from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import DATA_DIR, THEMES
+from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.probabilistic_episode_model import (
+    ProbabilisticEpisodeModel,
+)
 
 
 def main():

@@ -19,15 +19,15 @@ bugs) into regression assertions guaranteeing:
 10. Grid layout dynamic derivation from G.
 """
 
-import sys
+import contextlib
 import copy
-import json
+import sys
+import tempfile
+import unittest
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
-import unittest
-import tempfile
-import contextlib
 
 try:
     import pytest
@@ -49,7 +49,6 @@ except ImportError:
             unittest.main()
     pytest = PytestShim()
 
-from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -69,14 +68,14 @@ def test_half_open_bouts_basic():
     # Sequence of 10 zeros, 40 ones, 10 twos
     seq = np.r_[np.zeros(10, dtype=int), np.ones(40, dtype=int), np.full(10, 2, dtype=int)]
     starts, ends = vc.half_open_bouts(seq)
-    
+
     assert len(starts) == 3
     assert len(ends) == 3
     # True 40-frame bout must be reported as 40 frames: [10, 50)
     assert starts[1] == 10
     assert ends[1] == 50
     assert (ends[1] - starts[1]) == 40
-    
+
     # Boundary bouts
     assert starts[0] == 0 and ends[0] == 10 and (ends[0] - starts[0]) == 10
     assert starts[2] == 50 and ends[2] == 60 and (ends[2] - starts[2]) == 10
@@ -153,7 +152,7 @@ def test_tier1_density_exemplar_matching():
     ranks = vc.stable_ranks(stable_keys)
 
     result = vc.select_tier1_density(state, global_nbrs, ranks, G=12, n_neighbors=50)
-    
+
     # Official KPMS calculation
     nbrs = NearestNeighbors(n_neighbors=50).fit(state)
     d, i = nbrs.kneighbors(state)

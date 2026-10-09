@@ -21,15 +21,18 @@ Generates:
 """
 
 import os
+
 os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
 
 import re
 import time
 from pathlib import Path
+
 import h5py
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -580,7 +583,7 @@ def main():
 
     # 7. Write Executive Markdown Report
     print("\n[7/6] Writing comprehensive executive markdown report...", flush=True)
-    report_md = f"""# Preliminary Comparative Analysis: Two Cameras (Tandem 23kp) vs One Camera (TopCam 17kp)
+    report_md = rf"""# Preliminary Comparative Analysis: Two Cameras (Tandem 23kp) vs One Camera (TopCam 17kp)
 
 **Document Date:** {time.strftime('%Y-%m-%d %H:%M:%S')}  
 **1-Camera Model:** `final_karen_model_k240k` (TopCam 17-keypoint baseline)  

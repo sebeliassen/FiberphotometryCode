@@ -15,10 +15,11 @@ Outputs are saved directly to:
 """
 
 import os
-import shutil
 import pickle
-import numpy as np
+
 import matplotlib
+import numpy as np
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -117,7 +118,7 @@ def main():
     # Shading between real and markov curves (Excess behavioral memory)
     ax1.fill_between(
         lag_seconds, m_mean, r_mean, where=(r_mean >= m_mean),
-        color="#FDBF6F", alpha=0.45, label="Excess Behavioral Memory ($\Delta I > 0$)"
+        color="#FDBF6F", alpha=0.45, label=r"Excess Behavioral Memory ($\Delta I > 0$)"
     )
 
     # Real and Markov mean curves
@@ -196,10 +197,10 @@ def main():
 
         # Shading between real and markov
         if g_key != "KI_Amphetamine":
-            ax.fill_between(lag_seconds, m_m, r_m, where=(r_m >= m_m), color=col, alpha=0.12, label="Excess Memory ($\Delta I > 0$)")
+            ax.fill_between(lag_seconds, m_m, r_m, where=(r_m >= m_m), color=col, alpha=0.12, label=r"Excess Memory ($\Delta I > 0$)")
         else:
             # Highlight negative excess memory for DAT-KI Amphetamine
-            ax.fill_between(lag_seconds, r_m, m_m, where=(m_m >= r_m), color="#888888", alpha=0.15, label="Negative Excess ($\Delta I < 0$)")
+            ax.fill_between(lag_seconds, r_m, m_m, where=(m_m >= r_m), color="#888888", alpha=0.15, label=r"Negative Excess ($\Delta I < 0$)")
 
         # Peak annotation
         p_idx = int(np.argmax(ex_m))
@@ -267,8 +268,8 @@ def main():
     ax_c1.set_xlim([lag_seconds[0], lag_seconds[-1]])
     ax_c1.set_ylim([-0.18, 0.35])
     ax_c1.set_xlabel("Time Lag $\\tau$ (seconds, log scale)", fontweight="bold")
-    ax_c1.set_ylabel("Excess Mutual Information $\Delta I$ (bits)", fontweight="bold")
-    ax_c1.set_title("A. Excess Behavioral Memory Across Lags ($\Delta I = I_{\\mathrm{real}} - I_{\\mathrm{markov}}$)", fontweight="bold", pad=12)
+    ax_c1.set_ylabel(r"Excess Mutual Information $\Delta I$ (bits)", fontweight="bold")
+    ax_c1.set_title("A. Excess Behavioral Memory Across Lags ($\\Delta I = I_{\\mathrm{real}} - I_{\\mathrm{markov}}$)", fontweight="bold", pad=12)
     ax_c1.grid(True, which="both", linestyle="--", alpha=0.35)
     ax_c1.legend(loc="upper right", frameon=True, facecolor="white", edgecolor="#DDDDDD", framealpha=0.95)
 

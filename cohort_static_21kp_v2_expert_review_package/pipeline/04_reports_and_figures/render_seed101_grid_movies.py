@@ -16,9 +16,8 @@ Environment: kpms_gpu_cuml
 =============================================================================
 """
 
-import os
-import sys
 import argparse
+import sys
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -27,11 +26,12 @@ if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
 import re
+
 import cv2
-import numpy as np
 import h5py
-import pandas as pd
 import imageio
+import numpy as np
+import pandas as pd
 from vidio.read import OpenCVReader
 
 from core.pair_matching import find_matched_pairs

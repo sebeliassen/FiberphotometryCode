@@ -15,34 +15,34 @@ for the 8-Keypoint models in amph_project_8kp/:
 """
 
 import os
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.35"
 
-import sys
 import glob
 import json
+import sys
 import time
 import urllib.request
 from pathlib import Path
 
 # Fix numpy bool8 deprecation for modern numpy
 import numpy as np
+
 np.bool8 = np.bool_
 
 import h5py
-import jax
 import jax.numpy as jnp
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-
-import keypoint_moseq as kpms
-from keypoint_moseq.fitting import marginal_log_likelihood
-from keypoint_moseq.util import get_frequencies
-from keypoint_moseq.io import load_hdf5, save_hdf5, _get_path
 from jax_moseq.utils import unbatch
+from keypoint_moseq.fitting import marginal_log_likelihood
+from keypoint_moseq.io import load_hdf5, save_hdf5
+from keypoint_moseq.util import get_frequencies
 
 NTFY_URL = "https://ntfy.sh/woody_videos_seb"
 
@@ -73,13 +73,13 @@ def fast_reindex_checkpoint(ckpt_path: Path):
         num_states = f[f"model_snapshots/{last_iter}/params/pi"].shape[0]
         z = f[f"model_snapshots/{last_iter}/states/z"][()]
         mask = f["data/mask"][()]
-        
+
         freqs = get_frequencies(z, mask, num_states, runlength=True)
         index = np.argsort(freqs)[::-1]
-        
+
         if np.all(index == np.arange(len(index))):
             return index, 0.0, True
-            
+
         inv_index = np.argsort(index)
         for iteration in saved_iterations:
             snap = f[f"model_snapshots/{iteration}"]
@@ -88,7 +88,7 @@ def fast_reindex_checkpoint(ckpt_path: Path):
             snap["params/Ab"][:] = snap["params/Ab"][()][index]
             snap["params/Q"][:] = snap["params/Q"][()][index]
             snap["states/z"][:] = inv_index[snap["states/z"][()]]
-            
+
     return index, time.time() - t0, False
 
 def fast_extract_results(ckpt_path: Path, results_path: Path):
@@ -98,7 +98,7 @@ def fast_extract_results(ckpt_path: Path, results_path: Path):
     t0 = time.time()
     if results_path.exists():
         results_path.unlink()
-        
+
     with h5py.File(ckpt_path, "r") as f:
         last_iter = np.max([int(i) for i in f["model_snapshots"]])
         x = f[f"model_snapshots/{last_iter}/states/x"][()]
@@ -146,15 +146,15 @@ def main():
     for name in all_model_names:
         ckpt_path = PROJECT_DIR / name / "checkpoint.h5"
         summary_path = PROJECT_DIR / name / "model_summary.json"
-        
+
         if not ckpt_path.exists():
             discarded_models.append((name, "No checkpoint.h5 found"))
             continue
-            
+
         with h5py.File(ckpt_path, "r") as f:
             snaps = sorted([int(i) for i in f.get("model_snapshots", {}).keys()])
             max_iter = max(snaps) if snaps else 0
-            
+
         seed = None
         if summary_path.exists():
             try:
@@ -180,14 +180,14 @@ def main():
     print("\n" + "=" * 80)
     print("  PHASE 1: SYLLABLE REINDEXING & RESULTS EXTRACTION")
     print("=" * 80)
-    
+
     for name, max_iter, seed in completed_models:
         ckpt_path = PROJECT_DIR / name / "checkpoint.h5"
         res_path = PROJECT_DIR / name / "results.h5"
-        
+
         idx, reindex_time, was_already = fast_reindex_checkpoint(ckpt_path)
         status_str = "Already reindexed" if was_already else f"Reindexed in {reindex_time:.3f}s"
-        
+
         extract_time = fast_extract_results(ckpt_path, res_path)
         res_size_mb = res_path.stat().st_size / (1024 * 1024)
         print(f"  [{name}] {status_str} | Extracted results.h5 ({res_size_mb:.1f} MB) in {extract_time:.2f}s")
@@ -196,7 +196,7 @@ def main():
     print("\n" + "=" * 80)
     print("  PHASE 2: PRE-STAGING DATA & PARAMETERS FOR GPU EML")
     print("=" * 80)
-    
+
     first_ckpt = PROJECT_DIR / completed_models[0][0] / "checkpoint.h5"
     with h5py.File(first_ckpt, "r") as f:
         data_mask = f["data/mask"][()]
@@ -217,7 +217,7 @@ def main():
             Ab = snap["params/Ab"][()]
             Q = snap["params/Q"][()]
             pi = snap["params/pi"][()]
-            
+
         model_xs.append(x)
         model_params.append({
             "Ab": jnp.array(Ab),
@@ -252,7 +252,7 @@ def main():
     for i in range(num_models):
         name_i = eval_model_names[i]
         params_i = model_params[i]
-        
+
         for j in range(num_models):
             if i == j:
                 continue
@@ -274,7 +274,7 @@ def main():
                     params_i["pi"]
                 ).block_until_ready()
                 total_ll += float(chunk_val.item())
-            
+
             mlls[i, j] = total_ll
             pair_dur = time.time() - t_pair_start
             pair_times.append(pair_dur)
@@ -302,7 +302,7 @@ def main():
     sorted_indices = np.argsort(scores)[::-1]
     best_idx = sorted_indices[0]
     best_model_name = eval_model_names[best_idx]
-    
+
     print("\n" + "=" * 80)
     print("  PHASE 4: FINAL 8-KEYPOINT MODEL RANKINGS (EXPECTED MARGINAL LIKELIHOOD)")
     print("=" * 80)
@@ -313,13 +313,13 @@ def main():
         name = eval_model_names[idx]
         score = scores[idx]
         stderr = standard_errors[idx]
-        
+
         sum_path = PROJECT_DIR / name / "model_summary.json"
         summary_info = {}
         if sum_path.exists():
             with open(sum_path) as sf:
                 summary_info = json.load(sf)
-                
+
         seed = summary_info.get("seed", "N/A")
         med_dur = summary_info.get("median_duration_frames", "N/A")
         wall_time = summary_info.get("wall_clock_seconds", 0)

@@ -15,18 +15,20 @@ Evaluates:
 """
 
 import os
+import pickle
 import sys
 import time
-import pickle
+
+import matplotlib
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import TensorDataset, DataLoader
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GroupKFold
-import matplotlib
+from torch.utils.data import DataLoader, TensorDataset
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 

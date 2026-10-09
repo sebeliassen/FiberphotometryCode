@@ -9,7 +9,6 @@ Unit tests for hardened core.io_utils routines:
 =============================================================================
 """
 
-import os
 import sys
 import tempfile
 import unittest
@@ -26,10 +25,9 @@ if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
 from core.io_utils import (
-    copy_dataset_bounded,
-    copy_group_bounded,
-    inspect_checkpoint_iterations,
     compact_kpms_checkpoint,
+    copy_dataset_bounded,
+    inspect_checkpoint_iterations,
 )
 
 

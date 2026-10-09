@@ -7,11 +7,11 @@ Render Publication-Quality Percentage-Wise NMF Retention Curves
 """
 
 import os
-import sys
 import shutil
-import numpy as np
-import pandas as pd
+
 import matplotlib
+import pandas as pd
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 

@@ -42,17 +42,18 @@ if str(REPO_ROOT) not in sys.path:
 
 import cv2
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import jax.numpy as jnp
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
 import keypoint_moseq as kpms
-import keypoint_moseq.viz as viz
 import keypoint_moseq.util as util
-from vidio.read import OpenCVReader
+import keypoint_moseq.viz as viz
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
 from scipy import stats
+from vidio.read import OpenCVReader
 
 # ==============================================================================
 # FAST-SEEK OPENCVREADER MONKEYPATCH
@@ -107,18 +108,18 @@ def verify_grid_movie_sync(video_path, num_frames=5, grid_rows=3, grid_cols=4):
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    
+
     if total_frames <= 0 or w <= 0 or h <= 0:
         cap.release()
         return False, "Failed to read video dimensions"
-        
+
     tile_h, tile_w = h // grid_rows, w // grid_cols
-    sample_frames = np.linspace(max(5, int(total_frames * 0.1)), 
-                                min(total_frames - 5, int(total_frames * 0.9)), 
+    sample_frames = np.linspace(max(5, int(total_frames * 0.1)),
+                                min(total_frames - 5, int(total_frames * 0.9)),
                                 num_frames, dtype=int)
     center_vals = []
     arena_vals = []
-    
+
     for f_idx in sample_frames:
         cap.set(cv2.CAP_PROP_POS_FRAMES, f_idx)
         ret, frame = cap.read()
@@ -138,10 +139,10 @@ def verify_grid_movie_sync(video_path, num_frames=5, grid_rows=3, grid_cols=4):
                     center_vals.append(np.mean(tile[center_mask]))
                     arena_vals.append(np.median(tile[floor_mask]))
     cap.release()
-    
+
     if len(center_vals) < 5:
         return False, "Insufficient valid tiles"
-        
+
     center_vals = np.array(center_vals)
     arena_vals = np.array(arena_vals)
     contrast = arena_vals - center_vals

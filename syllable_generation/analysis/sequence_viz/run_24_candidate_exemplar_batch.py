@@ -38,9 +38,9 @@ import os
 import sys
 import time
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
-import h5py
 from scipy.interpolate import interp1d
 from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
@@ -54,9 +54,9 @@ REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
-    load_chain_movie_resources,
     generate_chain_grid_movie,
-    standardize_chain_instances
+    load_chain_movie_resources,
+    standardize_chain_instances,
 )
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/screening_24_exemplars"
@@ -154,7 +154,7 @@ def select_kpms_density_ratio_instances(candidate_list, results, pca, all_nbrs, 
         rk = inst["recording_key"]
         sf = int(inst["start_frame"])
         ef = int(inst["end_frame"])
-        
+
         if rk not in results or sf >= ef or ef > len(results[rk]["latent_state"]):
             continue
 
@@ -166,7 +166,7 @@ def select_kpms_density_ratio_instances(candidate_list, results, pca, all_nbrs, 
         t_target = np.linspace(0, 1, n_timepoints)
         interp = interp1d(t_orig, chunk, axis=0)
         resampled = interp(t_target).flatten()
-        
+
         trajectories.append(resampled)
         valid_indices.append(idx)
 
@@ -200,7 +200,7 @@ def select_kpms_density_ratio_instances(candidate_list, results, pca, all_nbrs, 
 
     # 4. Exemplar Neighborhood
     nbr_indices = local_indices[exemplar_idx]
-    
+
     # Dispersion reduction in 4D PCA space
     center_pca = np.mean(Xpca_cand, axis=0)
     all_dists_to_center = np.linalg.norm(Xpca_cand - center_pca, axis=1)
@@ -262,7 +262,7 @@ def write_catalog(records):
             f"{r['wt_count']} / {r['ki_count']} | {r['sal_count']} / {r['amph_count']} | {vid_link} |"
         )
         rows.append(row)
-    
+
     with open(MD_CATALOG, "w") as f:
         f.write(header + "\n".join(rows) + "\n")
 
@@ -509,7 +509,7 @@ def main():
             target_count=6,
             n_timepoints=20
         )
-        
+
         wt_c = sum(1 for c in raw_candidates if c.get("genotype") == "WT")
         ki_c = sum(1 for c in raw_candidates if c.get("genotype") == "KI")
         sal_c = sum(1 for c in raw_candidates if c.get("drug") == "Saline")

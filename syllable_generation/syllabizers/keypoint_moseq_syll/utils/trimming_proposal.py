@@ -1,6 +1,7 @@
 
 import numpy as np
 
+
 def _clean_short_runs(mask, min_true=1, min_false=1):
     """Remove ON runs shorter than min_true, and OFF runs shorter than min_false."""
     m = mask.copy()
@@ -92,8 +93,8 @@ def filter_with_masks_and_downsample(coordinates, confidences, project_dir,
     """
     Combined Downsampling + Filtering.
     """
-    import numpy as np
     import keypoint_moseq as kpms
+    import numpy as np
 
     names = set(coordinates) & set(confidences)
     if not names:
@@ -111,11 +112,11 @@ def filter_with_masks_and_downsample(coordinates, confidences, project_dir,
         else:
             ds_coords[name] = coordinates[name]
             ds_confs[name]  = confidences[name]
-        
+
         # 2. Generate Mask (on downsampled data)
         # We extract only the relevant args for presence_mask_from_conf from kwargs
         mask_arg_names = [
-            'p_thresh', 'frac_min_parts', 'smooth_win', 'enter_thresh', 
+            'p_thresh', 'frac_min_parts', 'smooth_win', 'enter_thresh',
             'exit_thresh', 'off_grace_frames', 'min_on_frames', 'min_off_frames'
         ]
         mask_kwargs = {k: v for k, v in kwargs.items() if k in mask_arg_names}
@@ -148,7 +149,7 @@ def filter_with_masks_and_downsample(coordinates, confidences, project_dir,
     if return_video_frame_indexes:
         # Map back to original indices
         video_frame_indexes = {
-            k: (keep[k] * downsample_rate).astype(int) 
+            k: (keep[k] * downsample_rate).astype(int)
             for k in names
         }
         return filtered_coordinates, filtered_confidences, video_frame_indexes

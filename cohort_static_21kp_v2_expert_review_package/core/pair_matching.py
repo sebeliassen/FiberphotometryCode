@@ -7,9 +7,9 @@ for TopCam (dorsal) and BotCam (ventral) video tracking files.
 
 import re
 from pathlib import Path
-from typing import List, Dict, Optional, Tuple
+from typing import Dict, List, Optional
+
 import numpy as np
-import pandas as pd
 
 from .schemas import CHAMBER_MAP, PathConfig
 

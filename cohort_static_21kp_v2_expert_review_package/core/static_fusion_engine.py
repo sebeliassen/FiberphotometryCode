@@ -12,25 +12,29 @@ Occam's Razor Static Affine Tracking Fusion Engine:
 6. Full atomic publishing (.tmp -> rename) with cryptographic sidecar manifests.
 """
 
-import time
 import json
+import time
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Dict
+
 import numpy as np
 import pandas as pd
 
-from .schemas import (
-    TOP_USE_BODYPARTS,
-    DEFAULT_ARENA_WIDTH,
-    PathConfig,
-)
-from .camera_correspondence import get_session_mapping, get_session_calibration_details
 from .cache_manifest import (
     OK as _CACHE_OK,
+)
+from .cache_manifest import (
     UNVERIFIED_NO_MANIFEST as _CACHE_UNVERIFIED,
+)
+from .cache_manifest import (
     atomic_path,
     verify_manifest,
     write_manifest,
+)
+from .camera_correspondence import get_session_calibration_details, get_session_mapping
+from .schemas import (
+    DEFAULT_ARENA_WIDTH,
+    TOP_USE_BODYPARTS,
 )
 
 _CORE_DIR = Path(__file__).resolve().parent

@@ -6,15 +6,16 @@ or the system web browser in app mode.
 """
 
 import os
-import sys
-import time
 import socket
+import sys
 import threading
+import time
 import webbrowser
 from pathlib import Path
 
 # Ensure numpy compatibility
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
@@ -37,13 +38,13 @@ def run_server():
 
 def main():
     use_window = "--browser" not in sys.argv
-    
+
     # 1. Start backend server in a daemon thread if not already running
     if not is_port_in_use(PORT):
         print(f"[KPMS Studio] Starting server on http://{HOST}:{PORT} using kpms_gpu_cuml...")
         server_thread = threading.Thread(target=run_server, daemon=True)
         server_thread.start()
-        
+
         # Wait for server to bind
         for _ in range(30):
             if is_port_in_use(PORT):

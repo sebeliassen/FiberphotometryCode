@@ -1,12 +1,10 @@
+import gc
 import os
 import sys
 import time
-import json
-import gc
-import traceback
 from dataclasses import dataclass, field
-from typing import Dict, Any, List, Optional
 from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
@@ -21,31 +19,30 @@ if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
 import numpy as np
-np.bool8 = np.bool_
-import scipy.linalg as sla
-from numba import njit, prange
-import concurrent.futures
 
-import pandas as pd
-import keypoint_moseq as kpms
+np.bool8 = np.bool_
+import concurrent.futures
+import shutil
+from functools import partial
+
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-from functools import partial
-import shutil
-
-from utils.paths import ref_pairs_from_sessions
-from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg
-from utils.batch_init import batched_init_model_by_video
-import utils.resample_batching as rb
-
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from jax_moseq.models.keypoint_slds.gibbs import resample_heading, resample_location, compute_squared_error
-from jax_moseq.models.arhmm.gibbs import resample_hdp_transitions, sample_mniw
-from jax_moseq.utils import pad_affine, psd_inv, psd_solve
-from jax_moseq.utils.autoregression import get_lags, get_nlags
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+import keypoint_moseq as kpms
+import pandas as pd
+import scipy.linalg as sla
+import utils.resample_batching as rb
 from dynamax.hidden_markov_model.inference import hmm_posterior_sample
+from jax_moseq.models.arhmm.gibbs import resample_hdp_transitions, sample_mniw
+from jax_moseq.models.keypoint_slds.gibbs import resample_heading, resample_location
+from jax_moseq.utils import pad_affine, psd_inv, psd_solve
+from jax_moseq.utils.autoregression import get_lags
+from numba import njit, prange
+from utils.batch_init import batched_init_model_by_video
+from utils.paths import ref_pairs_from_sessions
+from utils.trimming import clamp_conf_nonneg, filter_with_masks, presence_mask_from_conf
 
 SCRATCH_DIR = os.path.join(KPMS_DIR, "scratch_profiling_project")
 DIRTY_PKL = os.path.join(REPO_ROOT, "syllable_generation/data/sessions_karen_project_dirty.pkl")
@@ -210,7 +207,7 @@ def _fast_numba_assemble_banded_system(
     for seq_i in prange(N):
         ab = ab_all[seq_i]
         g = g_all[seq_i]
-        
+
         # Prior for initial frames
         for d in range(nlags * D):
             ab[0, d] += 1.0
@@ -225,7 +222,7 @@ def _fast_numba_assemble_banded_system(
                         for o_i in range(obs_dim):
                             val += C_mat[o_i, r] * (1.0 / (sigmasq_np[o_i] * s_np[seq_i, t, o_i] + 1e-8)) * C_mat[o_i, c]
                         ab[c - r, t_idx + r] += val
-                
+
                 for r in range(D):
                     val = 0.0
                     for o_i in range(obs_dim):
@@ -276,11 +273,11 @@ def fast_compiled_banded_gmrf(seed, Y, mask, v, h, s, z, Cd, sigmasq, Ab, Q, nla
     N_total = T * D
 
     Y_vanilla, s_vanilla, Cd_vanilla, sigmasq_vanilla = slds_gibbs.to_vanilla_slds(Y, v, h, s, Cd, sigmasq)
-    
+
     C_mat = np.array(Cd_vanilla[:, :-1], dtype=np.float64)
     d_off = np.array(Cd_vanilla[:, -1], dtype=np.float64)
     sigmasq_np = np.array(sigmasq_vanilla, dtype=np.float64)
-    
+
     Y_np = np.array(Y_vanilla, dtype=np.float64)
     mask_np = np.array(mask, dtype=bool)
     s_np = np.array(s_vanilla, dtype=np.float64)
@@ -291,7 +288,7 @@ def fast_compiled_banded_gmrf(seed, Y, mask, v, h, s, z, Cd, sigmasq, Ab, Q, nla
 
     A_mats = Ab_np[:, :, :-1]
     b_vecs = Ab_np[:, :, -1]
-    
+
     Q_inv_all = np.zeros_like(Q_np)
     K_blocks = np.zeros((K, block_dim, block_dim), dtype=np.float64)
     g_priors = np.zeros((K, block_dim), dtype=np.float64)

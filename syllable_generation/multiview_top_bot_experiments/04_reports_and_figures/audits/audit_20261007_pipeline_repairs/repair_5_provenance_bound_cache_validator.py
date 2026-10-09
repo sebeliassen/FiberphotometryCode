@@ -19,13 +19,10 @@ Includes executable unit tests demonstrating that changing:
 immediately and deterministically invalidates downstream caches.
 """
 
-import sys
 import json
+import sys
 import tempfile
-import shutil
 from pathlib import Path
-from typing import Dict, List, Tuple, Any
-import numpy as np
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
@@ -35,16 +32,13 @@ if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
 from core.cache_manifest import (
-    write_manifest,
-    verify_manifest,
-    fingerprint_file,
-    source_fingerprint,
-    config_hash,
     OK,
     STALE,
     UNVERIFIED_NO_MANIFEST,
-    MISSING_ARTIFACT,
+    verify_manifest,
+    write_manifest,
 )
+
 
 def test_cache_invalidation_rules():
     AUDIT_DIR.mkdir(parents=True, exist_ok=True)

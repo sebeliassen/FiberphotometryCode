@@ -1,10 +1,6 @@
 import os
 import sys
-import time
-import numpy as np
 
-import jax
-import jax.numpy as jnp
 import jax.random as jr
 
 REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -14,12 +10,12 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-from run_pipeline import get_sessions
 import keypoint_moseq as kpms
-from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg
-from utils.paths import get_key_to_aid_mapping, ref_pairs_from_sessions
-from utils.batch_init import batched_init_model_by_video
 from diagnostics.fast_state_cache import save_init_state
+from run_pipeline import get_sessions
+from utils.batch_init import batched_init_model_by_video
+from utils.paths import ref_pairs_from_sessions
+from utils.trimming import clamp_conf_nonneg, filter_with_masks, presence_mask_from_conf
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "karen_project_2")
 CACHE_FILE = "/tmp/karen_slds_init_state.pkl"
@@ -54,7 +50,7 @@ def cache_init():
 
     # 3. Format data
     data, metadata = kpms.format_data(filtered_coords, filtered_confs, **kpms.load_config(PROJECT_DIR))
-    
+
     # 4. Batched init
     pca = kpms.load_pca(PROJECT_DIR)
     init_config = kpms.load_config(PROJECT_DIR)

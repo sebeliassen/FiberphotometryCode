@@ -14,16 +14,17 @@ A clean, publication-quality presentation slide figure:
 """
 
 import os
-import sys
-import shutil
 import pickle
-import numpy as np
-import pandas as pd
-from sklearn.decomposition import NMF
+import shutil
+import sys
+
 import matplotlib
+import numpy as np
+from sklearn.decomposition import NMF
+
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter
 
 # Paths
@@ -59,10 +60,10 @@ for s_idx, bouts in enumerate(session_bouts):
     if len(bouts) < 100: continue
     max_frame = bouts[-1]["end_frame"]
     N = max_frame + 1
-    
+
     frame_sylls = np.zeros(N, dtype=np.int32)
     frame_spatial = np.zeros((N, 2), dtype=np.float32)
-    
+
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = min(b["syllable"], NUM_SYLLS - 1)
@@ -71,16 +72,16 @@ for s_idx, bouts in enumerate(session_bouts):
         if vec is not None and len(vec) >= 2:
             frame_spatial[sf : ef + 1, 0] = vec[0]
             frame_spatial[sf : ef + 1, 1] = vec[1]
-            
+
     oh_bout = np.zeros((N, NUM_SYLLS), dtype=np.float32)
     diffs = np.where(frame_sylls[1:] != frame_sylls[:-1])[0] + 1
     onsets = np.zeros(N, dtype=bool)
     onsets[0] = True; onsets[diffs] = True
     oh_bout[onsets, frame_sylls[onsets]] = 1.0
-    
+
     cum_bout = np.vstack([np.zeros((1, NUM_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
     cum_spatial = np.vstack([np.zeros((1, 2), dtype=np.float32), np.cumsum(frame_spatial, axis=0)])
-    
+
     for t in range(W_FRAMES, N - H_FRAMES, STRIDE_FRAMES):
         w_b = cum_bout[t] - cum_bout[t - W_FRAMES]
         sp_mean = (cum_spatial[t] - cum_spatial[t - W_FRAMES]) / float(W_FRAMES)
@@ -177,51 +178,51 @@ gs_cols = gridspec.GridSpecFromSubplotSpec(2, 4, subplot_spec=gs_main[2], height
 for k in range(K):
     # --- Top Row: Syllable Loadings ---
     ax_bar = fig.add_subplot(gs_cols[0, k])
-    
+
     enrichment = H[k] / mean_pop
     top_sylls = np.argsort(enrichment)[::-1][:5]
     top_enrich = enrichment[top_sylls]
-    
+
     y_pos = np.arange(len(top_sylls))[::-1]
     bars = ax_bar.barh(y_pos, top_enrich, color=comp_colors[k], alpha=0.88, edgecolor='#333333', linewidth=0.8, height=0.62)
-    
+
     ax_bar.set_yticks(y_pos)
     ax_bar.set_yticklabels([f"Syllable {s}" for s in top_sylls], fontsize=9.5, fontweight='bold', color='#222222')
     ax_bar.set_xlabel("Fold Enrichment (vs. Pop Mean)", fontsize=8.5, labelpad=5)
-    
+
     max_enr = max(top_enrich)
     ax_bar.set_xlim(0, max_enr * 1.35)
     for idx, (s_id, val) in enumerate(zip(top_sylls, top_enrich)):
         ax_bar.text(val + max_enr * 0.03, y_pos[idx], f"{val:.1f}×",
                     va='center', fontsize=9.0, fontweight='bold', color='#111111')
-        
+
     ax_bar.set_title(f"{comp_names[k]} Loadings", fontsize=11.5, fontweight='bold', color=comp_colors[k], pad=8)
     ax_bar.grid(axis='x', linestyle='--', alpha=0.35)
     ax_bar.spines['top'].set_visible(False)
     ax_bar.spines['right'].set_visible(False)
-    
+
     # --- Bottom Row: Spatial Arena Occupancy (True Square Arena) ---
     ax_sp = fig.add_subplot(gs_cols[1, k])
-    
+
     # Compute 2D weighted spatial histogram over square arena
     weights_k = W_probs[:, k]
     x_pts = np.clip(Spatial[:, 0], -1.0, 1.0)
     y_pts = np.clip(Spatial[:, 1], -1.0, 1.0)
-    
+
     # 2D Binned density with Gaussian smoothing across square extent
     bins = 40
     H_sp, xedges, yedges = np.histogram2d(x_pts, y_pts, bins=bins, range=[[-1.0, 1.0], [-1.0, 1.0]], weights=weights_k)
     H_smooth = gaussian_filter(H_sp, sigma=1.4)
-    
+
     X_grid, Y_grid = np.meshgrid(0.5*(xedges[:-1]+xedges[1:]), 0.5*(yedges[:-1]+yedges[1:]))
-    
+
     # Render contourf density across full square arena
     cf = ax_sp.contourf(X_grid, Y_grid, H_smooth.T, levels=15, cmap=cmaps[k], alpha=0.92)
-    
+
     # Draw true square arena boundary
     square = plt.Rectangle((-1.0, -1.0), 2.0, 2.0, color='#222222', fill=False, linewidth=1.6, linestyle='-', zorder=3)
     ax_sp.add_patch(square)
-    
+
     ax_sp.set_xlim(-1.08, 1.08)
     ax_sp.set_ylim(-1.08, 1.08)
     ax_sp.set_aspect('equal')

@@ -1,8 +1,8 @@
-import sys
-import os
-import pickle
 import argparse
 import importlib
+import os
+import pickle
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -57,20 +57,20 @@ def build_sessions(
     # Dynamic imports
     if str(proj_dir) not in sys.path:
         sys.path.insert(0, str(proj_dir))
-    
+
     # Reload modules to make sure we don't have cached configs from other runs
     if "enrich" in sys.modules:
         importlib.reload(sys.modules["enrich"])
-    
+
     if "config" in sys.modules:
         try:
             importlib.reload(sys.modules["config"])
         except Exception:
             # If config module is cached but cannot be reloaded, delete it
             sys.modules.pop("config", None)
-        
+
     import enrich
-    
+
     project_config = None
     try:
         import config as project_config
@@ -84,17 +84,17 @@ def build_sessions(
     # Overwrite the global JCFG in syllable_generation library
     from syllable_generation.loaders.jonathan import config as lib_config
     from syllable_generation.loaders.jonathan.config import JonathanConfig
-    
+
     if project_config is not None and hasattr(project_config, "JCFG"):
-        print(f"[sessions-unified] Overwriting JCFG with project config.")
+        print("[sessions-unified] Overwriting JCFG with project config.")
         lib_config.JCFG = project_config.JCFG
     else:
-        print(f"[sessions-unified] Resetting JCFG to default JonathanConfig.")
+        print("[sessions-unified] Resetting JCFG to default JonathanConfig.")
         lib_config.JCFG = JonathanConfig()
 
-    from syllable_generation.loaders.jonathan.context import BuildContext
-    from syllable_generation.loaders.jonathan.build import build
     from syllable_generation.loaders.jonathan import steps as jonathan_steps
+    from syllable_generation.loaders.jonathan.build import build
+    from syllable_generation.loaders.jonathan.context import BuildContext
 
     # 2. Determine Discovery Mode
     # Default to H5-based for syllable_generation example, and hybrid video/H5 for others
@@ -115,13 +115,13 @@ def build_sessions(
             print(f"[sessions-unified] Loading custom tracking step from: {custom_tracking}")
             if str(proj_dir) not in sys.path:
                 sys.path.insert(0, str(proj_dir))
-            
+
             if "tracking" in sys.modules:
                 importlib.reload(sys.modules["tracking"])
             import tracking
-            
+
             discovery_step = tracking.discover_sessions_hybrid
-            
+
             if str(proj_dir) in sys.path:
                 sys.path.remove(str(proj_dir))
         else:
@@ -148,7 +148,7 @@ def build_sessions(
 
     # 4. Check for Flipping
     has_flipping = (project_config is not None and hasattr(project_config, "OPTIMAL_FLIP_IDS")) or project == "jonathan_flipped"
-    
+
     if has_flipping:
         flip_ids = getattr(project_config, "OPTIMAL_FLIP_IDS", [728, 740, 1767, 1773, 1664, 1666, 1779, 1781])
         print(f"[sessions-unified] Flipping enabled. Optimal flip IDs: {flip_ids}")
@@ -200,7 +200,7 @@ def build_sessions(
     with out_path.open("wb") as f:
         pickle.dump(sessions, f, protocol=pickle.HIGHEST_PROTOCOL)
     print(f"[sessions-unified] Saved {len(sessions)} sessions to: {out_path}")
-    
+
     return sessions
 
 def main():
@@ -213,18 +213,18 @@ def main():
     parser.add_argument("--csv-root", default=None, help="Optional path to photometry CSV files root folder (if separate from data-dir)")
     parser.add_argument("--discovery-mode", choices=["h5", "hybrid"], default=None, help="Force specific discovery mode")
     args = parser.parse_args()
-    
+
     data_root = Path(args.data_dir).resolve()
     h5_dir = data_root / "h5_files"
     video_dir = data_root / "video_files"
-    
+
     if args.csv_root:
         csv_root = Path(args.csv_root).resolve()
     else:
         # Resolve CSV candidates
         csv_candidates = [data_root / "csvs", data_root / "Jonathan_IFxDN_csvs", data_root]
         csv_root = next((p for p in csv_candidates if p.exists()), data_root)
-    
+
     build_sessions(
         data_root=data_root,
         h5_dir=h5_dir,

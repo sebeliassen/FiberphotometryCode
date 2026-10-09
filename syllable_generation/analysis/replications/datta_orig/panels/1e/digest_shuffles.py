@@ -1,8 +1,11 @@
-import sys, os, gc, time
-from pathlib import Path
-import pandas as pd
-import numpy as np
+import gc
+import os
+import sys
+import time
 from datetime import datetime
+from pathlib import Path
+
+import pandas as pd
 
 # ==============================================================================
 # CONFIGURATION
@@ -27,10 +30,10 @@ def optimize_dataframe_inplace(df):
     """Shrinks RAM usage by converting strings to categories."""
     if "r" in df.columns:
         df["r"] = pd.to_numeric(df["r"], errors="coerce").astype("float32")
-    
-    cat_cols = ["genotype", "timescale", "brain_reg", "neural_agg", "feature", 
+
+    cat_cols = ["genotype", "timescale", "brain_reg", "neural_agg", "feature",
                 "shuffle_mode", "hemisphere", "fiber_num", "orig_letter", "animal_id", "signal"]
-    
+
     for c in cat_cols:
         if c in df.columns and df[c].dtype == "object":
             df[c] = df[c].astype("category")
@@ -38,17 +41,17 @@ def optimize_dataframe_inplace(df):
 def process_and_save_stats(df_subset, pipeline_name, valid_meta):
     """Calculates 95% Quantiles for shuffles."""
     modes = df_subset["shuffle_mode"].unique().tolist()
-    
+
     for mode in modes:
         log(f"   --- Generating Stats for: {pipeline_name} ({mode}) ---")
         sub = df_subset[df_subset["shuffle_mode"] == mode]
-        
+
         base_cols = ["genotype", "timescale", "brain_reg", "neural_agg", "feature"]
-        grp_cols = base_cols + valid_meta 
-        
+        grp_cols = base_cols + valid_meta
+
         # 1. Population Mean (avoids pseudoreplication)
         shuffle_means = sub.groupby(["shuffle_index"] + grp_cols, observed=True)["r"].mean()
-        
+
         # 2. Chance Bands
         chance_df = shuffle_means.abs().groupby(grp_cols, observed=True).quantile(0.95)
         p_dist_df = shuffle_means.unstack("feature")
@@ -56,7 +59,7 @@ def process_and_save_stats(df_subset, pipeline_name, valid_meta):
         out_name = DATA_DIR / f"STATS_{pipeline_name}_{mode}.pkl"
         log(f"      💾 Saving {out_name.name}")
         pd.to_pickle((chance_df, p_dist_df), out_name)
-        
+
         del sub, chance_df, p_dist_df, shuffle_means
         gc.collect()
 
@@ -65,10 +68,10 @@ def process_and_save_stats(df_subset, pipeline_name, valid_meta):
 # ==============================================================================
 def digest_shuffles():
     log(f"{'='*40}")
-    log(f"DIGESTING SHUFFLES (STATS)")
+    log("DIGESTING SHUFFLES (STATS)")
     log(f"{'='*40}")
-    
-    candidates = list(DATA_DIR.glob(f"datta_corr_SHUFFLE_raw_combined_*.parquet"))
+
+    candidates = list(DATA_DIR.glob("datta_corr_SHUFFLE_raw_combined_*.parquet"))
     if not candidates:
         log("❌ No shuffle parquet found.")
         return
@@ -81,7 +84,7 @@ def digest_shuffles():
         filters=[("genotype", "!=", "UNK"), ("brain_reg", "!=", "UNK")]
     )
     log(f"✅ Loaded {len(df):,} rows in {time.time() - t0:.1f}s.")
-    
+
     optimize_dataframe_inplace(df)
 
     desired_meta = ["hemisphere", "fiber_num", "orig_letter"]
@@ -89,7 +92,7 @@ def digest_shuffles():
 
     log("✂️ Splitting Pipelines...")
     is_datta = df["signal"].astype(str).str.contains("_datta")
-    
+
     # Datta
     df_datta = df[is_datta].copy()
     if not df_datta.empty: process_and_save_stats(df_datta, "datta_ransac", valid_meta)
@@ -107,10 +110,10 @@ def digest_shuffles():
 # ==============================================================================
 def digest_observed():
     log(f"\n{'='*40}")
-    log(f"DIGESTING OBSERVED DATA")
+    log("DIGESTING OBSERVED DATA")
     log(f"{'='*40}")
 
-    candidates = list(DATA_DIR.glob(f"datta_corr_OBSERVED_raw_*.parquet"))
+    candidates = list(DATA_DIR.glob("datta_corr_OBSERVED_raw_*.parquet"))
     if not candidates:
         log("❌ No Observed parquet found.")
         return
@@ -134,7 +137,7 @@ def digest_observed():
         out = DATA_DIR / "datta_corr_OBSERVED_datta_ransac.pkl"
         df_datta.to_pickle(out)
         log(f"   💾 Saved {out.name}")
-    
+
     # 2. Save Standard Observed
     df_std = df[~is_datta].copy()
     if not df_std.empty:

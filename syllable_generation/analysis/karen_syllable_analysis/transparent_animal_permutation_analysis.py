@@ -21,8 +21,9 @@ Transparent Animal-Level Permutation Analysis for Syllable Usage Results:
 
 import os
 import sys
-from pathlib import Path
 import warnings
+from pathlib import Path
+
 warnings.simplefilter("ignore")
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -32,13 +33,14 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import pickle
+from collections import defaultdict
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from scipy import stats
 from scipy.spatial.distance import jensenshannon
-from collections import defaultdict
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 # Clean, professional styling
 plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
@@ -55,7 +57,7 @@ with open(DATA_PKL, "rb") as f:
 
 # Filter for main cohort (exclude pilot)
 main_sessions = [
-    s for s in sessions 
+    s for s in sessions
     if s.metadata.get("genotype") in ["PFF", "Monomer"] and not str(s.metadata.get("animal_id", "")).startswith("pilot")
 ]
 
@@ -94,24 +96,24 @@ for i, aid in enumerate(animals):
     sess_list = animal_sessions[aid]
     total_valid_frames = 0
     syll_counts = np.zeros(K, dtype=np.float64)
-    
+
     for s in sess_list:
         if isinstance(s.syllables, pd.DataFrame):
             raw_s = s.syllables["syllable"].fillna(-5).to_numpy()
         else:
             raw_s = np.array(s.syllables)
-            
+
         sylls = pd.to_numeric(raw_s, errors="coerce")
         sylls = np.nan_to_num(sylls, nan=-5).astype(np.int32)
-            
+
         valid_mask = (sylls >= 0) & (sylls < K)
         total_valid_frames += np.sum(valid_mask)
         valid_sylls = sylls[valid_mask]
-        
+
         if len(valid_sylls) > 0:
             counts = np.bincount(valid_sylls, minlength=K)[:K]
             syll_counts += counts
-            
+
     if total_valid_frames > 0:
         animal_occupancy[i, :] = syll_counts / total_valid_frames
 
@@ -140,34 +142,34 @@ def calc_summary_stats(data_matrix, mask1, mask2):
     v2 = np.var(x2, axis=0, ddof=1)
     n1 = x1.shape[0]
     n2 = x2.shape[0]
-    
+
     denom = np.sqrt(v1 / n1 + v2 / n2)
     denom = np.where(denom == 0, np.nan, denom)
     t_stats = (m1 - m2) / denom
     t_stats = np.nan_to_num(t_stats, nan=0.0)
-    
+
     # Degrees of freedom for Welch t-test (Satterthwaite approximation)
     num_df = (v1 / n1 + v2 / n2) ** 2
     den_df = ((v1 / n1) ** 2) / (n1 - 1) + ((v2 / n2) ** 2) / (n2 - 1)
     df_welch = np.where(den_df == 0, n1 + n2 - 2, num_df / den_df)
     df_welch = np.nan_to_num(df_welch, nan=n1 + n2 - 2)
-    
+
     p_vals = 2 * (1 - stats.t.cdf(np.abs(t_stats), df=df_welch))
-    
+
     # 1. Star count (nominal p < 0.05)
     star_count = np.sum(p_vals < 0.05)
-    
+
     # 2. Max |t| statistic
     max_t = np.max(np.abs(t_stats))
-    
+
     # 3. Global distance (Jensen-Shannon Distance)
     mu1_norm = m1 / np.sum(m1)
     mu2_norm = m2 / np.sum(m2)
     js_dist = jensenshannon(mu1_norm, mu2_norm)
-    
+
     # 4. Global Euclidean Distance (L2)
     l2_dist = np.linalg.norm(mu1_norm - mu2_norm)
-    
+
     return {
         "t_stats": t_stats,
         "p_vals": p_vals,
@@ -220,13 +222,13 @@ for b in range(N_PERMS):
     perm_pff_mask = np.zeros(n_animals, dtype=bool)
     perm_pff_mask[perm_idx[:n_pff]] = True
     perm_mono_mask = ~perm_pff_mask
-    
+
     res = calc_summary_stats(animal_occupancy, perm_pff_mask, perm_mono_mask)
     null_star_count[b] = res["star_count"]
     null_max_t[b] = res["max_t"]
     null_js_dist[b] = res["js_dist"]
     null_l2_dist[b] = res["l2_dist"]
-    
+
     if (b + 1) % 5000 == 0:
         print(f"  Completed {b+1:,} / {N_PERMS:,} permutations...", flush=True)
 
@@ -241,17 +243,17 @@ p_val_l2_dist = (1 + np.sum(null_l2_dist >= obs["l2_dist"])) / (N_PERMS + 1)
 print("\n" + "="*80, flush=True)
 print("🎯 3. EMPIRICAL PERMUTATION RESULTS & P-VALUES", flush=True)
 print("="*80, flush=True)
-print(f"1. STAR COUNT STATISTIC (Number of Syllables with nominal p < 0.05):", flush=True)
+print("1. STAR COUNT STATISTIC (Number of Syllables with nominal p < 0.05):", flush=True)
 print(f"   • Real PFF vs Monomer:   {obs['star_count']} syllables", flush=True)
 print(f"   • Shuffled Null Mean:    {np.mean(null_star_count):.2f} syllables (95% CI: [{np.percentile(null_star_count, 2.5):.0f}, {np.percentile(null_star_count, 97.5):.0f}])", flush=True)
 print(f"   • Empirical p-value:     p = {p_val_stars:.5f} ({np.sum(null_star_count >= obs['star_count'])} / {N_PERMS} shuffles >= {obs['star_count']})", flush=True)
 
-print(f"\n2. MAX-STATISTIC (Largest absolute t-statistic across all 100 syllables):", flush=True)
+print("\n2. MAX-STATISTIC (Largest absolute t-statistic across all 100 syllables):", flush=True)
 print(f"   • Real PFF vs Monomer:   max |t| = {obs['max_t']:.4f}", flush=True)
 print(f"   • Shuffled Null Mean:    max |t| = {np.mean(null_max_t):.4f} (95% CI: [{np.percentile(null_max_t, 2.5):.4f}, {np.percentile(null_max_t, 97.5):.4f}])", flush=True)
 print(f"   • Empirical p-value:     p = {p_val_max_t:.5f} ({np.sum(null_max_t >= obs['max_t'])} / {N_PERMS} shuffles >= {obs['max_t']:.4f})", flush=True)
 
-print(f"\n3. GLOBAL REPERTOIRE DISTANCE (Jensen-Shannon Distance):", flush=True)
+print("\n3. GLOBAL REPERTOIRE DISTANCE (Jensen-Shannon Distance):", flush=True)
 print(f"   • Real PFF vs Monomer:   JSD = {obs['js_dist']:.4f}", flush=True)
 print(f"   • Shuffled Null Mean:    JSD = {np.mean(null_js_dist):.4f} (95% CI: [{np.percentile(null_js_dist, 2.5):.4f}, {np.percentile(null_js_dist, 97.5):.4f}])", flush=True)
 print(f"   • Empirical p-value:     p = {p_val_js_dist:.5f} ({np.sum(null_js_dist >= obs['js_dist'])} / {N_PERMS} shuffles >= {obs['js_dist']:.4f})", flush=True)
@@ -329,17 +331,17 @@ with open(report_path, "w") as f:
     f.write("="*80 + "\n")
     f.write("TRANSPARENT ANIMAL-LEVEL PERMUTATION TEST REPORT (N_perm = 25,000)\n")
     f.write("="*80 + "\n\n")
-    f.write(f"Cohort: 21 unique animals (12 PFF, 9 Monomer) across 99 total longitudinal sessions.\n")
-    f.write(f"Syllable repertoire: 100 syllables (0 to 99).\n\n")
-    f.write(f"1. STAR COUNT STATISTIC (Number of Syllables with nominal p < 0.05):\n")
+    f.write("Cohort: 21 unique animals (12 PFF, 9 Monomer) across 99 total longitudinal sessions.\n")
+    f.write("Syllable repertoire: 100 syllables (0 to 99).\n\n")
+    f.write("1. STAR COUNT STATISTIC (Number of Syllables with nominal p < 0.05):\n")
     f.write(f"   - Observed Real Split:  {obs['star_count']} syllables\n")
     f.write(f"   - Null Distribution:    Mean = {np.mean(null_star_count):.2f}, Median = {np.median(null_star_count):.0f}, 95% CI: [{np.percentile(null_star_count, 2.5):.0f}, {np.percentile(null_star_count, 97.5):.0f}]\n")
     f.write(f"   - Empirical p-value:    p = {p_val_stars:.5f} ({np.sum(null_star_count >= obs['star_count'])} / {N_PERMS} shuffles >= {obs['star_count']})\n\n")
-    f.write(f"2. MAX-STATISTIC (Largest absolute t-statistic across all 100 syllables):\n")
+    f.write("2. MAX-STATISTIC (Largest absolute t-statistic across all 100 syllables):\n")
     f.write(f"   - Observed Real Split:  max |t| = {obs['max_t']:.4f}\n")
     f.write(f"   - Null Distribution:    Mean = {np.mean(null_max_t):.4f}, Median = {np.median(null_max_t):.4f}, 95% CI: [{np.percentile(null_max_t, 2.5):.4f}, {np.percentile(null_max_t, 97.5):.4f}]\n")
     f.write(f"   - Empirical p-value:    p = {p_val_max_t:.5f} ({np.sum(null_max_t >= obs['max_t'])} / {N_PERMS} shuffles >= {obs['max_t']:.4f})\n\n")
-    f.write(f"3. GLOBAL REPERTOIRE DIVERGENCE (Jensen-Shannon Distance):\n")
+    f.write("3. GLOBAL REPERTOIRE DIVERGENCE (Jensen-Shannon Distance):\n")
     f.write(f"   - Observed Real Split:  JSD = {obs['js_dist']:.4f}\n")
     f.write(f"   - Null Distribution:    Mean = {np.mean(null_js_dist):.4f}, Median = {np.median(null_js_dist):.4f}, 95% CI: [{np.percentile(null_js_dist, 2.5):.4f}, {np.percentile(null_js_dist, 97.5):.4f}]\n")
     f.write(f"   - Empirical p-value:    p = {p_val_js_dist:.5f} ({np.sum(null_js_dist >= obs['js_dist'])} / {N_PERMS} shuffles >= {obs['js_dist']:.4f})\n\n")

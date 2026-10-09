@@ -19,13 +19,13 @@ Provides drop-in backward and forward compatibility:
 """
 
 import os
-import h5py
-import numpy as np
 import pickle
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple, Union
 
+import h5py
 import keypoint_moseq as kpms
+import numpy as np
 from keypoint_moseq.io import _get_path, load_hdf5
 
 _ORIGINAL_LOAD_CHECKPOINT = kpms.io.load_checkpoint

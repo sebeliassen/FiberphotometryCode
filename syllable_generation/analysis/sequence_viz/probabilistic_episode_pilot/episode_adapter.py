@@ -19,8 +19,8 @@ Features:
 
 import sys
 from pathlib import Path
+
 import numpy as np
-import pandas as pd
 from scipy.interpolate import interp1d
 
 # Add repo root to path
@@ -28,7 +28,8 @@ REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
-    EXP_DIR, DATA_DIR, THEMES, META_NAMES, TRAIN_ANIMALS
+    THEMES,
+    TRAIN_ANIMALS,
 )
 
 

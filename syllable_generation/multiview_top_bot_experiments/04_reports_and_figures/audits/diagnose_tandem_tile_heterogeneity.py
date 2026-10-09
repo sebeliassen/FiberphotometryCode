@@ -9,9 +9,13 @@ Test 3: Is the large variance of bot_nose_tip / bot_tail_base signal or noise?
 Both read the continuous-calibrated fused h5 files (60 fps raw top-frame index space)
 and the results.h5 + video_frame_indexes.npz of each model.
 """
-import re, json, sys
+import json
+import re
 from pathlib import Path
-import numpy as np, pandas as pd, h5py
+
+import h5py
+import numpy as np
+import pandas as pd
 from scipy.ndimage import median_filter
 from sklearn.cluster import MiniBatchKMeans
 

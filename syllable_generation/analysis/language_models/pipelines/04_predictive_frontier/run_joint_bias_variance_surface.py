@@ -17,13 +17,14 @@ Methodology:
 """
 
 import os
+import pickle
 import sys
 import time
-import pickle
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
-import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from sklearn.preprocessing import StandardScaler
 
@@ -80,7 +81,7 @@ for sess_idx, bouts in enumerate(session_bouts):
     sp = np.zeros((N, 6), dtype=np.float32)
     oh_bout = np.zeros((N, NUM_ACTIVE_SYLLS), dtype=np.float32)
     next_bout_ptrs = np.full(N, N, dtype=np.int32)
-    
+
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = b["syllable"] - 1
@@ -90,18 +91,18 @@ for sess_idx, bouts in enumerate(session_bouts):
         vec = b.get("vector", None)
         if vec is not None and len(vec) >= 14:
             sp[sf:ef+1, :4] = vec[:4]; sp[sf:ef+1, 4] = vec[10]; sp[sf:ef+1, 5] = vec[12]
-            
+
     b_starts = np.array([b["start_frame"] for b in bouts])
     for t_idx, b_st in enumerate(b_starts):
         prev_st = b_starts[t_idx-1] if t_idx > 0 else 0
         next_bout_ptrs[prev_st:b_st] = b_st
     if len(b_starts) > 0:
         next_bout_ptrs[b_starts[-1]:] = N
-        
+
     cum_bout = np.vstack([np.zeros((1, NUM_ACTIVE_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
     cum_spatial = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp, axis=0)])
     cum_spatial_sq = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp**2, axis=0)])
-    
+
     sessions_data.append({
         "sess_idx": sess_idx, "N": N, "fs": fs, "cum_bout": cum_bout,
         "next_bout_ptrs": next_bout_ptrs, "cum_spatial": cum_spatial,
@@ -113,13 +114,13 @@ for s in sessions_data:
     N = s["N"]
     if N < W_FRAMES + H_FRAMES + 200: continue
     inj_f = s["inj_frame"]
-    
+
     t_anchors = np.arange(W_FRAMES, N - H_FRAMES, STRIDE_FRAMES)
     t_tgt_start = s["next_bout_ptrs"][t_anchors]
     valid = (t_tgt_start + H_FRAMES < N)
     t_anchors = t_anchors[valid]
     t_tgt_start = t_tgt_start[valid]
-    
+
     past_start = t_anchors - W_FRAMES
     future_end = t_tgt_start + H_FRAMES
     no_straddle = (future_end < inj_f) | (past_start > inj_f)
@@ -127,7 +128,7 @@ for s in sessions_data:
     t_tgt_start = t_tgt_start[no_straddle]
     M = len(t_anchors)
     if M == 0: continue
-    
+
     # 1. Spatial context (14-D)
     t_norm = t_anchors / float(N)
     p1 = np.column_stack([t_norm, t_norm**2]).astype(np.float32)
@@ -136,15 +137,15 @@ for s in sessions_data:
     sp_sq = s["cum_spatial_sq"][t_anchors] - s["cum_spatial_sq"][t_anchors - W_FRAMES]
     sp_var = np.maximum(sp_sq / float(W_FRAMES) - sp_mean**2, 1e-6)
     feat_space = np.hstack([p1, sp_mean, np.sqrt(sp_var)]).astype(np.float32)
-    
+
     # 2. Repertoire (99-D)
     b_cnt = s["cum_bout"][t_anchors] - s["cum_bout"][t_anchors - W_FRAMES]
     feat_rep = (b_cnt + 1e-4) / (np.sum(b_cnt, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     # 3. Target Future (99-D)
     f_cnt = s["cum_bout"][t_tgt_start + H_FRAMES] - s["cum_bout"][t_tgt_start]
     target = (f_cnt + 1e-4) / (np.sum(f_cnt, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     for i in range(M):
         raw_windows.append({
             "sess_idx": s["sess_idx"],
@@ -200,69 +201,69 @@ for frac in N_FRACS:
     n_repeats = REPEATS_PER_FRAC[frac]
     for rep_i in range(n_repeats):
         rng = np.random.RandomState(42 + int(frac * 1000) + rep_i * 17)
-        
+
         # Precompute per-anchor nearest neighbors
         # Store for all k in K_GRID
         pred_risks = {k: np.zeros(N_win, dtype=np.float32) for k in K_GRID}
         mean_dists = {k: np.zeros(N_win, dtype=np.float32) for k in K_GRID}
         dispersions = {k: np.zeros(N_win, dtype=np.float32) for k in K_GRID}
-        
+
         for s_idx in unique_sessions:
             anchor_mask = (sess_ids == s_idx)
             anchor_indices = np.where(anchor_mask)[0]
-            
+
             cand_sessions = [s for s in unique_sessions if s != s_idx]
             n_sub = max(2, int(len(cand_sessions) * frac)) if frac < 1.0 else len(cand_sessions)
             chosen_cands = rng.choice(cand_sessions, size=n_sub, replace=False) if frac < 1.0 else cand_sessions
-            
+
             sub_cand_mask = np.isin(sess_ids, chosen_cands)
             cand_indices = np.where(sub_cand_mask)[0]
-            
+
             X_anchors = X_tensor[anchor_indices]
             X_cands = X_tensor[cand_indices]
             Y_anchors = Y_tensor[anchor_indices]
             Y_cands = Y_tensor[cand_indices]
-            
+
             batch_size = 512
             for b_start in range(0, len(anchor_indices), batch_size):
                 b_end = min(b_start + batch_size, len(anchor_indices))
                 b_X = X_anchors[b_start:b_end]
                 b_Y = Y_anchors[b_start:b_end]
                 b_global_idx = anchor_indices[b_start:b_end]
-                
+
                 dists = torch.cdist(b_X, X_cands, p=2.0)
                 max_k = min(max(K_GRID), len(cand_indices))
                 topk_dists, topk_idx = torch.topk(dists, k=max_k, largest=False, dim=1)
-                
+
                 for k_val in K_GRID:
                     eff_k = min(k_val, max_k)
                     sub_dists = topk_dists[:, :eff_k]
                     sub_idx = topk_idx[:, :eff_k]
-                    
+
                     neigh_Y = Y_cands[sub_idx] # [B, eff_k, 99]
                     Y_bar_N = torch.mean(neigh_Y, dim=1)
-                    
+
                     risk_pred = js_divergence_pt(b_Y, Y_bar_N)
-                    
+
                     Y_bar_exp = Y_bar_N.unsqueeze(1).repeat(1, eff_k, 1)
                     disp_k = js_divergence_pt(neigh_Y.reshape(-1, NUM_ACTIVE_SYLLS), Y_bar_exp.reshape(-1, NUM_ACTIVE_SYLLS))
                     disp_k = disp_k.reshape(-1, eff_k).mean(dim=1)
-                    
+
                     pred_risks[k_val][b_global_idx] = risk_pred.cpu().numpy()
                     mean_dists[k_val][b_global_idx] = sub_dists.mean(dim=1).cpu().numpy()
                     dispersions[k_val][b_global_idx] = disp_k.cpu().numpy()
-                    
+
         # Compute session-level averages for each k
         for k_val in K_GRID:
             sess_risks = [np.mean(pred_risks[k_val][sess_ids == s]) for s in unique_sessions]
             sess_dists = [np.mean(mean_dists[k_val][sess_ids == s]) for s in unique_sessions]
             sess_disps = [np.mean(dispersions[k_val][sess_ids == s]) for s in unique_sessions]
-            
+
             m_risk = float(np.mean(sess_risks))
             m_dist = float(np.mean(sess_dists))
             m_disp = float(np.mean(sess_disps))
             m_gain = ((mean_null_js - m_risk) / mean_null_js) * 100.0
-            
+
             cloud_records.append({
                 "Dataset_Fraction": frac,
                 "Repeat_ID": rep_i,
@@ -272,7 +273,7 @@ for frac in N_FRACS:
                 "Predictive_Gain_pct": m_gain,
                 "Local_Dispersion_bits": m_disp
             })
-            
+
     log(f"  Completed scale N = {frac*100:3.0f}% ({n_repeats} random subsets evaluated).")
 
 df_cloud = pd.DataFrame(cloud_records)
@@ -306,11 +307,11 @@ popt2, pcov2 = curve_fit(model_surface_p2, (d_data, k_data), r_data, p0=[0.14, 0
 R_inf_2, a2, b2 = popt2
 r2_2 = 1.0 - np.sum((r_data - model_surface_p2((d_data, k_data), *popt2))**2) / np.sum((r_data - np.mean(r_data))**2)
 
-log(f"--- Surface Model p=1 (Linear d) ---")
+log("--- Surface Model p=1 (Linear d) ---")
 log(f"  R_inf = {R_inf_1:.4f} bits | a = {a1:.4f} | b = {b1:.4f} | R^2 = {r2_1:.4f}")
 log(f"  Implied Asymptotic Gain = {((mean_null_js - R_inf_1) / mean_null_js) * 100.0:.2f}%")
 
-log(f"--- Surface Model p=2 (Quadratic d) ---")
+log("--- Surface Model p=2 (Quadratic d) ---")
 log(f"  R_inf = {R_inf_2:.4f} bits | a = {a2:.4f} | b = {b2:.4f} | R^2 = {r2_2:.4f}")
 log(f"  Implied Asymptotic Gain = {((mean_null_js - R_inf_2) / mean_null_js) * 100.0:.2f}%")
 
@@ -327,13 +328,13 @@ for b_i in range(B_ITERS):
     d_b = d_data[boot_indices]
     k_b = k_data[boot_indices]
     r_b = r_data[boot_indices]
-    
+
     try:
         popt_b1, _ = curve_fit(model_surface_p1, (d_b, k_b), r_b, p0=[0.14, 0.1, 0.5], bounds=([0.0, 0.0, 0.0], [0.3, 2.0, 10.0]), maxfev=2000)
         boot_R_inf_p1.append(popt_b1[0])
     except Exception:
         pass
-        
+
     try:
         popt_b2, _ = curve_fit(model_surface_p2, (d_b, k_b), r_b, p0=[0.14, 0.1, 0.5], bounds=([0.0, 0.0, 0.0], [0.3, 2.0, 10.0]), maxfev=2000)
         boot_R_inf_p2.append(popt_b2[0])
@@ -343,11 +344,11 @@ for b_i in range(B_ITERS):
 ci_p1 = (float(np.percentile(boot_R_inf_p1, 2.5)), float(np.percentile(boot_R_inf_p1, 97.5)))
 ci_p2 = (float(np.percentile(boot_R_inf_p2, 2.5)), float(np.percentile(boot_R_inf_p2, 97.5)))
 
-log(f"\n=================================================================")
-log(f"FINAL BOOTSTRAP RESULTS:")
+log("\n=================================================================")
+log("FINAL BOOTSTRAP RESULTS:")
 log(f"  Linear d (p=1):    R_inf = {np.mean(boot_R_inf_p1):.4f} bits [95% CI: {ci_p1[0]:.4f} - {ci_p1[1]:.4f}]")
 log(f"  Quadratic d (p=2): R_inf = {np.mean(boot_R_inf_p2):.4f} bits [95% CI: {ci_p2[0]:.4f} - {ci_p2[1]:.4f}]")
-log(f"=================================================================")
+log("=================================================================")
 
 # Save Summary Table
 summary_data = [

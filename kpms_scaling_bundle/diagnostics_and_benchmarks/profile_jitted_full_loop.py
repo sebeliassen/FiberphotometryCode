@@ -1,12 +1,15 @@
 import os
 import sys
 import time
+
 import numpy as np
+
 np.bool8 = np.bool_
+from functools import partial
+
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-from functools import partial
 import pandas as pd
 
 REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -16,15 +19,19 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import keypoint_moseq as kpms
 import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
-import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from utils.paths import ref_pairs_from_sessions
-from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg
-from utils.batch_init import batched_init_model_by_video
-from utils.resample_batching import fast_banded_gmrf_resample_x, fast_resample_discrete_stateseqs, vectorized_resample_ar_params, _numba_assemble_and_solve_tridiagonal_v
+import keypoint_moseq as kpms
 from jax_moseq.utils.autoregression import get_nlags
 from jax_moseq.utils.transitions import count_transitions, sample_hdp_transitions
+from utils.batch_init import batched_init_model_by_video
+from utils.paths import ref_pairs_from_sessions
+from utils.resample_batching import (
+    _numba_assemble_and_solve_tridiagonal_v,
+    fast_banded_gmrf_resample_x,
+    fast_resample_discrete_stateseqs,
+    vectorized_resample_ar_params,
+)
+from utils.trimming import clamp_conf_nonneg, filter_with_masks, presence_mask_from_conf
 
 SCRATCH_DIR = os.path.join(KPMS_DIR, "scratch_profiling_project")
 DIRTY_PKL = os.path.join(REPO_ROOT, "syllable_generation/data/sessions_karen_project_dirty.pkl")
@@ -69,7 +76,7 @@ def main():
     hypparams = model["hypparams"]
     Y = data["Y"]
     mask = data["mask"]
-    
+
     N, T, k, d = Y.shape
     nlags = get_nlags(params["Ab"])
     num_states = len(params["betas"])
@@ -91,7 +98,7 @@ def main():
 
     for it in range(1, 6):
         t_tot = time.perf_counter()
-        
+
         # 1. Transitions
         t0 = time.perf_counter()
         counts = count_transitions(num_states, states["z"], mask)
@@ -102,7 +109,7 @@ def main():
         )
         params["pi"].block_until_ready()
         t_trans = (time.perf_counter() - t0) * 1000.0
-        
+
         # 2. AR Dynamics (Ab, Q)
         t0 = time.perf_counter()
         params["Ab"], params["Q"] = vectorized_resample_ar_params(
@@ -110,7 +117,7 @@ def main():
         )
         params["Q"].block_until_ready()
         t_ar = (time.perf_counter() - t0) * 1000.0
-        
+
         # 3. Discrete Syllables (z)
         t0 = time.perf_counter()
         states["z"] = fast_resample_discrete_stateseqs(
@@ -119,7 +126,7 @@ def main():
         )
         states["z"].block_until_ready()
         t_z = (time.perf_counter() - t0) * 1000.0
-        
+
         # 4. Heading (h)
         t0 = time.perf_counter()
         states["h"] = jit_resample_heading(
@@ -139,7 +146,7 @@ def main():
         states["v"] = jnp.array(v_np)
         states["v"].block_until_ready()
         t_v = (time.perf_counter() - t0) * 1000.0
-        
+
         # 6. Continuous Latents (x)
         t0 = time.perf_counter()
         states["x"] = fast_banded_gmrf_resample_x(
@@ -149,7 +156,7 @@ def main():
         )
         states["x"].block_until_ready()
         t_x = (time.perf_counter() - t0) * 1000.0
-        
+
         # 7. Scales (s)
         t0 = time.perf_counter()
         states["s"] = jit_resample_scales(
@@ -159,9 +166,9 @@ def main():
         )
         states["s"].block_until_ready()
         t_s = (time.perf_counter() - t0) * 1000.0
-        
+
         total = (time.perf_counter() - t_tot) * 1000.0
-        
+
         accounted = t_trans + t_ar + t_z + t_h + t_v + t_x + t_s
         print(f"Iter {it}: Total = {total:6.1f} ms | x: {t_x:5.1f}ms | v: {t_v:5.1f}ms | h: {t_h:5.1f}ms | z: {t_z:5.1f}ms | AR: {t_ar:5.1f}ms | s: {t_s:5.1f}ms | trans: {t_trans:5.1f}ms (overhead: {total-accounted:.1f}ms)")
 

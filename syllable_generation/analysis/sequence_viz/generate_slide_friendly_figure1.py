@@ -16,10 +16,11 @@ Slide-optimized version of Figure 1:
 
 import itertools
 from pathlib import Path
+
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 
 DATA_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/data")
 PRESENTATION_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/presentations")
@@ -146,7 +147,7 @@ for cohort in ["WT_Saline", "KI_Saline", "WT_Amphetamine", "KI_Amphetamine"]:
     means = sub["rate_per_min_mean"].values
     sems = sub["rate_per_min_sem"].values
     x_pos = chain_indices + offsets[cohort]
-    
+
     ax_top.bar(x_pos, means, yerr=sems, width=bar_w, color=cohort_colors[cohort],
                capsize=3.0, edgecolor="#1A202C", linewidth=1.0, alpha=0.92,
                label=cohort_labels[cohort], zorder=3)
@@ -154,23 +155,23 @@ for cohort in ["WT_Saline", "KI_Saline", "WT_Amphetamine", "KI_Amphetamine"]:
 # Add Significance Brackets and Stars
 for k in range(1, K + 1):
     sub_k = df_cohort[df_cohort["factor_id"] == k]
-    
+
     # Saline values
     wt_sal_row = sub_k[sub_k["cohort"] == "WT_Saline"].iloc[0]
     ki_sal_row = sub_k[sub_k["cohort"] == "KI_Saline"].iloc[0]
     sal_max = max(wt_sal_row["rate_per_min_mean"] + wt_sal_row["rate_per_min_sem"],
                   ki_sal_row["rate_per_min_mean"] + ki_sal_row["rate_per_min_sem"])
-    
+
     # Amph values
     wt_amph_row = sub_k[sub_k["cohort"] == "WT_Amphetamine"].iloc[0]
     ki_amph_row = sub_k[sub_k["cohort"] == "KI_Amphetamine"].iloc[0]
     amph_max = max(wt_amph_row["rate_per_min_mean"] + wt_amph_row["rate_per_min_sem"],
                    ki_amph_row["rate_per_min_mean"] + ki_amph_row["rate_per_min_sem"])
-    
+
     # Get p-values
     p_sal_k = df_uni[(df_uni["factor_id"] == k) & (df_uni["drug"] == "Saline")]["p_val"].values[0]
     p_amph_k = df_uni[(df_uni["factor_id"] == k) & (df_uni["drug"] == "Amphetamine")]["p_val"].values[0]
-    
+
     # Saline bracket
     if p_sal_k < 0.05:
         star_sal = "***" if p_sal_k < 0.001 else ("**" if p_sal_k < 0.01 else "*")
@@ -181,7 +182,7 @@ for k in range(1, K + 1):
         ax_top.plot([x1, x1, x2, x2], [y_b, y_b + h_tick, y_b + h_tick, y_b], color="#2D3748", lw=1.2, zorder=5)
         ax_top.text((x1 + x2) / 2, y_b + h_tick + 0.04, star_sal, ha="center", va="bottom",
                     fontsize=12, fontweight="bold", color="#C05621", zorder=5)
-        
+
     # Amph bracket
     if p_amph_k < 0.05:
         star_amph = "***" if p_amph_k < 0.001 else ("**" if p_amph_k < 0.01 else "*")

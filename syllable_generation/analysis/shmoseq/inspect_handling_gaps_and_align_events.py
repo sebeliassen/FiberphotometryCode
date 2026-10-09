@@ -22,15 +22,16 @@ Audit and Refine Behavioral Event Alignment:
 """
 
 import os
-import sys
-import shutil
 import pickle
+import shutil
+import sys
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.ndimage import binary_closing, binary_opening, label
-from scipy import stats
-import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
+from scipy import stats
+from scipy.ndimage import binary_closing, binary_opening, label
 
 BASE_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 if BASE_DIR not in sys.path:
@@ -50,16 +51,16 @@ def detect_session_events(mean_lh, md_entry, md_inj, fps=FPS):
     brief dropouts during presence (<= 2.0s).
     """
     n_frames = len(mean_lh)
-    
+
     # Raw absence: mean likelihood < 0.35
     absent_raw = (mean_lh < 0.35)
-    
+
     # 1. Bridge brief false-presence spikes during handling (hand/glove crossing, <= 2.5s)
     absent_bridged = binary_closing(absent_raw, structure=np.ones(int(round(2.5 * fps)), dtype=bool))
-    
+
     # 2. Require sustained absence >= 5.0s
     absent_sustained = binary_opening(absent_bridged, structure=np.ones(int(round(5.0 * fps)), dtype=bool))
-    
+
     # 3. Connected absence components
     lbl, n_lbl = label(absent_sustained)
     blocks = []
@@ -71,7 +72,7 @@ def detect_session_events(mean_lh, md_entry, md_inj, fps=FPS):
             'dur_f': int(idx[-1] - idx[0] + 1),
             'dur_s': (idx[-1] - idx[0] + 1) / fps
         })
-        
+
     # Chamber Entry: end of initial absence block
     if len(blocks) > 0 and blocks[0]['start_f'] < int(30 * fps):
         detected_entry = blocks[0]['end_f'] + 1

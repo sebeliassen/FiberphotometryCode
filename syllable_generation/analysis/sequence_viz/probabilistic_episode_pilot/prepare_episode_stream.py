@@ -10,13 +10,13 @@ Preserves the exact bout clock and original frame timestamps.
 =============================================================================
 """
 
+import pickle
 import sys
 import time
-import pickle
 from pathlib import Path
-import numpy as np
-import pandas as pd
+
 import h5py
+import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
@@ -24,12 +24,15 @@ from sklearn.preprocessing import StandardScaler
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
-    EXP_DIR, DATA_DIR, KPMS_RESULTS_PATH, VFI_PATH, SESSIONS_CSV, ANIMALS_CSV,
-    CLUSTERED_DATASET_PATH, TRAIN_ANIMALS, VAL_ANIMALS, META_NAMES
-)
 from syllable_generation.analysis.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
-    get_verified_metadata, get_level_definitions
+    get_verified_metadata,
+)
+from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
+    DATA_DIR,
+    KPMS_RESULTS_PATH,
+    TRAIN_ANIMALS,
+    VAL_ANIMALS,
+    VFI_PATH,
 )
 
 

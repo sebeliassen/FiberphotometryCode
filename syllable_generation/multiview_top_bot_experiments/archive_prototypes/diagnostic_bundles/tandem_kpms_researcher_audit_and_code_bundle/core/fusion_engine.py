@@ -14,29 +14,30 @@ Mathematical 2D tracking fusion engine implementing the 4 Golden Rules:
 
 import time
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 import numpy as np
 import pandas as pd
 from scipy.ndimage import median_filter
 
 try:
+    from .camera_correspondence import get_session_mapping
     from .schemas import (
-        TOP_USE_BODYPARTS,
         BOT_RENAME_MAP,
         DEFAULT_ARENA_WIDTH,
+        TOP_USE_BODYPARTS,
         PathConfig,
     )
     from .ttl_sync import get_session_ttl_offset
-    from .camera_correspondence import get_session_mapping
 except ImportError:
+    from camera_correspondence import get_session_mapping
     from schemas import (
-        TOP_USE_BODYPARTS,
         BOT_RENAME_MAP,
         DEFAULT_ARENA_WIDTH,
+        TOP_USE_BODYPARTS,
         PathConfig,
     )
     from ttl_sync import get_session_ttl_offset
-    from camera_correspondence import get_session_mapping
 
 def rot2d(angle: np.ndarray) -> np.ndarray:
     """Computes vectorized 2D rotation matrices for an array of angles in radians."""
@@ -112,7 +113,7 @@ def fuse_single_pair(
         if mapping is not None:
             N_map = min(N_top, len(mapping))
             mapping = mapping[:N_map]
-            
+
             # Truncate terminal aborted recordings (e.g. BotCam died early)
             if truncate_aborted_tail:
                 valid_mapped = np.where((mapping >= 0) & (mapping < N_bot))[0]

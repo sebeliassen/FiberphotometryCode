@@ -12,11 +12,12 @@ Generates a dedicated, slide-ready figure for Chain Self-Transitions & Persevera
 """
 
 from pathlib import Path
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+
 import matplotlib.gridspec as gridspec
 import matplotlib.patches as patches
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 DATA_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/data")
 PRESENTATION_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/presentations")
@@ -75,7 +76,7 @@ if ep_file.exists():
     df_ep_raw = pd.read_csv(ep_file)
     meta_file = DATA_DIR / "session_metadata_ground_truth.csv"
     df_meta = pd.read_csv(meta_file) if meta_file.exists() else None
-    
+
     # Check if level3_seqnmf_model_results exists
     model_pkl = DATA_DIR / "level3_seqnmf_model_results.pkl"
     with open(model_pkl, "rb") as f:
@@ -86,10 +87,7 @@ if ep_file.exists():
     pass
 
 # We can directly run the exact transition calculation from extract_level3
-from extract_level3_chain_quantitative_results import (
-    run_full_level3_pipeline,
-    analyze_chain_looping_and_perseveration
-)
+from extract_level3_chain_quantitative_results import analyze_chain_looping_and_perseveration, run_full_level3_pipeline
 
 W, token_names, df_ep, df_meta = run_full_level3_pipeline()
 df_loop, norm_cohort_trans = analyze_chain_looping_and_perseveration(df_ep, df_meta, K=10)
@@ -164,26 +162,26 @@ ax_top.set_ylim(0, 0.68)
 for c_idx, cohort in enumerate(COHORT_ORDER):
     ax_mat = fig.add_subplot(gs[1, c_idx])
     t_mat = norm_cohort_trans[cohort]
-    
+
     im = ax_mat.imshow(t_mat, cmap="viridis", vmin=0, vmax=0.45, aspect="equal")
     ax_mat.set_title(f"{COHORT_LABELS[cohort]}\nTransition Matrix", fontweight="bold", fontsize=11.5, pad=8)
-    
+
     ax_mat.set_xticks(np.arange(0, K, 2))
     ax_mat.set_xticklabels([f"C{k+1}" for k in range(0, K, 2)], fontsize=9)
     ax_mat.set_yticks(np.arange(0, K, 2))
     ax_mat.set_yticklabels([f"C{k+1}" for k in range(0, K, 2)], fontsize=9)
-    
+
     # Highlight diagonal self-transitions with clean orange/white bounding boxes
     for k in range(K):
         rect = patches.Rectangle((k - 0.5, k - 0.5), 1, 1, fill=False,
                                  edgecolor="#ED8936" if "KI" in cohort else "#63B3ED",
                                  linewidth=1.4, linestyle="-", zorder=5)
         ax_mat.add_patch(rect)
-        
+
     if c_idx == 0:
         ax_mat.set_ylabel("Current Chain $k_t$", fontweight="bold", fontsize=11)
     ax_mat.set_xlabel("Next Chain $k_{t+1}$", fontweight="bold", fontsize=11)
-    
+
     if c_idx == 3:
         cbar = fig.colorbar(im, ax=ax_mat, fraction=0.046, pad=0.07)
         cbar.set_label("Transition Probability", fontweight="bold", fontsize=10)

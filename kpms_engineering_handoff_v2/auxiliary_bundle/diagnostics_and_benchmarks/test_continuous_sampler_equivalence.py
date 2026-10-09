@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+
 import numpy as np
 
 # Numpy 2.x compatibility
@@ -14,11 +15,10 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import jax
 import jax.numpy as jnp
 import jax.random as jr
-import keypoint_moseq as kpms
 import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+import keypoint_moseq as kpms
 from utils.resample_batching import pure_numba_resample_continuous_stateseqs
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "amph_project")
@@ -124,7 +124,7 @@ def main():
     var_mae = float(np.mean(var_diff))
     var_ratio = float(np.mean(var_n) / np.mean(var_k))
 
-    log(f"\n      --- Moments Parity on Valid Frames ---")
+    log("\n      --- Moments Parity on Valid Frames ---")
     log(f"      * Posterior Mean Trajectory Correlation (r): {mean_corr:.4f} (across all {D} dims)")
     log(f"      * Posterior Mean MAE:                      {mean_mae:.5f}")
     log(f"      * Posterior Mean Max Diff:                 {mean_max:.5f}")

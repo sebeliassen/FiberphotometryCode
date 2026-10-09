@@ -21,19 +21,19 @@ import os
 import sys
 import time
 from pathlib import Path
+
 import numpy as np
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
-    load_chain_movie_resources,
     filter_chain_outliers,
-    generate_chain_grid_movie
+    generate_chain_grid_movie,
+    load_chain_movie_resources,
 )
 from syllable_generation.analysis.sequence_viz.clustered_seqnmf.prepare_clustered_sequences import (
     SYLL_TO_META_ARR,
-    META_SYLLABLE_DEFS
 )
 
 OUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/clustered_seqnmf/movies"

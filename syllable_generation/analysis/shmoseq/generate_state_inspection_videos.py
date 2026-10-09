@@ -24,9 +24,10 @@ Outputs:
 """
 
 import os
-import sys
 import pickle
 import subprocess
+import sys
+
 import cv2
 import numpy as np
 import pandas as pd

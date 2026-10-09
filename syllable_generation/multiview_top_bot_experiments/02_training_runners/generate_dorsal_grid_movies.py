@@ -13,12 +13,12 @@ Follows all rules and best practices from kpms-visualizations skill:
 5. Generates both raw video crops and keypoint skeleton overlay grid movies.
 """
 
-import os
-import sys
-import re
 import argparse
-from pathlib import Path
+import os
+import re
 from collections import Counter
+from pathlib import Path
+
 import numpy as np
 
 # Force CPU execution before importing JAX / KPMS
@@ -30,14 +30,15 @@ if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import matplotlib
+
 matplotlib.use("Agg")
 
 import jax.numpy as jnp
 import keypoint_moseq as kpms
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
 import keypoint_moseq.util as util
 import keypoint_moseq.viz as viz
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
@@ -71,7 +72,7 @@ def main():
     model_name = model_path.name
 
     print("=" * 80)
-    print(f"🎬 DORSAL SYLLABLE GRID MOVIE GENERATOR")
+    print("🎬 DORSAL SYLLABLE GRID MOVIE GENERATOR")
     print(f"  Project Dir: {project_dir}")
     print(f"  Model Name:  {model_name}")
     print(f"  Top Sylls:   {args.top_n_syllables}")
@@ -212,7 +213,7 @@ def main():
     raw_files = list(out_raw.glob("*.mp4"))
     overlay_files = list(out_overlay.glob("*.mp4"))
     print("\n" + "=" * 80)
-    print(f"🎉 COMPLETED DORSAL SYLLABLE INSTANCES GENERATION!")
+    print("🎉 COMPLETED DORSAL SYLLABLE INSTANCES GENERATION!")
     print(f"  Raw grid movies:     {len(raw_files)} files in {out_raw}")
     print(f"  Overlay grid movies: {len(overlay_files)} files in {out_overlay}")
     print("=" * 80, flush=True)

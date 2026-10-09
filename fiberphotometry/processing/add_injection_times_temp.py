@@ -1,6 +1,7 @@
 # phot_df has [FrameCounter, Timestamp, cam_frame_num, BonsaiTrackingTimestamp]
 import pandas as pd
 
+
 def adjust_names(s):
     first_second, mouse_ids, hand_dir, _ = s.split('_')
     id_one, id_two = mouse_ids.split('&')

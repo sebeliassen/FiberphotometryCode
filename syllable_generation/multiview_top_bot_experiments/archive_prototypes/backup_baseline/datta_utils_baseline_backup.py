@@ -3,16 +3,14 @@
 from __future__ import annotations
 
 import re
-from typing import Iterable, List, Dict
-import pandas as pd
-
 from pathlib import Path
+from typing import Dict, Iterable, List
+
 import numpy as np
+import pandas as pd
 
 # Repo-local imports
 from syllable_generation.loaders.jonathan.config import JCFG
-from syllable_generation.loaders.jonathan.utils.photometry import get_signal_cols
-
 
 # ---------- helpers ----------
 

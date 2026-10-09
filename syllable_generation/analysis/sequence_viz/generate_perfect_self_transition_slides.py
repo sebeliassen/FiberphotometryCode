@@ -15,13 +15,14 @@ fig_level3_slide_duration_vertical:
 =============================================================================
 """
 
-from pathlib import Path
 import itertools
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+from pathlib import Path
+
 import matplotlib.gridspec as gridspec
 import matplotlib.patches as patches
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from scipy import stats
 
 DATA_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/data")
@@ -64,6 +65,7 @@ VERTICAL_CHAIN_LABELS = {
 
 # Run pipeline to get verified episodes and metadata
 import sys
+
 sys.path.append(str(Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz")))
 from extract_level3_chain_quantitative_results import run_full_level3_pipeline
 
@@ -81,20 +83,20 @@ for _, s_row in df_meta.iterrows():
     gt = s_row["genotype"]
     drug = s_row["drug"]
     cohort = s_row["cohort"]
-    
+
     ep_sub = df_ep[df_ep["session_idx"] == s_idx].sort_values("start_bout")
     factors = ep_sub["factor_id"].values
     n_ep = len(factors)
-    
+
     sess_trans = np.zeros((K, K), dtype=np.float64)
     if n_ep > 1:
         for i in range(n_ep - 1):
             f_curr = factors[i] - 1
             f_next = factors[i+1] - 1
             sess_trans[f_curr, f_next] += 1.0
-            
+
     cohort_trans_counts[cohort] += sess_trans
-    
+
     row_sums = sess_trans.sum(axis=1)
     for k in range(K):
         p_self = sess_trans[k, k] / row_sums[k] if row_sums[k] > 0 else 0.0
@@ -207,13 +209,13 @@ def draw_top_self_transitions_panel(ax_top):
         "WT_Amphetamine": 0.65 * bar_w,
         "KI_Amphetamine": 1.65 * bar_w,
     }
-    
+
     for cohort in COHORT_ORDER:
         sub = df_self_summary[df_self_summary["cohort"] == cohort].sort_values("factor_id")
         means = sub["mean"].values
         sems = sub["sem"].values
         x_pos = chain_indices + offsets[cohort]
-        
+
         ax_top.bar(x_pos, means, yerr=sems, width=bar_w, color=COHORT_COLORS[cohort],
                    capsize=2.8, edgecolor="#1A202C", linewidth=0.9, alpha=0.92,
                    label=COHORT_LABELS[cohort], zorder=3)
@@ -235,15 +237,15 @@ def draw_top_self_transitions_panel(ax_top):
         ki_sal_row = sub_k[sub_k["cohort"] == "KI_Saline"].iloc[0]
         sal_max = max(wt_sal_row["mean"] + wt_sal_row["sem"],
                       ki_sal_row["mean"] + ki_sal_row["sem"])
-        
+
         wt_amph_row = sub_k[sub_k["cohort"] == "WT_Amphetamine"].iloc[0]
         ki_amph_row = sub_k[sub_k["cohort"] == "KI_Amphetamine"].iloc[0]
         amph_max = max(wt_amph_row["mean"] + wt_amph_row["sem"],
                        ki_amph_row["mean"] + ki_amph_row["sem"])
-        
+
         p_sal_k = df_uni_self[(df_uni_self["factor_id"] == k) & (df_uni_self["drug"] == "Saline")]["p_val"].values[0]
         p_amph_k = df_uni_self[(df_uni_self["factor_id"] == k) & (df_uni_self["drug"] == "Amphetamine")]["p_val"].values[0]
-        
+
         if p_sal_k < 0.05:
             star_sal = "***" if p_sal_k < 0.001 else ("**" if p_sal_k < 0.01 else "*")
             x1 = k + offsets["WT_Saline"]
@@ -254,7 +256,7 @@ def draw_top_self_transitions_panel(ax_top):
             ax_top.text((x1 + x2) / 2, star_pos_y, star_sal,
                         ha="center", va="bottom", fontsize=11.5, fontweight="bold", color="#C05621", zorder=5)
             max_star_y = max(max_star_y, star_pos_y + 0.04 * scale_factor)
-            
+
         if p_amph_k < 0.05:
             star_amph = "***" if p_amph_k < 0.001 else ("**" if p_amph_k < 0.01 else "*")
             x1 = k + offsets["WT_Amphetamine"]
@@ -276,7 +278,7 @@ def draw_top_self_transitions_panel(ax_top):
     # Clean horizontal legend positioned above plot
     ax_top.legend(bbox_to_anchor=(0.5, 1.25), loc="upper center", ncol=4,
                   frameon=True, facecolor="white", edgecolor="#CBD5E0", framealpha=0.95, fontsize=11)
-    
+
     y_top_limit = max(0.65, max_star_y * 1.08)
     ax_top.set_ylim(0, y_top_limit)
 
@@ -293,26 +295,26 @@ draw_top_self_transitions_panel(ax_top1)
 for c_idx, cohort in enumerate(COHORT_ORDER):
     ax_mat = fig1.add_subplot(gs1[1, c_idx])
     t_mat = norm_cohort_trans[cohort]
-    
+
     im = ax_mat.imshow(t_mat, cmap="viridis", vmin=0, vmax=0.45, aspect="equal")
     ax_mat.set_title(f"{COHORT_LABELS[cohort]}\nTransition Matrix", fontweight="bold", fontsize=11.5, pad=8)
-    
+
     ax_mat.set_xticks(np.arange(0, K, 2))
     ax_mat.set_xticklabels([f"C{k+1}" for k in range(0, K, 2)], fontsize=9)
     ax_mat.set_yticks(np.arange(0, K, 2))
     ax_mat.set_yticklabels([f"C{k+1}" for k in range(0, K, 2)], fontsize=9)
-    
+
     # Highlight diagonal self-transitions with clean bounding boxes
     for k in range(K):
         rect = patches.Rectangle((k - 0.5, k - 0.5), 1, 1, fill=False,
                                  edgecolor="#ED8936" if "KI" in cohort else "#63B3ED",
                                  linewidth=1.3, linestyle="-", zorder=5)
         ax_mat.add_patch(rect)
-        
+
     if c_idx == 0:
         ax_mat.set_ylabel("Current Chain $k_t$", fontweight="bold", fontsize=11)
     ax_mat.set_xlabel("Next Chain $k_{t+1}$", fontweight="bold", fontsize=11)
-    
+
     if c_idx == 3:
         cbar = fig1.colorbar(im, ax=ax_mat, fraction=0.046, pad=0.07)
         cbar.set_label("Transition Probability", fontweight="bold", fontsize=10)
@@ -346,7 +348,7 @@ for b_idx in range(len(patches_s)):
     if bins[b_idx] >= tv_obs_sal:
         patches_s[b_idx].set_facecolor("#ED8936")
         patches_s[b_idx].set_alpha(0.95)
-        
+
 ax_b1.axvline(tv_obs_sal, color="#C05621", linestyle="--", linewidth=2.6, zorder=4,
               label=f"Observed TV = {tv_obs_sal:.3f}\nExact p = {p_sal:.4f} *")
 ax_b1.set_xlabel("Total Variation Distance (TV)", fontweight="bold", fontsize=11.5)
@@ -365,7 +367,7 @@ for b_idx in range(len(patches_a)):
     if bins_a[b_idx] >= tv_obs_amph:
         patches_a[b_idx].set_facecolor("#E53E3E")
         patches_a[b_idx].set_alpha(0.95)
-        
+
 ax_b2.axvline(tv_obs_amph, color="#9B2C2C", linestyle="--", linewidth=2.6, zorder=4,
               label=f"Observed TV = {tv_obs_amph:.3f}\nExact p = {p_amph:.4f} ***")
 ax_b2.set_xlabel("Total Variation Distance (TV)", fontweight="bold", fontsize=11.5)

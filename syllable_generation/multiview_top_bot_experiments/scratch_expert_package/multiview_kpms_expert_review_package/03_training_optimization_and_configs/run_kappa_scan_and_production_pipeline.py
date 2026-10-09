@@ -18,17 +18,17 @@ End-to-end automated pipeline:
      - Evaluates duration-matched models and generates master scorecard
 """
 
+import json
 import os
+import pickle
+import shutil
 import sys
 import time
-import json
-import shutil
-import pickle
-from pathlib import Path
 from itertools import groupby
-import numpy as np
-import pandas as pd
+from pathlib import Path
+
 import h5py
+import numpy as np
 
 # Unbuffered live stdout/stderr
 sys.stdout.reconfigure(line_buffering=True)
@@ -37,6 +37,7 @@ sys.stderr.reconfigure(line_buffering=True)
 # Headless & hardware flags
 os.environ["BROWSER"] = "/bin/true"
 import webbrowser
+
 webbrowser.get = lambda *args, **kwargs: None
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
@@ -50,9 +51,9 @@ if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import matplotlib
+
 matplotlib.use("Agg")
 
-import jax
 import keypoint_moseq as kpms
 from sklearn.metrics import adjusted_rand_score
 
@@ -70,6 +71,7 @@ if str(KPMS_UTILS_DIR) not in sys.path:
 
 import utils.resample_batching as rb
 from utils.batch_init import batched_init_model_by_video
+
 from syllable_generation.syllabizers.keypoint_moseq_syll.utils.patch_checkpoint import apply_kpms_checkpoint_patch
 
 TARGET_FPS = 60
@@ -106,7 +108,7 @@ def slice_scout_data(full_data, full_meta, scout_sids):
     keys = full_meta[0]
     scout_mask = np.array([any(sid in str(k) for sid in scout_sids) for k in keys])
     scout_idx = np.where(scout_mask)[0]
-    
+
     sub_data = {k: v[scout_idx] for k, v in full_data.items()}
     sub_meta = (keys[scout_idx], full_meta[1][scout_idx])
     return sub_data, sub_meta
@@ -302,7 +304,7 @@ def run_production_training(arm, full_data, full_meta, config, pca, arm_dir, sld
     print(f"  Model Name:          {model_name}")
     print(f"  SLDS Kappa (3x):     {slds_kappa:.3e}")
     print(f"  Total Batches:       {len(full_data['Y'])}")
-    print(f"  Regimen:             50 AR + 150 SLDS = 200 Gibbs Iterations")
+    print("  Regimen:             50 AR + 150 SLDS = 200 Gibbs Iterations")
     print("=" * 80, flush=True)
 
     rb.KPMSStateCache.clear()
@@ -317,7 +319,7 @@ def run_production_training(arm, full_data, full_meta, config, pca, arm_dir, sld
     t_train_start = time.time()
 
     # 50 AR iters
-    print(f"\n>>> Running AR Phase (iters 0 -> 50)...", flush=True)
+    print("\n>>> Running AR Phase (iters 0 -> 50)...", flush=True)
     model, _ = kpms.fit_model(
         model, full_data, full_meta,
         project_dir=str(arm_dir),
@@ -338,7 +340,7 @@ def run_production_training(arm, full_data, full_meta, config, pca, arm_dir, sld
     rb.precompute_optimal_batch_config(full_data, model=model, verbose=False)
 
     # 150 SLDS iters
-    print(f"\n>>> Running SLDS Phase (iters 50 -> 200)...", flush=True)
+    print("\n>>> Running SLDS Phase (iters 50 -> 200)...", flush=True)
     model, _ = kpms.fit_model(
         model, full_data, full_meta,
         project_dir=str(arm_dir),
@@ -385,7 +387,7 @@ def main():
     print(f"Target Duration:    {TARGET_FRAMES} frames (400ms @ 60fps) +/- {TOL_FRAMES} frames")
     print(f"Search Bounds:      [10^{LOG_LO:.1f}, 10^{LOG_HI:.1f}]")
     print(f"Step Fraction:      {STEP_FRACTION:.2f} (Conservative Bisection)")
-    print(f"Production Scaling: 3.0x Scout Kappa")
+    print("Production Scaling: 3.0x Scout Kappa")
     print("=" * 80, flush=True)
 
     pipeline_start = time.time()

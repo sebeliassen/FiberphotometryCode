@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-import sys, json, tempfile
+import json
+import sys
+import tempfile
 from pathlib import Path
-import numpy as np, pandas as pd
-from scipy import signal
+
+import numpy as np
+import pandas as pd
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
@@ -11,9 +14,10 @@ AUDIT_DIR = EXP / "04_reports_and_figures/audits/audit_20261007_independent_veri
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-from core.camera_correspondence import compute_session_camera_mapping, get_session_mapping
+from core.camera_correspondence import compute_session_camera_mapping
 from core.pair_matching import find_matched_pairs
 from core.ttl_sync import find_camera_timestamp_files
+
 
 def test_synthetic_delay():
     N = 1000

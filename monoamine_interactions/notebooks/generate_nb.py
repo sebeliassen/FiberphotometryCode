@@ -1,6 +1,6 @@
 
+
 import nbformat as nbf
-from pathlib import Path
 
 nb = nbf.v4.new_notebook()
 

@@ -1,10 +1,9 @@
 import os
-import sys
 import time
+
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-from functools import partial
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["TF_GPU_ALLOCATOR"] = "cuda_malloc_async"
@@ -12,10 +11,16 @@ os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 
 jax.config.update("jax_enable_x64", True)
 
-from dynamax.hidden_markov_model.inference import hmm_posterior_sample, hmm_filter
-from dynamax.linear_gaussian_ssm.inference import lgssm_posterior_sample, lgssm_filter, ParamsLGSSM, ParamsLGSSMInitial, ParamsLGSSMDynamics, ParamsLGSSMEmissions
-from jax_moseq.utils import psd_solve, psd_inv, symmetrize
-from tensorflow_probability.substrates.jax.distributions import MultivariateNormalTriL as MVN
+from dynamax.hidden_markov_model.inference import hmm_posterior_sample
+from dynamax.linear_gaussian_ssm.inference import (
+    ParamsLGSSM,
+    ParamsLGSSMDynamics,
+    ParamsLGSSMEmissions,
+    ParamsLGSSMInitial,
+    lgssm_posterior_sample,
+)
+from jax_moseq.utils import psd_inv, psd_solve, symmetrize
+
 
 def benchmark_hmm():
     print("=" * 70)

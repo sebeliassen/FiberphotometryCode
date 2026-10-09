@@ -6,8 +6,10 @@ and historical production training runners.
 """
 
 import importlib.util
-import yaml
 from pathlib import Path
+
+import yaml
+
 from core.paths import REPO_ROOT
 
 

@@ -12,8 +12,6 @@ for Champion Seed 404 syllables, linking:
 =============================================================================
 """
 
-import os
-import json
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent

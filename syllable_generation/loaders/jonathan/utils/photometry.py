@@ -1,14 +1,16 @@
 import re
-import numpy as np
 from pathlib import Path
-from typing import List, Optional, Tuple, Dict
+from typing import Dict, List, Optional, Tuple
 
-from scipy.signal import butter, filtfilt
+import numpy as np
 import pandas as pd
+from scipy.signal import butter, filtfilt
+
 
 def list_combined_csv_entries(root, jcfg):
-    from pathlib import Path
     import re
+    from pathlib import Path
+
     from .time import parse_csv_ts
 
     csv_re = re.compile(jcfg.phot_combined_csv_regex, re.I)
@@ -323,13 +325,13 @@ def estimate_fps(df: pd.DataFrame, time_col: str = "SystemTimestamp") -> float:
     """Estimate sampling rate from timestamp column."""
     if time_col not in df.columns or len(df) < 2:
         return 30.0 # Fallback
-    
+
     # Assuming seconds; robust diff
     diffs = np.diff(df[time_col])
     diffs = diffs[diffs > 0] # ignore resets/duplicates
     if len(diffs) == 0:
         return 30.0
-    
+
     median_dt = np.nanmedian(diffs)
     if median_dt == 0:
         return 30.0
@@ -339,17 +341,16 @@ def calculate_rolling_dff(series: pd.Series, fps: float, win_sec: float = 5.0, q
     """Datta-style dF/F0: F0 is rolling 10th percentile."""
     window = int(win_sec * fps)
     if window < 1: window = 1
-    
+
     # Center=True is important for phase alignment
     rolling_f0 = series.rolling(window=window, center=True, min_periods=1).quantile(quantile)
-    
+
     # Avoid division by zero
     rolling_f0 = rolling_f0.replace(0, np.nan)
-    
+
     dff = (series - rolling_f0) / rolling_f0
     return dff
 
-from scipy.signal import butter, filtfilt
 
 def calculate_ransac_subtraction(sig_dff: pd.Series, ref_dff: pd.Series) -> pd.Series:
     """
@@ -357,29 +358,29 @@ def calculate_ransac_subtraction(sig_dff: pd.Series, ref_dff: pd.Series) -> pd.S
     INCLUDES: 3Hz Low-Pass Filter on Reference (Datta Method).
     """
     # [cite_start]1. Filter Reference (3Hz Low Pass) [cite: 1142]
-    # Assuming ~20-30Hz effective sampling rate. 
+    # Assuming ~20-30Hz effective sampling rate.
     # We need to know FPS. If you don't pass FPS, assume 20Hz (standard for 80Hz/4-cycle).
-    fps = 20.0 
+    fps = 20.0
     b, a = butter(2, 3.0, fs=fps, btype='low')
-    
+
     # Fill NaNs    # Updated to avoid FutureWarning
     ref_clean = ref_dff.ffill().bfill().fillna(0)
     ref_filtered_vals = filtfilt(b, a, ref_clean.values)
     ref_filtered = pd.Series(ref_filtered_vals, index=ref_dff.index)
-    
+
     # 2. RANSAC
     # Use the FILTERED reference for the fitting
     mask = (~np.isnan(sig_dff)) & (~np.isnan(ref_filtered)) & (~np.isinf(sig_dff))
-    
+
     if mask.sum() < 10:
-        return sig_dff 
-        
+        return sig_dff
+
     X = ref_filtered[mask].values.reshape(-1, 1)
     y = sig_dff[mask].values
-    
+
     if np.all(X == X[0][0]):
         return sig_dff
-    
+
     try:
         from sklearn import linear_model
     except ImportError:
@@ -387,11 +388,11 @@ def calculate_ransac_subtraction(sig_dff: pd.Series, ref_dff: pd.Series) -> pd.S
 
     ransac = linear_model.RANSACRegressor()
     ransac.fit(X, y)
-    
+
     # Predict using the FILTERED reference
     ref_full = ref_filtered.fillna(0).values.reshape(-1, 1)
     pred_ref = ransac.predict(ref_full)
-    
+
     # Subtract
     return sig_dff - pred_ref
 
@@ -399,13 +400,14 @@ def calculate_rolling_zscore(series: pd.Series, fps: float, win_sec: float = 20.
     """Datta-style final Z-score: 20s sliding window."""
     window = int(win_sec * fps)
     if window < 1: window = 1
-    
+
     rolling_mu = series.rolling(window=window, center=True, min_periods=1).mean()
     rolling_std = series.rolling(window=window, center=True, min_periods=1).std()
-    
+
     return (series - rolling_mu) / rolling_std
 
 from scipy import stats
+
 
 def calculate_wallace_dff(signal_trace: pd.Series, iso_trace: pd.Series) -> pd.Series:
     """
@@ -415,25 +417,25 @@ def calculate_wallace_dff(signal_trace: pd.Series, iso_trace: pd.Series) -> pd.S
     mask = ~np.isnan(signal_trace) & ~np.isnan(iso_trace)
     if mask.sum() < 2:
         return signal_trace * 0 # Return zeros or NaNs if not enough data
-        
+
     x = iso_trace[mask] # Iso (Reference)
     y = signal_trace[mask] # Signal (470/560)
-    
+
     if np.all(x == x.iloc[0]):
         return signal_trace * 0
-    
+
     # 2. Fit the Iso to the Signal
     # We ask: "How much of the Signal is just a scaled version of Iso?"
     slope, intercept, _, _, _ = stats.linregress(x, y)
-    
+
     # 3. Create the "Predicted Artifact"
     # This is what the signal WOULD look like if it were only noise/bleaching
     predicted_artifact = slope * iso_trace + intercept
-    
+
     # 4. Subtract and Normalize
     # (Raw - Artifact) / Artifact
     dff = (signal_trace - predicted_artifact) / predicted_artifact
-    
+
     return dff * 100  # Return as true % change
 
 def calculate_manual_dff(signal_trace: pd.Series, iso_trace: pd.Series) -> pd.Series:
@@ -451,11 +453,11 @@ def calculate_manual_dff(signal_trace: pd.Series, iso_trace: pd.Series) -> pd.Se
     mask = ~np.isnan(signal_trace) & ~np.isnan(iso_trace)
     if mask.sum() < 2:
         return signal_trace * 0
-        
+
     # 2. Simple Subtraction
     # We assume traces are already baseline-corrected or raw-aligned as per user preprocessing
     dff = signal_trace - iso_trace
-    
+
     return dff
 
 def calculate_signal_prominence(series: pd.Series, fps: float, win_sec: float = 5.0, quantile: float = 0.1) -> pd.Series:
@@ -465,10 +467,10 @@ def calculate_signal_prominence(series: pd.Series, fps: float, win_sec: float = 
     """
     window = int(win_sec * fps)
     if window < 1: window = 1
-    
+
     # Local baseline
     baseline = series.rolling(window=window, center=True, min_periods=1).quantile(quantile)
-    
+
     # Prominence = Signal - Baseline
     return series - baseline
 

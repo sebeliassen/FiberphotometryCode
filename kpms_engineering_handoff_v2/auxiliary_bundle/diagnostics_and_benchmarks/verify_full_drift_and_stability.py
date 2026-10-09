@@ -1,14 +1,15 @@
 import os
 import sys
 import time
+
 import numpy as np
+
 np.bool8 = np.bool_
-import scipy.linalg as sla
-from numba import njit, prange
 import jax
 import jax.numpy as jnp
 import jax.random as jr
 import pandas as pd
+from numba import njit, prange
 
 REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
 KPMS_DIR = os.path.join(REPO_ROOT, "syllable_generation", "syllabizers", "keypoint_moseq_syll")
@@ -17,16 +18,16 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import keypoint_moseq as kpms
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from utils.paths import ref_pairs_from_sessions
-from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg
-from utils.batch_init import batched_init_model_by_video
-from jax_moseq.utils import psd_inv, pad_affine
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+import keypoint_moseq as kpms
+from dynamax.hidden_markov_model.inference import hmm_posterior_sample
+from jax_moseq.utils import pad_affine, psd_inv
 from jax_moseq.utils.autoregression import get_lags, get_nlags
 from jax_moseq.utils.transitions import count_transitions, sample_hdp_transitions
-from dynamax.hidden_markov_model.inference import hmm_posterior_sample
+from utils.batch_init import batched_init_model_by_video
+from utils.paths import ref_pairs_from_sessions
+from utils.trimming import clamp_conf_nonneg, filter_with_masks, presence_mask_from_conf
 
 SCRATCH_DIR = os.path.join(KPMS_DIR, "scratch_profiling_project")
 DIRTY_PKL = os.path.join(REPO_ROOT, "syllable_generation/data/sessions_karen_project_dirty.pkl")
@@ -93,39 +94,39 @@ def _fast_numba_assemble_banded_system(
 def _assemble_and_solve_tridiagonal_v(Y, mask, Y_rot, s, sigmasq, sigmasq_loc, N, T, k, d):
     v_sampled = np.zeros((N, T, d), dtype=np.float64)
     q_loc_inv = 1.0 / (sigmasq_loc + 1e-8)
-    
+
     for seq_i in prange(N):
         # 1. Compute observation weights and weighted mean mu for all t
         gammasq = np.zeros(T, dtype=np.float64)
         mu = np.zeros((T, d), dtype=np.float64)
-        
+
         for t in range(T):
             inv_var_sum = 0.0
             for k_i in range(k):
                 inv_var = 1.0 / (s[seq_i, t, k_i] * sigmasq[k_i] + 1e-8)
                 inv_var_sum += inv_var
             gammasq[t] = 1.0 / inv_var_sum
-            
+
             for k_i in range(k):
                 w_k = (1.0 / (s[seq_i, t, k_i] * sigmasq[k_i] + 1e-8)) * gammasq[t]
                 for dim_i in range(d):
                     mu[t, dim_i] += (Y[seq_i, t, k_i, dim_i] - Y_rot[seq_i, t, k_i, dim_i]) * w_k
-        
+
         # 2. Solve for each spatial dimension (x, y) independently
         for dim_i in range(d):
             diag = np.zeros(T, dtype=np.float64)
             subdiag = np.zeros(T - 1, dtype=np.float64)
             rhs = np.zeros(T, dtype=np.float64)
-            
+
             # Prior random walk: v_t - v_{t-1} ~ N(0, sigmasq_loc)
             diag[0] = 1e-4 + q_loc_inv
             for t in range(1, T - 1):
                 diag[t] = 2.0 * q_loc_inv
             diag[T - 1] = q_loc_inv
-            
+
             for t in range(T - 1):
                 subdiag[t] = -q_loc_inv
-            
+
             # Observation terms
             for t in range(T):
                 if mask[seq_i, t]:
@@ -139,24 +140,24 @@ def _assemble_and_solve_tridiagonal_v(Y, mask, Y_rot, s, sigmasq, sigmasq_loc, N
             # Thomas Cholesky solve: L L^T = Omega
             l_d = np.zeros(T, dtype=np.float64)
             l_sub = np.zeros(T - 1, dtype=np.float64)
-            
+
             l_d[0] = np.sqrt(diag[0])
             for t in range(1, T):
                 l_sub[t - 1] = subdiag[t - 1] / l_d[t - 1]
                 l_d[t] = np.sqrt(max(diag[t] - l_sub[t - 1] * l_sub[t - 1], 1e-8))
-            
+
             w = np.zeros(T, dtype=np.float64)
             w[0] = rhs[0] / l_d[0]
             for t in range(1, T):
                 w[t] = (rhs[t] - l_sub[t - 1] * w[t - 1]) / l_d[t]
-            
+
             eta = np.random.standard_normal(T)
             rhs_sample = w + eta
-            
+
             v_sampled[seq_i, T - 1, dim_i] = rhs_sample[T - 1] / l_d[T - 1]
             for t in range(T - 2, -1, -1):
                 v_sampled[seq_i, t, dim_i] = (rhs_sample[t] - l_sub[t] * v_sampled[seq_i, t + 1, dim_i]) / l_d[t]
-                
+
     return v_sampled
 
 
@@ -164,7 +165,7 @@ def main():
     print("=" * 90)
     print("      DEEP NUMERICAL DRIFT & STABILITY AUDIT (10 FULL GIBBS ITERATIONS)")
     print("=" * 90)
-    
+
     jax.config.update("jax_enable_x64", True)
 
     # 1. Load Data
@@ -192,7 +193,7 @@ def main():
     hypparams = model["hypparams"]
     Y = data["Y"]
     mask = data["mask"]
-    
+
     N, T, k, d = Y.shape
     d_latent = states["x"].shape[-1]
     nlags = get_nlags(params["Ab"])
@@ -206,7 +207,7 @@ def main():
 
     for iter_i in range(1, 11):
         t_start = time.perf_counter()
-        
+
         # 1. Update transitions (HDP)
         trans_counts = count_transitions(num_states, states["z"], mask)
         params["betas"], params["pi"] = sample_hdp_transitions(
@@ -215,12 +216,12 @@ def main():
             hypparams["trans_hypparams"]["kappa"],
             hypparams["trans_hypparams"]["gamma"]
         )
-        
+
         # 2. Vectorized GPU AR parameters
         params["Ab"], params["Q"] = arhmm_gibbs.resample_ar_params(
             jr.fold_in(seed, iter_i * 10 + 2), x=states["x"], z=states["z"], mask=mask, **hypparams["ar_hypparams"]
         )
-        
+
         # 3. Discrete Syllables (z)
         L_Q = jnp.linalg.cholesky(params["Q"])
         half_log_det_Q = jnp.sum(jnp.log(jnp.diagonal(L_Q, axis1=-2, axis2=-1)), axis=-1)
@@ -232,14 +233,14 @@ def main():
         diff = x_target[:, :, None, :] - mu_all
         quad = jnp.einsum("ntkd,kde,ntke->ntk", diff, Q_inv, diff)
         log_likelihoods = -0.5 * quad - const[None, None, :]
-        
+
         initial_distribution = jnp.ones(num_states) / num_states
         def sample_one_hmm(seed_i, ll_i, mask_i):
             masked_ll = ll_i * mask_i[nlags:, None]
             _, z_out = hmm_posterior_sample(seed_i, initial_distribution, params["pi"], masked_ll)
             return z_out
         states["z"] = jax.vmap(sample_one_hmm)(jr.split(jr.fold_in(seed, iter_i * 10 + 3), N), log_likelihoods, mask)
-        
+
         # 4. Heading (h)
         variance = states["s"] * params["sigmasq"]
         Y_aligned = slds_gibbs.estimate_aligned(states["x"], params["Cd"], k)
@@ -250,7 +251,7 @@ def main():
         mean_direction = jnp.stack([kappa_cos, kappa_sin], axis=-1)
         sampled_direction = slds_gibbs.sample_vonmises_fisher(jr.fold_in(seed, iter_i * 10 + 4), mean_direction)
         states["h"] = slds_gibbs.vector_to_angle(sampled_direction)
-        
+
         # 5. Fast Tridiagonal Centroid (v)
         h_np = np.array(states["h"])
         cos_h = np.cos(h_np)[:, :, None]
@@ -258,13 +259,13 @@ def main():
         Y_rot_np = np.zeros_like(Y_aligned)
         Y_rot_np[..., 0] = cos_h * Y_aligned[..., 0] - sin_h * Y_aligned[..., 1]
         Y_rot_np[..., 1] = sin_h * Y_aligned[..., 0] + cos_h * Y_aligned[..., 1]
-        
+
         v_np = _assemble_and_solve_tridiagonal_v(
             np.array(Y), np.array(mask, dtype=bool), np.array(Y_rot_np),
             np.array(states["s"]), np.array(params["sigmasq"]), sigmasq_loc, N, T, k, d
         )
         states["v"] = jnp.array(v_np)
-        
+
         # 6. Precomputed Banded GMRF Latents (x)
         from utils.resample_batching import fast_banded_gmrf_resample_x
         states["x"] = fast_banded_gmrf_resample_x(
@@ -272,21 +273,21 @@ def main():
             s=states["s"], z=states["z"], Cd=params["Cd"], sigmasq=params["sigmasq"],
             Ab=params["Ab"], Q=params["Q"], nlags=nlags
         )
-        
+
         # 7. Noise Scales (s)
         states["s"] = slds_gibbs.resample_scales(
             jr.fold_in(seed, iter_i * 10 + 7), Y=Y, x=states["x"], v=states["v"], h=states["h"],
             Cd=params["Cd"], sigmasq=params["sigmasq"], mask=mask,
             **hypparams["obs_hypparams"], s_0=model.get("noise_prior", 1.0)
         )
-        
+
         iter_time = time.perf_counter() - t_start
-        
+
         # Metric audits
         max_x = float(jnp.max(jnp.abs(states["x"])))
         max_v = float(jnp.max(jnp.abs(states["v"])))
         n_active_z = len(np.unique(np.array(states["z"])))
-        
+
         # Check AR companion matrix spectral radius
         Ab_np = np.array(params["Ab"])
         max_eig = 0.0
@@ -299,9 +300,9 @@ def main():
                 comp[d_latent:, :-d_latent] = np.eye((nlags - 1) * d_latent)
             eigs = np.abs(np.linalg.eigvals(comp))
             max_eig = max(max_eig, float(np.max(eigs)))
-            
+
         n_nans = int(jnp.isnan(states["x"]).sum() + jnp.isnan(states["v"]).sum() + jnp.isnan(params["Ab"]).sum())
-        
+
         print(f"{iter_i:<5} | {iter_time:8.3f} s | {max_x:8.3f}   | {max_v:8.2f}   | {n_active_z:<10} | {max_eig:10.4f}   | {n_nans:<5}")
 
     print("=" * 90)

@@ -2,14 +2,14 @@
 # steps/fiberphotometry.py
 from __future__ import annotations
 
-import pandas as pd
 from pathlib import Path
-from datetime import datetime
 
-from ..context import BuildContext
+import pandas as pd
+
 from ..config import JCFG
-from ..utils.time import parse_session_ts
 from ..utils.photometry import *
+from ..utils.time import parse_session_ts
+
 
 def attach_photometry_refs(ctx, sessions, tolerance_seconds=None):
     tol = JCFG.tolerance_seconds if tolerance_seconds is None else float(tolerance_seconds)
@@ -53,8 +53,8 @@ def attach_photometry_refs(ctx, sessions, tolerance_seconds=None):
     return sessions
 
 def realize_photometry_columns(ctx, sessions):
-    from collections import defaultdict
     import gc
+    from collections import defaultdict
 
     # 1. Group sessions by their shared photometry CSV
     by_path = defaultdict(list)
@@ -66,7 +66,7 @@ def realize_photometry_columns(ctx, sessions):
     # 2. Caches for this step
     # Cache for AllTimestamps DataFrames: (path, camera) -> df
     allts_cache = {}
-    
+
     # 3. Process each unique CSV once
     for csv_path_str, group in by_path.items():
         p = Path(csv_path_str)
@@ -83,11 +83,11 @@ def realize_photometry_columns(ctx, sessions):
         for s in group:
             plan = plan_from_header(all_cols, s, JCFG)
             group_plans[s.session_id] = plan
-            
+
             sig_cols = [col for _, col in plan["signals"]]
             union_cols.update(plan["non_fiber_cols"])
             union_cols.update(sig_cols)
-            
+
             s.metadata["effective_indices"] = plan.get("effective_indices", [])
 
         # Read the shared CSV ONCE
@@ -149,11 +149,11 @@ def realize_photometry_columns(ctx, sessions):
 
             allts_path, _dt, camera_name = match
             cache_key = (str(allts_path), camera_name)
-            
+
             if cache_key not in allts_cache:
                 # OPTIMIZATION: Cache AllTimestamps
                 allts_cache[cache_key] = pd.read_csv(allts_path, usecols=[JCFG.allts_system_ts_col], engine='pyarrow')
-            
+
             df = attach_frame_idx_column(df, allts_cache[cache_key], JCFG)
 
             s.metadata["alltimestamps_csv_path"] = str(allts_path)
@@ -238,7 +238,7 @@ def compute_dff_zscore_session(
 
     iso_signals = set(get_signal_cols(iso_df))
     ts_col = JCFG.phot_system_ts_col
-    
+
     # Estimate FPS for rolling calculations
     fps = estimate_fps(iso_df, ts_col)
 
@@ -261,7 +261,7 @@ def compute_dff_zscore_session(
         # Get Timestamps for Interpolation
         # We want to map ISO (Reference) -> TGT (Signal) time
         can_interp = (ts_col in iso_df.columns) and (ts_col in tgt.columns)
-        
+
         if can_interp:
             # Convert to numpy float for fast interpolation
             t_iso = iso_df[ts_col].iloc[:n].to_numpy(dtype=float)
@@ -270,7 +270,7 @@ def compute_dff_zscore_session(
         for sig in common:
             # Get raw traces
             tgt_trace = tgt[sig].iloc[:n]
-            
+
             if can_interp:
                 # --- OPTIMIZATION: Linear Interpolation ---
                 # Estimate what Ref was doing at the exact moment Signal was recorded
@@ -286,30 +286,30 @@ def compute_dff_zscore_session(
 
             dff_col = f"{sig}_dff"
             z_col = f"{sig}_zscore"
-            
+
             # 2. Datta-style Logic
             # A. Rolling dF/F (using Interpolated Reference)
             sig_dff_datta = calculate_rolling_dff(tgt_trace, fps, win_sec=5.0)
             ref_dff_datta = calculate_rolling_dff(iso_trace, fps, win_sec=5.0)
-            
+
             # --- Standard Datta (RANSAC) ---
             clean_ransac = calculate_ransac_subtraction(sig_dff_datta, ref_dff_datta)
             z_ransac = calculate_rolling_zscore(clean_ransac, fps, win_sec=20.0)
-            
+
             if JCFG.include_ransac:
                 _assign_col(tgt, f"{sig}_zscore_ransac", z_ransac)
 
             # --- Optional Wallace Method (Regression) ---
             # Compute if requested OR if needed as basis for prominence
             active_basis = getattr(JCFG, "prominence_basis", "wallace")
-            
+
             # 1. Wallace (Regression)
             needs_wallace = JCFG.include_wallace or (JCFG.include_prominence and active_basis == "wallace")
-            z_wallace = None 
+            z_wallace = None
             if needs_wallace:
                 clean_wallace = calculate_wallace_dff(sig_dff_datta, ref_dff_datta)
                 z_wallace = calculate_rolling_zscore(clean_wallace, fps, win_sec=20.0)
-                
+
                 if JCFG.include_wallace:
                     _assign_col(tgt, f"{sig}_zscore_wallace", z_wallace)
 
@@ -317,7 +317,7 @@ def compute_dff_zscore_session(
             needs_manual = JCFG.include_manual or (JCFG.include_prominence and active_basis == "manual")
             z_manual = None
             if needs_manual:
-                # Use rolling dF/F inputs to account for signal drift, but apply simple subtraction 
+                # Use rolling dF/F inputs to account for signal drift, but apply simple subtraction
                 # (no regression scaling) as per Wallace et al. (2025).
                 clean_manual = calculate_manual_dff(sig_dff_datta, ref_dff_datta)
                 z_manual = calculate_rolling_zscore(clean_manual, fps, win_sec=20.0)
@@ -328,7 +328,7 @@ def compute_dff_zscore_session(
             # --- Legacy/Global Outputs ---
             if JCFG.include_dff:
                 _assign_col(tgt, dff_col, dff)
-                
+
             if JCFG.include_zscore:
                 _assign_col(tgt, z_col, z)
 
@@ -342,7 +342,7 @@ def compute_dff_zscore_session(
                     base_for_prom = z_manual
                 else: # Default to RANSAC
                     base_for_prom = z_ransac
-                
+
                 if base_for_prom is not None:
                     prom = calculate_signal_prominence(base_for_prom, fps, win_sec=5.0)
                     _assign_col(tgt, f"{sig}_prominence", prom)
@@ -364,7 +364,7 @@ def compute_dff_zscore(
     def _proc(s):
         compute_dff_zscore_session(ctx, s, freqs=freqs, iso=iso)
         return s
-    
+
     try:
         from joblib import Parallel, delayed
         sessions = Parallel(n_jobs=-1)(delayed(_proc)(s) for s in sessions)

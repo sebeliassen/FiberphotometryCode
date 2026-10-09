@@ -18,13 +18,12 @@ Objectives:
    hardware triggers are absent.
 """
 
-import sys
 import json
+import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+
 import numpy as np
 import pandas as pd
-from scipy import signal
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
@@ -33,9 +32,10 @@ AUDIT_DIR = EXP / "04_reports_and_figures/audits/audit_20261007_pipeline_repairs
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
+from core.camera_correspondence import compute_session_camera_mapping
 from core.pair_matching import find_matched_pairs
 from core.ttl_sync import find_camera_timestamp_files
-from core.camera_correspondence import compute_session_camera_mapping
+
 
 def audit_full_cohort_timestamps():
     pairs = find_matched_pairs()
@@ -56,7 +56,7 @@ def audit_full_cohort_timestamps():
         try:
             df_t = pd.read_csv(top_csv)
             df_b = pd.read_csv(bot_csv)
-        except Exception as e:
+        except Exception:
             continue
 
         n_t = len(df_t)

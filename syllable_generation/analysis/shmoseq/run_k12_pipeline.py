@@ -12,16 +12,16 @@ Complete 12-State (K=12) shMoSeq Pipeline on Run 12 Sessions:
 =============================================================================
 """
 
-import os
-import sys
-import time
-import pickle
 import itertools
+import os
+import pickle
+import time
+
+import matplotlib
 import numpy as np
 import pandas as pd
-from scipy import stats
 from scipy.spatial.distance import jensenshannon
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -136,7 +136,7 @@ def main():
     print(f"✓ K={N_STATES} Fitting completed in {fit_duration/60:.2f} min ({fit_duration:.1f}s).", flush=True)
 
     # Posterior Decoding
-    print(f"Decoding posterior smoothed states...", flush=True)
+    print("Decoding posterior smoothed states...", flush=True)
     smoothed_probs = sm.hhmm_efficient.smoothed_states(data, params, parallel=False)
     decoded_states = jnp.argmax(smoothed_probs, axis=-1)
     states_dict_k12 = sm.unbatch(np.array(decoded_states), *batch_metadata)
@@ -273,7 +273,7 @@ def main():
     for k in range(N_STATES):
         obs_diff = wt_sal_mean[k] - ki_sal_mean[k]
         p_state = float(np.mean(np.abs(perm_state_diffs[:, k]) >= np.abs(obs_diff)))
-        
+
         obs_dlt_diff = wt_dlt_mean[k] - ki_dlt_mean[k]
         p_dlt_state = float(np.mean(np.abs(perm_dlt_state_diffs[:, k]) >= np.abs(obs_dlt_diff)))
 
@@ -291,7 +291,7 @@ def main():
         })
 
     df_k12_states = pd.DataFrame(state_results)
-    
+
     # Benjamini-Hochberg FDR
     df_k12_states = df_k12_states.sort_values("saline_exact_p").reset_index(drop=True)
     df_k12_states["fdr_rank"] = np.arange(1, N_STATES + 1)
@@ -358,12 +358,12 @@ def main():
     print("\n" + "=" * 80)
     print("📊 DIRECT COMPARISON: K=8 MODEL VS. K=12 MODEL")
     print("=" * 80)
-    print(f"Metric                               | K=8 Model         | K=12 Model")
+    print("Metric                               | K=8 Model         | K=12 Model")
     print("-" * 75)
     print(f"Multivariate Saline TV Distance      | 0.3297 (p=0.754)  | {obs_sal_tv:.4f} (p={p_val_tv:.5f})")
     print(f"Multivariate Saline L2 Distance      | 0.3022 (p=0.778)  | {obs_sal_l2:.4f} (p={p_val_l2:.5f})")
     print(f"Multivariate Drug Delta L2 Distance  | 0.3115 (p=0.586)  | {obs_dlt_l2:.4f} (p={p_val_dlt:.5f})")
-    
+
     # Check if any state achieves p < 0.05 or FDR q < 0.05
     k12_sig_raw = df_k12_states[df_k12_states["saline_exact_p"] < 0.05]
     k12_sig_fdr = df_k12_states[df_k12_states["saline_fdr_sig"]]

@@ -13,14 +13,14 @@ Key features:
 4. Zero dependency on long-term photometry stream survival (immune to photometry freezes).
 """
 
-import json
 import re
 from pathlib import Path
 from typing import Dict, Optional, Tuple, Union
+
 import numpy as np
 import pandas as pd
 
-from .ttl_sync import find_camera_timestamp_files, get_session_ttl_offset, load_ttl_cache
+from .ttl_sync import get_session_ttl_offset, load_ttl_cache
 
 _MAPPING_CACHE: Dict[str, np.ndarray] = {}
 _CALIBRATION_DETAILS_CACHE: Dict[str, dict] = {}
@@ -49,42 +49,42 @@ def compute_session_camera_mapping(
     """
     top_csv = Path(top_csv)
     bot_csv = Path(bot_csv)
-    
+
     if not top_csv.exists() or not bot_csv.exists():
         raise FileNotFoundError(f"Timestamp files not found: top={top_csv}, bot={bot_csv}")
-    
+
     # Read available timestamp columns
     cols_top = pd.read_csv(top_csv, nrows=0).columns.tolist()
     cols_bot = pd.read_csv(bot_csv, nrows=0).columns.tolist()
-    
+
     use_basler = ("Cam_Basler_Timestamp" in cols_top) and ("Cam_Basler_Timestamp" in cols_bot)
-    
+
     if use_basler:
         df_t = pd.read_csv(top_csv, usecols=["Cam_Basler_Timestamp", "Cam_Bonsai_Timestamp"])
         df_b = pd.read_csv(bot_csv, usecols=["Cam_Basler_Timestamp", "Cam_Bonsai_Timestamp"])
-        
+
         if len(df_t) == 0 or len(df_b) == 0:
             raise ValueError(f"Empty timestamp file detected: top={len(df_t)}, bot={len(df_b)}")
-        
+
         t_bas = df_t["Cam_Basler_Timestamp"].to_numpy().astype(np.float64)
         b_bas = df_b["Cam_Basler_Timestamp"].to_numpy().astype(np.float64)
         t_bon = df_t["Cam_Bonsai_Timestamp"].to_numpy().astype(np.float64)
         b_bon = df_b["Cam_Bonsai_Timestamp"].to_numpy().astype(np.float64)
-        
+
         # Validate finite and non-empty
-        if not (np.all(np.isfinite(t_bas)) and np.all(np.isfinite(b_bas)) and 
+        if not (np.all(np.isfinite(t_bas)) and np.all(np.isfinite(b_bas)) and
                 np.all(np.isfinite(t_bon)) and np.all(np.isfinite(b_bon))):
             raise ValueError(f"Non-finite (NaN/Inf) timestamps found in {top_csv.name} or {bot_csv.name}")
-            
+
         # Validate monotonicity of camera crystal clocks
         if np.any(np.diff(t_bas) < 0) or np.any(np.diff(b_bas) < 0):
             raise ValueError(f"Non-monotonic crystal timestamps found in {top_csv.name} or {bot_csv.name}")
-        
+
         # 1. Rate-Aware Hardware Crystal Clock Calibration
         # Filter out batched / duplicate host timestamps (USB polling artifacts)
         t_valid = np.r_[True, np.diff(t_bon) > 0.005]
         b_valid = np.r_[True, np.diff(b_bon) > 0.005]
-        
+
         anchors_t = []
         anchors_b = []
         margin = min(50, max(5, len(t_bon) // 10))
@@ -104,10 +104,10 @@ def compute_session_camera_mapping(
                         if dt < 0.003:  # strictly within 3ms host time
                             anchors_t.append(t_bas[i])
                             anchors_b.append(b_bas[b_idx])
-                        
+
         anchors_t = np.array(anchors_t)
         anchors_b = np.array(anchors_b)
-        
+
         if len(anchors_t) >= 5:
             poly = np.polyfit(anchors_b, anchors_t, deg=1)
             res_ms = np.abs(anchors_t - (poly[0] * anchors_b + poly[1])) / 1e6
@@ -144,7 +144,7 @@ def compute_session_camera_mapping(
             status = "DEGRADED_INSUFFICIENT_ANCHORS"
             mode = "insufficient_anchors_fallback"
             is_valid = False
-            
+
         calib_details = {
             "status": status,
             "mode": mode,
@@ -158,17 +158,17 @@ def compute_session_camera_mapping(
             "anchor_max_res_ms": max_res_ms,
             "anchor_mean_res_ms": mean_res_ms,
         }
-        
+
         # Calibrated BotCam crystal time projected into TopCam crystal timeline
         b_bas_cal = slope * b_bas + intercept
-        
+
         # 2. Nearest neighbor search on calibrated Basler crystal time
         idx = np.searchsorted(b_bas_cal, t_bas)
         idx = np.clip(idx, 0, len(b_bas_cal) - 1)
         left = np.maximum(0, idx - 1)
         closer_left = np.abs(b_bas_cal[left] - t_bas) < np.abs(b_bas_cal[idx] - t_bas)
         best_bot = np.where(closer_left, left, idx)
-        
+
         dt_ms = np.abs(b_bas_cal[best_bot] - t_bas) / 1e6
         valid = (dt_ms <= max_jitter_ms) & (t_bas >= b_bas_cal[0] - 8e6) & (t_bas <= b_bas_cal[-1] + 8e6)
         mapping = np.where(valid, best_bot, -1)
@@ -181,22 +181,22 @@ def compute_session_camera_mapping(
         # Fallback to Cam_Bonsai_Timestamp
         df_t = pd.read_csv(top_csv, usecols=["Cam_Bonsai_Timestamp"])
         df_b = pd.read_csv(bot_csv, usecols=["Cam_Bonsai_Timestamp"])
-        
+
         if len(df_t) == 0 or len(df_b) == 0:
             raise ValueError(f"Empty timestamp file detected: top={len(df_t)}, bot={len(df_b)}")
-            
+
         t_bon = df_t["Cam_Bonsai_Timestamp"].to_numpy().astype(np.float64)
         b_bon = df_b["Cam_Bonsai_Timestamp"].to_numpy().astype(np.float64)
-        
+
         if not (np.all(np.isfinite(t_bon)) and np.all(np.isfinite(b_bon))):
             raise ValueError(f"Non-finite timestamps in {top_csv.name} or {bot_csv.name}")
-        
+
         idx = np.searchsorted(b_bon, t_bon)
         idx = np.clip(idx, 0, len(b_bon) - 1)
         left = np.maximum(0, idx - 1)
         closer_left = np.abs(b_bon[left] - t_bon) < np.abs(b_bon[idx] - t_bon)
         best_bot = np.where(closer_left, left, idx)
-        
+
         dt_ms = np.abs(b_bon[best_bot] - t_bon) * 1000.0
         valid = (dt_ms <= max_jitter_ms) & (t_bon >= b_bon[0] - 0.008) & (t_bon <= b_bon[-1] + 0.008)
         mapping = np.where(valid, best_bot, -1)
@@ -219,23 +219,23 @@ def get_session_mapping(sid: str, strict: bool = False) -> Optional[np.ndarray]:
     """Retrieves or computes the continuous TopCam -> BotCam mapping array for a session ID."""
     global _MAPPING_CACHE, _CALIBRATION_DETAILS_CACHE
     clean_sid = re.sub(r"_seg\d+", "", sid).replace("_tandem_23kp", "")
-    
+
     if clean_sid in _MAPPING_CACHE:
         calib = _CALIBRATION_DETAILS_CACHE.get(clean_sid)
         if strict and calib and not calib.get("is_valid_crystal", False):
             raise RuntimeError(f"Session {sid} cached mapping is not valid crystal calibration: {calib.get('status')}")
         return _MAPPING_CACHE[clean_sid]
-        
+
     ttl_cache = load_ttl_cache()
     info = ttl_cache.get(sid) or ttl_cache.get(clean_sid)
     if not info:
         return None
-        
+
     top_csv = Path(info.get("top_csv", ""))
     bot_csv = Path(info.get("bot_csv", ""))
     if not top_csv.exists() or not bot_csv.exists():
         return None
-        
+
     mapping, _, calib = compute_session_camera_mapping(top_csv, bot_csv, strict=strict)
     _MAPPING_CACHE[clean_sid] = mapping
     _MAPPING_CACHE[sid] = mapping
@@ -266,11 +266,11 @@ def top_to_bot_frame_continuous(sid: str, top_frame: int, allow_static_fallback:
             return int(mapping[top_frame])  # Explicitly preserves -1 for dropped frames!
         else:
             return -1  # Out of recording bounds
-            
+
     if allow_static_fallback:
         info = get_session_ttl_offset(sid)
         if info:
             offset = int(info.get("bot0_in_top", 0) - info.get("top0_in_bot", 0))
             return max(0, top_frame - offset)
-            
+
     return -2  # Timestamp files missing / unmapped session

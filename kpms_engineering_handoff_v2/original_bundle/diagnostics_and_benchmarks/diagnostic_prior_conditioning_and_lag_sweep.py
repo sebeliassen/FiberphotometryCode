@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+
 import h5py
 import numpy as np
 
@@ -19,14 +20,15 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
+from functools import partial
+
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-from functools import partial
-from jax_moseq.utils.autoregression import get_nlags
-from jax_moseq.utils.utils import mixed_map
-from jax_moseq.utils.kalman import ar_to_lds_emissions, kalman_sample
 from jax_moseq.models.keypoint_slds.alignment import to_vanilla_slds
+from jax_moseq.utils.autoregression import get_nlags
+from jax_moseq.utils.kalman import ar_to_lds_emissions, kalman_sample
+from jax_moseq.utils.utils import mixed_map
 from utils.resample_batching import pure_numba_resample_continuous_stateseqs
 
 na = None

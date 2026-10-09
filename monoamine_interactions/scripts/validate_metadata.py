@@ -1,18 +1,19 @@
-import pandas as pd
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import pandas as pd
 
 # Add project root to path
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 
 def validate():
     print("=== Metadata Validation ===")
-    
+
     # Paths
     proj_dir = Path(__file__).resolve().parents[1] / "jonathan_oft_baseline"
     data_dir = Path("/home/fsp585/Desktop/FiberphotometryCode/src_mono_inter/jonathan_oft_baseline/Jonathan_IFxDN_csvs")
     animals_csv = proj_dir / "overrides" / "animals.csv"
-    
+
     if not animals_csv.exists():
         print(f"ERROR: animals.csv not found at {animals_csv}")
         return
@@ -41,15 +42,15 @@ def validate():
                 found_ids.add(aid)
 
     print(f"Detected {len(found_ids)} unique Animal IDs in session files.")
-    
+
     missing = assigned_ids - found_ids
     extra = found_ids - assigned_ids
-    
+
     if missing:
         print(f"WARNING: IDs in animals.csv but NOT found in data: {missing}")
     if extra:
         print(f"WARNING: IDs in data but NOT found in animals.csv: {extra}")
-        
+
     if not missing and not extra:
         print("SUCCESS: Metadata matches detected data IDs.")
 

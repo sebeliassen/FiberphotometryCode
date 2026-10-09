@@ -22,15 +22,14 @@ Features:
 =============================================================================
 """
 
-import sys
-import os
-import time
 import json
 import pickle
+import sys
+import time
 from pathlib import Path
-import numpy as np
-import pandas as pd
+
 import cv2
+import numpy as np
 
 # Add repo root to path
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
@@ -38,15 +37,19 @@ sys.path.insert(0, str(REPO_ROOT))
 
 # Compatibility bridge for NumPy unpickling
 import numpy.core.numeric as _numeric
+
 sys.modules['numpy._core.numeric'] = _numeric
 
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
-    EXP_DIR, DATA_DIR, MOVIES_DIR, THUMBS_DIR, THEMES
-)
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
-    load_chain_movie_resources, generate_chain_grid_movie
+    generate_chain_grid_movie,
+    load_chain_movie_resources,
 )
-
+from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
+    DATA_DIR,
+    MOVIES_DIR,
+    THEMES,
+    THUMBS_DIR,
+)
 
 # Load Human Syllable Labels
 HUMAN_LABELS_PATH = REPO_ROOT / "syllable_generation/analysis/sequence_viz/run12_human_labels.csv"

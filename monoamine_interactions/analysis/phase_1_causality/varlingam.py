@@ -1,11 +1,10 @@
 
-import pandas as pd
-import numpy as np
 import lingam
-from lingam.utils import make_dot
+import pandas as pd
+
 
 def run_varlingam(
-    df: pd.DataFrame, 
+    df: pd.DataFrame,
     lags: int = 1,
     criterion: str = 'bic'
 ) -> dict:
@@ -24,17 +23,17 @@ def run_varlingam(
         - 'residuals': Residuals of the VAR model.
         - 'model': The fitted VARLiNGAM object.
     """
-    
+
     # 1. Fit VARLiNGAM
     model = lingam.VARLiNGAM(lags=lags, criterion=criterion)
     model.fit(df)
-    
+
     # 2. Extract results
     # adjacency_matrices[0] is contemporaneous (B0)
     # adjacency_matrices[k] is lagged (Bk)
     adj_matrices = model.adjacency_matrices_
     causal_order = model.causal_order_
-    
+
     return {
         "adjacency_matrices": adj_matrices,
         "causal_order": causal_order,

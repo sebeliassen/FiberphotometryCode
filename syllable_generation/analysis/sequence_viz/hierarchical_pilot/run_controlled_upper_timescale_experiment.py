@@ -24,26 +24,28 @@ Comprehensive Controlled Upper-Timescale Experiment & M=4 State Resolution:
 =============================================================================
 """
 
-import sys
-import time
-import json
 import pickle
+import sys
 from pathlib import Path
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-import matplotlib.colors as mcolors
-import jax
 import jax.numpy as jnp
+import matplotlib.colors as mcolors
+import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.hierarchical_pilot.hierarchical_subroutine_model import (
-    HierarchicalSubroutineModel, build_transition_matrix_np, jax_forward_backward, jax_forward_loglik_only
+    HierarchicalSubroutineModel,
+    build_transition_matrix_np,
+    jax_forward_backward,
+    jax_forward_loglik_only,
 )
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/hierarchical_pilot"

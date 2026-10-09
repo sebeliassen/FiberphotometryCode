@@ -10,10 +10,10 @@ Evaluation routines for Keypoint-MoSeq models:
 """
 
 from pathlib import Path
-from typing import Dict, Any, Tuple, List, Optional
+from typing import Any, Dict, List
+
 import h5py
 import numpy as np
-import pandas as pd
 
 from .logging_utils import get_logger
 

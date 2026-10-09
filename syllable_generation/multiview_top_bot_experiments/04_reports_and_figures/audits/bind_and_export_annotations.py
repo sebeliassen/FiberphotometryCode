@@ -17,7 +17,6 @@ import hashlib
 import json
 import time
 from pathlib import Path
-from typing import Dict, Any
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 EXP_DIR = Path(__file__).resolve().parents[2]
@@ -37,7 +36,7 @@ def main():
     # Fingerprint current production model (seed 101)
     cohort_dir = EXP_DIR / "cohort_static_21kp_v2"
     model_dir = cohort_dir / "model_21kp_static_50ar_300slds_seed101"
-    
+
     fingerprint_seed101 = {
         "model_name": "model_21kp_static_50ar_300slds_seed101",
         "cohort": "cohort_static_21kp_v2",

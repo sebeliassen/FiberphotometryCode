@@ -16,19 +16,20 @@ Key repairs:
    and gap decoding on representative production videos.
 """
 
-import sys
 import json
 import pickle
+import sys
 from pathlib import Path
-from typing import Dict, List, Tuple, Any
-import numpy as np
-import pandas as pd
+from typing import Any, Dict, List
+
 import cv2
 import h5py
 import matplotlib
+import numpy as np
+import pandas as pd
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from scipy.ndimage import median_filter
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
@@ -39,8 +40,8 @@ MODEL_DIR = COHORT_DIR / "model_21kp_static_50ar_200slds_seed101"
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-import keypoint_moseq as kpms
 from keypoint_moseq.util import filter_angle
+
 
 def generate_unified_selection_manifest(
     num_samples_per_syllable: int = 10,

@@ -15,13 +15,12 @@ Parallelized across worker processes for rapid throughput.
 =============================================================================
 """
 
-import os
 import sys
 import time
-from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from pathlib import Path
+
 import numpy as np
-import pandas as pd
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
@@ -31,6 +30,7 @@ if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
 from audit_cohort_correlations import find_matched_pairs
+
 from core.fusion_engine import fuse_single_pair
 
 OUT_DIR = EXP_DIR / "fused_h5_continuous_calibrated"

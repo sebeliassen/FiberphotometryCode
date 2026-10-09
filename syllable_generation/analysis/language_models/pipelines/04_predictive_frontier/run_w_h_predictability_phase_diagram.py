@@ -26,10 +26,11 @@ sys.path.insert(0, LM_DIR)
 sys.path.insert(0, os.path.join(ROOT_DIR, "syllable_generation"))
 
 import pickle
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 
 FIG_DIR = os.path.join(LM_DIR, "output", "presentation", "figures")
@@ -98,7 +99,7 @@ for sess_idx, bouts in enumerate(session_bouts):
     sp = np.zeros((N, 6), dtype=np.float32)
     oh_bout = np.zeros((N, NUM_ACTIVE_SYLLS), dtype=np.float32)
     next_bout_ptrs = np.full(N, N, dtype=np.int32)
-    
+
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_id = b["syllable"] - 1
@@ -110,18 +111,18 @@ for sess_idx, bouts in enumerate(session_bouts):
             sp[sf:ef+1, :4] = vec[:4]
             sp[sf:ef+1, 4] = vec[10]
             sp[sf:ef+1, 5] = vec[12]
-            
+
     b_starts = np.array([b["start_frame"] for b in bouts])
     for t_idx, b_st in enumerate(b_starts):
         prev_st = b_starts[t_idx-1] if t_idx > 0 else 0
         next_bout_ptrs[prev_st:b_st] = b_st
     if len(b_starts) > 0:
         next_bout_ptrs[b_starts[-1]:] = N
-        
+
     cum_bout = np.vstack([np.zeros((1, NUM_ACTIVE_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
     cum_spatial = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp, axis=0)])
     cum_spatial_sq = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp**2, axis=0)])
-    
+
     sessions_data.append({
         "sess_idx": sess_idx, "N": N, "fs": fs, "cum_bout": cum_bout,
         "next_bout_ptrs": next_bout_ptrs, "cum_spatial": cum_spatial,
@@ -147,24 +148,24 @@ STRIDE_FRAMES = int(STRIDE_SEC * FPS)
 
 for W_sec in W_SECS:
     W_frames = int(W_sec * FPS)
-    
+
     for H_sec in H_SECS:
         H_frames = int(H_sec * FPS)
         log(f"\nEvaluating Cell: History W = {W_sec:5.1f}s | Forecast Horizon H = {H_sec:5.1f}s...")
-        
+
         # Extract paired windows for this (W, H)
         windows = []
         for s in sessions_data:
             N = s["N"]
             if N < W_frames + H_frames + 200: continue
             inj_f = s["meta"]["inj_frame"]
-            
+
             t_anchors = np.arange(W_frames, N - H_frames, STRIDE_FRAMES)
             t_tgt_start = s["next_bout_ptrs"][t_anchors]
             valid = (t_tgt_start + H_frames < N)
             t_anchors = t_anchors[valid]
             t_tgt_start = t_tgt_start[valid]
-            
+
             past_start = t_anchors - W_frames
             future_end = t_tgt_start + H_frames
             no_straddle = (future_end < inj_f) | (past_start > inj_f)
@@ -172,11 +173,11 @@ for W_sec in W_SECS:
             t_tgt_start = t_tgt_start[no_straddle]
             M = len(t_anchors)
             if M == 0: continue
-            
+
             # Past Repertoire (99-D)
             b_cnt = s["cum_bout"][t_anchors] - s["cum_bout"][t_anchors - W_frames]
             feat_rep = (b_cnt + 1e-4) / (np.sum(b_cnt, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-            
+
             # Spatial context (14-D)
             t_norm = t_anchors / float(N)
             p1 = np.column_stack([t_norm, t_norm**2]).astype(np.float32)
@@ -185,11 +186,11 @@ for W_sec in W_SECS:
             sp_sq = s["cum_spatial_sq"][t_anchors] - s["cum_spatial_sq"][t_anchors - W_frames]
             sp_var = np.maximum(sp_sq / float(W_frames) - sp_mean**2, 1e-6)
             feat_space = np.hstack([p1, sp_mean, np.sqrt(sp_var)]).astype(np.float32)
-            
+
             # Target Repertoire in H (99-D)
             f_cnt = s["cum_bout"][t_tgt_start + H_frames] - s["cum_bout"][t_tgt_start]
             target = (f_cnt + 1e-4) / (np.sum(f_cnt, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-            
+
             for i in range(M):
                 windows.append({
                     "sess_idx": s["sess_idx"],
@@ -197,66 +198,66 @@ for W_sec in W_SECS:
                     "rep": feat_rep[i],
                     "target": target[i]
                 })
-                
+
         N_w = len(windows)
         if N_w < 500:
             log(f"  Insufficient windows ({N_w}), skipping.")
             continue
-            
+
         sess_ids = np.array([w["sess_idx"] for w in windows])
         Y_targets = np.array([w["target"] for w in windows], dtype=np.float32)
         X_space_raw = np.array([w["space"] for w in windows], dtype=np.float32)
         X_rep_raw = np.array([w["rep"] for w in windows], dtype=np.float32)
-        
+
         scaler = StandardScaler().fit(X_space_raw)
         X_space_std = scaler.transform(X_space_raw).astype(np.float32)
         X_sp_norm = X_space_std / np.sqrt(X_space_std.shape[1])
         X_rep_hellinger = np.sqrt(X_rep_raw)
         X_rep_norm = X_rep_hellinger / np.sqrt(np.mean(np.sum(X_rep_hellinger**2, axis=1)))
         X_hybrid = np.hstack([X_sp_norm, X_rep_norm]) / np.sqrt(2.0)
-        
+
         X_tensor = torch.tensor(X_hybrid, dtype=torch.float32, device=device)
         Y_tensor = torch.tensor(Y_targets, dtype=torch.float32, device=device)
-        
+
         # 1. Unconditional Null (Random pairs)
         global_prior = Y_tensor.mean(dim=0, keepdim=True)
         r_null_arr = js_divergence_pt(Y_tensor, global_prior.repeat(N_w, 1)).cpu().numpy()
         R_null_H = float(np.mean(r_null_arr))
-        
+
         # 2. Matched Twin Conditional Dispersion (Top 5% closest analogues / k=20)
         k_eval = 20
         disp_list = []
         unique_s = np.unique(sess_ids)
-        
+
         for s_idx in unique_s:
             a_idx = np.where(sess_ids == s_idx)[0]
             c_idx = np.where(sess_ids != s_idx)[0]
             if len(a_idx) == 0 or len(c_idx) < k_eval: continue
-            
+
             X_a = X_tensor[a_idx]
             X_c = X_tensor[c_idx]
             Y_c = Y_tensor[c_idx]
-            
+
             dists = torch.cdist(X_a, X_c, p=2.0)
             _, topk_idx = torch.topk(dists, k=k_eval, largest=False, dim=1)
             neigh_Y = Y_c[topk_idx] # [B, k, 99]
-            
+
             Y_bar = torch.mean(neigh_Y, dim=1, keepdim=True)
             disp_k = js_divergence_pt(neigh_Y.reshape(-1, NUM_ACTIVE_SYLLS), Y_bar.repeat(1, k_eval, 1).reshape(-1, NUM_ACTIVE_SYLLS))
             disp_k = disp_k.reshape(-1, k_eval).mean(dim=1)
             disp_list.append(disp_k.cpu().numpy())
-            
+
         all_disp = np.concatenate(disp_list)
         R_cond = float(np.mean(all_disp))
-        
+
         R_win = R_WINDOW_DICT.get(H_sec, 0.13761)
-        
+
         # Normalized Predictability Index
         resolved_fraction = max(0.0, min(100.0, ((R_null_H - R_cond) / max(1e-4, (R_null_H - R_win))) * 100.0))
         raw_reduction = ((R_null_H - R_cond) / R_null_H) * 100.0
-        
+
         log(f"  [W={W_sec:5.1f}s, H={H_sec:5.1f}s] R_null: {R_null_H:.4f} b | R_cond: {R_cond:.4f} b | R_win: {R_win:.4f} b | Resolved: {resolved_fraction:5.1f}% (Raw: -{raw_reduction:4.1f}%)")
-        
+
         matrix_results.append({
             "History_W_sec": W_sec,
             "Horizon_H_sec": H_sec,

@@ -10,9 +10,11 @@ rather than generating sprawling directories of individual plots.
 
 from pathlib import Path
 from typing import Dict, List, Optional
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -368,13 +370,13 @@ class ChainVisualizer:
         """
         if micro_df.empty:
             return None
-            
+
         unique_tokens = sorted(micro_df["syllable_token"].unique())[:4]
         fig, axes = plt.subplots(1, len(unique_tokens), figsize=(4.5 * len(unique_tokens), 4), sharey=True)
         if len(unique_tokens) == 1:
             axes = [axes]
         fig.suptitle(f"{title_prefix}: Intra-Frame Micro-Kinematics (Velocity Across Normalized Syllable Phase)", fontsize=13, fontweight="bold")
-        
+
         for ax, tok in zip(axes, unique_tokens):
             sub = micro_df[micro_df["syllable_token"] == tok]
             sns.lineplot(
@@ -391,7 +393,7 @@ class ChainVisualizer:
             ax.set_xlabel("Normalized Phase (tau)")
             ax.set_ylabel("Speed")
             ax.grid(True, linestyle=":", alpha=0.5)
-            
+
         plt.tight_layout()
         out_path = self.out_dir / "intra_syllable_micro_kinematics.png"
         fig.savefig(out_path, dpi=200, bbox_inches="tight")

@@ -1,8 +1,10 @@
 # analysis/signal_processing.py
 
-import numpy as np
 from collections import defaultdict
+
+import numpy as np
 from scipy import stats
+
 
 def group_signals(sessions, key_fn):
     """

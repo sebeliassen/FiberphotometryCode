@@ -26,14 +26,15 @@ sys.path.insert(0, LM_DIR)
 sys.path.insert(0, os.path.join(ROOT_DIR, "syllable_generation"))
 
 import pickle
+
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score, adjusted_rand_score
+from sklearn.metrics import adjusted_rand_score, silhouette_score
 from sklearn.preprocessing import StandardScaler
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 
 FIG_DIR = os.path.join(LM_DIR, "output", "presentation", "figures")
 TABLE_DIR = os.path.join(LM_DIR, "output", "04_predictive_frontier", "tables")
@@ -97,7 +98,7 @@ for sess_idx, bouts in enumerate(session_bouts):
     pose = np.zeros((N, 30), dtype=np.float32)
     oh_bout = np.zeros((N, NUM_ACTIVE_SYLLS), dtype=np.float32)
     next_bout_ptrs = np.full(N, N, dtype=np.int32)
-    
+
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_raw = b["syllable"]
@@ -105,7 +106,7 @@ for sess_idx, bouts in enumerate(session_bouts):
         if 0 <= s_id < NUM_ACTIVE_SYLLS:
             fs[sf:ef+1] = s_id
             oh_bout[sf, s_id] = 1.0
-            
+
         vec = b.get("vector", None)
         if vec is not None and len(vec) >= 14:
             sp[sf:ef+1, :4] = vec[:4]
@@ -115,18 +116,18 @@ for sess_idx, bouts in enumerate(session_bouts):
                 pose[sf:ef+1] = vec[:30]
             else:
                 pose[sf:ef+1, :len(vec)] = vec
-                
+
     b_starts = np.array([b["start_frame"] for b in bouts])
     for t_idx, b_st in enumerate(b_starts):
         prev_st = b_starts[t_idx-1] if t_idx > 0 else 0
         next_bout_ptrs[prev_st:b_st] = b_st
     if len(b_starts) > 0:
         next_bout_ptrs[b_starts[-1]:] = N
-        
+
     cum_bout = np.vstack([np.zeros((1, NUM_ACTIVE_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
     cum_spatial = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp, axis=0)])
     cum_spatial_sq = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp**2, axis=0)])
-    
+
     sessions_data.append({
         "sess_idx": sess_idx, "N": N, "fs": fs, "pose": pose, "cum_bout": cum_bout,
         "next_bout_ptrs": next_bout_ptrs, "cum_spatial": cum_spatial,
@@ -138,13 +139,13 @@ for s in sessions_data:
     N = s["N"]
     if N < W_FRAMES + H_FRAMES + 200: continue
     inj_f = s["meta"]["inj_frame"]
-    
+
     t_anchors = np.arange(W_FRAMES, N - H_FRAMES, STRIDE_FRAMES)
     t_tgt_start = s["next_bout_ptrs"][t_anchors]
     valid = (t_tgt_start + H_FRAMES < N)
     t_anchors = t_anchors[valid]
     t_tgt_start = t_tgt_start[valid]
-    
+
     past_start = t_anchors - W_FRAMES
     future_end = t_tgt_start + H_FRAMES
     no_straddle = (future_end < inj_f) | (past_start > inj_f)
@@ -152,7 +153,7 @@ for s in sessions_data:
     t_tgt_start = t_tgt_start[no_straddle]
     M = len(t_anchors)
     if M == 0: continue
-    
+
     # Past Spatial context (14-D)
     t_norm = t_anchors / float(N)
     p1 = np.column_stack([t_norm, t_norm**2]).astype(np.float32)
@@ -161,22 +162,22 @@ for s in sessions_data:
     sp_sq = s["cum_spatial_sq"][t_anchors] - s["cum_spatial_sq"][t_anchors - W_FRAMES]
     sp_var = np.maximum(sp_sq / float(W_FRAMES) - sp_mean**2, 1e-6)
     feat_space_past = np.hstack([p1, sp_mean, np.sqrt(sp_var)]).astype(np.float32)
-    
+
     # Past Repertoire distribution (99-D)
     b_cnt_past = s["cum_bout"][t_anchors] - s["cum_bout"][t_anchors - W_FRAMES]
     feat_rep_past = (b_cnt_past + 1e-4) / (np.sum(b_cnt_past, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     # Future Target distribution over H=120s (99-D)
     f_cnt_future = s["cum_bout"][t_tgt_start + H_FRAMES] - s["cum_bout"][t_tgt_start]
     target_future = (f_cnt_future + 1e-4) / (np.sum(f_cnt_future, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     # Future Spatial & Kinematic context (14-D)
     sp_sum_f = s["cum_spatial"][t_tgt_start + H_FRAMES] - s["cum_spatial"][t_tgt_start]
     sp_mean_f = sp_sum_f / float(H_FRAMES)
     sp_sq_f = s["cum_spatial_sq"][t_tgt_start + H_FRAMES] - s["cum_spatial_sq"][t_tgt_start]
     sp_var_f = np.maximum(sp_sq_f / float(H_FRAMES) - sp_mean_f**2, 1e-6)
     feat_space_future = np.hstack([p1, sp_mean_f, np.sqrt(sp_var_f)]).astype(np.float32)
-    
+
     for i in range(M):
         raw_windows.append({
             "sess_idx": s["sess_idx"],
@@ -215,13 +216,13 @@ scaler_ent = StandardScaler().fit(future_entropy)
 future_entropy_std = scaler_ent.transform(future_entropy).astype(np.float32)
 
 Y_cluster_features = np.hstack([
-    Y_rep_hellinger, 
+    Y_rep_hellinger,
     0.5 * Y_space_std / np.sqrt(Y_space_std.shape[1]),
     0.5 * future_entropy_std
 ]).astype(np.float32)
 
 past_features = np.hstack([
-    X_rep_hellinger, 
+    X_rep_hellinger,
     0.5 * X_space_std / np.sqrt(X_space_std.shape[1]),
     0.5 * future_entropy_std
 ]).astype(np.float32)
@@ -238,30 +239,30 @@ all_k_sweep_results = []
 all_k_models = {}
 
 for K in K_VALUES:
-    log(f"\n=================================================================")
+    log("\n=================================================================")
     log(f"EVALUATING DISCRETE RESOLUTION: K = {K} MACRO-STRATEGIES")
-    log(f"=================================================================")
-    
+    log("=================================================================")
+
     # 1. Measure Cross-Session Stability (ARI between 2 disjoint session halves)
     half1_sess = unique_sessions[:len(unique_sessions)//2]
     half2_sess = unique_sessions[len(unique_sessions)//2:]
     mask1 = np.isin(sess_ids, half1_sess)
     mask2 = np.isin(sess_ids, half2_sess)
-    
+
     km1 = KMeans(n_clusters=K, random_state=42, n_init=5).fit(Y_cluster_features[mask1])
     km2 = KMeans(n_clusters=K, random_state=42, n_init=5).fit(Y_cluster_features[mask2])
     preds1 = km1.predict(Y_cluster_features)
     preds2 = km2.predict(Y_cluster_features)
     ari = adjusted_rand_score(preds1, preds2)
-    
+
     # Subsampled silhouette
     sub_idx = np.random.choice(N_win, size=min(4000, N_win), replace=False)
     km_full = KMeans(n_clusters=K, random_state=42, n_init=10).fit(Y_cluster_features)
     sil = silhouette_score(Y_cluster_features[sub_idx], km_full.labels_[sub_idx])
-    
+
     Y_state_labels = km_full.labels_
     X_state_labels = km_full.predict(past_features)
-    
+
     # Transition labels: 0 = Persist, 1..K-1 = Switch to modular target
     transition_labels = np.zeros(N_win, dtype=np.int32)
     for i in range(N_win):
@@ -269,25 +270,25 @@ for K in K_VALUES:
             transition_labels[i] = 0
         else:
             transition_labels[i] = (Y_state_labels[i] - X_state_labels[i]) % K
-            
+
     persistence_pct = float(np.mean(Y_state_labels == X_state_labels) * 100.0)
-    
+
     # Unconditional Nulls
     state_counts = np.bincount(Y_state_labels, minlength=K)
     state_probs = state_counts / float(N_win)
     null_acc_state = float(np.max(state_probs)) * 100.0
     null_ent_state = float(-np.sum(state_probs * np.log2(state_probs + 1e-12)))
     null_neff_state = float(2.0 ** null_ent_state)
-    
+
     trans_counts = np.bincount(transition_labels, minlength=K)
     trans_probs = trans_counts / float(N_win)
     null_acc_trans = float(np.max(trans_probs)) * 100.0
     null_ent_trans = float(-np.sum(trans_probs * np.log2(trans_probs + 1e-12)))
-    
+
     log(f"  [K={K:2d}] Cross-Session ARI: {ari:.4f} | Silhouette: {sil:.4f}")
     log(f"  [K={K:2d}] Autoregressive State Persistence Baseline: {persistence_pct:.2f}%")
     log(f"  [K={K:2d}] Unconditional Null State Acc: {null_acc_state:.2f}% | Null Entropy: {null_ent_state:.3f} b | Null N_eff: {null_neff_state:.2f}")
-    
+
     all_k_models[K] = {
         "Y_state": Y_state_labels,
         "X_state": X_state_labels,
@@ -300,62 +301,62 @@ for K in K_VALUES:
         "null_ent_trans": null_ent_trans,
         "class_prevalence": state_probs * 100.0
     }
-    
+
     # Sweep epsilon
     for eps_r in EPSILON_SWEEP:
         acc_state_arr = np.full(N_win, np.nan, dtype=np.float32)
         ent_state_arr = np.full(N_win, np.nan, dtype=np.float32)
         neff_state_arr = np.full(N_win, np.nan, dtype=np.float32)
-        
+
         acc_trans_arr = np.full(N_win, np.nan, dtype=np.float32)
         ent_trans_arr = np.full(N_win, np.nan, dtype=np.float32)
-        
+
         density_arr = np.zeros(N_win, dtype=np.int32)
         mean_dist_arr = np.full(N_win, np.nan, dtype=np.float32)
-        
+
         for s_idx in unique_sessions:
             anchor_mask = (sess_ids == s_idx)
             cand_mask = (sess_ids != s_idx)
-            
+
             anchor_indices = np.where(anchor_mask)[0]
             cand_indices = np.where(cand_mask)[0]
-            
+
             X_anchors = X_tensor[anchor_indices]
             X_cands = X_tensor[cand_indices]
-            
+
             Y_state_cands = Y_state_labels[cand_indices]
             Y_trans_cands = transition_labels[cand_indices]
-            
+
             batch_size = 512
             for b_start in range(0, len(anchor_indices), batch_size):
                 b_end = min(b_start + batch_size, len(anchor_indices))
                 b_X = X_anchors[b_start:b_end]
                 b_global_idx = anchor_indices[b_start:b_end]
-                
+
                 dists = torch.cdist(b_X, X_cands, p=2.0)
                 within_eps = (dists < eps_r)
                 counts = within_eps.sum(dim=1).cpu().numpy()
                 density_arr[b_global_idx] = counts
-                
+
                 valid_b = np.where(counts >= 2)[0]
                 for v_idx in valid_b:
                     mask_j = within_eps[v_idx].cpu().numpy()
                     matched_state = Y_state_cands[mask_j]
                     matched_trans = Y_trans_cands[mask_j]
                     matched_d = dists[v_idx, mask_j].cpu().numpy()
-                    
+
                     p_state = np.bincount(matched_state, minlength=K) / float(len(matched_state))
                     a_state = np.max(p_state)
                     h_state = -np.sum(p_state * np.log2(p_state + 1e-12))
-                    
+
                     p_trans = np.bincount(matched_trans, minlength=K) / float(len(matched_trans))
                     a_trans = np.max(p_trans)
                     h_trans = -np.sum(p_trans * np.log2(p_trans + 1e-12))
-                    
+
                     acc_state_arr[b_global_idx[v_idx]] = a_state
                     ent_state_arr[b_global_idx[v_idx]] = h_state
                     neff_state_arr[b_global_idx[v_idx]] = 2.0 ** h_state
-                    
+
                     acc_trans_arr[b_global_idx[v_idx]] = a_trans
                     ent_trans_arr[b_global_idx[v_idx]] = h_trans
                     mean_dist_arr[b_global_idx[v_idx]] = np.mean(matched_d)
@@ -363,7 +364,7 @@ for K in K_VALUES:
         valid_mask = ~np.isnan(acc_state_arr)
         n_cov = np.sum(valid_mask)
         cov_pct = (n_cov / N_win) * 100.0
-        
+
         if n_cov > 0:
             mean_acc_state = float(np.mean(acc_state_arr[valid_mask])) * 100.0
             mean_ent_state = float(np.mean(ent_state_arr[valid_mask]))
@@ -375,9 +376,9 @@ for K in K_VALUES:
         else:
             mean_acc_state, mean_ent_state, mean_neff_state = np.nan, np.nan, np.nan
             mean_acc_trans, mean_ent_trans, mean_dens, mean_d = np.nan, np.nan, np.nan, np.nan
-            
+
         log(f"    [eps={eps_r:4.2f}] Cov: {cov_pct:5.1f}% | A*(Y_state): {mean_acc_state:5.2f}% (N_eff={mean_neff_state:4.2f}) | A*(Y_trans): {mean_acc_trans:5.2f}%")
-        
+
         all_k_sweep_results.append({
             "K_Strategies": K,
             "Epsilon_Radius": eps_r,
@@ -426,8 +427,8 @@ for K in K_VALUES:
     m = k_markers[K]
     null_val = all_k_models[K]["null_acc_state"]
     persist_val = all_k_models[K]["persistence_pct"]
-    
-    ax1.plot(sub["Epsilon_Radius"], sub["Oracle_Acc_State_pct"], 
+
+    ax1.plot(sub["Epsilon_Radius"], sub["Oracle_Acc_State_pct"],
              marker=m, linewidth=2.2, color=c, label=f'K={K} A*(Y_state) [Null: {null_val:.1f}%, Persist: {persist_val:.1f}%]')
 
 ax1.set_title("A. Empirical Bayes Oracle Accuracy A*(Y_state) vs. Past History Similarity ($\\epsilon$)\n[Comparing Macro-Strategy Resolutions $K \\in \\{4, 8, 16\\}$]", fontsize=11, fontweight='bold', pad=10)
@@ -443,8 +444,8 @@ for K in K_VALUES:
     c = k_colors[K]
     m = k_markers[K]
     null_neff = all_k_models[K]["null_neff_state"]
-    
-    ax2.plot(sub["Epsilon_Radius"], sub["N_effective_Futures"], 
+
+    ax2.plot(sub["Epsilon_Radius"], sub["N_effective_Futures"],
              marker=m, linewidth=2.2, color=c, label=f'K={K} $N_{{\\text{{eff}}}}(X)$ [Unconditional Null: {null_neff:.2f}]')
 
 ax2.set_title("B. Future Strategy Branching Factor $N_{\\text{eff}}(X) = 2^{H(Y|X)}$\n[How Many Distinct Future Strategies Remain Plausible Given Past $X$]", fontsize=11, fontweight='bold', pad=10)
@@ -459,7 +460,7 @@ for K in K_VALUES:
     sub = df_all_k[df_all_k["K_Strategies"] == K]
     c = k_colors[K]
     m = k_markers[K]
-    ax3.plot(sub["Epsilon_Radius"], sub["Oracle_Acc_Transition_pct"], 
+    ax3.plot(sub["Epsilon_Radius"], sub["Oracle_Acc_Transition_pct"],
              marker=m, linewidth=2.2, color=c, label=f'K={K} A*(Y_transition)')
 
 ax3.set_title("C. Strategic Switch Oracle Accuracy A*(Y_transition)\n[Evaluating Future Choice Beyond Autoregressive State Persistence]", fontsize=11, fontweight='bold', pad=10)

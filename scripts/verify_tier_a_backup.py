@@ -6,10 +6,10 @@ against their physical backup mirror on /mnt/hdd/backups/TierA_backup_20261009.
 Consults MOVES.tsv to resolve relocated paths.
 """
 
-import os
-import sys
 import csv
 import hashlib
+import os
+import sys
 import time
 from pathlib import Path
 

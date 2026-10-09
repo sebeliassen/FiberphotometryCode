@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def create_batches(coordinates, confidences, errors=None, max_product_size=1e7):
     batches_coords = []
     batches_confs = []

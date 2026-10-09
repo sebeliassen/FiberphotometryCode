@@ -21,17 +21,16 @@ Themes:
 =============================================================================
 """
 
-import sys
 import os
+import sys
 import time
-import json
 from pathlib import Path
+
+import cv2
 import numpy as np
-import pandas as pd
 from scipy.interpolate import interp1d
 from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
-import cv2
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 os.environ["JAX_PLATFORMS"] = "cpu"
@@ -43,14 +42,15 @@ sys.path.insert(0, str(REPO_ROOT))
 
 # NumPy compatibility
 import numpy.core.numeric as _numeric
+
 sys.modules['numpy._core.numeric'] = _numeric
 
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+    generate_chain_grid_movie,
     load_chain_movie_resources,
-    generate_chain_grid_movie
 )
 from syllable_generation.analysis.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
-    get_verified_metadata
+    get_verified_metadata,
 )
 
 OUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/movies_2x3_friday_seqnmf"

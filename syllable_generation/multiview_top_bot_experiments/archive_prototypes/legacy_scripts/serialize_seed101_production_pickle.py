@@ -12,18 +12,19 @@ Environment: kpms_gpu_cuml
 =============================================================================
 """
 
-import os
+import pickle
 import sys
 import time
-import pickle
 from pathlib import Path
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
+import h5py
 import pandas as pd
 from scipy.ndimage import median_filter
-import h5py
 
 # Setup repository paths
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")

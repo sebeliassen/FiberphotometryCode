@@ -4,8 +4,9 @@ File: syllable_generation/analysis/language_models/pipelines/24_generate_exempla
 """
 
 import os
-import sys
 import pickle
+import sys
+
 import numpy as np
 import pandas as pd
 
@@ -86,13 +87,13 @@ for model_name in ["kmeans_k16", "gmm_k16"]:
     cfg = m_data["config"]
     full_labels = m_data["window_labels"][valid_win_indices]
     full_probs = m_data["window_probs"][valid_win_indices]
-    
+
     mat = raw_trans_inputs[valid_win_indices] + cfg["laplace_smooth"]
     if cfg["norm_type"] == "l1":
         from sklearn.preprocessing import normalize
         mat = normalize(mat, norm="l1")
     latent_z = svd.transform(mat)
-    
+
     point_scores = np.zeros(len(latent_z), dtype=np.float32)
     if cfg["family"] == "KMeans":
         centroids = clf.cluster_centers_
@@ -101,13 +102,13 @@ for model_name in ["kmeans_k16", "gmm_k16"]:
     else:
         for i in range(len(latent_z)):
             point_scores[i] = -full_probs[i, full_labels[i]]
-            
+
     breakdown_rows = []
     for s_id in np.sort(np.unique(full_labels)):
         c_indices = np.where(full_labels == s_id)[0]
         n_c = len(c_indices)
         sort_order = np.argsort(point_scores[c_indices])
-        
+
         # 100%
         sub_100 = df_win_features.iloc[c_indices]
         # 10%
@@ -116,7 +117,7 @@ for model_name in ["kmeans_k16", "gmm_k16"]:
         # 1%
         n_1 = max(int(np.ceil(n_c * 0.01)), 4)
         sub_1 = df_win_features.iloc[c_indices[sort_order[:n_1]]]
-        
+
         breakdown_rows.append({
             "strategy_id": s_id,
             "n_total": n_c,
@@ -133,7 +134,7 @@ for model_name in ["kmeans_k16", "gmm_k16"]:
             "cadence_10": float(sub_10["cadence"].mean()),
             "cadence_1": float(sub_1["cadence"].mean()),
         })
-        
+
     df_bd = pd.DataFrame(breakdown_rows)
     out_csv = os.path.join(AUDIT_DIR, f"strategy_exemplar_breakdown_{model_name}.csv")
     df_bd.to_csv(out_csv, index=False)

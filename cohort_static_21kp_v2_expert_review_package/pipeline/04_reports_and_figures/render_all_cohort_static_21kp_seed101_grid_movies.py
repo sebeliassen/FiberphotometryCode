@@ -23,18 +23,16 @@ Environment: keypoint_moseq (CPU forced)
 =============================================================================
 """
 
-import os
-import sys
 import argparse
-import time
 import re
-import json
+import sys
 from pathlib import Path
-import numpy as np
-import h5py
-import pandas as pd
+
 import cv2
+import h5py
 import imageio
+import numpy as np
+import pandas as pd
 from vidio.read import OpenCVReader
 
 # Fast-seek monkeypatch to OpenCVReader supporting scalar ints, slices, and array-likes
@@ -60,8 +58,8 @@ EXP_DIR = SCRIPT_DIR.parent
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.pair_matching import find_matched_pairs
 from core.camera_correspondence import top_to_bot_frame_continuous
+from core.pair_matching import find_matched_pairs
 
 # Paths
 PROJECT_DIR = EXP_DIR / "cohort_static_21kp"
@@ -384,8 +382,8 @@ def main():
                 c_top_onset = c_top_all[start]
                 h_top_onset = h_top_all[start]
 
-                if (c_top_onset[0] < 0 or c_top_onset[0] >= top_w or 
-                    c_top_onset[1] < 0 or c_top_onset[1] >= top_h or 
+                if (c_top_onset[0] < 0 or c_top_onset[0] >= top_w or
+                    c_top_onset[1] < 0 or c_top_onset[1] >= top_h or
                     np.isnan(c_top_onset[0]) or np.isnan(c_top_onset[1])):
                     c_top_onset = (top_w / 2.0, top_h / 2.0)
 

@@ -15,11 +15,11 @@ Validates:
 4. Saves paired_sessions_manifest.json for downstream fusion
 """
 
-import os
-import sys
 import json
 import pickle
+import sys
 from pathlib import Path
+
 import pandas as pd
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
@@ -48,7 +48,7 @@ def extract_botcam_tokens(vid_id):
         if tok in ["Arena1", "Arena2", "Arena3", "Arena4"]:
             arena = tok
             break
-            
+
     # Timestamp is trailing: 2026-XX-XXTXX_XX_XX
     ts = None
     for i in range(len(tokens) - 1):
@@ -61,7 +61,7 @@ def extract_botcam_tokens(vid_id):
             break
     if not ts and "BotCamVid_" in vid_id:
         ts = vid_id.split("BotCamVid_")[1]
-        
+
     return arena, ts
 
 def main():
@@ -106,7 +106,7 @@ def main():
         for s in sessions:
             rk = getattr(s, "results_dict_key", "")
             sid = getattr(s, "session_id", "")
-            
+
             # Check if timestamp and quadrant are in session identifier
             if ts in rk and quadrant in rk:
                 matched_sess = s

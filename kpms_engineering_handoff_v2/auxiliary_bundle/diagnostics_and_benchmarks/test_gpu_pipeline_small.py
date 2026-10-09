@@ -1,17 +1,15 @@
-import time
+from functools import partial
+
 import jax
 import jax.numpy as jnp
 import jax.random as jr
-from functools import partial
-import numpy as np
-
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.keypoint_slds.alignment as slds_alignment
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.slds.gibbs as vanilla_slds_gibbs
-import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from jax_moseq.utils import pad_affine, psd_inv, psd_solve
-from jax_moseq.utils.autoregression import get_lags
+import numpy as np
 from dynamax.hidden_markov_model.inference import hmm_posterior_sample
+from jax_moseq.utils import pad_affine, psd_inv
+from jax_moseq.utils.autoregression import get_lags
 
 # Configuration
 N = 10

@@ -8,16 +8,17 @@ timeline to produce the enriched session pickle.
 """
 
 from __future__ import annotations
-import os
-import sys
+
 import gc
-import pickle
-import time
 import logging
+import pickle
+import sys
+import time
 from pathlib import Path
 
 # Ensure numpy 2 backward compatibility for bokeh / kpms
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
@@ -28,8 +29,9 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import keypoint_moseq as kpms
-from syllable_generation.analysis.utils.sampling import flatten_results_to_timeline, build_aligned_dfs
+
 from syllable_generation.analysis.replications.datta_utils import build_aligned_moseq_phot
+from syllable_generation.analysis.utils.sampling import build_aligned_dfs, flatten_results_to_timeline
 
 logging.basicConfig(
     level=logging.INFO,
@@ -60,7 +62,7 @@ def main():
         results = kpms.load_results(str(PROJECT_DIR), MODEL_NAME)
     else:
         log.info("Step 1: results.h5 not found. Extracting from checkpoint.h5...")
-        
+
         # Try reindexing syllables by frequency (most frequent = 0)
         try:
             log.info("Reindexing syllables in checkpoint by usage frequency...")

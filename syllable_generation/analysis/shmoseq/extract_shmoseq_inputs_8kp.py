@@ -16,13 +16,13 @@ Methodology:
 =============================================================================
 """
 
-import os
-import sys
 import pickle
+import sys
+from pathlib import Path
+
 import h5py
 import numpy as np
 import pandas as pd
-from pathlib import Path
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 if str(REPO_ROOT) not in sys.path:
@@ -51,7 +51,7 @@ def main():
     sessions_pkl_path = REPO_ROOT / "syllable_generation" / "data" / "jonathan_amph_sessions_run12_w_sylls.pkl"
     with open(sessions_pkl_path, "rb") as f_s:
         raw_sessions = pickle.load(f_s)
-    
+
     sess_meta_map = {}
     for s in raw_sessions:
         m = s.metadata
@@ -136,7 +136,7 @@ def main():
             for s in np.unique(syll_seq):
                 unique_sylls.add(int(s))
 
-    print(f"\nExtraction Summary (8KP Run 03 - Post-Return Alignment):")
+    print("\nExtraction Summary (8KP Run 03 - Post-Return Alignment):")
     print(f"  - Total sessions extracted: {len(syllables_dict)}")
     print(f"  - Unique syllables observed: {len(unique_sylls)} (range {min(unique_sylls)}..{max(unique_sylls)})")
     print(f"  - Post-injection frames (40Hz): min={min(lengths)}, max={max(lengths)}, median={np.median(lengths):.1f}")

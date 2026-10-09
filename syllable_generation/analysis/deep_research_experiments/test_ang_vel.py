@@ -13,10 +13,11 @@ map to a "Left Turn" flipped syllable, and vice versa.
 Methodological improvement: We also directly compare the instance-level
 physical AV to avoid dilution from the global syllable mean lookup.
 """
-import pandas as pd
-import numpy as np
-from scipy import stats
 import sys
+
+import numpy as np
+import pandas as pd
+from scipy import stats
 
 sys.path.insert(0, '/home/fsp585/Desktop/FiberphotometryCode')
 
@@ -113,12 +114,12 @@ mapped_avs = np.array(results_mapped)
 
 if len(orig_avs) >= 3:
     r, p = stats.pearsonr(orig_avs, mapped_avs)
-    
+
     print(f"\n{'='*60}")
     print(f"PEARSON CORRELATION TEST (n={len(orig_avs)} syllables)")
     print(f"{'='*60}")
     print(f"r = {r:.4f}, p = {p:.4e}")
-    
+
     if r < -0.7 and p < 0.05:
         print("RESULT: Strong inverse correlation. MoSeq learned spatial parity.")
     elif r < 0 and p < 0.05:
@@ -128,7 +129,7 @@ if len(orig_avs) >= 3:
 
     # Spearman (rank-based, robust to outliers)
     rho, p_s = stats.spearmanr(orig_avs, mapped_avs)
-    print(f"\nSpearman rank correlation (robust to outliers):")
+    print("\nSpearman rank correlation (robust to outliers):")
     print(f"rho = {rho:.4f}, p = {p_s:.4e}")
 else:
     print("\nNot enough data points for correlation test.")

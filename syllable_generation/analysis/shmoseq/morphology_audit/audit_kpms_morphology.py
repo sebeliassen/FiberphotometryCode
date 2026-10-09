@@ -14,14 +14,15 @@ Addresses every point of the ChatGPT review:
 """
 
 import os
-import sys
 import pickle
-import joblib
+
 import h5py
+import joblib
+import matplotlib
 import numpy as np
 import pandas as pd
 from scipy import stats
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -97,7 +98,7 @@ with h5py.File(chk_path, "r") as f_chk, h5py.File(res_path, "r") as f_res:
 
         # Get all batches for this session
         batch_indices = [i for i, name in enumerate(meta0) if name == chk_name]
-        
+
         # Sample uniformly across all batches (up to 15 batches spread across session)
         sample_step = max(1, len(batch_indices) // 15)
         selected_batches = batch_indices[::sample_step][:15]
@@ -166,7 +167,7 @@ r_straight = pivot_straight["Saline"].corr(pivot_straight["Amphetamine"])
 r_axial = pivot_axial["Saline"].corr(pivot_axial["Amphetamine"])
 r_width = pivot_width["Saline"].corr(pivot_width["Amphetamine"])
 
-print(f"\nIntra-Animal Stability across Days (Day 1 Saline vs Day 2 Amphetamine):")
+print("\nIntra-Animal Stability across Days (Day 1 Saline vs Day 2 Amphetamine):")
 print(f"  Straight-Line Neck-Tail Length : r = {r_straight:.4f}")
 print(f"  True Axial-Chain Spine Length  : r = {r_axial:.4f}")
 print(f"  Transverse Body Width          : r = {r_width:.4f}")

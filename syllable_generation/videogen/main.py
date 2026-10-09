@@ -15,19 +15,19 @@ Key Features:
 """
 
 import argparse
+import os
 import pickle
 import sys
-import pandas as pd
-import numpy as np
 from pathlib import Path
-from typing import List, Optional
-import os
+from typing import Optional
+
+import numpy as np
+import pandas as pd
 
 # Append CWD to path to allow running as script
 sys.path.append(os.getcwd())
 
-from syllable_generation.videogen import composer
-from syllable_generation.videogen import config
+from syllable_generation.videogen import composer, config
 
 # Mice lists (Retained for reference if needed, but NOT used for VFI logic in the double_flip project)
 FLIP_LIST = [728, 740, 1767, 1773, 1664, 1666, 1779, 1781]
@@ -51,18 +51,18 @@ def find_most_active_window(session, window_size: int, pdf_dir: Optional[Path] =
 
     # 1. Calculate Changes (transitions)
     changes = (df['syllable'] != df['syllable'].shift(1)).fillna(False).astype(int)
-    
+
     # 2. PDF Coverage & Syllable Weighting
     # Prioritize turning syllables and those with PDFs
     TARGET_TURNS = [13, 18, 20, 28, 36, 40, 41, 42]
-    
+
     pdf_exists_map = {}
     if pdf_dir and pdf_dir.exists():
         unique_sylls = df['syllable'].dropna().unique()
         for s in unique_sylls:
             s_id = int(s)
             pdf_exists_map[s_id] = (pdf_dir / f"Syllable{s_id}.pdf").exists()
-    
+
     # 3. Calculate Score
     # Base Weight: 1.0
     # PDF Multiplier: 2.0 (if PDF exists)
@@ -78,16 +78,16 @@ def find_most_active_window(session, window_size: int, pdf_dir: Optional[Path] =
         return weight
 
     weights = df['syllable'].map(calculate_frame_weight).fillna(0)
-    valid_changes = changes * weights 
-    
+    valid_changes = changes * weights
+
     # 4. Rolling Sum (Find most active window)
     rolling_score = valid_changes.rolling(window=window_size).sum()
-    
+
     # Get index of max
     max_idx = rolling_score.idxmax()
     if pd.isna(max_idx):
         return 0
-        
+
     start_frame = int(max_idx - window_size + 1)
     return max(0, start_frame)
 
@@ -100,23 +100,23 @@ def find_most_turning_syllables_window(session, window_size: int) -> int:
     df = session.all_data_df
     if 'syllable' not in df.columns:
         raise ValueError("Session dataframe missing 'syllable' column.")
-        
+
     # User-provided list of turning syllables (explicitly requested: 13, 18, 20, 36)
     target_turns = [13, 18, 20, 36]
-    
+
     # Create mask of frames where the mouse is performing a target turn
     turn_mask = df['syllable'].isin(target_turns).astype(int)
-    
+
     # Calculate rolling sum to find the window with the most turning frames
     rolling_turns = turn_mask.rolling(window=window_size).sum()
-    
+
     # Find the index with maximum turns
     max_idx = rolling_turns.idxmax()
     if pd.isna(max_idx):
         return 0
-        
+
     start_frame = int(max_idx - window_size + 1)
-    
+
     # Ensure start_frame is valid
     return max(0, start_frame)
 
@@ -137,9 +137,9 @@ def main():
     parser.add_argument("--kinematic-proof", action="store_true", help="Generate 2x2 Kinematic Verification video")
     parser.add_argument("--snapshots-only", action="store_true", help="Only generate snapshots for verification")
     parser.add_argument("--most-turns", action="store_true", help="Automatically select a 1-minute window with the highest density of turning syllables")
-    
+
     args = parser.parse_args()
-    
+
     # Load Data
     sessions = load_sessions(args.pkl)
     if not sessions:
@@ -163,7 +163,7 @@ def main():
         session_id = session.session_id
         candidate_name = f"Arena1234_CenterTopCamVid_{session_id}.avi"
         candidate_path = config.BEHAVIOR_VIDEO_DIR / candidate_name
-        
+
         if not candidate_path.exists() and hasattr(session, 'video_refs_df') and session.video_refs_df is not None:
              vrefs = session.video_refs_df
              if 'path' in vrefs.columns and len(vrefs) > 0:
@@ -183,10 +183,10 @@ def main():
     # Logic for Test Mode
     start_frame = args.start
     num_frames = args.frames
-    
+
     if args.test_syllable_mode:
-        print(f"--- TEST SYLLABLE MODE ---")
-        
+        print("--- TEST SYLLABLE MODE ---")
+
     if args.pdf_dir:
         pdf_dir = Path(args.pdf_dir)
         print(f"Using manual PDF directory override: {pdf_dir}")
@@ -195,7 +195,7 @@ def main():
         pdf_dir = config.get_syllable_pdf_dir(getattr(session, "project", None))
 
     print(f"Prioritizing windows with PDFs from: {pdf_dir}")
-    
+
     if args.most_turns:
         target_fps = 80 # default to 80Hz sampling rate
         window_frames = 60 * target_fps # 1 minute
@@ -205,8 +205,8 @@ def main():
         print(f"Found active window starting at frame {start_frame}")
     elif args.test_syllable_mode:
         target_fps = getattr(config, 'DEFAULT_SAMPLING_RATE', 80)
-        window_frames = 10000000 
-        
+        window_frames = 10000000
+
         print(f"Scanning Session {args.session} for {window_frames}-frame window with most syllable transitions (weighted by PDF availability)...")
         start_frame = find_most_active_window(session, window_frames, pdf_dir=pdf_dir)
         print(f"Found active window starting at frame {start_frame}")
@@ -215,7 +215,7 @@ def main():
         print(f"Scanning Session {args.session} for {num_frames}-frame window with most syllable transitions (weighted by PDF availability)...")
         start_frame = find_most_active_window(session, num_frames, pdf_dir=pdf_dir)
         print(f"Found active window starting at frame {start_frame}")
-    
+
     if num_frames < 2000:
         # Print Sequence
         window = session.all_data_df.iloc[start_frame : start_frame + num_frames]
@@ -229,16 +229,16 @@ def main():
                 val = "NaN"
             else:
                 val = int(current_syll)
-                
+
             if val != last_syll:
                 seq_str.append(f"Fr{idx}:{val}")
                 last_syll = val
-        
+
         print(f"Expected Sequence: {' -> '.join(seq_str)}")
         print("--------------------------")
 
     end_frame = start_frame + num_frames
-    
+
     if args.photometry_only:
         output_filename = f"Session{args.session}_F{start_frame}-{end_frame}_PhotoOnly.mp4"
         output_path = Path(args.output) / output_filename
@@ -257,13 +257,13 @@ def main():
         # But for now let's just use what we have. If args.pdf_dir is set, use it.
         # If not, let composer default (or pass None and let SyllableGridGenerator handle it via config).
         # We'll pass Path(args.pdf_dir) if args.pdf_dir else None.
-        
+
         pdf_dir_arg = Path(args.pdf_dir) if args.pdf_dir else None
         composer.generate_trio_video(session, output_path, start_frame, end_frame, show_tracking=args.show_tracking, pdf_dir=pdf_dir_arg)
     elif args.kinematic_proof:
         output_filename = f"Session{args.session}_F{start_frame}-{end_frame}_KinematicProof.mp4"
         output_path = Path(args.output) / output_filename
-        
+
         # Load VFI for sync fix
         vfi_array = None
         vfi_path = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll/flipped_double_project/double_flip_activity_k100k/video_frame_indexes.npz")
@@ -275,7 +275,7 @@ def main():
             print(f"Loading VFI from {vfi_path}...")
             vfi_data = np.load(vfi_path)
 
-            # Look for the exact stem but EXCLUDING '_flipped' to get the primary logical ground truth 
+            # Look for the exact stem but EXCLUDING '_flipped' to get the primary logical ground truth
             # (although mathematically they are the same physical frames)
             matches = [k for k in vfi_data.files if stem in k and '_flipped' not in k]
             vfi_key = matches[0] if matches else None

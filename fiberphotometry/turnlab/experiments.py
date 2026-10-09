@@ -1,13 +1,13 @@
 # turnlab/experiments.py
 
 from typing import Dict, List, Optional, Set, Tuple
-import os
-import numpy as np
+
 import pandas as pd
 
+from .cache_index import build_or_load_turn_index, slice_by_percentile
 from .detect import make_turn_syllable_series
 from .peth_plot import compute_turn_peths_from_merged
-from .cache_index import build_or_load_turn_index, slice_by_percentile, onset_mask_from_slice
+
 
 def exp(name, method, bins, start_pct,
         min_bout_ms, merge_gap_ms,

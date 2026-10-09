@@ -1,9 +1,10 @@
-import deeplabcut
+import datetime
 import glob
 import os
-import urllib.request
 import time
-import datetime
+import urllib.request
+
+import deeplabcut
 
 config = '/home/fsp585/Desktop/dataset_fix-Seb_Soeren-2024-12-16/config.yaml'
 video_dir = '/home/fsp585/Desktop/dataset_fix-Seb_Soeren-2024-12-16/videos'
@@ -46,17 +47,17 @@ try:
     for i, video in enumerate(videos_to_analyze):
         video_name = os.path.basename(video)
         print(f"\n--- Analyzing video {i+1}/{total_to_analyze}: {video_name} ---")
-        
+
         # Run analysis for this single video
         deeplabcut.analyze_videos(config, [video], shuffle=10, save_as_csv=True)
-        
+
         analyzed_count += 1
         elapsed = time.time() - start_time
         avg_time = elapsed / analyzed_count
         remaining_count = total_to_analyze - analyzed_count
         eta_seconds = avg_time * remaining_count
         eta_str = str(datetime.timedelta(seconds=int(eta_seconds)))
-        
+
         # Send progress notification after each video
         try:
             msg = f"Progress: {analyzed_count}/{total_to_analyze} analyzed. Completed: {video_name}. ETA: {eta_str}"

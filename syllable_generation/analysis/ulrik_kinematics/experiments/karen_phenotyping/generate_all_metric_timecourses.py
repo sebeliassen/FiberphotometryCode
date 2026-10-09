@@ -17,12 +17,15 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import pickle
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
+import matplotlib
 import pandas as pd
 from scipy import stats
-import matplotlib
+
 matplotlib.use("Agg", force=True)
 import matplotlib.pyplot as plt
 
@@ -47,14 +50,14 @@ def plot_timecourse_grid(df_data, panels, nrows, ncols, figsize, out_name, supti
     fig, axes = plt.subplots(nrows, ncols, figsize=figsize)
     axes_flat = axes.flatten() if nrows * ncols > 1 else [axes]
     x_pos = np.arange(len(condition_order))
-    
+
     for idx, (col, title, ylabel) in enumerate(panels):
         ax = axes_flat[idx]
-        
+
         # Shaded background for L-Dopa drug rescue
         ax.axvspan(3.5, 4.5, color="#f2f2f2", alpha=0.9, zorder=0)
         ax.axvline(x=3.5, color="#888888", linestyle="--", linewidth=1.5, alpha=0.8, zorder=1)
-        
+
         # Drug rescue banner at top
         ax.text(
             4.0, 0.93, "L-Dopa Rescue",
@@ -63,10 +66,10 @@ def plot_timecourse_grid(df_data, panels, nrows, ncols, figsize, out_name, supti
             color="#444444", fontsize=8.0, fontweight="bold",
             bbox=dict(boxstyle="round,pad=0.25", facecolor="#ffffff", edgecolor="#bbbbbb", alpha=0.9, zorder=5)
         )
-        
+
         for g, color in palette.items():
             sub = df_data[df_data["genotype"] == g]
-            
+
             # Individual mouse faint spaghetti traces
             for aid in sub["animal_id"].unique():
                 a_sub = sub[sub["animal_id"] == aid]
@@ -75,11 +78,11 @@ def plot_timecourse_grid(df_data, panels, nrows, ncols, figsize, out_name, supti
                 y_pts = [a_map[condition_order[i]] for i in x_pts]
                 if len(x_pts) >= 2:
                     ax.plot(x_pts, y_pts, color=color, alpha=0.15, linewidth=1.0, zorder=2)
-            
+
             # Group Mean & SEM
             means = sub.groupby("condition")[col].mean().reindex(condition_order).values
             sems = sub.groupby("condition")[col].sem().reindex(condition_order).values
-            
+
             ax.errorbar(x_pos[:4], means[:4], yerr=sems[:4], color=color, label=f"{g} (Mean ± SEM)" if idx == 0 else None, marker="o", markersize=7.0, linewidth=2.5, capsize=4, zorder=4)
             ax.errorbar(x_pos[3:], means[3:], yerr=sems[3:], color=color, linestyle=":", marker="o", markersize=7.0, linewidth=1.8, capsize=4, zorder=4)
 
@@ -93,7 +96,7 @@ def plot_timecourse_grid(df_data, panels, nrows, ncols, figsize, out_name, supti
                 u_stat, p_u = stats.mannwhitneyu(p_vals, m_vals)
                 min_p = min(p_t, p_u)
                 y_top = max(m_vals.mean() + (m_vals.sem() if len(m_vals)>1 else 0), p_vals.mean() + (p_vals.sem() if len(p_vals)>1 else 0))
-                
+
                 if min_p < 0.05:
                     star = "*" if min_p >= 0.01 else ("**" if min_p >= 0.001 else "***")
                     ax.text(i, y_top * 1.08, f"{star}\np={min_p:.3f}", ha="center", va="bottom", fontsize=8.0, fontweight="bold", color="#d95f02")
@@ -109,14 +112,14 @@ def plot_timecourse_grid(df_data, panels, nrows, ncols, figsize, out_name, supti
         t_all, p_all_t = stats.ttest_ind(p_all, m_all, equal_var=False)
         u_all, p_all_u = stats.mannwhitneyu(p_all, m_all)
         star_all = "*" if min(p_all_t, p_all_u) < 0.05 else ("#" if min(p_all_t, p_all_u) < 0.1 else "ns")
-        
+
         ax.text(
             0.03, 0.04, f"Untreated (3w-24w):\n{star_all} p = {min(p_all_t, p_all_u):.4f}",
             transform=ax.transAxes,
             fontsize=8.0, fontweight="bold",
             bbox=dict(boxstyle="round,pad=0.25", facecolor="#ffffff", edgecolor="#cccccc", alpha=0.85)
         )
-        
+
         ax.set_title(title, fontsize=11, fontweight="bold", pad=10)
         ax.set_xticks(x_pos)
         ax.set_xticklabels(condition_labels, fontsize=9.0, fontweight="bold")
@@ -125,18 +128,18 @@ def plot_timecourse_grid(df_data, panels, nrows, ncols, figsize, out_name, supti
         ax.grid(True, linestyle=":", alpha=0.6)
         y_lims = ax.get_ylim()
         ax.set_ylim(y_lims[0] * 0.95 if y_lims[0] > 0 else 0, y_lims[1] * 1.25)
-        
+
     axes_flat[0].legend(frameon=True, facecolor="white", edgecolor="#cccccc", fontsize=9.5, loc="upper left")
-    
+
     for j in range(len(panels), len(axes_flat)):
         axes_flat[j].set_visible(False)
-        
+
     if suptitle:
         fig.suptitle(suptitle, fontsize=13.5, fontweight="bold", y=0.99)
         plt.tight_layout(rect=[0, 0, 1, 0.96])
     else:
         plt.tight_layout()
-        
+
     out_path = OUT_DIR / out_name
     fig.savefig(out_path, dpi=300)
     plt.close(fig)
@@ -146,10 +149,10 @@ def plot_timecourse_grid(df_data, panels, nrows, ncols, figsize, out_name, supti
 def main():
     with open(DATA_PKL, "rb") as f:
         sessions = pickle.load(f)
-        
+
     fps = 80.0
     records = []
-    
+
     for s in sessions:
         md = getattr(s, "metadata", {})
         g = md.get("genotype", "Unknown")
@@ -157,19 +160,19 @@ def main():
         cond = md.get("condition", "Unknown")
         drug = md.get("drug", "None")
         is_drug = md.get("is_drug_session", False)
-        
+
         if g not in ["PFF", "Monomer"] or cond not in condition_order:
             continue
-            
+
         df = s.all_data_df.dropna(subset=["velocity_px_s", "syllable"])
         if len(df) < 1000:
             continue
-            
+
         speed = df["velocity_px_s"].values
         accel = np.diff(speed) * fps
         jerk = np.diff(accel) * fps
         norm_jerk = np.mean(np.abs(jerk)) / (np.mean(speed) + 1e-3)
-        
+
         # Bout dynamics
         is_active = (speed > 5.0).astype(int)
         active_changes = np.diff(np.concatenate(([0], is_active, [0])))
@@ -180,13 +183,13 @@ def main():
         immobility_pct = np.mean(speed < 5.0) * 100.0
         session_min = len(speed) / (fps * 60.0)
         bouts_per_min = len(bout_durations) / session_min
-        
+
         # Syllables & Syntax
         sylls = df["syllable"].values.astype(int)
         changes = np.concatenate(([True], sylls[1:] != sylls[:-1]))
         collapsed = sylls[changes]
         switch_rate_hz = len(collapsed) / (len(speed) / fps)
-        
+
         if len(collapsed) >= 50:
             src = collapsed[:-1]
             dst = collapsed[1:]
@@ -202,7 +205,7 @@ def main():
         else:
             h_cond = np.nan
             h_rep = np.nan
-            
+
         records.append({
             "session_id": s.session_id,
             "animal_id": aid,
@@ -219,9 +222,9 @@ def main():
             "syntax_entropy_rate": h_cond,
             "repertoire_entropy": h_rep,
         })
-        
+
     df_data = pd.DataFrame(records)
-    
+
     # 1. MASTER 6-PANEL FIGURE
     master_panels = [
         ("mean_speed", "1. Locomotor Speed (px/s)", "Speed (px/s)"),
@@ -232,7 +235,7 @@ def main():
         ("syntax_entropy_rate", "6. Transition Entropy Rate $H(S_{t+1}|S_t)$", "Syntax Disorder (bits)"),
     ]
     plot_timecourse_grid(df_data, master_panels, 2, 3, (18, 10), "karen_longitudinal_6panel_master.png", "Comprehensive Longitudinal Kinematic & Behavioral Phenotyping (3w -> 24w PI + L-Dopa)")
-    
+
     # 2. BOUT DYNAMICS & FREEZING 3-PANEL FIGURE
     bout_panels = [
         ("mean_bout_dur", "A. Active Movement Bout Duration (s)", "Continuous Run Length (s)"),
@@ -240,7 +243,7 @@ def main():
         ("bouts_per_min", "C. Movement Initiation Rate (Starts/min)", "Bout Frequency (starts/min)"),
     ]
     plot_timecourse_grid(df_data, bout_panels, 1, 3, (18, 5.5), "karen_bout_dynamics_timecourse.png", "Longitudinal Bout Dynamics & Freezing Progression")
-    
+
     # 3. SYNTAX & ENTROPY 3-PANEL FIGURE
     syntax_panels = [
         ("syntax_entropy_rate", "A. Transition Entropy Rate $H(S_{t+1}|S_t)$", "Syntax Disorder (bits/step)"),

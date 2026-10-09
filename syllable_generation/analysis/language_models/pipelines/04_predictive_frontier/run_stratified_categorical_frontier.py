@@ -33,14 +33,14 @@ sys.path.insert(0, LM_DIR)
 sys.path.insert(0, os.path.join(ROOT_DIR, "syllable_generation"))
 
 import pickle
+
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score, adjusted_rand_score
 from sklearn.preprocessing import StandardScaler
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 
 FIG_DIR = os.path.join(LM_DIR, "output", "presentation", "figures")
 TABLE_DIR = os.path.join(LM_DIR, "output", "04_predictive_frontier", "tables")
@@ -104,7 +104,7 @@ for sess_idx, bouts in enumerate(session_bouts):
     pose = np.zeros((N, 30), dtype=np.float32)
     oh_bout = np.zeros((N, NUM_ACTIVE_SYLLS), dtype=np.float32)
     next_bout_ptrs = np.full(N, N, dtype=np.int32)
-    
+
     for b in bouts:
         sf, ef = b["start_frame"], b["end_frame"]
         s_raw = b["syllable"]
@@ -112,7 +112,7 @@ for sess_idx, bouts in enumerate(session_bouts):
         if 0 <= s_id < NUM_ACTIVE_SYLLS:
             fs[sf:ef+1] = s_id
             oh_bout[sf, s_id] = 1.0
-            
+
         vec = b.get("vector", None)
         if vec is not None and len(vec) >= 14:
             sp[sf:ef+1, :4] = vec[:4]
@@ -122,18 +122,18 @@ for sess_idx, bouts in enumerate(session_bouts):
                 pose[sf:ef+1] = vec[:30]
             else:
                 pose[sf:ef+1, :len(vec)] = vec
-                
+
     b_starts = np.array([b["start_frame"] for b in bouts])
     for t_idx, b_st in enumerate(b_starts):
         prev_st = b_starts[t_idx-1] if t_idx > 0 else 0
         next_bout_ptrs[prev_st:b_st] = b_st
     if len(b_starts) > 0:
         next_bout_ptrs[b_starts[-1]:] = N
-        
+
     cum_bout = np.vstack([np.zeros((1, NUM_ACTIVE_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
     cum_spatial = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp, axis=0)])
     cum_spatial_sq = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp**2, axis=0)])
-    
+
     sessions_data.append({
         "sess_idx": sess_idx, "N": N, "fs": fs, "pose": pose, "cum_bout": cum_bout,
         "next_bout_ptrs": next_bout_ptrs, "cum_spatial": cum_spatial,
@@ -145,13 +145,13 @@ for s in sessions_data:
     N = s["N"]
     if N < W_FRAMES + H_FRAMES + 200: continue
     inj_f = s["meta"]["inj_frame"]
-    
+
     t_anchors = np.arange(W_FRAMES, N - H_FRAMES, STRIDE_FRAMES)
     t_tgt_start = s["next_bout_ptrs"][t_anchors]
     valid = (t_tgt_start + H_FRAMES < N)
     t_anchors = t_anchors[valid]
     t_tgt_start = t_tgt_start[valid]
-    
+
     past_start = t_anchors - W_FRAMES
     future_end = t_tgt_start + H_FRAMES
     no_straddle = (future_end < inj_f) | (past_start > inj_f)
@@ -159,7 +159,7 @@ for s in sessions_data:
     t_tgt_start = t_tgt_start[no_straddle]
     M = len(t_anchors)
     if M == 0: continue
-    
+
     # 1. Past Spatial context (14-D)
     t_norm = t_anchors / float(N)
     p1 = np.column_stack([t_norm, t_norm**2]).astype(np.float32)
@@ -168,25 +168,25 @@ for s in sessions_data:
     sp_sq = s["cum_spatial_sq"][t_anchors] - s["cum_spatial_sq"][t_anchors - W_FRAMES]
     sp_var = np.maximum(sp_sq / float(W_FRAMES) - sp_mean**2, 1e-6)
     feat_space_past = np.hstack([p1, sp_mean, np.sqrt(sp_var)]).astype(np.float32)
-    
+
     # 2. Past Repertoire distribution (99-D)
     b_cnt_past = s["cum_bout"][t_anchors] - s["cum_bout"][t_anchors - W_FRAMES]
     feat_rep_past = (b_cnt_past + 1e-4) / (np.sum(b_cnt_past, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     # 3. Future Target distribution over H=120s (99-D)
     f_cnt_future = s["cum_bout"][t_tgt_start + H_FRAMES] - s["cum_bout"][t_tgt_start]
     target_future = (f_cnt_future + 1e-4) / (np.sum(f_cnt_future, axis=1, keepdims=True) + 1e-4 * NUM_ACTIVE_SYLLS)
-    
+
     # 4. Future Spatial & Kinematic context (14-D)
     sp_sum_f = s["cum_spatial"][t_tgt_start + H_FRAMES] - s["cum_spatial"][t_tgt_start]
     sp_mean_f = sp_sum_f / float(H_FRAMES)
     sp_sq_f = s["cum_spatial_sq"][t_tgt_start + H_FRAMES] - s["cum_spatial_sq"][t_tgt_start]
     sp_var_f = np.maximum(sp_sq_f / float(H_FRAMES) - sp_mean_f**2, 1e-6)
     feat_space_future = np.hstack([p1, sp_mean_f, np.sqrt(sp_var_f)]).astype(np.float32)
-    
+
     # 5. Instantaneous pose & short context at transition moment (30-D)
     feat_pose_inst = s["pose"][t_anchors].astype(np.float32)
-    
+
     for i in range(M):
         raw_windows.append({
             "sess_idx": s["sess_idx"],
@@ -237,13 +237,13 @@ scaler_ent = StandardScaler().fit(future_entropy)
 future_entropy_std = scaler_ent.transform(future_entropy).astype(np.float32)
 
 Y_cluster_features = np.hstack([
-    Y_rep_hellinger, 
+    Y_rep_hellinger,
     0.5 * Y_space_std / np.sqrt(Y_space_std.shape[1]),
     0.5 * future_entropy_std
 ]).astype(np.float32)
 
 past_cluster_features = np.hstack([
-    X_rep_hellinger, 
+    X_rep_hellinger,
     0.5 * X_space_std / np.sqrt(X_space_std.shape[1]),
     0.5 * future_entropy_std
 ]).astype(np.float32)
@@ -263,13 +263,13 @@ for i in range(N_win):
         Y_trans_K4[i] = (Y_state_K4[i] - X_state_K4[i]) % K_HEADLINE
 
 persistence_K4 = float(np.mean(Y_state_K4 == X_state_K4) * 100.0)
-log(f"\n=================================================================")
-log(f"K = 4 MACRO-STRATEGY GROUND TRUTH:")
+log("\n=================================================================")
+log("K = 4 MACRO-STRATEGY GROUND TRUTH:")
 log(f"  Autoregressive State Persistence Baseline: {persistence_K4:.2f}%")
 for c in range(K_HEADLINE):
     cnt = np.sum(Y_state_K4 == c)
     log(f"  Cluster {c}: {cnt:,} windows ({cnt/N_win*100:4.1f}%)")
-log(f"=================================================================")
+log("=================================================================")
 
 # GPU Setup
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -299,12 +299,12 @@ CONDITIONING_LEVELS = [
 ladder_results = []
 
 for cond_name, x_type, stratify_state in CONDITIONING_LEVELS:
-    log(f"\n" + "=" * 70)
+    log("\n" + "=" * 70)
     log(f"EVALUATING CONDITIONING LEVEL: {cond_name}")
-    log(f"=" * 70)
-    
+    log("=" * 70)
+
     cur_X_tensor = X1_tensor if x_type == "X1" else X3_tensor
-    
+
     for eps_r in EPS_SWEEP:
         acc_state_list = []
         ent_state_list = []
@@ -313,84 +313,84 @@ for cond_name, x_type, stratify_state in CONDITIONING_LEVELS:
         ent_trans_list = []
         dens_list = []
         dist_list = []
-        
+
         for s_idx in unique_sessions:
             anchor_mask = (sess_ids == s_idx)
             cand_mask = (sess_ids != s_idx)
-            
+
             anchor_indices = np.where(anchor_mask)[0]
             cand_indices = np.where(cand_mask)[0]
-            
+
             X_anchors = cur_X_tensor[anchor_indices]
             X_cands = cur_X_tensor[cand_indices]
-            
+
             Y_state_cands = Y_state_K4[cand_indices]
             X_state_cands = X_state_K4[cand_indices]
             Y_trans_cands = Y_trans_K4[cand_indices]
-            
+
             X_state_anchors = X_state_K4[anchor_indices]
-            
+
             batch_size = 512
             for b_start in range(0, len(anchor_indices), batch_size):
                 b_end = min(b_start + batch_size, len(anchor_indices))
                 b_X = X_anchors[b_start:b_end]
                 b_state = X_state_anchors[b_start:b_end]
-                
+
                 dists = torch.cdist(b_X, X_cands, p=2.0)
                 within_eps = (dists < eps_r).cpu().numpy()
                 dists_cpu = dists.cpu().numpy()
-                
+
                 for v_idx in range(len(b_X)):
                     match_mask = within_eps[v_idx].copy()
-                    
+
                     # IF STRATIFIED BY STATE: strictly filter for analogues in the same current macro-state
                     if stratify_state:
                         match_mask = match_mask & (X_state_cands == b_state[v_idx])
-                        
+
                     n_match = np.sum(match_mask)
                     if n_match >= 2:
                         matched_Y_state = Y_state_cands[match_mask]
                         matched_Y_trans = Y_trans_cands[match_mask]
                         matched_d = dists_cpu[v_idx, match_mask]
-                        
+
                         # Empirical conditional state distribution
                         p_st = np.bincount(matched_Y_state, minlength=K_HEADLINE) / float(n_match)
                         a_st = np.max(p_st)
                         h_st = -np.sum(p_st * np.log2(p_st + 1e-12))
-                        
+
                         # Empirical conditional transition distribution
                         p_tr = np.bincount(matched_Y_trans, minlength=K_HEADLINE) / float(n_match)
                         a_tr = np.max(p_tr)
                         h_tr = -np.sum(p_tr * np.log2(p_tr + 1e-12))
-                        
+
                         acc_state_list.append(a_st)
                         ent_state_list.append(h_st)
                         neff_state_list.append(2.0 ** h_st)
-                        
+
                         acc_trans_list.append(a_tr)
                         ent_trans_list.append(h_tr)
-                        
+
                         dens_list.append(n_match)
                         dist_list.append(np.mean(matched_d))
 
         n_cov = len(acc_state_list)
         cov_pct = (n_cov / N_win) * 100.0
-        
+
         if n_cov > 0:
             m_acc_st = float(np.mean(acc_state_list)) * 100.0
             m_ent_st = float(np.mean(ent_state_list))
             m_neff_st = float(np.mean(neff_state_list))
-            
+
             m_acc_tr = float(np.mean(acc_trans_list)) * 100.0
             m_ent_tr = float(np.mean(ent_trans_list))
-            
+
             m_dens = float(np.mean(dens_list))
             m_dist = float(np.mean(dist_list))
         else:
             m_acc_st, m_ent_st, m_neff_st, m_acc_tr, m_ent_tr, m_dens, m_dist = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
-            
+
         log(f"  [eps = {eps_r:4.2f}] Cov: {cov_pct:5.1f}% | Density: {m_dens:6.1f} twins | A*(Y_state): {m_acc_st:5.2f}% (N_eff={m_neff_st:4.2f}) | A*(Y_trans): {m_acc_tr:5.2f}%")
-        
+
         ladder_results.append({
             "Conditioning_Level": cond_name,
             "X_Type": x_type,
@@ -446,7 +446,7 @@ for cond_name, _, _ in CONDITIONING_LEVELS:
     sub = df_ladder[df_ladder["Conditioning_Level"] == cond_name]
     c = colors_ladder[cond_name]
     m = markers_ladder[cond_name]
-    ax1.plot(sub["Epsilon_Radius"], sub["Oracle_Acc_State_pct"], 
+    ax1.plot(sub["Epsilon_Radius"], sub["Oracle_Acc_State_pct"],
              marker=m, linewidth=2.2, color=c, label=cond_name)
 
 ax1.axhline(persistence_K4, color='#d62728', linestyle='--', linewidth=1.8, alpha=0.85, label=f'Autoregressive Persistence ({persistence_K4:.1f}%)')
@@ -464,7 +464,7 @@ for cond_name, _, _ in CONDITIONING_LEVELS:
     sub = df_ladder[df_ladder["Conditioning_Level"] == cond_name]
     c = colors_ladder[cond_name]
     m = markers_ladder[cond_name]
-    ax2.plot(sub["Epsilon_Radius"], sub["N_effective_Futures"], 
+    ax2.plot(sub["Epsilon_Radius"], sub["N_effective_Futures"],
              marker=m, linewidth=2.2, color=c, label=cond_name)
 
 ax2.axhline(null_neff_K4, color='black', linestyle=':', linewidth=1.5, alpha=0.7, label=f'Unconditional Null $N_{{\\text{{eff}}}}$ ({null_neff_K4:.2f})')
@@ -481,7 +481,7 @@ for cond_name, _, _ in CONDITIONING_LEVELS:
     sub = df_ladder[df_ladder["Conditioning_Level"] == cond_name]
     c = colors_ladder[cond_name]
     m = markers_ladder[cond_name]
-    ax3.plot(sub["Epsilon_Radius"], sub["Oracle_Acc_Transition_pct"], 
+    ax3.plot(sub["Epsilon_Radius"], sub["Oracle_Acc_Transition_pct"],
              marker=m, linewidth=2.2, color=c, label=cond_name)
 
 ax3.set_title("C. Strategic Switch Accuracy $A^*(Y_{\\text{transition}})$\n[Predicting Choice Beyond Simple Persistence]", fontsize=11, fontweight='bold', pad=10)

@@ -9,11 +9,11 @@ RUN12_SYLLABLE_PROMINENCE_AND_SEQNMF_CATALOG.md
 =============================================================================
 """
 
-import pickle
 import json
-from pathlib import Path
+import pickle
 from collections import defaultdict
-import numpy as np
+from pathlib import Path
+
 import pandas as pd
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
@@ -158,7 +158,7 @@ def main():
     lines.append(f"- **Top 20 Syllables**: Account for **{top20_pct:.2f}%** of all behavior.")
     lines.append(f"- **Top 30 Syllables (00–29)**: Account for **{top30_pct:.2f}%** of all behavior.")
     lines.append(f"- **Top 50 Syllables**: Account for **{top50_pct:.2f}%** of all behavior.")
-    lines.append(f"- **seqNMF Motif Coverage**: **29 distinct syllables** participate in the 10 validated convolutional seqNMF motifs. All of them fall in Tier 1.")
+    lines.append("- **seqNMF Motif Coverage**: **29 distinct syllables** participate in the 10 validated convolutional seqNMF motifs. All of them fall in Tier 1.")
     lines.append("")
     lines.append("---")
     lines.append("")

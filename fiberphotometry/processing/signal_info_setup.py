@@ -1,10 +1,12 @@
-from collections import defaultdict
 import warnings
-from fiberphotometry.analysis.response_metrics import calculate_signal_response_metrics_matrix
-from fiberphotometry.utils import find_start_end_idxs
-from fiberphotometry import config
+from collections import defaultdict
+
 import numpy as np
+
+from fiberphotometry import config
+from fiberphotometry.analysis.response_metrics import calculate_signal_response_metrics_matrix
 from fiberphotometry.config import SYNC
+from fiberphotometry.utils import find_start_end_idxs
 
 
 class EventSignalExtractor:
@@ -69,7 +71,7 @@ class EventSignalExtractor:
 
         # 2) find which photometry stream (freq) to load
         freq_label = config.LETTER_TO_FREQS.get(brain_region[-1])
-        phot_df    = self.session.dfs.get_data(f"phot_" + freq_label)
+        phot_df    = self.session.dfs.get_data("phot_" + freq_label)
         if phot_df is None:
             raise ValueError(f"phot_{freq_label} DataFrame missing")
 
@@ -131,7 +133,7 @@ class EventSignalExtractor:
             idx_ranges.append((s, e))
 
             trace    =     phot_df[f"{brain_region}_dff"].iloc[s:e].to_numpy()
-            
+
             rel_start = response_interval[0]
             pre_mean = trace[rel_start-7 : rel_start+7].mean()
             matrix[i] = trace - pre_mean
@@ -154,8 +156,8 @@ def get_session_signal_info(session):
     for br_region in session.brain_regions:
         # unpack region as before
         try:
-            br, side, color = (br_region.split("_") 
-                               if isinstance(br_region, str) 
+            br, side, color = (br_region.split("_")
+                               if isinstance(br_region, str)
                                else br_region)
         except ValueError:
             raise ValueError(

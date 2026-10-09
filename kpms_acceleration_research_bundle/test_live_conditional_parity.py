@@ -9,14 +9,15 @@ import argparse
 import copy
 import hashlib
 import inspect
-from pathlib import Path
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 import numpy as np
-
 from test_precompute_regressions import (
-    dense_information, fixture, live_module,
+    dense_information,
+    fixture,
+    live_module,
 )
 
 
@@ -151,9 +152,9 @@ def main():
         parser.error('Use at least 2048 independent frozen-condition draws.')
     DRAWS = args.draws
     RB = live_module(args.rb)
-    import jax
-    import numba
     import importlib.metadata
+
+    import jax
     print('Versions:',{name:importlib.metadata.version(name)
                        for name in ['jax','jaxlib','numba','jax-moseq','keypoint-moseq']},flush=True)
     print('Devices:',jax.devices(),'x64:',jax.config.jax_enable_x64,flush=True)

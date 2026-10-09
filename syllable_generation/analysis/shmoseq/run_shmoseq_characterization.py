@@ -19,14 +19,15 @@ Methodology:
 """
 
 import os
-import sys
 import pickle
+import sys
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from scipy.spatial.distance import jensenshannon
 
 BASE_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 if BASE_DIR not in sys.path:
@@ -49,10 +50,10 @@ def extract_episodes(state_seq, probs_seq=None):
     T = len(state_seq)
     if T == 0:
         return episodes
-        
+
     cur_state = state_seq[0]
     cur_start = 0
-    
+
     for t in range(1, T):
         if state_seq[t] != cur_state:
             length = t - cur_start
@@ -68,7 +69,7 @@ def extract_episodes(state_seq, probs_seq=None):
             })
             cur_state = state_seq[t]
             cur_start = t
-            
+
     # Final episode
     length = T - cur_start
     mean_prob = float(probs_seq[cur_start:T, cur_state].mean()) if probs_seq is not None else 1.0
@@ -86,19 +87,19 @@ def main():
     print("=" * 80)
     print("RUNNING SHMOSEQ OBJECTIVE STATE CHARACTERIZATION")
     print("=" * 80)
-    
+
     os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
     os.makedirs(os.path.dirname(FIG_FILE), exist_ok=True)
     os.makedirs(os.path.dirname(TIMESTAMPS_TABLE), exist_ok=True)
-    
+
     print(f"Loading model bundle from: {MODEL_FILE}")
     with open(MODEL_FILE, "rb") as f:
         model_bundle = pickle.load(f)
-        
+
     print(f"Loading data bundle from: {DATA_FILE}")
     with open(DATA_FILE, "rb") as f:
         data_bundle = pickle.load(f)
-        
+
     states_dict = model_bundle["states_dict"]
     probs_dict = model_bundle["probs_dict"]
     metadata_dict = model_bundle["metadata_dict"]
@@ -106,9 +107,9 @@ def main():
     fps = model_bundle.get("fps", 40.0125)
     N_STATES = hypparams["n_states"]
     n_syllables = hypparams["n_syllables"]
-    
+
     print(f"Total sessions: {len(states_dict)}, States: {N_STATES}, Syllable vocab: {n_syllables}, FPS: {fps:.2f}")
-    
+
     # -------------------------------------------------------------------------
     # 1. Episode Segmentation & Duration Analysis
     # -------------------------------------------------------------------------
@@ -116,12 +117,12 @@ def main():
     all_episodes = []
     uncensored_durations = {k: [] for k in range(N_STATES)}
     all_durations = {k: [] for k in range(N_STATES)}
-    
+
     for session_key, state_seq in states_dict.items():
         probs_seq = probs_dict.get(session_key, None)
         meta = metadata_dict.get(session_key, {})
         inj_f = meta.get("injection_frame", 0)
-        
+
         episodes = extract_episodes(state_seq, probs_seq)
         for ep in episodes:
             ep["session_key"] = session_key
@@ -132,22 +133,22 @@ def main():
             ep["duration_sec"] = ep["length"] / fps
             ep["abs_start_frame"] = inj_f + ep["start"] * 2  # mapped back to raw recording clock
             ep["abs_end_frame"] = inj_f + ep["end"] * 2
-            
+
             all_episodes.append(ep)
             all_durations[ep["state"]].append(ep["duration_sec"])
             if not ep["is_boundary"]:
                 uncensored_durations[ep["state"]].append(ep["duration_sec"])
-                
+
     df_episodes = pd.DataFrame(all_episodes)
     print(f"Extracted {len(df_episodes)} total episodes across 30 sessions.")
     print(f"Censored {df_episodes['is_boundary'].sum()} boundary episodes to prevent truncation bias.")
-    
+
     # -------------------------------------------------------------------------
     # 2. Exit Transition Matrix Between Macro-States
     # -------------------------------------------------------------------------
     print("\nComputing state-to-state exit transition routing matrix...")
     exit_counts = np.zeros((N_STATES, N_STATES), dtype=np.float64)
-    
+
     for session_key, state_seq in states_dict.items():
         episodes = extract_episodes(state_seq)
         for i in range(len(episodes) - 1):
@@ -155,21 +156,21 @@ def main():
             dst = episodes[i+1]["state"]
             if src != dst:
                 exit_counts[src, dst] += 1.0
-                
+
     row_sums = exit_counts.sum(axis=1, keepdims=True)
     exit_routing_matrix = np.divide(exit_counts, row_sums, out=np.zeros_like(exit_counts), where=row_sums > 0)
-    
+
     # -------------------------------------------------------------------------
     # 3. Syllable Emission Enrichment
     # -------------------------------------------------------------------------
     print("\nComputing syllable emissions and fold-enrichment across states...")
     syllables_dict = data_bundle["syllables_dict"]
-    
+
     # Global syllable distribution
     all_sylls_flat = np.concatenate(list(syllables_dict.values()))
     global_syll_counts = np.bincount(all_sylls_flat, minlength=n_syllables).astype(np.float64)
     global_syll_prob = (global_syll_counts + 1.0) / (global_syll_counts.sum() + n_syllables)
-    
+
     # State-specific syllable distributions
     state_syll_counts = np.zeros((N_STATES, n_syllables), dtype=np.float64)
     for session_key, state_seq in states_dict.items():
@@ -179,11 +180,11 @@ def main():
             st = state_seq[t]
             syl = syll_seq[t]
             state_syll_counts[st, syl] += 1.0
-            
+
     state_syll_probs = np.zeros((N_STATES, n_syllables), dtype=np.float64)
     state_syll_enrichment = np.zeros((N_STATES, n_syllables), dtype=np.float64)
     top_syllables_per_state = {}
-    
+
     for k in range(N_STATES):
         row = state_syll_counts[k]
         total = row.sum()
@@ -198,18 +199,18 @@ def main():
             top_syllables_per_state[k] = [(int(idx), float(enrichment[idx]), float(p_k[idx]*100)) for idx in top_idx]
         else:
             top_syllables_per_state[k] = []
-            
+
     # -------------------------------------------------------------------------
     # 4. Summary Metrics Table
     # -------------------------------------------------------------------------
     summary_rows = []
     total_frames = sum(len(s) for s in states_dict.values())
-    
+
     print("\nHigh-Level State Summary:")
     print("-" * 85)
     print(f"{'State':<7} | {'Frames %':<9} | {'Episodes':<9} | {'Median Dur (s)':<15} | {'IQR Dur (s)':<12} | {'Top Enriched Syllables'}")
     print("-" * 85)
-    
+
     for k in range(N_STATES):
         frames_k = sum((s == k).sum() for s in states_dict.values())
         prop_k = (frames_k / total_frames) * 100.0
@@ -218,9 +219,9 @@ def main():
         med_dur = float(np.median(durs_k)) if n_ep > 0 else 0.0
         iqr_dur = float(np.percentile(durs_k, 75) - np.percentile(durs_k, 25)) if n_ep > 0 else 0.0
         top_s_str = ", ".join([f"Syll{s} (+{fc:.1f}b)" for s, fc, _ in top_syllables_per_state[k][:3]])
-        
+
         print(f"State {k:<2} | {prop_k:6.2f}%   | {n_ep:<9} | {med_dur:6.2f}s          | {iqr_dur:6.2f}s       | {top_s_str}")
-        
+
         summary_rows.append({
             "state_id": k,
             "occupancy_percent": prop_k,
@@ -232,17 +233,17 @@ def main():
             "top_enriched_syllables": top_s_str,
         })
     print("-" * 85)
-    
+
     df_summary = pd.DataFrame(summary_rows)
     df_summary.to_csv(STATE_SUMMARY_TABLE, index=False)
     print(f"Saved state summary table to: {STATE_SUMMARY_TABLE}")
-    
+
     # -------------------------------------------------------------------------
     # 5. Export Representative Timestamps for Blinded Video Review
     # -------------------------------------------------------------------------
     print("\nSelecting representative, high-confidence episodes across diverse animals...")
     rep_episodes = []
-    
+
     for k in range(N_STATES):
         # Pick uncensored episodes of state k with duration > median and high posterior confidence
         k_eps = [ep for ep in all_episodes if ep["state"] == k and not ep["is_boundary"] and ep["length"] >= 20]
@@ -273,11 +274,11 @@ def main():
                 chosen += 1
                 if chosen >= 5:
                     break
-                    
+
     df_rep = pd.DataFrame(rep_episodes)
     df_rep.to_csv(TIMESTAMPS_TABLE, index=False)
     print(f"Exported {len(df_rep)} representative episodes ({len(df_rep)//N_STATES} per state) to:\n  {TIMESTAMPS_TABLE}")
-    
+
     # -------------------------------------------------------------------------
     # 6. Cache Characteristics
     # -------------------------------------------------------------------------
@@ -294,12 +295,12 @@ def main():
     with open(CACHE_FILE, "wb") as f:
         pickle.dump(cache_bundle, f)
     print(f"Cached all computed characteristics to: {CACHE_FILE}")
-    
+
     # -------------------------------------------------------------------------
     # 7. Diagnostic Figures
     # -------------------------------------------------------------------------
     fig, axes = plt.subplots(1, 3, figsize=(16, 4.5), dpi=300)
-    
+
     # Panel A: Episode Durations (Boxplot on log-scale)
     ax = axes[0]
     box_data = [uncensored_durations[k] for k in range(N_STATES)]
@@ -311,7 +312,7 @@ def main():
     ax.set_xlabel("High-Level State ID", fontweight="bold")
     ax.set_title("A. State Duration Distribution (Uncensored)", fontweight="bold")
     ax.grid(True, axis="y", ls="--", alpha=0.3)
-    
+
     # Panel B: Exit Transition Routing Matrix Heatmap
     ax = axes[1]
     im = ax.imshow(exit_routing_matrix, cmap="Blues", vmin=0.0, vmax=0.4)
@@ -323,7 +324,7 @@ def main():
     ax.set_ylabel("Source State", fontweight="bold")
     ax.set_title("B. High-Level Transition Routing Matrix", fontweight="bold")
     plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04, label="Routing Probability")
-    
+
     # Panel C: Top Enriched Syllables Matrix
     ax = axes[2]
     # Pick the union of all top 3 enriched syllables across states
@@ -338,7 +339,7 @@ def main():
     ax.set_ylabel("High-Level State", fontweight="bold")
     ax.set_title("C. Distinctive Syllable Log2 Enrichment", fontweight="bold")
     plt.colorbar(im2, ax=ax, fraction=0.046, pad=0.04, label="Log2 Fold-Change")
-    
+
     plt.tight_layout()
     plt.savefig(FIG_FILE, bbox_inches="tight")
     plt.close()

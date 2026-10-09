@@ -16,27 +16,30 @@ Environment: kpms_gpu_cuml
 """
 
 import os
+
 os.environ["JAX_PLATFORMS"] = "cpu"
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 
 from pathlib import Path
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import imageio
-from PIL import Image
 import h5py
-
+import imageio
 import jax.numpy as jnp
-from jax_moseq.models.keypoint_slds import estimate_coordinates
-
 import keypoint_moseq as kpms
-import keypoint_moseq.viz as viz
 import keypoint_moseq.util as util
+import keypoint_moseq.viz as viz
+import matplotlib.pyplot as plt
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from PIL import Image
+
 
 # --- 1. Modern Matplotlib Rasterize Patch (ensuring deep buffer copy for animations) ---
 def modern_rasterize_figure(fig):
@@ -228,7 +231,7 @@ def main():
             alpha=0.15,
             plot_width=5.2,
         )
-        
+
         # Save vector PDF
         pdf_super = SUPER_DIR / f"syllable_{s:02d}_superimposed.pdf"
         fig_s.savefig(str(pdf_super), bbox_inches="tight", dpi=300)
@@ -279,7 +282,7 @@ def main():
         ax_left.imshow(rasters_d[-1])
         ax_right.imshow(rasters_v[-1])
         fig_combo.suptitle(desc, fontsize=13, fontweight="bold", y=0.98)
-        
+
         pdf_tandem = SIDE_DIR / f"syllable_{s:02d}_tandem_side_by_side.pdf"
         fig_combo.savefig(str(pdf_tandem), bbox_inches="tight", dpi=300)
         plt.close(fig_combo)

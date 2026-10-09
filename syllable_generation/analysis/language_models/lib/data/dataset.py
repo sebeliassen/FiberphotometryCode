@@ -1,6 +1,7 @@
 import os
 import pickle
-from typing import List, Tuple, Dict, Any, Optional
+from typing import Any, Dict, List, Optional, Tuple
+
 
 class SessionDataset:
     """
@@ -15,7 +16,7 @@ class SessionDataset:
         self.labels: List[str] = []
         self.n_windows_per_session: List[int] = []
         self.cache_path = cache_path
-        
+
         if cache_path:
             self.load_from_cache(cache_path)
 
@@ -27,7 +28,7 @@ class SessionDataset:
             raise FileNotFoundError(f"Cache file not found: {cache_path}")
         with open(cache_path, "rb") as f:
             self.clusterer, self.all_win_inputs, self.session_window_meta = pickle.load(f)
-            
+
         self.cache_path = cache_path
         self.labels = [meta[5] for meta in self.session_window_meta]
         self.n_windows_per_session = [meta[0] for meta in self.session_window_meta]
@@ -57,7 +58,7 @@ class SessionDataset:
         target_set = set(target_cohorts)
         subset_inputs = []
         subset_meta = []
-        
+
         win_offset = 0
         for meta in self.session_window_meta:
             n_win = meta[0]
@@ -66,7 +67,7 @@ class SessionDataset:
                 subset_inputs.extend(self.all_win_inputs[win_offset : win_offset + n_win])
                 subset_meta.append(meta)
             win_offset += n_win
-            
+
         return {
             "window_inputs": subset_inputs,
             "session_meta": subset_meta

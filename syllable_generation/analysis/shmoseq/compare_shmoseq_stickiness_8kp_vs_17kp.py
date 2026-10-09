@@ -17,22 +17,22 @@ Evaluation Criteria (per user and shMoSeq paper recommendations):
 =============================================================================
 """
 
+import itertools
 import os
+import pickle
 import sys
 import time
-import pickle
-import itertools
+from pathlib import Path
+
+import matplotlib
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from scipy.spatial.distance import jensenshannon
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
-import jax
 import jax.numpy as jnp
 import jax.random as jr
 import state_moseq as sm
@@ -77,7 +77,7 @@ def exact_animal_permutation_test(occupancies_by_animal, animals_metadata, n_sta
     unique_animals = sorted(list(animals_metadata.keys()))
     wt_animals = [a for a in unique_animals if "WT" in animals_metadata[a]["genotype"]]
     ki_animals = [a for a in unique_animals if "KI" in animals_metadata[a]["genotype"] or "Het" in animals_metadata[a]["genotype"]]
-    
+
     n_total = len(unique_animals)
     n_wt = len(wt_animals)
     n_ki = len(ki_animals)

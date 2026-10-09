@@ -14,18 +14,16 @@ Features:
 =============================================================================
 """
 
-import os
-import sys
 import argparse
-import time
 import re
-import json
+import sys
 from pathlib import Path
-import numpy as np
-import h5py
-import pandas as pd
+
 import cv2
+import h5py
 import imageio
+import numpy as np
+import pandas as pd
 from vidio.read import OpenCVReader
 
 # Fast-seek monkeypatch to OpenCVReader supporting scalar ints, slices, and array-likes
@@ -51,8 +49,8 @@ EXP_DIR = SCRIPT_DIR.parent
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.pair_matching import find_matched_pairs
 from core.camera_correspondence import top_to_bot_frame_continuous
+from core.pair_matching import find_matched_pairs
 
 DEFAULT_MODEL_DIR = EXP_DIR / "pilot_static_21kp/pilot_static_21kp_k12_seed404"
 DEFAULT_VFI_PATH = EXP_DIR / "pilot_static_21kp/video_frame_indexes.npz"
@@ -241,7 +239,7 @@ def main():
                     if s_id not in bout_catalog:
                         bout_catalog[s_id] = []
                         syll_kinematics[s_id] = {"vels": [], "angs": [], "durs": []}
-                    
+
                     b_vel = float(np.mean(vel[start:min(end-1, len(vel))])) if end > start + 1 else 0.0
                     b_ang = float(np.mean(ang_vel[start:min(end-1, len(ang_vel))])) if end > start + 1 else 0.0
 
@@ -374,8 +372,8 @@ def main():
                 c_top_onset = c_top_all[start]
                 h_top_onset = h_top_all[start]
 
-                if (c_top_onset[0] < 0 or c_top_onset[0] >= top_w or 
-                    c_top_onset[1] < 0 or c_top_onset[1] >= top_h or 
+                if (c_top_onset[0] < 0 or c_top_onset[0] >= top_w or
+                    c_top_onset[1] < 0 or c_top_onset[1] >= top_h or
                     np.isnan(c_top_onset[0]) or np.isnan(c_top_onset[1])):
                     c_top_onset = (top_w / 2.0, top_h / 2.0)
 

@@ -1,12 +1,11 @@
+import copy
 import os
 import sys
-import copy
 import time
+
 import numpy as np
+
 np.bool8 = np.bool_
-import jax
-import jax.numpy as jnp
-import jax.random as jr
 
 REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
 KPMS_DIR = os.path.join(REPO_ROOT, "syllable_generation", "syllabizers", "keypoint_moseq_syll")
@@ -15,11 +14,11 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import keypoint_moseq as kpms
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from utils.resample_batching import apply_optimizations
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+import keypoint_moseq as kpms
 import utils.resample_batching as rb
+from utils.resample_batching import apply_optimizations
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "karen_project_2")
 MODEL_NAME = "final_karen_model_k150k"
@@ -28,10 +27,10 @@ def benchmark_iterations():
     print("=" * 80)
     print("  KPMS STEADY-STATE ITERATION TIMING BENCHMARK (5 SLDS ITERATIONS)")
     print("=" * 80)
-    
+
     # 1. Load checkpoint at Iteration 50
     model, data, metadata, _ = kpms.load_checkpoint(PROJECT_DIR, MODEL_NAME, iteration=50)
-    
+
     N_SLICED = 30
     sliced_data = {
         'Y': data['Y'][:N_SLICED],
@@ -39,16 +38,16 @@ def benchmark_iterations():
     }
     if 'conf' in data and data['conf'] is not None:
         sliced_data['conf'] = data['conf'][:N_SLICED]
-        
+
     sliced_metadata = tuple(m[:N_SLICED] for m in metadata) if isinstance(metadata, tuple) else metadata
-    
+
     sliced_states = {}
     for k, v in model['states'].items():
         if hasattr(v, '__len__') and len(v) >= N_SLICED:
             sliced_states[k] = v[:N_SLICED]
         else:
             sliced_states[k] = v
-            
+
     if 'noise_prior' in model and hasattr(model['noise_prior'], '__len__') and len(model['noise_prior']) >= N_SLICED:
         model['noise_prior'] = model['noise_prior'][:N_SLICED]
 
@@ -67,12 +66,12 @@ def benchmark_iterations():
     # -------------------------------------------------------------------------
     print("\n--- Testing Branch: PATCHED (FIXED) ---")
     apply_optimizations()
-    
+
     m_fixed = copy.deepcopy(model)
     m_fixed['states'] = copy.deepcopy(sliced_states)
     out_dir_fixed = os.path.join(KPMS_DIR, "scratch_speed_fixed")
     os.makedirs(out_dir_fixed, exist_ok=True)
-    
+
     fixed_times = []
     curr_m = m_fixed
     for i in range(1, NUM_ITERS + 1):
@@ -141,19 +140,19 @@ def benchmark_iterations():
     print("\n--- Testing Branch: UNPATCHED ORIGINAL JAX ---")
     import jax_moseq.models.keypoint_slds as kp_slds_mod
     import jax_moseq.models.slds as slds_mod
-    
+
     slds_gibbs.resample_continuous_stateseqs = orig_resample_continuous
     arhmm_gibbs.resample_discrete_stateseqs = orig_resample_discrete
     arhmm_gibbs.resample_ar_params = orig_resample_ar
     slds_gibbs.resample_scales = orig_resample_scales
     slds_gibbs.resample_heading = orig_resample_heading
     slds_gibbs.resample_location = orig_resample_loc
-    
+
     kp_slds_mod.resample_continuous_stateseqs = orig_resample_continuous
     kp_slds_mod.resample_scales = orig_resample_scales
     kp_slds_mod.resample_heading = orig_resample_heading
     kp_slds_mod.resample_location = orig_resample_loc
-    
+
     from jax_moseq.models.slds.gibbs import resample_continuous_stateseqs as slds_orig_resample_x
     slds_mod.resample_continuous_stateseqs = slds_orig_resample_x
     slds_mod.resample_scales = orig_resample_scales
@@ -196,11 +195,11 @@ def benchmark_iterations():
         iter_name = f"Iter {i+1} (Compile)" if i == 0 else f"Iter {i+1} (Steady)"
         print(f"{iter_name:<15} | {fixed_times[i]:16.3f}s | {buggy_times[i]:16.3f}s | {unp_times[i]:16.3f}s")
     print("-" * 80)
-    
+
     fixed_steady = np.mean(fixed_times[1:])
     buggy_steady = np.mean(buggy_times[1:])
     unp_steady = np.mean(unp_times[1:])
-    
+
     print(f"{'Steady-State Mean':<15} | {fixed_steady:16.3f}s | {buggy_steady:16.3f}s | {unp_steady:16.3f}s")
     print(f"{'Speedup vs JAX':<15} | {unp_steady/fixed_steady:17.2f}x | {unp_steady/buggy_steady:17.2f}x | {'1.00x':<18}")
     print("=" * 80)

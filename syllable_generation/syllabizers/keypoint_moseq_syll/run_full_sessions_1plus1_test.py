@@ -20,6 +20,7 @@ import sys
 
 # Crucial numpy compatibility patch before importing bokeh/panel/kpms
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
@@ -31,6 +32,7 @@ os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.75"
 os.environ["DISABLE_NTFY"] = "1"
 
 import multiprocessing
+
 if multiprocessing.current_process().name != 'MainProcess':
     os.environ["CUDA_VISIBLE_DEVICES"] = ""
     os.environ["JAX_PLATFORMS"] = "cpu"
@@ -41,14 +43,14 @@ KPMS_DIR = os.path.join(REPO_ROOT, "syllable_generation", "syllabizers", "keypoi
 sys.path.insert(0, REPO_ROOT)
 sys.path.insert(0, KPMS_DIR)
 
-import time
-import json
 import shutil
 import subprocess
-import pandas as pd
+import time
+
 import h5py
-from kpms_pipeline import run_pipeline
+import pandas as pd
 import utils.resample_batching as rb
+from kpms_pipeline import run_pipeline
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "amph_project")
 MODEL_NAME = "amph_batching_verification_1plus1"
@@ -95,7 +97,7 @@ def main():
     print("  FULL-COHORT BATCHING & VRAM VERIFICATION TEST (1 AR + 1 SLDS)")
     print("=" * 85)
     print(f"Dataset:            {SESSIONS_PKL}")
-    print(f"Target Cohort:      Full 30 Sessions (~5.5M frames, 562 sequences)")
+    print("Target Cohort:      Full 30 Sessions (~5.5M frames, 562 sequences)")
     print(f"Model Directory:    {OUTPUT_DIR}")
     print(f"Initial GPU VRAM:   {get_gpu_vram_mb():.1f} MB in use")
     print(f"Batching Config:    discrete_bs={rb.CONFIG.discrete_bs}, scales_bs={rb.CONFIG.scales_bs}, "
@@ -142,7 +144,7 @@ def main():
     print("\n" + "=" * 85)
     print("                 FULL COHORT 1+1 VERIFICATION RESULTS")
     print("=" * 85)
-    print(f"Status:                 SUCCESS (Completed without OOM or exceptions)")
+    print("Status:                 SUCCESS (Completed without OOM or exceptions)")
     print(f"Total Wall-Clock Time:  {t_total:.2f} s ({t_total/60:.2f} min)")
     print(f"Frames Used:            {results.get('frames_used', 'N/A')}")
     print(f"Median Duration:        {results.get('median_duration_frames', 'N/A')} frames")

@@ -12,9 +12,10 @@ Generates clean publication figures containing ONLY Real Data and 1st-Order Null
 
 import os
 import pickle
-import numpy as np
-import pandas as pd
+
 import matplotlib
+import numpy as np
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
@@ -61,7 +62,7 @@ def main():
     for s in range(n_sessions):
         ax_a.plot(lag_seconds, real_mis[s], color=c_real, alpha=0.10, linewidth=0.7)
         ax_a.plot(lag_seconds, markov_mis[s], color=c_markov, alpha=0.08, linewidth=0.7)
-    
+
     r_mean = real_mis.mean(axis=0)
     r_sem = real_mis.std(axis=0) / np.sqrt(n_sessions)
     m_mean = markov_mis.mean(axis=0)
@@ -99,13 +100,13 @@ def main():
     ax_b.fill_between(lag_seconds, m_sub_mean - m_sub_sem, m_sub_mean + m_sub_sem, color=c_markov, alpha=0.20)
 
     # Shade the excess behavioral memory between Real and Markov
-    ax_b.fill_between(lag_seconds, m_sub_mean, r_sub_mean, color=c_shade, alpha=0.45, label="Excess Behavioral Memory ($\Delta I > 0$)")
+    ax_b.fill_between(lag_seconds, m_sub_mean, r_sub_mean, color=c_shade, alpha=0.45, label=r"Excess Behavioral Memory ($\Delta I > 0$)")
 
     ax_b.set_xscale("log")
     ax_b.set_xlim([lag_seconds[0], lag_seconds[-1]])
     ax_b.set_ylim([-0.05, 1.15])
     ax_b.set_xlabel("Lag $\\tau$ (seconds, log scale)", fontsize=11, fontweight="bold")
-    ax_b.set_ylabel("Net Mutual Information $\Delta I$ (bits)", fontsize=11, fontweight="bold")
+    ax_b.set_ylabel(r"Net Mutual Information $\Delta I$ (bits)", fontsize=11, fontweight="bold")
     ax_b.set_title("B. Baseline Removed: Excess Behavioral Memory Highlighted", fontsize=12, fontweight="bold")
     ax_b.grid(True, which="both", linestyle="--", alpha=0.35)
     ax_b.legend(loc="upper right", frameon=True, fontsize=9.5)
@@ -165,7 +166,7 @@ def main():
     axs3[2].fill_between(lag_seconds, ex_mean - ex_sem, ex_mean + ex_sem, color=c_excess, alpha=0.25)
     for s in range(n_sessions):
         axs3[2].plot(lag_seconds, excess_mi[s], color=c_excess, alpha=0.08, linewidth=0.6)
-    
+
     peak_idx = np.argmax(ex_mean)
     axs3[2].scatter([lag_seconds[peak_idx]], [ex_mean[peak_idx]], color="#C51B7D", s=70, zorder=5)
     axs3[2].annotate(f"Peak: +{ex_mean[peak_idx]:.3f} bits\n(at $\\tau = {lag_seconds[peak_idx]:.1f}$s)",
@@ -179,7 +180,7 @@ def main():
     axs3[2].set_ylim([-0.03, 0.12])
     axs3[2].set_xlabel("Lag $\\tau$ (seconds, log scale)", fontweight="bold")
     axs3[2].set_ylabel("Excess Mutual Information (bits)", fontweight="bold")
-    axs3[2].set_title("C. Net Behavioral Memory ($\Delta I = I_{\\mathrm{real}} - I_{\\mathrm{markov}}$)", fontweight="bold", fontsize=11)
+    axs3[2].set_title("C. Net Behavioral Memory ($\\Delta I = I_{\\mathrm{real}} - I_{\\mathrm{markov}}$)", fontweight="bold", fontsize=11)
     axs3[2].grid(True, which="both", linestyle="--", alpha=0.35)
     axs3[2].legend(loc="upper right", frameon=True, fontsize=9)
 

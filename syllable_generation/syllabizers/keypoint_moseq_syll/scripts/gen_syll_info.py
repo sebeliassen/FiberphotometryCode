@@ -1,5 +1,6 @@
-import pandas as pd
 import os
+
+import pandas as pd
 
 model_dir = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll/flipped_double_project/double_flip_activity_k100k"
 out_csv = os.path.join(model_dir, "syll_info.csv")

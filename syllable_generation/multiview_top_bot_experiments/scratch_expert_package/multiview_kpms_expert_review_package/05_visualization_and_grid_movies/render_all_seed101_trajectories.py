@@ -19,30 +19,33 @@ Environment: kpms_gpu_cuml
 """
 
 import os
+
 os.environ["JAX_PLATFORMS"] = "cpu"
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 
 from pathlib import Path
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import imageio
-from PIL import Image
-import h5py
 import pickle
 
+import h5py
 import jax.numpy as jnp
-from jax_moseq.models.keypoint_slds import estimate_coordinates
-
 import keypoint_moseq as kpms
-import keypoint_moseq.viz as viz
 import keypoint_moseq.util as util
+import keypoint_moseq.viz as viz
+import matplotlib.pyplot as plt
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from PIL import Image
 from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
+
 
 # Modern Matplotlib Rasterize Patch
 def modern_rasterize_figure(fig):
@@ -170,7 +173,7 @@ def main():
 
     # Check if we can skip session loading and extraction completely
     if pkl_density_path.exists() and pkl_traj_path.exists():
-        print(f"  ⚡ Found cached trajectories and density instances! Loading directly...", flush=True)
+        print("  ⚡ Found cached trajectories and density instances! Loading directly...", flush=True)
         with open(pkl_density_path, "rb") as pf:
             sampled_instances = pickle.load(pf)
         with open(pkl_traj_path, "rb") as pf:
@@ -280,7 +283,7 @@ def main():
                 sampled_instances[s] = [inst[i] for i in chosen_sub_indices]
 
             print(f"  Density sampling complete across all {len(sampled_instances)} syllables.")
-            
+
             # Save sampled density instances for grid movie generator
             with open(pkl_density_path, "wb") as pf:
                 pickle.dump(sampled_instances, pf)

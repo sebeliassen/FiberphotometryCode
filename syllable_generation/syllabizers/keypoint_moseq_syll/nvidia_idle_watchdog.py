@@ -10,13 +10,12 @@ Sends an alert to ntfy.sh/woody_videos_seb.
 =============================================================================
 """
 
-import os
-import sys
-import time
 import argparse
+import os
 import subprocess
-import urllib.request
+import time
 from datetime import datetime
+
 import psutil
 
 NTFY_URL = "https://ntfy.sh/woody_videos_seb"

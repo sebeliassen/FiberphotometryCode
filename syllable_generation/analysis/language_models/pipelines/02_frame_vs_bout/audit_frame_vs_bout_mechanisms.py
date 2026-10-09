@@ -14,17 +14,17 @@ Comprehensive statistical validation to verify:
 """
 
 import os
+import pickle
 import sys
 import time
-import pickle
+
 import numpy as np
-import pandas as pd
-from sklearn.decomposition import TruncatedSVD
-from sklearn.preprocessing import normalize
 from sklearn.cluster import KMeans
+from sklearn.decomposition import TruncatedSVD
 from sklearn.linear_model import Ridge
-from sklearn.model_selection import GroupKFold
 from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
+from sklearn.model_selection import GroupKFold
+from sklearn.preprocessing import normalize
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
@@ -65,7 +65,7 @@ def main():
     log("=" * 80)
     log("LAUNCHING RIGOROUS AUDIT: FRAME PIPELINE VS. BOUT PIPELINE")
     log("=" * 80)
-    
+
     cache_path = os.path.join(LM_DIR, "output", "strategies_extended", "continuous_bout_cache.pkl")
     log(f"Loading continuous bout cache: {cache_path}")
     with open(cache_path, "rb") as f:
@@ -74,12 +74,12 @@ def main():
 
     sessions = []
     t0 = time.time()
-    
+
     for sess_idx, bouts in enumerate(session_bouts):
         if len(bouts) < 100: continue
         max_frame = bouts[-1]["end_frame"]
         N = max_frame + 1
-        
+
         frame_sylls = np.zeros(N, dtype=np.int32)
         frame_spatial = np.zeros((N, 6), dtype=np.float32)
         for b in bouts:
@@ -91,22 +91,22 @@ def main():
                 frame_spatial[sf : ef + 1, :4] = vec[:4]
                 frame_spatial[sf : ef + 1, 4] = vec[10]
                 frame_spatial[sf : ef + 1, 5] = vec[12]
-                
+
         # 1. Unigram Frame Prefix Sums
         oh_frame = np.zeros((N, NUM_SYLLS), dtype=np.float32)
         oh_frame[np.arange(N), frame_sylls] = 1.0
         cum_frame = np.vstack([np.zeros((1, NUM_SYLLS), dtype=np.float32), np.cumsum(oh_frame, axis=0)])
         bigram_frame = frame_sylls[:-1] * NUM_SYLLS + frame_sylls[1:]
-        
+
         # 2. Discrete Bout Prefix Sums (onsets only)
         diffs = np.where(frame_sylls[1:] != frame_sylls[:-1])[0] + 1
         onsets = np.zeros(N, dtype=bool)
         onsets[0] = True; onsets[diffs] = True
-        
+
         oh_bout = np.zeros((N, NUM_SYLLS), dtype=np.float32)
         oh_bout[onsets, frame_sylls[onsets]] = 1.0
         cum_bout = np.vstack([np.zeros((1, NUM_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
-        
+
         # 3. Next non-self pointer
         next_bout_ptrs = np.zeros(N, dtype=np.int32)
         cur = 0
@@ -114,15 +114,15 @@ def main():
             next_bout_ptrs[cur:d] = d
             cur = d
         next_bout_ptrs[cur:] = N
-        
+
         # 4. Spatial prefix sums
         cum_spatial = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(frame_spatial, axis=0)])
         cum_spatial_sq = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(frame_spatial**2, axis=0)])
-        
+
         # 5. Fast onset indices and bout sequence for binary search
         bout_seq = frame_sylls[onsets]
         bout_onsets = np.where(onsets)[0]
-        
+
         sessions.append({
             "sess_idx": sess_idx, "N": N, "frame_sylls": frame_sylls,
             "cum_frame": cum_frame, "cum_bout": cum_bout,
@@ -130,21 +130,21 @@ def main():
             "cum_spatial": cum_spatial, "cum_spatial_sq": cum_spatial_sq,
             "bout_seq": bout_seq, "bout_onsets": bout_onsets
         })
-        
+
     log(f"Preprocessed {len(sessions)} sessions in {time.time()-t0:.2f}s.")
-    
+
     # Extract Features
     all_time, all_sp, all_curr_oh, all_curr_s = [], [], [], []
     all_past_frame_dist, all_past_bout_dist = [], []
     all_trans_frame, all_trans_bout = [], []
     all_tgt, all_sess = [], []
-    
+
     t_feat = time.time()
     for s in sessions:
         sess_idx = s["sess_idx"]
         N = s["N"]
         if N < W_FRAMES + H_FRAMES + 200: continue
-        
+
         t_anchors = np.arange(W_FRAMES, N - H_FRAMES, STRIDE_FRAMES)
         t_tgt_start = s["next_bout_ptrs"][t_anchors]
         valid = (t_tgt_start + H_FRAMES < N)
@@ -152,28 +152,28 @@ def main():
         t_tgt_start = t_tgt_start[valid]
         M = len(t_anchors)
         if M == 0: continue
-        
+
         curr_syll = s["frame_sylls"][t_anchors]
-        
+
         # Time
         t_norm = t_anchors / float(N)
         time_feat = np.column_stack([t_norm, t_norm**2]).astype(np.float32)
-        
+
         # Spatial
         sp_sum = s["cum_spatial"][t_anchors] - s["cum_spatial"][t_anchors - W_FRAMES]
         sp_mean = sp_sum / float(W_FRAMES)
         sp_sq = s["cum_spatial_sq"][t_anchors] - s["cum_spatial_sq"][t_anchors - W_FRAMES]
         sp_var = np.maximum(sp_sq / float(W_FRAMES) - sp_mean**2, 1e-6)
         spatial_feat = np.hstack([sp_mean, np.sqrt(sp_var)]).astype(np.float32)
-        
+
         # 1. Past Frame Unigrams
         pf_cnt = s["cum_frame"][t_anchors] - s["cum_frame"][t_anchors - W_FRAMES]
         past_frame_dist = (pf_cnt + 1e-4) / (np.sum(pf_cnt, axis=1, keepdims=True) + 1e-4 * NUM_SYLLS)
-        
+
         # 2. Past Bout Unigrams
         pb_cnt = s["cum_bout"][t_anchors] - s["cum_bout"][t_anchors - W_FRAMES]
         past_bout_dist = (pb_cnt + 1e-4) / (np.sum(pb_cnt, axis=1, keepdims=True) + 1e-4 * NUM_SYLLS)
-        
+
         # 3. Past Frame Transitions (with self-transitions)
         bigrams_f = s["bigram_frame"]
         trans_f = np.zeros((M, NUM_SYLLS * NUM_SYLLS), dtype=np.float32)
@@ -182,16 +182,16 @@ def main():
             b_cnt = np.bincount(seg, minlength=NUM_SYLLS * NUM_SYLLS).reshape(NUM_SYLLS, NUM_SYLLS)
             rs = b_cnt.sum(axis=1, keepdims=True); rs[rs==0] = 1.0
             trans_f[i] = ((b_cnt + 1e-4) / (rs + 1e-4 * NUM_SYLLS)).flatten()
-            
+
         # 4. Past Bout Transitions (O(log K) searchsorted strictly non-self transitions)
         b_onsets = s["bout_onsets"]
         b_seq = s["bout_seq"]
         trans_b = np.zeros((M, NUM_SYLLS * NUM_SYLLS), dtype=np.float32)
-        
+
         # Binary search range for all anchors
         i_starts = np.searchsorted(b_onsets, t_anchors - W_FRAMES)
         i_ends = np.searchsorted(b_onsets, t_anchors)
-        
+
         for i in range(M):
             i0, i1 = i_starts[i], i_ends[i]
             if i1 - i0 > 1:
@@ -202,14 +202,14 @@ def main():
                 trans_b[i] = ((b_cnt + 1e-4) / (rs + 1e-4 * NUM_SYLLS)).flatten()
             else:
                 trans_b[i] = 1.0 / NUM_SYLLS
-                
+
         curr_oh = np.zeros((M, NUM_SYLLS), dtype=np.float32)
         curr_oh[np.arange(M), curr_syll] = 1.0
-        
+
         # Target: Future Discrete Bout Counts
         f_cnt = s["cum_bout"][t_tgt_start + H_FRAMES] - s["cum_bout"][t_tgt_start]
         target = (f_cnt + 1e-4) / (np.sum(f_cnt, axis=1, keepdims=True) + 1e-4 * NUM_SYLLS)
-        
+
         all_time.append(time_feat); all_sp.append(spatial_feat)
         all_curr_oh.append(curr_oh); all_curr_s.append(curr_syll)
         all_past_frame_dist.append(past_frame_dist); all_past_bout_dist.append(past_bout_dist)
@@ -265,38 +265,38 @@ def main():
         p_glob = np.tile(np.mean(Y_tr, axis=0, keepdims=True), (len(te_idx), 1))
         p_glob /= np.sum(p_glob, axis=1, keepdims=True)
         js_blind = js_vec(Y_te, p_glob)
-        
+
         # Base Macro + Posture
         X_tr_p3 = np.hstack([X_time[tr_idx], X_spatial[tr_idx], X_curr_oh[tr_idx]])
         X_te_p3 = np.hstack([X_time[te_idx], X_spatial[te_idx], X_curr_oh[te_idx]])
-        
+
         # 1. PURE FRAME PIPELINE
         # Unigram alone
         p_ug_f = np.clip(Ridge(1.0).fit(X_pf_dist[tr_idx], Y_tr).predict(X_pf_dist[te_idx]), 1e-4, 1.0)
         p_ug_f /= np.sum(p_ug_f, axis=1, keepdims=True)
         g_ug_f.append(((js_blind - js_vec(Y_te, p_ug_f)) / js_blind) * 100.0)
-        
+
         # P4: Macro + Posture + Frame-Derived Strategy K=16
         p_p4_f = np.clip(Ridge(5.0).fit(np.hstack([X_tr_p3, strat_f_oh[tr_idx]]), Y_tr).predict(np.hstack([X_te_p3, strat_f_oh[te_idx]])), 1e-4, 1.0)
         p_p4_f /= np.sum(p_p4_f, axis=1, keepdims=True)
         g_p4_f.append(((js_blind - js_vec(Y_te, p_p4_f)) / js_blind) * 100.0)
-        
+
         # P5: Full Frame Empirical Bound
         p_p5_f = np.clip(Ridge(1.0).fit(np.hstack([X_tr_p3, X_pf_dist[tr_idx], latent_f[tr_idx]]), Y_tr).predict(np.hstack([X_te_p3, X_pf_dist[te_idx], latent_f[te_idx]])), 1e-4, 1.0)
         p_p5_f /= np.sum(p_p5_f, axis=1, keepdims=True)
         g_p5_f.append(((js_blind - js_vec(Y_te, p_p5_f)) / js_blind) * 100.0)
-        
+
         # 2. PURE BOUT PIPELINE
         # Unigram alone
         p_ug_b = np.clip(Ridge(1.0).fit(X_pb_dist[tr_idx], Y_tr).predict(X_pb_dist[te_idx]), 1e-4, 1.0)
         p_ug_b /= np.sum(p_ug_b, axis=1, keepdims=True)
         g_ug_b.append(((js_blind - js_vec(Y_te, p_ug_b)) / js_blind) * 100.0)
-        
+
         # P4: Macro + Posture + Bout-Derived Strategy K=16
         p_p4_b = np.clip(Ridge(5.0).fit(np.hstack([X_tr_p3, strat_b_oh[tr_idx]]), Y_tr).predict(np.hstack([X_te_p3, strat_b_oh[te_idx]])), 1e-4, 1.0)
         p_p4_b /= np.sum(p_p4_b, axis=1, keepdims=True)
         g_p4_b.append(((js_blind - js_vec(Y_te, p_p4_b)) / js_blind) * 100.0)
-        
+
         # P5: Full Bout Empirical Bound
         p_p5_b = np.clip(Ridge(1.0).fit(np.hstack([X_tr_p3, X_pb_dist[tr_idx], latent_b[tr_idx]]), Y_tr).predict(np.hstack([X_te_p3, X_pb_dist[te_idx], latent_b[te_idx]])), 1e-4, 1.0)
         p_p5_b /= np.sum(p_p5_b, axis=1, keepdims=True)
@@ -307,17 +307,17 @@ def main():
     log("=" * 90)
     log(f"{'Model Component':<24} | {'Pure RAW FRAMES Pipeline':<28} | {'Pure DISCRETE BOUTS Pipeline':<30} | {'Delta (Frames - Bouts)':<18}")
     log("-" * 90)
-    
+
     rows = [
         ("Past Unigrams Alone", np.mean(g_ug_f), 1.96*np.std(g_ug_f)/np.sqrt(5), np.mean(g_ug_b), 1.96*np.std(g_ug_b)/np.sqrt(5)),
         ("Strategy K=16 (P_4)", np.mean(g_p4_f), 1.96*np.std(g_p4_f)/np.sqrt(5), np.mean(g_p4_b), 1.96*np.std(g_p4_b)/np.sqrt(5)),
         ("Empirical Bound (P_max)", np.mean(g_p5_f), 1.96*np.std(g_p5_f)/np.sqrt(5), np.mean(g_p5_b), 1.96*np.std(g_p5_b)/np.sqrt(5))
     ]
-    
+
     for name, mf, cif, mb, cib in rows:
         diff = mf - mb
         log(f"{name:<24} | +{mf:5.2f}% ± {cif:4.2f}%              | +{mb:5.2f}% ± {cib:4.2f}%                | {diff:+5.2f}%")
-        
+
     log("=" * 90)
     log("AUDIT COMPLETED SUCCESSFULLY!")
     log("=" * 90)

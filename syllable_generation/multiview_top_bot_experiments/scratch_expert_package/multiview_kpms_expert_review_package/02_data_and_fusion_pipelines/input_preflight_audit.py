@@ -14,12 +14,12 @@ Input Preflight Audit for Corrected Tandem Multi-View Retraining:
 """
 
 import sys
-import os
 import time
+from itertools import groupby
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from itertools import groupby
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
@@ -29,8 +29,9 @@ if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
 from audit_cohort_correlations import find_matched_pairs
-from core.fusion_engine import fuse_single_pair
+
 from core.camera_correspondence import get_session_mapping
+from core.fusion_engine import fuse_single_pair
 
 VENTRAL_BPS = [
     'left_front_paw', 'right_front_paw',
@@ -145,19 +146,19 @@ def audit_january_screw(fused_dir: Path):
     sid = '2026-01-09T12_19_47_top_left'
     h5_path = fused_dir / f"{sid}_tandem_23kp.h5"
     df = pd.read_hdf(h5_path)
-    
+
     w_start, w_end = 94720, 94750
     sub_df = df.iloc[w_start:w_end]
-    
+
     left_paw_p = sub_df[('fused_multiview', 'left_front_paw', 'likelihood')].to_numpy()
     left_paw_x = sub_df[('fused_multiview', 'left_front_paw', 'x')].to_numpy()
-    
+
     glitch_left_p = left_paw_p[5:15]
     glitch_left_x = left_paw_x[5:15]
-    
+
     zero_p_count = np.sum(glitch_left_p == 0.0)
     nan_x_count = np.sum(np.isnan(glitch_left_x))
-    
+
     return {
         'sid': sid,
         'window': f"{w_start}-{w_end}",
@@ -170,13 +171,13 @@ def audit_january_screw(fused_dir: Path):
 def audit_december_gap(fused_dir: Path):
     sid = '2025-12-03T14_06_45_bottom_right'
     mapping = get_session_mapping(sid)
-    
+
     # Check exact gap frames 186366-186374
     sub_map = mapping[186366:186374]
     gap_slice = mapping[186367:186373]
     has_six_minus_ones = (len(gap_slice) == 6) and np.all(gap_slice == -1)
     recovered_cleanly = (mapping[186373] == 186367)
-    
+
     return {
         'sid': sid,
         'gap_window': '186367-186372',
@@ -190,13 +191,13 @@ def audit_march_abort(fused_dir: Path):
     sid = '2026-03-15T09_51_36_bottom_left'
     h5_path = fused_dir / f"{sid}_tandem_23kp.h5"
     df = pd.read_hdf(h5_path)
-    
+
     segments, is_valid = split_session_into_dual_view_segments(df)
     total_raw = len(df)
     retained_frames = sum(e - s for s, e in segments)
     excluded_frames = total_raw - retained_frames
     first_seg_start = segments[0][0] if segments else -1
-    
+
     return {
         'sid': sid,
         'total_raw_frames': total_raw,
@@ -213,26 +214,26 @@ def main():
     print("🔬 PREFLIGHT AUDIT: CORRECTED CALIBRATED TANDEM INPUTS")
     print(f"Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 80)
-    
+
     fused_calib_dir = EXP_DIR / "fused_h5_continuous_calibrated"
     fused_calib_dir.mkdir(parents=True, exist_ok=True)
-    
+
     matched_pairs = {p['sid']: p for p in find_matched_pairs()}
-    
+
     rows = []
-    
+
     for item in PREFLIGHT_SESSIONS:
         sid = item['sid']
         cond = item['condition']
         arena = item['arena']
         case = item['case']
-        
+
         if sid not in matched_pairs:
             print(f"  [ERROR] {sid} not in matched pairs!")
             continue
-            
+
         p = matched_pairs[sid]
-        
+
         res = fuse_single_pair(
             p,
             out_dir=fused_calib_dir,
@@ -241,21 +242,21 @@ def main():
             truncate_aborted_tail=True,
             overwrite=False
         )
-        
+
         h5_path = fused_calib_dir / f"{sid}_tandem_23kp.h5"
         df = pd.read_hdf(h5_path)
         N_raw = len(df)
-        
+
         mapping = get_session_mapping(sid)
         has_cont_sync = (mapping is not None and len(mapping) > 0)
-        
+
         segments, is_valid = split_session_into_dual_view_segments(df)
         retained_frames = sum(e - s for s, e in segments)
         excluded_frames = N_raw - retained_frames
         cov_pct = (retained_frames / N_raw) * 100.0 if N_raw > 0 else 0.0
         n_segs = len(segments)
         mean_seg_len = retained_frames / n_segs if n_segs > 0 else 0
-        
+
         rows.append({
             'condition': cond,
             'session_id': sid,
@@ -269,29 +270,29 @@ def main():
             'mean_segment_len': round(mean_seg_len, 1),
             'notes': case
         })
-        
+
         print(f"✓ [{cond:10s}] {sid[:24]} | Raw: {N_raw:6d} | Retained: {retained_frames:6d} ({cov_pct:5.1f}%) | Excl: {excluded_frames:6d} | Segs: {n_segs:3d} | Sync: {has_cont_sync}")
 
     df_report = pd.DataFrame(rows)
-    
+
     out_csv = EXP_DIR / "audit_comparative_slices" / "preflight_retained_dual_view_coverage.csv"
     out_csv.parent.mkdir(parents=True, exist_ok=True)
     df_report.to_csv(out_csv, index=False)
     print(f"\nSaved coverage table to {out_csv}")
-    
+
     print("\n" + "=" * 80)
     print("🎯 RUNNING SPECIFIC TARGETED SAFEGUARD CHECKS")
     print("=" * 80)
-    
+
     jan_res = audit_january_screw(fused_calib_dir)
     print(f"1. January Screw Failure Check: {jan_res}")
-    
+
     dec_res = audit_december_gap(fused_calib_dir)
     print(f"2. December Real 6-Frame Gap Check: {dec_res}")
-    
+
     mar_res = audit_march_abort(fused_calib_dir)
     print(f"3. March Prolonged Missing Runs & Camera Abort Check: {mar_res}")
-    
+
     md_summary = f"""# Preflight Audit: Retained Dual-View Coverage & Safeguard Report
 
 **Date & Time:** {time.strftime('%Y-%m-%d %H:%M:%S')}  

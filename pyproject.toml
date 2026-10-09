@@ -43,8 +43,8 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["core*", "fiberphotometry*"]
+where = ["src", "."]
+include = ["fpcode*", "core*", "fiberphotometry*"]
 exclude = ["tests*", "docs*", "archive*", "_backups*"]
 
 [tool.pytest.ini_options]
@@ -54,6 +54,7 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 pythonpath = [
     ".",
+    "src",
     "syllable_generation/syllabizers/keypoint_moseq_syll",
 ]
 addopts = "-ra --strict-markers -m cpu --ignore=tests/test_oft_session_full_data.py --ignore=tests/test_simple_session.py --ignore=tests/test_flipping.py --ignore=tests/test_v4_repairs.py"

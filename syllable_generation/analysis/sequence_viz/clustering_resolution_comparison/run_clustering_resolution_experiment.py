@@ -22,26 +22,25 @@ For each level:
 =============================================================================
 """
 
-import os
+import json
 import sys
 import time
-import json
 from pathlib import Path
+
+import cv2
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
 from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
-import cv2
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+    generate_chain_grid_movie,
     load_chain_movie_resources,
-    generate_chain_grid_movie
 )
-from syllable_generation.analysis.sequence_viz.optimized_seqnmf.convolutional_seqnmf import ConvolutionalSeqNMF
 
 EXP_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison"
 EXP_DIR.mkdir(parents=True, exist_ok=True)
@@ -335,7 +334,7 @@ def extract_candidates_for_theme(results, vfi, target_seq, stage_tokens, max_dur
         heads = data.get("heading")
         latents = data["latent_state"]
         sylls = data["syllable"]
-        
+
         # Mapping to target sequence passed via target_seq
         # Pre-mapped syllables must be handled in caller
         continue
@@ -369,7 +368,7 @@ def run_pipeline():
         dur = rng.randint(25, 120)
         sf = rng.randint(0, n - dur)
         ef = sf + dur
-        
+
         t_orig = np.linspace(0, 1, dur)
         t_targ = np.linspace(0, 1, 20)
         z_res = interp1d(t_orig, z[sf:ef], axis=0)(t_targ).flatten()
@@ -498,7 +497,7 @@ def run_pipeline():
                 rk = c["recording_key"]
                 z = results[rk]["latent_state"][sf:ef]
                 cents_sub = results[rk]["centroid"][sf:ef]
-                
+
                 t_orig = np.linspace(0, 1, ef - sf)
                 t_targ = np.linspace(0, 1, 20)
                 z_res = interp1d(t_orig, z, axis=0)(t_targ).flatten()

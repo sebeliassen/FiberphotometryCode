@@ -20,16 +20,14 @@ Features:
 import sys
 import time
 from pathlib import Path
+
 import numpy as np
-from scipy.special import logsumexp
 
 # Add repo root to path
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
-    THEMES, META_NAMES
-)
+from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import THEMES
 
 
 class ProbabilisticEpisodeModel:
@@ -58,10 +56,10 @@ class ProbabilisticEpisodeModel:
         # p_adv[k, s]: advance probability from phase s to s+1 (or exit if s == S-1)
         # Expected dwell time in bouts: 1 / p_adv. Initialized to ~1.5 - 2.0 bouts
         self.p_adv = np.full((self.K, self.S), 0.60, dtype=np.float64)
-        
+
         # Background stay probability
         self.p_bg_stay = 0.85
-        
+
         # Inter-episode transition matrix A_ep[K+1, K+1]
         # (transitions among episodes and background upon completion/exit)
         self.A_ep = np.full((self.K + 1, self.K + 1), 1.0 / (self.K + 1), dtype=np.float64)

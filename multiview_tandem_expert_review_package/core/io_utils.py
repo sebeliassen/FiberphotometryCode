@@ -5,12 +5,13 @@ Safe I/O utilities for HDF5 datasets, Keypoint-MoSeq checkpoints,
 and pickle session databases.
 """
 
+import pickle
 from pathlib import Path
-from typing import Dict, Any, Optional, Tuple, List
+from typing import Any, List, Optional
+
 import h5py
 import numpy as np
 import pandas as pd
-import pickle
 
 from .logging_utils import get_logger
 
@@ -115,6 +116,7 @@ def compact_kpms_checkpoint(
     """
     import os
     import time
+
     import psutil
 
     ckpt_path = Path(checkpoint_path).resolve()

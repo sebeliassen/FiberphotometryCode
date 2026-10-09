@@ -3,14 +3,12 @@ Plot Results (AMPH): Generates Correlation Plots for AMPH Dataset (Panel 1e).
 - Filter: Green fibers only.
 - Groups: Genotype x Drug.
 """
-import sys
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
-from statsmodels.stats.multitest import multipletests
-from pathlib import Path
 from lib import config
+from statsmodels.stats.multitest import multipletests
 
 # --- CONFIG ---
 sns.set(style="whitegrid", context="talk", font_scale=0.8)
@@ -18,11 +16,11 @@ PLOT_HEIGHT = 3.0
 PLOT_ASPECT = 1.1
 
 LABEL_MAP = {
-    "velocity_px_s": "vel.", "angular_velocity": "ang. vel.", "acceleration": "acc.", 
+    "velocity_px_s": "vel.", "angular_velocity": "ang. vel.", "acceleration": "acc.",
     "jerk": "jerk", "transition": "trans.", "duration": "dur."
 }
 FIXED_PALETTE = {
-    "velocity_px_s": "C0", "transition": "C1", "angular_velocity": "C2", 
+    "velocity_px_s": "C0", "transition": "C1", "angular_velocity": "C2",
     "acceleration": "C3", "jerk": "C4", "duration": "C5"
 }
 
@@ -31,7 +29,7 @@ def normalize_keys(df):
     if df is None: return None
     is_idx = isinstance(df.index, pd.MultiIndex)
     if is_idx: df = df.reset_index()
-        
+
     for col in ["brain_reg", "neural_agg", "feature", "genotype", "hemisphere", "orig_letter", "drug"]:
         if col in df.columns:
             df[col] = df[col].astype(str).str.strip()
@@ -39,7 +37,7 @@ def normalize_keys(df):
                 df[col] = df[col].replace({"Left": "L", "Right": "R", "left": "L", "right": "R"})
             if col == "orig_letter":
                 df[col] = df[col].replace({"Green": "G", "Red": "R"})
-                
+
     if "timescale" in df.columns:
         df["timescale"] = pd.to_numeric(df["timescale"], errors="coerce").fillna(0).astype(int)
     return df
@@ -58,7 +56,7 @@ def load_data():
     prefix = "DEBUG_" if config.DEBUG_MODE else ""
     # Override Output Dir
     target_dir = config.PANEL_DIRS["1e_amph"]
-    
+
     # Load Observed
     obs_path = target_dir / f"{prefix}OBSERVED.pkl"
     if not obs_path.exists():
@@ -67,7 +65,7 @@ def load_data():
     obs_df = pd.read_pickle(obs_path)
     if "r" in obs_df.columns:
         obs_df["r"] = pd.to_numeric(obs_df["r"], errors="coerce").astype("float32")
-    
+
     stats = {}
     for mode in ["roll", "permute"]:
         stats_path = target_dir / f"{prefix}STATS_{mode}.pkl"
@@ -75,7 +73,7 @@ def load_data():
             stats[mode] = pd.read_pickle(stats_path)
         else:
             print(f"Missing stats for {mode}")
-            
+
     return obs_df, stats
 
 def plot_panel(group_label, title_str, obs_g, chance_g, p_dist_g, features, output_path):
@@ -84,7 +82,7 @@ def plot_panel(group_label, title_str, obs_g, chance_g, p_dist_g, features, outp
     if not valid_feats: return
 
     final_p_long = pd.DataFrame()
-    
+
     if p_dist_g is not None:
         p_vals = {}
         p_dist_flat = normalize_keys(p_dist_g.copy())
@@ -92,13 +90,13 @@ def plot_panel(group_label, title_str, obs_g, chance_g, p_dist_g, features, outp
         obs_mean = obs_flat.groupby(["timescale", "brain_reg", "neural_agg"])[valid_feats].mean().reset_index()
         shuff_mean = p_dist_flat.groupby(["timescale", "brain_reg", "neural_agg", "shuffle_index"])[valid_feats].mean().reset_index()
         merged = pd.merge(shuff_mean, obs_mean, on=["timescale", "brain_reg", "neural_agg"], suffixes=("_shuff", "_obs"))
-        
+
         for ft in valid_feats:
             if f"{ft}_shuff" not in merged.columns: continue
             merged["extreme"] = merged[f"{ft}_shuff"].abs() >= merged[f"{ft}_obs"].abs()
             sub_p = merged.groupby(["timescale", "brain_reg", "neural_agg"])["extreme"].mean()
             p_vals[ft] = sub_p
-            
+
         if p_vals:
             p_df = pd.DataFrame(p_vals)
             corrected = []
@@ -117,7 +115,7 @@ def plot_panel(group_label, title_str, obs_g, chance_g, p_dist_g, features, outp
     plot_idx = obs_g.reset_index()
     plot_idx = normalize_keys(plot_idx)
     reset_cols = ["timescale", "brain_reg", "neural_agg", "animal_id", "drug"] # Include Drug
-    
+
     plot_data = plot_idx.melt(
         id_vars=[c for c in reset_cols if c in plot_idx.columns],
         value_vars=valid_feats,
@@ -132,7 +130,7 @@ def plot_panel(group_label, title_str, obs_g, chance_g, p_dist_g, features, outp
         errorbar=("ci", 68),
         height=PLOT_HEIGHT, aspect=PLOT_ASPECT, palette=FIXED_PALETTE, legend="auto"
     )
-    
+
     if g.legend:
         g.legend.set_title("")
         for t in g.legend.get_texts():
@@ -158,13 +156,13 @@ def plot_panel(group_label, title_str, obs_g, chance_g, p_dist_g, features, outp
                  if isinstance(c_flat, pd.Series): c_flat = c_flat.reset_index()
                  if "r" in c_flat.columns: c_flat = c_flat.rename(columns={"r": "val"})
                  if 0 in c_flat.columns: c_flat = c_flat.rename(columns={0: "val"})
-                 
-                 # Chance grouping implicitly included Drug? 
+
+                 # Chance grouping implicitly included Drug?
                  # chance_g was sliced by Drug before passing here.
-                 
+
                  mask = (c_flat["brain_reg"] == c_name) & (c_flat["neural_agg"] == r_name) & (c_flat["feature"].isin(valid_feats))
                  panel_chance = c_flat[mask]
-                 
+
                  if not panel_chance.empty:
                      envelope = panel_chance.groupby("timescale")["val"].max()
                      ax.fill_between(envelope.index, -envelope.values, envelope.values,
@@ -196,44 +194,44 @@ def main():
 
     obs_df = normalize_keys(obs_df)
     obs_df = apply_color_hotfix_stats(obs_df)
-    
+
     # Pivot
     idx_cols = ["genotype", "drug", "timescale", "brain_reg", "neural_agg", "animal_id", "hemisphere", "orig_letter"]
     idx_cols = [c for c in idx_cols if c in obs_df.columns]
     obs_wide = obs_df.pivot_table(index=idx_cols, columns="feature", values="r")
-    
+
     plot_dir = config.PANEL_DIRS["1e_amph"] / "plots"
     plot_dir.mkdir(exist_ok=True, parents=True)
-    
+
     # Iterate Groups
     genotypes = obs_wide.index.get_level_values("genotype").unique()
     drugs = obs_wide.index.get_level_values("drug").unique() if "drug" in obs_wide.index.names else ["UNK"]
     hemispheres = ["L", "R"]
-    
+
     for mode in ["roll", "permute"]:
         if mode not in stats: continue
         print(f"   MODE: {mode}")
-        
+
         chance_df, p_dist_df = stats[mode]
         chance_df = apply_color_hotfix_stats(normalize_keys(chance_df))
         p_dist_df = apply_color_hotfix_stats(normalize_keys(p_dist_df))
-        
+
         def get_slice(df, geno, drug, hemi):
             # Assumes Green Only ("G")
             color = "G"
-            
+
             mask = (df["genotype"] == geno) & (df["orig_letter"] == color) & (df["hemisphere"] == hemi)
             if "drug" in df.columns: mask &= (df["drug"] == drug)
             if "drug" in df.index.names: mask &= (df.index.get_level_values("drug") == drug)
-                
+
             if isinstance(df.index, pd.MultiIndex):
                 # Using boolean mask on MultiIndex is tricky, better to reset or use xs if simple.
                 # xs doesn't handle custom levels easily if not sorted/named perfectly.
                 # Simplest: ensure we work with flat DF for slicing or use query.
                 flat = df.reset_index()
                 sub = flat[
-                     (flat["genotype"] == geno) & 
-                     (flat["orig_letter"] == color) & 
+                     (flat["genotype"] == geno) &
+                     (flat["orig_letter"] == color) &
                      (flat["hemisphere"] == hemi) &
                      (flat.get("drug", "UNK") == drug) # Safe check
                 ]
@@ -258,22 +256,22 @@ def main():
                         curr_obs = temp
                     except KeyError:
                         continue
-                        
+
                     if curr_obs.empty: continue
-                    
+
                     # Slice Stats (Chance/P)
                     # These are likely flat or different structure.
                     # Let's simple filter.
                     curr_chance = get_slice(chance_df, geno, drug, hemi)
                     curr_p = get_slice(p_dist_df, geno, drug, hemi)
-                    
+
                     title = f"{geno} | {drug} | G-{hemi} | {mode}"
                     fname = f"scalar_{geno}_{drug}_G_{hemi}_{mode}_amph.png"
-                    
+
                     cols = curr_obs.columns
                     prim = [f for f in ["velocity_px_s", "transition"] if f in cols]
                     sec = [f for f in ["angular_velocity", "acceleration", "jerk", "duration"] if f in cols]
-                    
+
                     if prim:
                         plot_panel(f"{geno}-{drug}", title, curr_obs, curr_chance, curr_p, prim, plot_dir / f"PRIMARY_{fname}")
                     if sec:

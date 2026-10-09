@@ -18,7 +18,6 @@ Supports both:
 """
 
 import os
-import shutil
 import tempfile
 import time
 from pathlib import Path
@@ -112,7 +111,7 @@ def compact_checkpoint(
         # Create temporary working file in same directory as destination to allow atomic replace
         dest_dir = dest_path.parent
         dest_dir.mkdir(parents=True, exist_ok=True)
-        
+
         with tempfile.NamedTemporaryFile(suffix=".tmp.h5", dir=dest_dir, delete=False) as tmp_file:
             temp_path = Path(tmp_file.name)
 
@@ -131,7 +130,7 @@ def compact_checkpoint(
                     src_snap_key = f"model_snapshots/{it}"
                     if verbose:
                         print(f"  Transferring snapshot {it}...")
-                    
+
                     if mode == "full":
                         # Full scientific mode: copy complete snapshot
                         f_src.copy(f_src[src_snap_key], snaps_dst, name=str(it))

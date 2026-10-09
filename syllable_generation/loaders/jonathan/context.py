@@ -1,7 +1,9 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
-from .config import JonathanConfig, JCFG
+
+from .config import JCFG, JonathanConfig
+
 
 @dataclass
 class BuildContext:

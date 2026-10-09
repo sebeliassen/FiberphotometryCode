@@ -15,16 +15,18 @@ Models evaluated:
 """
 
 import os
-import sys
 import pickle
+import sys
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
+from scipy.stats import kurtosis, skew
 from sklearn.decomposition import PCA
-from scipy.stats import skew, kurtosis, f_oneway
+from sklearn.metrics import calinski_harabasz_score, davies_bouldin_score, silhouette_score
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
 if ROOT_DIR not in sys.path:
@@ -55,18 +57,18 @@ session_kinematics = {}
 for session in raw_sessions:
     sid = session.session_id
     df = session.all_data_df
-    
+
     vel = df["velocity_px_s"].values if "velocity_px_s" in df.columns else np.zeros(len(df))
     cx = df["centroid_x"].values if "centroid_x" in df.columns else np.zeros(len(df))
     cy = df["centroid_y"].values if "centroid_y" in df.columns else np.zeros(len(df))
     c_mean_x, c_mean_y = np.nanmean(cx), np.nanmean(cy)
     dist_center = np.sqrt((cx - c_mean_x)**2 + (cy - c_mean_y)**2)
-    
+
     h = df["heading"].values if "heading" in df.columns else np.zeros(len(df))
     dh = np.diff(h, prepend=h[0])
     dh_wrapped = (dh + np.pi) % (2 * np.pi) - np.pi
     ang_vel = np.clip(np.abs(dh_wrapped) * 80.025, 0.0, 25.0)
-    
+
     session_kinematics[sid] = {
         "velocity": vel.astype(np.float32),
         "dist_center": dist_center.astype(np.float32),
@@ -81,30 +83,30 @@ for w_i, (w, s) in enumerate(zip(win_meta, win_scalars)):
     sid = w["session_id"]
     sf = int(w["start_frame"])
     ef = min(int(w["end_frame"]), session_kinematics[sid]["len"])
-    
+
     if ef <= sf:
         continue
-        
+
     v_arr = session_kinematics[sid]["velocity"][sf:ef:2]
     dc_arr = session_kinematics[sid]["dist_center"][sf:ef:2]
     av_arr = session_kinematics[sid]["angular_vel"][sf:ef:2]
-    
+
     valid = ~np.isnan(v_arr) & ~np.isnan(dc_arr)
     if np.sum(valid) < 10:
         continue
-        
+
     v_val = v_arr[valid]
     dc_val = dc_arr[valid]
     av_val = av_arr[valid]
-    
+
     mean_v = float(np.mean(v_val))
     std_v = float(np.std(v_val))
     speed_cv = float(std_v / (mean_v + 1e-3))
     pause_frac = float(np.mean(v_val < 5.0))
-    
+
     mean_av = float(np.mean(av_val))
     mean_dc = float(np.mean(dc_val))
-    
+
     window_records.append({
         "window_idx": w_i,
         "session_id": sid,
@@ -156,20 +158,20 @@ all_tier_results = []
 archetype_profiles = {}
 
 for model_name in MODELS:
-    print(f"\n=======================================================")
+    print("\n=======================================================")
     print(f"Exemplar Mining & Coherence Sweep on: {model_name}")
-    print(f"=======================================================")
-    
+    print("=======================================================")
+
     model_path = os.path.join(MODEL_DIR, f"{model_name}.pkl")
     with open(model_path, "rb") as f:
         m_data = pickle.load(f)
-        
+
     clf = m_data["model"]
     svd = m_data["svd"]
     cfg = m_data["config"]
     full_labels = m_data["window_labels"][valid_win_indices]
     full_probs = m_data["window_probs"][valid_win_indices]
-    
+
     # Re-obtain latent SVD representations
     mat = raw_trans_inputs[valid_win_indices] + cfg["laplace_smooth"]
     if cfg["norm_type"] == "log1p":
@@ -181,15 +183,15 @@ for model_name in MODELS:
         from sklearn.preprocessing import normalize
         mat = normalize(mat, norm="l2")
     latent_z = svd.transform(mat)
-    
+
     K = cfg["k"]
     unique_strats = np.sort(np.unique(full_labels))
-    
+
     # Compute ranking metric per window within its assigned cluster
     # KMeans: Euclidean distance to centroid (ascending)
     # GMM: Posterior probability / margin (descending)
     point_scores = np.zeros(len(latent_z), dtype=np.float32)
-    
+
     if cfg["family"] == "KMeans":
         centroids = clf.cluster_centers_
         for i in range(len(latent_z)):
@@ -200,7 +202,7 @@ for model_name in MODELS:
             st = full_labels[i]
             # Posterior confidence
             point_scores[i] = -full_probs[i, st] # negative so lower is better
-            
+
     # For each tier, extract exemplar mask
     for tier_pct, tier_label in zip(TIERS, TIER_LABELS):
         selected_mask = np.zeros(len(latent_z), dtype=bool)
@@ -211,7 +213,7 @@ for model_name in MODELS:
         strat_bc_turn = []
         strat_bc_center = []
         strat_bc_cadence = []
-        
+
         # 4-pillar data collectors for ANOVA eta^2
         pillar_speed = {s_id: [] for s_id in unique_strats}
         pillar_cv = {s_id: [] for s_id in unique_strats}
@@ -219,24 +221,24 @@ for model_name in MODELS:
         pillar_center = {s_id: [] for s_id in unique_strats}
         pillar_cadence = {s_id: [] for s_id in unique_strats}
         pillar_seq = {s_id: [] for s_id in unique_strats}
-        
+
         for s_id in unique_strats:
             c_indices = np.where(full_labels == s_id)[0]
             n_c = len(c_indices)
             c_scores = point_scores[c_indices]
-            
+
             # Sort ascending (lowest distance or highest confidence)
             sort_order = np.argsort(c_scores)
             n_keep = max(int(np.ceil(n_c * tier_pct)), 4)
             keep_indices = c_indices[sort_order[:n_keep]]
             selected_mask[keep_indices] = True
-            
+
             # Latent radius for kept points
             z_sub = latent_z[keep_indices]
             c_mean = np.mean(z_sub, axis=0)
             radius = np.mean(np.linalg.norm(z_sub - c_mean, axis=1))
             strat_radii.append(radius)
-            
+
             # Internal PC1 Modality
             if len(z_sub) >= 6:
                 pca_internal = PCA(n_components=1, random_state=42)
@@ -245,7 +247,7 @@ for model_name in MODELS:
             else:
                 bc_pc1 = 0.20
             strat_bc_pc1.append(bc_pc1)
-            
+
             # 4-Pillar metrics for kept windows
             sub_feats = df_win_features.iloc[keep_indices]
             v_vals = sub_feats["mean_speed"].values
@@ -254,24 +256,24 @@ for model_name in MODELS:
             dc_vals = sub_feats["dist_center"].values
             cad_vals = sub_feats["cadence"].values
             seq_vals = sub_feats["sequence_entropy"].values
-            
+
             strat_bc_speed.append(calc_bimodality_coeff(v_vals))
             strat_bc_cv.append(calc_bimodality_coeff(cv_vals))
             strat_bc_turn.append(calc_bimodality_coeff(t_vals))
             strat_bc_center.append(calc_bimodality_coeff(dc_vals))
             strat_bc_cadence.append(calc_bimodality_coeff(cad_vals))
-            
+
             pillar_speed[s_id] = v_vals
             pillar_cv[s_id] = cv_vals
             pillar_turn[s_id] = t_vals
             pillar_center[s_id] = dc_vals
             pillar_cadence[s_id] = cad_vals
             pillar_seq[s_id] = seq_vals
-            
+
         n_selected = np.sum(selected_mask)
         z_sel = latent_z[selected_mask]
         lbl_sel = full_labels[selected_mask]
-        
+
         # Latent Clustering Metrics
         # Subsample for fast silhouette computation if large
         if len(z_sel) > 5000:
@@ -279,11 +281,11 @@ for model_name in MODELS:
             sil = float(silhouette_score(z_sel[sub_idx], lbl_sel[sub_idx]))
         else:
             sil = float(silhouette_score(z_sel, lbl_sel))
-            
+
         db_score = float(davies_bouldin_score(z_sel, lbl_sel))
         ch_score = float(calinski_harabasz_score(z_sel, lbl_sel))
         mean_radius = float(np.mean(strat_radii))
-        
+
         # 4-Pillar ANOVA eta^2
         eta2_speed = calc_eta2(list(pillar_speed.values()))
         eta2_cv = calc_eta2(list(pillar_cv.values()))
@@ -292,13 +294,13 @@ for model_name in MODELS:
         eta2_cadence = calc_eta2(list(pillar_cadence.values()))
         eta2_seq = calc_eta2(list(pillar_seq.values()))
         mean_eta2 = float(np.mean([eta2_speed, eta2_cv, eta2_turn, eta2_center, eta2_cadence, eta2_seq]))
-        
+
         # Modality summary
         mean_bc_pc1 = float(np.mean(strat_bc_pc1))
         mean_bc_speed = float(np.mean(strat_bc_speed))
         mean_bc_center = float(np.mean(strat_bc_center))
         bimodal_strats_count = sum(1 for bc in strat_bc_speed if bc > 0.555)
-        
+
         res_row = {
             "model": model_name,
             "tier_label": tier_label,
@@ -321,7 +323,7 @@ for model_name in MODELS:
             "mean_eta2": mean_eta2
         }
         all_tier_results.append(res_row)
-        
+
         print(f"Tier {tier_label:10s} | N={n_selected:5d} | Radius={mean_radius:.4f} | Sil={sil:+.3f} | DB={db_score:.2f} | Mean η²={mean_eta2:.3f} | PC1 BC={mean_bc_pc1:.3f}")
 
 df_all_results = pd.DataFrame(all_tier_results)
@@ -434,17 +436,17 @@ for champ_model in ["kmeans_k16", "gmm_k16"]:
     cfg = m_data["config"]
     full_labels = m_data["window_labels"][valid_win_indices]
     full_probs = m_data["window_probs"][valid_win_indices]
-    
+
     mat = raw_trans_inputs[valid_win_indices] + cfg["laplace_smooth"]
     if cfg["norm_type"] == "l1":
         from sklearn.preprocessing import normalize
         mat = normalize(mat, norm="l1")
     latent_z = svd.transform(mat)
-    
+
     # 2D PCA projection for visualization
     pca2 = PCA(n_components=2, random_state=42)
     z_2d = pca2.fit_transform(latent_z)
-    
+
     point_scores = np.zeros(len(latent_z), dtype=np.float32)
     if cfg["family"] == "KMeans":
         centroids = clf.cluster_centers_
@@ -453,11 +455,11 @@ for champ_model in ["kmeans_k16", "gmm_k16"]:
     else:
         for i in range(len(latent_z)):
             point_scores[i] = -full_probs[i, full_labels[i]]
-            
+
     fig, axes = plt.subplots(1, 4, figsize=(20, 5), dpi=200)
-    compare_tiers = [(1.00, "100% (All Windows)"), (0.25, "Top 25% Exemplars"), 
+    compare_tiers = [(1.00, "100% (All Windows)"), (0.25, "Top 25% Exemplars"),
                      (0.05, "Top 5% Pure Exemplars"), (0.01, "Top 1% Ultra Archetypes")]
-    
+
     for ax_i, (t_pct, t_name) in enumerate(compare_tiers):
         ax = axes[ax_i]
         sel_mask = np.zeros(len(latent_z), dtype=bool)
@@ -466,16 +468,16 @@ for champ_model in ["kmeans_k16", "gmm_k16"]:
             s_scores = point_scores[c_idx]
             n_k = max(int(np.ceil(len(c_idx) * t_pct)), 4)
             sel_mask[c_idx[np.argsort(s_scores)[:n_k]]] = True
-            
+
         z_plot = z_2d[sel_mask]
         l_plot = full_labels[sel_mask]
-        
+
         ax.scatter(z_plot[:, 0], z_plot[:, 1], c=l_plot, cmap="tab20", alpha=0.75 if t_pct <= 0.05 else 0.4, s=15 if t_pct <= 0.05 else 6)
         ax.set_title(f"{t_name}\n(N={np.sum(sel_mask):,} windows)", fontsize=11, fontweight="bold")
         ax.set_xlabel("Latent Strategy PC1", fontsize=9)
         ax.set_ylabel("Latent Strategy PC2", fontsize=9)
         ax.grid(True, linestyle="--", alpha=0.3)
-        
+
     plt.suptitle(f"Attractor Basin Condensation: {champ_model.upper()} (K=16)", fontsize=14, fontweight="bold", y=1.02)
     plt.tight_layout()
     scatter_out = os.path.join(AUDIT_DIR, f"latent_condensation_scatter_{champ_model}.png")

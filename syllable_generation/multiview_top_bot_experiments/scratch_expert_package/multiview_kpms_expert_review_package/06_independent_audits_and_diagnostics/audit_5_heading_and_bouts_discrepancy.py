@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-import sys, json, pickle
+import json
+import pickle
 from pathlib import Path
-import numpy as np, pandas as pd, h5py
+
+import numpy as np
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
@@ -32,7 +34,7 @@ def audit_bouts_selection():
         grid_bouts = pickle.load(f)
     with open(TRAJ_PKL, "rb") as f:
         traj_data = pickle.load(f)
-    
+
     # Check overlap of bouts for syllables
     sylls = sorted(list(grid_bouts.keys()))[:10]
     comparison = {}

@@ -9,12 +9,12 @@ Tests:
 4. Permutation test over all 24 shuffles to prove no other assignment is better.
 """
 
-import sys
-import os
-import subprocess
 import itertools
-import numpy as np
+import subprocess
 from pathlib import Path
+
+import numpy as np
+
 
 def extract_motion_profile(video_path, timestamps, window_frames=50, width=120, height=120):
     """

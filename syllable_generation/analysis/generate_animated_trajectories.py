@@ -27,21 +27,24 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import imageio
-from PIL import Image
 import jax.numpy as jnp
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
 import keypoint_moseq as kpms
-import keypoint_moseq.viz as viz
 import keypoint_moseq.util as util
+import keypoint_moseq.viz as viz
 import tqdm
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
+from PIL import Image
+
 
 def modern_rasterize_figure(fig):
     canvas = fig.canvas
@@ -147,7 +150,7 @@ def main():
             num_timesteps=num_timesteps,
             keypoint_colormap=config.get("keypoint_colormap", "autumn"),
         )
-        
+
         # Save vector PDF
         pdf_path = out_traj / f"{title}.pdf"
         plt.savefig(str(pdf_path))

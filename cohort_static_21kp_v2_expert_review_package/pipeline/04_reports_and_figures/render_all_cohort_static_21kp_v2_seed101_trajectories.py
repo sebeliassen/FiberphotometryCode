@@ -19,25 +19,22 @@ Publication-grade Trajectory Visualizations for Cohort Static 21kp V2:
 Environment: kpms_gpu_cuml (pure CPU)
 """
 
-import os
-import sys
 import argparse
-import time
 import json
-from pathlib import Path
-import numpy as np
-import h5py
 import pickle
+import sys
+from pathlib import Path
+
+import h5py
+import matplotlib
+import numpy as np
 import yaml
-import imageio
 from PIL import Image
 
-import matplotlib
 matplotlib.use("Agg")
 matplotlib.rcParams["pdf.fonttype"] = 42
 matplotlib.rcParams["ps.fonttype"] = 42
 import matplotlib.pyplot as plt
-from scipy.ndimage import median_filter
 from scipy.interpolate import interp1d
 
 SCRIPT_DIR = Path(__file__).resolve().parent

@@ -1,12 +1,10 @@
 # fiberphotometry/kpms/syllable_appender.py
-import os
 import logging
-from pathlib import Path
-from typing import List, Any, Dict, Optional
-import pandas as pd
-import numpy as np
+import os
 
 import keypoint_moseq as kpms
+import numpy as np
+import pandas as pd
 
 # Standardized logging
 logging.basicConfig(

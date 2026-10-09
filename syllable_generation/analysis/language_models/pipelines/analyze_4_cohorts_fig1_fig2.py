@@ -12,15 +12,15 @@ Evaluates:
 """
 
 import os
-import sys
 import pickle
+import sys
+
 import numpy as np
 import pandas as pd
-from scipy.stats import f_oneway, mannwhitneyu, ttest_ind
 from scipy.optimize import curve_fit
+from scipy.stats import ttest_ind
 from sklearn.decomposition import NMF
 from sklearn.linear_model import Ridge
-from sklearn.preprocessing import normalize
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
@@ -52,7 +52,7 @@ def main():
     print("=" * 80)
     print("LOADING SESSIONS & BOUT CACHE...")
     print("=" * 80)
-    
+
     pkl_path = os.path.join(ROOT_DIR, "syllable_generation/data/jonathan_amph_sessions_v2_w_sylls.pkl")
     with open(pkl_path, "rb") as f:
         raw_sessions = pickle.load(f)
@@ -64,7 +64,7 @@ def main():
 
     cohort_names = ["WT_Saline", "WT_Amphetamine", "KI_Saline", "KI_Amphetamine"]
     session_meta = []
-    
+
     for i, s in enumerate(raw_sessions):
         meta = getattr(s, "metadata", {})
         gt = meta.get("genotype", "WT")
@@ -79,15 +79,15 @@ def main():
             "entry_f": entry_f, "inj_f": inj_f, "max_f": max_f
         })
     df_meta = pd.DataFrame(session_meta)
-    
+
     # -------------------------------------------------------------------------
     # 1. Precompute multi-window counts and future target arrays
     # -------------------------------------------------------------------------
     W_VALUES = [2.0, 5.0, 10.0, 20.0, 40.0, 68.3, 90.0, 120.0, 180.0, 240.0, 360.0]
-    
+
     print("\nExtracting sliding windows across all sessions...")
     session_windows = []
-    
+
     for s_idx, bouts in enumerate(session_bouts):
         if len(bouts) < 100: continue
         meta = df_meta.iloc[s_idx]
@@ -95,22 +95,22 @@ def main():
         entry_f = meta["entry_f"]
         max_frame = bouts[-1]["end_frame"]
         N = max_frame + 1
-        
+
         frame_sylls = np.zeros(N, dtype=np.int32)
         for b in bouts:
             sf, ef = b["start_frame"], b["end_frame"]
             s_id = min(b["syllable"], NUM_SYLLS - 1)
             frame_sylls[sf : ef + 1] = s_id
-                
+
         oh_bout = np.zeros((N, NUM_SYLLS), dtype=np.float32)
         diffs = np.where(frame_sylls[1:] != frame_sylls[:-1])[0] + 1
         onsets = np.zeros(N, dtype=bool)
         onsets[0] = True; onsets[diffs] = True
         oh_bout[onsets, frame_sylls[onsets]] = 1.0
         cum_bout = np.vstack([np.zeros((1, NUM_SYLLS), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
-        
+
         max_w_frames = int(max(W_VALUES) * FPS)
-        
+
         # We extract windows: pre-injection and post-injection
         for t in range(max_w_frames, N - H_FRAMES, STRIDE_FRAMES):
             # Target future distribution over H_FRAMES
@@ -118,17 +118,17 @@ def main():
             tot_y = np.sum(y_count)
             if tot_y < 1e-4: continue
             y_dist = y_count / tot_y
-            
+
             # Extract past counts for each W
             past_dict = {}
             for w_sec in W_VALUES:
                 w_fr = int(w_sec * FPS)
                 past_dict[w_sec] = cum_bout[t] - cum_bout[t - w_fr]
-                
+
             is_post = (t >= inj_f + int(68.3 * FPS))
             is_pre = (t < inj_f and t >= entry_f + max_w_frames)
             t_min_from_inj = (t - inj_f) / FPS / 60.0
-            
+
             session_windows.append({
                 "session_idx": s_idx,
                 "sid": meta["sid"],
@@ -142,7 +142,7 @@ def main():
                 "y_dist": y_dist,
                 "past_dict": past_dict
             })
-            
+
     df_win = pd.DataFrame(session_windows)
     print(f"Total evaluation windows extracted: {len(df_win)}")
     print("Post-injection windows per cohort:")
@@ -154,14 +154,14 @@ def main():
     print("\n" + "=" * 80)
     print("PART 1: FIG 1 & FIG 1D — NMF MACRO-COMPONENTS (K=4) ACROSS 4 COHORTS")
     print("=" * 80)
-    
+
     # Fit NMF K=4 on 68.3s past counts across reference WT Saline or All
     # Let's fit on WT_Saline (reference baseline) and all windows to get canonical components
     X_68_all = np.array([w["past_dict"][68.3] for w in session_windows], dtype=np.float32)
     K = 4
     nmf = NMF(n_components=K, init='nndsvda', random_state=42, max_iter=800)
     nmf.fit(X_68_all)
-    
+
     # Top syllable loadings per component
     print("\n--- Canonical NMF Components (K=4) Syllable Loadings ---")
     for k in range(K):
@@ -173,17 +173,17 @@ def main():
     # Compute Z_t for all windows
     Z_all = nmf.transform(X_68_all)
     Z_probs = Z_all / np.clip(np.sum(Z_all, axis=1, keepdims=True), 1e-8, None)
-    
+
     for k in range(K):
         df_win[f"z_{k+1}"] = Z_probs[:, k]
-    
+
     # Behavioral Entropy per window: H(z) = -sum(z * log2(z))
     z_clipped = np.clip(Z_probs, 1e-12, None)
     df_win["z_entropy"] = -np.sum(z_clipped * np.log2(z_clipped), axis=1)
 
     # Filter post-injection windows
     df_post = df_win[df_win["is_post"]].copy()
-    
+
     # Session-level aggregations
     sess_summary = df_post.groupby(["cohort", "genotype", "drug", "session_idx"])[
         ["z_1", "z_2", "z_3", "z_4", "z_entropy"]
@@ -228,47 +228,47 @@ def main():
     print("\n" + "=" * 80)
     print("PART 2: FIG 1B — NMF PREDICTIVE UTILITY VS COMPONENT COUNT K ACROSS COHORTS")
     print("=" * 80)
-    
+
     K_LIST = [1, 2, 3, 4, 6, 8, 10, 15, 20, 30]
-    
+
     # We train Ridge model on WT_Saline post-injection to predict future Y
     wt_sal_mask = (df_win["cohort"] == "WT_Saline") & df_win["is_post"]
     wtsal_sub = df_win[wt_sal_mask]
     X_68_train = np.array([w[68.3] for w in wtsal_sub["past_dict"]], dtype=np.float32)
     Y_train = np.array(wtsal_sub["y_dist"].tolist(), dtype=np.float32)
-    
+
     # Global null on WT Saline
     null_p0_wtsal = np.mean(Y_train, axis=0, keepdims=True)
-    
+
     nmf_k_results = []
-    
+
     for k_val in K_LIST:
         nmf_k = NMF(n_components=k_val, init='nndsvda', random_state=42, max_iter=600)
         Z_train_k = nmf_k.fit_transform(X_68_train)
-        
+
         reg = Ridge(alpha=10.0)
         reg.fit(Z_train_k, Y_train)
-        
+
         row = {"K": k_val}
         for cohort in cohort_names:
             c_sub = df_win[(df_win["cohort"] == cohort) & df_win["is_post"]]
             X_68_test = np.array([w[68.3] for w in c_sub["past_dict"]], dtype=np.float32)
             Y_test = np.array(c_sub["y_dist"].tolist(), dtype=np.float32)
-            
+
             # Cohort-specific marginal baseline
             p0_c = np.mean(Y_test, axis=0, keepdims=True)
             d_null = np.mean(js_divergence(Y_test, p0_c))
-            
+
             Z_test_k = nmf_k.transform(X_68_test)
             Y_pred = np.clip(reg.predict(Z_test_k), 1e-12, None)
             Y_pred = Y_pred / np.sum(Y_pred, axis=-1, keepdims=True)
             d_pred = np.mean(js_divergence(Y_test, Y_pred))
-            
+
             gain = (d_null - d_pred) / d_null * 100.0
             row[f"gain_{cohort}"] = gain
-            
+
         nmf_k_results.append(row)
-        
+
     df_nmf_k = pd.DataFrame(nmf_k_results)
     print("\nPredictive Gain (% Delta D_JS) vs NMF Components (Trained on WT Saline):")
     print(df_nmf_k.to_string(index=False))
@@ -279,76 +279,76 @@ def main():
     print("\n" + "=" * 80)
     print("PART 3: FIG 2 — HISTORY TIMESCALE MEMORY CURVES ACROSS 4 COHORTS")
     print("=" * 80)
-    
+
     # Evaluate across W_VALUES
     # Model 1: Trained on WT Saline Post-Injection -> Evaluated on all 4 cohorts
     # Model 2: Within-Cohort 5-Fold Cross-Validation on Post-Injection
-    
+
     print("\n--- Case A: Trained on WT Saline (Reference Model Transfer) ---")
     memory_results_transfer = []
-    
+
     for w_sec in W_VALUES:
         X_w_train = np.array([w[w_sec] for w in wtsal_sub["past_dict"]], dtype=np.float32)
         reg = Ridge(alpha=10.0)
         reg.fit(X_w_train, Y_train)
-        
+
         row = {"W_sec": w_sec}
         for cohort in cohort_names:
             c_sub = df_win[(df_win["cohort"] == cohort) & df_win["is_post"]]
             X_w_test = np.array([w[w_sec] for w in c_sub["past_dict"]], dtype=np.float32)
             Y_test = np.array(c_sub["y_dist"].tolist(), dtype=np.float32)
-            
+
             p0_c = np.mean(Y_test, axis=0, keepdims=True)
             d_null = np.mean(js_divergence(Y_test, p0_c))
-            
+
             Y_pred = np.clip(reg.predict(X_w_test), 1e-12, None)
             Y_pred = Y_pred / np.sum(Y_pred, axis=-1, keepdims=True)
             d_pred = np.mean(js_divergence(Y_test, Y_pred))
-            
+
             gain = (d_null - d_pred) / d_null * 100.0
             row[f"gain_{cohort}"] = gain
-            
+
         memory_results_transfer.append(row)
-        
+
     df_mem_transfer = pd.DataFrame(memory_results_transfer)
     print(df_mem_transfer.to_string(index=False))
 
     print("\n--- Case B: Within-Cohort Cross-Validation (Optimal Within-Group Fit) ---")
     memory_results_within = []
-    
+
     for w_sec in W_VALUES:
         row = {"W_sec": w_sec}
         for cohort in cohort_names:
             c_sub = df_win[(df_win["cohort"] == cohort) & df_win["is_post"]]
             sess_ids = c_sub["session_idx"].unique()
-            
+
             # Leave-one-session-out / cross-session CV
             gains = []
             for test_s in sess_ids:
                 train_sub = c_sub[c_sub["session_idx"] != test_s]
                 test_sub = c_sub[c_sub["session_idx"] == test_s]
                 if len(train_sub) == 0 or len(test_sub) == 0: continue
-                
+
                 X_tr = np.array([w[w_sec] for w in train_sub["past_dict"]], dtype=np.float32)
                 Y_tr = np.array(train_sub["y_dist"].tolist(), dtype=np.float32)
                 X_te = np.array([w[w_sec] for w in test_sub["past_dict"]], dtype=np.float32)
                 Y_te = np.array(test_sub["y_dist"].tolist(), dtype=np.float32)
-                
+
                 p0_tr = np.mean(Y_tr, axis=0, keepdims=True)  # train marginal
                 d_null = np.mean(js_divergence(Y_te, p0_tr))
-                
+
                 reg = Ridge(alpha=10.0)
                 reg.fit(X_tr, Y_tr)
                 Y_pred = np.clip(reg.predict(X_te), 1e-12, None)
                 Y_pred = Y_pred / np.sum(Y_pred, axis=-1, keepdims=True)
                 d_pred = np.mean(js_divergence(Y_te, Y_pred))
-                
+
                 gain = (d_null - d_pred) / d_null * 100.0
                 gains.append(gain)
-                
+
             row[f"gain_{cohort}"] = np.mean(gains)
         memory_results_within.append(row)
-        
+
     df_mem_within = pd.DataFrame(memory_results_within)
     print(df_mem_within.to_string(index=False))
 
@@ -357,19 +357,19 @@ def main():
     # -------------------------------------------------------------------------
     print("\n--- Biexponential Fit Parameters per Cohort (Within-Group Curve) ---")
     w_arr = df_mem_within["W_sec"].values
-    
+
     for cohort in cohort_names:
         g_arr = df_mem_within[f"gain_{cohort}"].values
         try:
             popt, _ = curve_fit(biexp_func, w_arr, g_arr, p0=[10.0, 15.0, 15.0, 600.0], maxfev=20000)
             p0_fit, a_fit, t_rise, t_decay = popt
-            
+
             # Find peak
             w_dense = np.linspace(0.1, 400.0, 2000)
             g_dense = biexp_func(w_dense, *popt)
             w_peak = w_dense[np.argmax(g_dense)]
             g_peak = np.max(g_dense)
-            
+
             print(f"\nCohort: {cohort}")
             print(f"  P0 (Instantaneous Gain)  : {p0_fit:5.2f}%")
             print(f"  P_max (Peak Gain)        : {g_peak:5.2f}%")

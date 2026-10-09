@@ -36,24 +36,25 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 os.environ["USE_MEMORY_PATCH"] = "1"
 
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import copy
-import time
-import signal
-import shutil
 import pickle
+import shutil
+import signal
+import time
 import traceback
 import urllib.request
 from datetime import datetime, timedelta
 from pathlib import Path
-import pandas as pd
-from scipy.ndimage import median_filter
 
 import jax
 import keypoint_moseq as kpms
+import pandas as pd
 from jax_moseq.utils.debugging import convert_data_precision
+from scipy.ndimage import median_filter
 
 # Setup repository paths
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
@@ -65,10 +66,9 @@ if str(KPMS_UTILS_DIR) not in sys.path:
 
 import utils.resample_batching as rb
 from utils.batch_init import batched_init_model_by_video
-from utils.trimming import presence_mask_from_conf, filter_with_masks
+from utils.trimming import filter_with_masks, presence_mask_from_conf
 
 from syllable_generation.analysis.replications.datta_utils import combined_photometry_and_syllables
-from syllable_generation.datamodel import SessionRecord
 from syllable_generation.multiview_top_bot_experiments.audit_cohort_correlations import find_matched_pairs
 
 # Configuration constants
@@ -159,7 +159,7 @@ def main():
     print(f"  Date & Time:         {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", flush=True)
     print(f"  Process PID:         {pid}", flush=True)
     print(f"  Model Name:          {model_name}", flush=True)
-    print(f"  Hardware:            RTX 4090 (24.5 GB VRAM) with Amdahl 27x Optimizations", flush=True)
+    print("  Hardware:            RTX 4090 (24.5 GB VRAM) with Amdahl 27x Optimizations", flush=True)
     print(f"  Init Kappa:          {init_kappa:.2e} -> SLDS Kappa: {slds_kappa:.2e}", flush=True)
     print(f"  Save Checkpoints:    Every {save_every_n_iters} iterations", flush=True)
     print(f"  Project Directory:   {PROD_KPMS_DIR}", flush=True)
@@ -366,7 +366,7 @@ def main():
             model = copy.deepcopy(cached_model)
             model["states"] = {k: jax.device_put(jnp.asarray(v), gpu_device) for k, v in cached_model["states"].items()}
             model = kpms.update_hypparams(model, kappa=float(init_kappa))
-            print(f"  [CACHE HIT] Model loaded and states placed on GPU in 0.5s.", flush=True)
+            print("  [CACHE HIT] Model loaded and states placed on GPU in 0.5s.", flush=True)
         else:
             print("\n  [INIT] Initializing fresh AR-HMM model with batched init...", flush=True)
             t0_init = time.time()
@@ -465,7 +465,7 @@ def main():
 
     # TRANSITION: 10x Kappa reduction for SLDS
     print("\n" + "=" * 70, flush=True)
-    print(f"  TRANSITION: Applying 10x Kappa Reduction for Phase 2 SLDS", flush=True)
+    print("  TRANSITION: Applying 10x Kappa Reduction for Phase 2 SLDS", flush=True)
     model = kpms.update_hypparams(model, kappa=float(slds_kappa))
     print(f"  New Kappa: {slds_kappa:.2e}", flush=True)
     print("=" * 70, flush=True)

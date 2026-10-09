@@ -4,27 +4,30 @@ Test script to generate 1 superimposed and 1 side-by-side trajectory plot (GIF +
 and verify layout, colors, and rasterization.
 """
 import os
+
 os.environ["JAX_PLATFORMS"] = "cpu"
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
 
 from pathlib import Path
+
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import imageio
+import jax.numpy as jnp
+import keypoint_moseq as kpms
+import keypoint_moseq.util as util
+import keypoint_moseq.viz as viz
+import matplotlib.pyplot as plt
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
 from PIL import Image
 
-import jax.numpy as jnp
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
-
-import keypoint_moseq as kpms
-import keypoint_moseq.viz as viz
-import keypoint_moseq.util as util
 
 def modern_rasterize_figure(fig):
     canvas = fig.canvas
@@ -147,7 +150,7 @@ lims_ventral = viz.get_limits(stacked_all[:, :, ventral_idxs], pctl=0, left=0.25
 print("Rendering test visualizations...")
 for s in test_sylls:
     traj = traj_dict[s] # shape (T, 23, 2)
-    
+
     # -------------------------------------------------------------
     # A. SUPERIMPOSED PLOT (Top + Bot fused)
     # -------------------------------------------------------------
@@ -227,7 +230,7 @@ for s in test_sylls:
     h_d, w_d = rasters_d[0].shape[:2]
     h_v, w_v = rasters_v[0].shape[:2]
     target_h = min(h_d, h_v)
-    
+
     combo_rasters = []
     for rd, rv in zip(rasters_d, rasters_v):
         # Resize to matching height

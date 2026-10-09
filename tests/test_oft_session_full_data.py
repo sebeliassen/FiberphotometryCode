@@ -28,17 +28,12 @@ if not (project_root / "fiberphotometry").exists():
 sys.path.insert(0, str(project_root))
 
 # After this, the import should work:
-from fiberphotometry.data.data_loading import load_all_sessions
-from fiberphotometry.data.session_loading import populate_containers
-from fiberphotometry.data.oft_session_loading import populate_oft_containers
-
-
 # In[3]:
-
-
 from fiberphotometry.config import PLOTTING_CONFIG
+from fiberphotometry.data.data_loading import load_all_sessions
+from fiberphotometry.data.oft_session_loading import populate_oft_containers
+from fiberphotometry.data.session_loading import populate_containers
 from fiberphotometry.processing.plotting_setup import PlottingSetup
-
 
 # In[4]:
 
@@ -65,17 +60,19 @@ populate_containers(sessions)
 # In[7]:
 
 
-populate_oft_containers(sessions, '/home/fsp585/Desktop/FiberphotometryCode/src_oft/jonathan_full/h5_files', 
+populate_oft_containers(sessions, '/home/fsp585/Desktop/FiberphotometryCode/src_oft/jonathan_full/h5_files',
                         '/home/fsp585/Desktop/FiberphotometryCode/src_oft/jonathan_full/video_files')
 
 
 # In[8]:
 
 
-import pandas as pd
-from pathlib import Path
 import os
 import re
+from pathlib import Path
+
+import pandas as pd
+
 
 def simplify_filename_details(filename: str) -> str:
     """
@@ -86,7 +83,7 @@ def simplify_filename_details(filename: str) -> str:
     keywords = ['left', 'right', 'bottom', 'top', 'upper', 'lower']
     pattern = r'|'.join(keywords)
     matches = re.finditer(pattern, filename, flags=re.IGNORECASE)
-    
+
     final_words = []
     for match in matches:
         word = match.group(0)
@@ -95,7 +92,7 @@ def simplify_filename_details(filename: str) -> str:
                 final_words.append(word)
         else:
             final_words.append(word)
-            
+
     return '_'.join([w.capitalize() for w in final_words])
 
 # 1. Create a flat list of records
@@ -103,12 +100,12 @@ records = []
 for s in sessions:
     session_id = f"{s.trial_id}/{s.chamber_id}"
     trial_dir = Path(s.trial_dir)
-    
+
     # A single loop now handles all data types
     for key, df in s.dfs.data.items():
         data_type = "unknown"
         details = "N/A"
-        
+
         if key.startswith('phot_'):
             data_type = "photometry"
             details = "Photometry Data"
@@ -126,29 +123,29 @@ for s in sessions:
             extension = Path(filename).suffix.lstrip('.')
             data_type = f"video_{extension}"
             details = simplify_filename_details(filename)
-        
+
         elif key.startswith('sync_'):
             data_type = "sync_csv"
-            
+
             # --- THIS BLOCK IS NOW CORRECTED ---
             try:
                 # 1. Get the camera name from the new column inside the dataframe
                 cam_name = df['camera_name'].iloc[0]
-                
+
                 # 2. Now use that correct camera name to find the file path
                 path = next(trial_dir.glob(f'{cam_name}_AllTimestampsCombined*.csv'))
                 details = simplify_filename_details(path.name)
             except (StopIteration, KeyError, IndexError):
                 # Catch errors if column/file is missing or df is empty
                 details = "Info not available"
-                
+
         else:
             continue
-            
+
         records.append((session_id, data_type, key, details))
 
 # 2. Convert the list of records into the final DataFrame
-summary_df = pd.DataFrame(records, 
+summary_df = pd.DataFrame(records,
                           columns=['Session ID', 'Data Type', 'Source Key', 'Simplified Details'])
 
 # 3. Sort the data for better readability
@@ -175,7 +172,8 @@ PlottingSetup(**PLOTTING_CONFIG['cpt']).apply_plotting_setup_to_sessions(session
 
 
 # In your notebook
-import pprint # Make sure pprint is imported
+import pprint  # Make sure pprint is imported
+
 from fiberphotometry.data.session_synchronization import synchronize_session_data
 
 print("--- ⏳ Starting synchronization for ALL sessions... ---")
@@ -204,7 +202,7 @@ all_sessions_verified = True
 for i, s in enumerate(sessions):
     # Find the synchronized keys for the CURRENT session `s`
     sync_keys = [k for k in s.dfs.data if k.startswith('synchronized_')]
-    
+
     if not sync_keys:
         print(f"❌ Session {i} ({s.trial_id}): FAILED. No synchronized DataFrames found.")
         all_sessions_verified = False
@@ -236,8 +234,8 @@ else:
 # In[12]:
 
 
-from fiberphotometry.kpms.syllable_generator import generate_syllable_models
 from fiberphotometry.kpms.syllable_appender import extract_and_append_results
+from fiberphotometry.kpms.syllable_generator import generate_syllable_models
 
 print("Successfully imported syllable analysis modules!")
 
@@ -246,7 +244,6 @@ print("Successfully imported syllable analysis modules!")
 
 
 import keypoint_moseq as kpms
-
 
 # In[14]:
 
@@ -293,7 +290,6 @@ print(f"\n--- ✅ FULL MODEL GENERATION FINISHED. {len(model_names)} model(s) cr
 
 from trimming import create_trimmed_coords_and_confs
 
-
 # In[17]:
 
 
@@ -336,7 +332,6 @@ from trimming import create_trimmed_coords_and_confs
 # In[18]:
 
 
-import numpy as np
 
 
 # In[19]:
@@ -487,22 +482,18 @@ MODEL_NAME = 'final_model_1.21e+04_idx0'
 # %autoreload 2
 
 # Standard library & path setup
+import pickle
+import pprint
 import sys
 from pathlib import Path
 
-# Data handling and analysis
-import pandas as pd
-import numpy as np
-import pickle
-import re
-
+# Modeling pipeline
 # Visualization
 import matplotlib.pyplot as plt
-import pprint
+import numpy as np
 
-# Modeling pipeline
-import keypoint_moseq as kpms
-import jax
+# Data handling and analysis
+import pandas as pd
 
 # --- 1. SETUP PROJECT PATH ---
 print("Setting up project path...")
@@ -518,20 +509,20 @@ try:
     # core Session class and loader
     from fiberphotometry.data.data_loading import Session, load_all_sessions
 
-    # container for holding session data
-    from fiberphotometry.data.session_loading import DataContainer
-
     # OFT-specific session population
     from fiberphotometry.data.oft_session_loading import populate_oft_containers
 
+    # container for holding session data
+    from fiberphotometry.data.session_loading import DataContainer
+
     # synchronizing different data streams in a session
     from fiberphotometry.data.session_synchronization import synchronize_session_data
+    from fiberphotometry.kpms.batching import create_batches
+    from fiberphotometry.kpms.syllable_appender import extract_and_append_results
 
     # KPMS pipeline stages
     from fiberphotometry.kpms.syllable_generator import generate_syllable_models
-    from fiberphotometry.kpms.syllable_appender import extract_and_append_results
     from fiberphotometry.kpms.trimming import create_trimmed_coords_and_confs
-    from fiberphotometry.kpms.batching import create_batches
 
     print("✅ All custom modules imported successfully.")
 except ImportError as e:
@@ -543,8 +534,9 @@ except ImportError as e:
 
 
 import pickle
-import pandas as pd
+
 import numpy as np
+import pandas as pd
 
 #load_filename = 'final_model_1.21e+04_idx0.pkl'
 load_filename = 'kpms_few_bp_150ms_frac_1_ld3_jn24.pkl'
@@ -622,7 +614,7 @@ sessions_merged = 0
 for i, s in enumerate(sessions):
     try:
         print(f"Processing session {i+1}/{len(sessions)}: {s.trial_id}")
-        
+
         # --- 1. Check if the required data exists ---
         if not hasattr(s, 'all_results'):
             raise KeyError("Attribute 'all_results' not found on this session object.")
@@ -641,14 +633,14 @@ for i, s in enumerate(sessions):
         # --- 4. If checks pass, add the new column ---
         # This modifies the DataFrame directly within your session object
         target_df['syllable'] = syllable_array
-        print(f"✅ Successfully added 'syllable' column.")
+        print("✅ Successfully added 'syllable' column.")
         sessions_merged += 1
 
     except (KeyError, ValueError) as e:
         # This will catch any errors raised above and print a warning,
         # allowing the loop to continue with the next session.
         print(f"❌ SKIPPING session {s.trial_id}: {e}")
-    
+
     print("-" * 50)
 
 print(f"\n--- ✅ Merge complete. {sessions_merged} out of {len(sessions)} sessions were updated. ---")
@@ -687,7 +679,6 @@ else:
 # In[6]:
 
 
-import keypoint_moseq as kpms
 model, data, metadata, current_iter = kpms.load_checkpoint(PROJECT_DIR, MODEL_NAME)
 results = kpms.extract_results(model, metadata, PROJECT_DIR, MODEL_NAME, save_results=False)
 
@@ -700,7 +691,7 @@ results = kpms.extract_results(model, metadata, PROJECT_DIR, MODEL_NAME, save_re
 # for model_name in model_names:
 #     # load the specific checkpoint
 #     model, data, metadata, current_iter = kpms.load_checkpoint(PROJECT_DIR, model_name)
-    
+
 #     # extract results for this model
 #     results = kpms.extract_results(model, metadata, PROJECT_DIR, model_name, save_results=True)
 
@@ -715,11 +706,11 @@ config = kpms.load_config(PROJECT_DIR)
 
 
 import os
-import h5py
-import numpy as np
+
 import jax.numpy as jnp
-from jax_moseq.utils import unbatch
+import numpy as np
 from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
 
 # compute the estimated coordinates
 Y_est = estimate_coordinates(
@@ -793,7 +784,8 @@ kpms.generate_trajectory_plots(coordinates_est, results, PROJECT_DIR, MODEL_NAME
 
 
 import os
-import pprint # Make sure pprint is imported for nice printing
+import pprint  # Make sure pprint is imported for nice printing
+
 
 def map_syllable_parts_to_videos(video_frame_indexes: dict, video_dir: str) -> dict:
     """
@@ -814,16 +806,16 @@ def map_syllable_parts_to_videos(video_frame_indexes: dict, video_dir: str) -> d
     """
     video_extensions = ('.mp4', '.avi', '.mov', '.mkv')
     video_files = [f for f in os.listdir(video_dir) if f.lower().endswith(video_extensions)]
-    
+
     video_path_map = {}
-    
+
     # Iterate through the keys of the video_frame_indexes dictionary
     for part_key in video_frame_indexes.keys():
-        
+
         # Find the original H5 base name by stripping any '_partX' suffix.
         # We split the string at '_part' and take the first piece.
         h5_base_name = part_key.split('_part')[0]
-        
+
         try:
             # Use the same logic as before to find the video's root name from the H5 base name
             video_root = h5_base_name.split('DLC_')[0]
@@ -837,7 +829,7 @@ def map_syllable_parts_to_videos(video_frame_indexes: dict, video_dir: str) -> d
                     video_path_map[part_key] = os.path.join(video_dir, video_file)
                     found_match = True
                     break # Match found, move to the next part_key
-            
+
             if not found_match:
                  print(f"Warning: No matching video found for key: {part_key}")
 
@@ -939,7 +931,6 @@ kpms.generate_grid_movies(
 # In[23]:
 
 
-import re
 
 # metadata_names is the list/array of all result names (e.g., metadata[0])
 metadata_names = metadata[0]
@@ -1044,7 +1035,6 @@ kpms.interactive_group_setting
 from fiberphotometry.config import PLOTTING_CONFIG
 from fiberphotometry.processing.plotting_setup import PlottingSetup
 
-
 # In[33]:
 
 
@@ -1080,11 +1070,11 @@ sessions[0].dfs.data['phot_470']
 # In[ ]:
 
 
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import sem
+import numpy as np
+import pandas as pd
 from scipy.signal import savgol_filter
+from scipy.stats import sem
 
 # --- Analysis & Smoothing Parameters ---
 SAMPLING_RATE = 80
@@ -1111,9 +1101,9 @@ syllable_id_to_label = {
 def process_session_data(session):
     """Processes a single session to extract, smooth, and baseline-correct traces."""
     df = session.dfs.data['synchronized_data_tracking_0']
-    
+
     onsets = df[(df['syllable'].notna()) & (df['syllable'] != df['syllable'].shift(1))]
-    
+
     syllable_traces = {s: {col: [] for col in SIGNAL_COLS} for s in onsets['syllable'].unique()}
     for index, row in onsets.iterrows():
         syllable = row['syllable']
@@ -1135,7 +1125,7 @@ def process_session_data(session):
                 baseline_value = smoothed[WINDOW_SAMPLES]
                 normalized_trace = smoothed - baseline_value
                 processed_traces[syllable][signal_col].append(normalized_trace)
-                
+
     return processed_traces
 
 # --- Analysis & Plotting ---
@@ -1162,7 +1152,7 @@ time_vector = np.linspace(-WINDOW_SECONDS, WINDOW_SECONDS, TOTAL_SAMPLES)
 # 4. Plot each syllable with hemisphere rows (top=left, bottom=right) and region columns
 for syl_idx, syllable in enumerate(all_syllables):
     final_label = syllable_id_to_label.get(int(syllable), f"Unknown ID: {syllable}")
-    
+
     hemis_order = ['left', 'right']  # top row = left, bottom = right
     n_rows = 2
     n_cols = len(regions)
@@ -1239,7 +1229,7 @@ kpms.plot_syll_stats_with_sem(
     exp_group="b",  # name of the experimental group for statistical testing
     figsize=(8, 4),  # figure size
     groups=stats_df["group"].unique(),  # groups to be plotted
-);
+)
 
 
 # In[ ]:

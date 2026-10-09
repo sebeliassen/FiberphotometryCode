@@ -1,4 +1,5 @@
-from tqdm import tqdm   # add this import at the top of the function
+from tqdm import tqdm  # add this import at the top of the function
+
 
 def make_initiation_series(
     df,
@@ -19,7 +20,8 @@ def make_initiation_series(
 
     Uses only speed_col for rest→move; left/right from sign(omega_col).
     """
-    import numpy as np, pandas as pd
+    import numpy as np
+    import pandas as pd
     from numpy.lib.stride_tricks import sliding_window_view as swv
 
     init_label = pd.Series([None]*len(df), index=df.index, dtype='object', name='turn_syllable')
@@ -113,9 +115,11 @@ def sweep_initiation_params_simple(
     Returns a DataFrame sorted by N_onsets (desc). Columns:
       min_rest_ms, min_move_ms, sd_mult, speed_floor, N_onsets, N_edge_safe (if requested), sessions_with_onsets
     """
-    import numpy as np, pandas as pd
-    from numpy.lib.stride_tricks import sliding_window_view as swv
     from itertools import product
+
+    import numpy as np
+    import pandas as pd
+    from numpy.lib.stride_tricks import sliding_window_view as swv
 
     # ---- Pre-sort once; build per-session slices ----
     order = df.sort_values([session_idx_col, frame_col]).index.to_numpy()

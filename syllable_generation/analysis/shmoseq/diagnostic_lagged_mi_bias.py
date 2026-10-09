@@ -14,9 +14,11 @@ Comprehensive diagnostic of Lagged Mutual Information (MI) timescale behavior:
 
 import os
 import pickle
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 

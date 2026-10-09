@@ -5,13 +5,14 @@ Shows the empirical bias-variance peak (>100%) and proves KI is simpler (K*=3 vs
 """
 
 import os
-import sys
-import numpy as np
-import pandas as pd
+
 import matplotlib
+import pandas as pd
+
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import shutil
+
+import matplotlib.pyplot as plt
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
@@ -39,32 +40,32 @@ plt.rcParams['axes.linewidth'] = 1.1
 def render():
     csv_path = os.path.join(TABLES_DIR, "cohort_4group_latent_regularization_nmf.csv")
     df = pd.read_csv(csv_path)
-    
+
     k_vals = df["K"].values
     cohort_order = ["WT_Saline", "WT_Amphetamine", "KI_Saline", "KI_Amphetamine"]
-    
+
     fig, ax = plt.subplots(figsize=(10.8, 6.2), dpi=300)
-    
+
     # Reference 100% line (Full 100-D Repertoire)
     ax.axhline(100.0, color="#555555", linestyle="--", linewidth=1.6, zorder=1, label="Uncompressed 100-D Syllable Past Baseline (100%)")
-    
+
     # Shaded Denoising / Regularization Zone (> 100%)
     ax.axhspan(100.0, 140.0, color="#e8f5e9", alpha=0.35, zorder=0)
-    ax.text(28.5, 137.0, "Denoising / Regularization Zone (NMF beats Raw 100-D)", 
+    ax.text(28.5, 137.0, "Denoising / Regularization Zone (NMF beats Raw 100-D)",
             fontsize=8.5, fontweight="bold", color="#2e7d32", ha="right", style="italic")
-            
+
     labels = {
         "WT_Saline": f"WT + Saline (N=8)       [Peak at K=10: {df.loc[df['K']==10, 'WT_Saline_pct'].values[0]:.1f}% | K=4: {df.loc[df['K']==4, 'WT_Saline_pct'].values[0]:.1f}%]",
         "WT_Amphetamine": f"WT + Amph (N=8)         [Peak at K= 3: {df.loc[df['K']==3, 'WT_Amphetamine_pct'].values[0]:.1f}% | K=4: {df.loc[df['K']==4, 'WT_Amphetamine_pct'].values[0]:.1f}%]",
         "KI_Saline": f"KI + Saline (N=7)       [Peak at K= 3: {df.loc[df['K']==3, 'KI_Saline_pct'].values[0]:.1f}% | K=4: {df.loc[df['K']==4, 'KI_Saline_pct'].values[0]:.1f}%]",
         "KI_Amphetamine": f"KI + Amph (N=7)         [Peak at K= 4: {df.loc[df['K']==4, 'KI_Amphetamine_pct'].values[0]:.1f}% | K=4: {df.loc[df['K']==4, 'KI_Amphetamine_pct'].values[0]:.1f}%]"
     }
-    
+
     for c in cohort_order:
         pct_vals = df[f"{c}_pct"].values
         ax.plot(k_vals, pct_vals, color=COLORS[c], linewidth=2.4, label=labels[c], zorder=3)
         ax.scatter(k_vals, pct_vals, color=COLORS[c], marker=MARKERS[c], s=40, edgecolors="white", linewidth=0.8, zorder=4)
-        
+
     # Highlight peaks with distinct marker
     ax.scatter(10, df.loc[df['K']==10, 'WT_Saline_pct'].values[0], color="#d62728", s=80, zorder=5, edgecolors="white", linewidth=1.2)
     ax.scatter(3, df.loc[df['K']==3, 'KI_Saline_pct'].values[0], color="#d62728", s=80, zorder=5, edgecolors="white", linewidth=1.2)
@@ -77,13 +78,13 @@ def render():
                 arrowprops=dict(arrowstyle="->", color=COLORS["WT_Saline"], lw=1.3),
                 fontsize=8.3, fontweight="bold", color=COLORS["WT_Saline"],
                 bbox=dict(boxstyle="round,pad=0.28", facecolor="#ffffff", edgecolor=COLORS["WT_Saline"], alpha=0.95))
-                
+
     ax.annotate("KI Saline: Simpler dynamics peak at K=3\n(Denoising gain: +33.2% above 100-D baseline)",
                 xy=(3, 133.2), xytext=(5, 133.0),
                 arrowprops=dict(arrowstyle="->", color=COLORS["KI_Saline"], lw=1.3),
                 fontsize=8.3, fontweight="bold", color=COLORS["KI_Saline"],
                 bbox=dict(boxstyle="round,pad=0.28", facecolor="#ffffff", edgecolor=COLORS["KI_Saline"], alpha=0.95))
-                
+
     ax.annotate("Amphetamine collapses WT peak from K=10 down to K=3\n(Stereotypy matches KI low-dimensional structure)",
                 xy=(3, 108.7), xytext=(5, 88.0),
                 arrowprops=dict(arrowstyle="->", color=COLORS["WT_Amphetamine"], lw=1.3),
@@ -99,12 +100,12 @@ def render():
     ax.set_ylabel("Predictive Utility Retained (% of Own 100-D Past Baseline)", fontsize=11.5, fontweight="bold", labelpad=9)
     ax.set_title("Empirical NMF Regularization / Denoising Curves (Latent State $Z$)\n(Demonstrating Intrinsic Rank: KI Peaks at $K=3$ vs. WT at $K=10$)",
                  fontsize=13, fontweight="bold", pad=12)
-                 
+
     ax.grid(True, linestyle="--", alpha=0.35, color="#cccccc")
     ax.legend(loc="lower right", frameon=True, facecolor="white", framealpha=0.96, edgecolor="#d0d7de",
               fontsize=8.0, prop={'family': 'monospace', 'size': 7.7},
               title="Intrinsic Dimensionality & Peak Saturation:", title_fontsize=8.5)
-              
+
     plt.tight_layout()
     out_png = os.path.join(OUT_DIR, "fig1b_4cohort_nmf_latent_regularization_curves.png")
     out_pdf = os.path.join(OUT_DIR, "fig1b_4cohort_nmf_latent_regularization_curves.pdf")

@@ -1,16 +1,13 @@
+import random
 from collections import defaultdict
-from itertools import chain, product
+from itertools import product
+
+import config
+import numpy as np
 from analysis.performance_funcs import add_performance_container
 from data.mouse import create_mice_dict
-from config import attr_interval_dict
-import config
-import random
 from utils import mouse_br_events_count
-import numpy as np
 
-
-from collections import defaultdict
-from itertools import chain, product
 
 class MiceAnalysis:
     def __init__(self, sessions, min_counts=0):
@@ -66,7 +63,7 @@ class MiceAnalysis:
         low_mouse_ids = set()
         high_mouse_ids = set()
 
-        # this basically removes duplicates based on the mouse_id, and chooses to keep the last entry from the left or 
+        # this basically removes duplicates based on the mouse_id, and chooses to keep the last entry from the left or
         # right respectively. Note that this nifty trick only works for python 3.7 and up.
 
         # TODO: for each mouse id in the sets, check that the mouse id has more then min_n_events, if not, remove its
@@ -74,7 +71,7 @@ class MiceAnalysis:
 
         from_left_scan = {k: v for (k, v) in id_cumsum_pairs}
         from_right_scan = {k: id_cumsum_pairs[1][-1] - v for (k, v) in reversed(id_cumsum_pairs)}
-  
+
         for (left_mouse_id, left_cumsum), (right_mouse_id, right_cumsum) \
             in zip(from_left_scan.items(), from_right_scan.items()):
 
@@ -92,18 +89,18 @@ class MiceAnalysis:
 
         # Iterate through low mouse IDs and extend the lowest_sessions list with filtered sessions
         for mouse_id in low_mouse_ids:
-            filtered_sessions = [session for session in self.mice_dict[mouse_id].sessions 
+            filtered_sessions = [session for session in self.mice_dict[mouse_id].sessions
                                  if brain_region in '_'.join(session.brain_regions)]
             lowest_sessions.extend(filtered_sessions)
 
         # Iterate through high mouse IDs and extend the highest_sessions list with filtered sessions
         for mouse_id in high_mouse_ids:
-            filtered_sessions = [session for session in self.mice_dict[mouse_id].sessions 
+            filtered_sessions = [session for session in self.mice_dict[mouse_id].sessions
                                  if brain_region in '_'.join(session.brain_regions)]
             highest_sessions.extend(filtered_sessions)
 
         return lowest_sessions, highest_sessions
-    
+
     def sample_response_metrics(self, metric, brain_region, event_type, n=200):
         low_sessions, high_sessions = \
             self.sample_high_and_low_sessions(metric, brain_region, event_type, n=n)
@@ -126,9 +123,9 @@ class MiceAnalysis:
             low_vals_by_metric = low_vals[response_metric]
             high_vals_by_metric = high_vals[response_metric]
 
-            final_n = min(n, len(low_vals_by_metric), len(high_vals_by_metric))            
+            final_n = min(n, len(low_vals_by_metric), len(high_vals_by_metric))
 
             low_sampled_vals[response_metric] = random.sample(low_vals_by_metric, final_n)
             high_sampled_vals[response_metric] = random.sample(high_vals_by_metric, final_n)
-        
+
         return low_sampled_vals, high_sampled_vals

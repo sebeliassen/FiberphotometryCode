@@ -9,23 +9,22 @@ Generates all 100 density-sampled clean grid movies (without trajectory overlay)
   the Antigravity IDE built-in video player and all web browsers.
 """
 
-import os
-import sys
 import time
 from pathlib import Path
+
 import numpy as np
+
 np.bool8 = np.bool_
 import cv2
 import imageio
-from tqdm import tqdm
-from sklearn.decomposition import PCA
-from sklearn.neighbors import NearestNeighbors
 import jax.numpy as jnp
-
 import keypoint_moseq as kpms
 from jax_moseq.models.keypoint_slds import estimate_coordinates
 from jax_moseq.utils import unbatch
 from keypoint_moseq.viz import OpenCVReader
+from sklearn.decomposition import PCA
+from sklearn.neighbors import NearestNeighbors
+from tqdm import tqdm
 
 PROJECT_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll/karen_project_2")
 MODEL_NAME = "final_karen_model_k240k"
@@ -98,14 +97,14 @@ for s in range(100):
         sub_inst = [inst_s[i] for i in sub_idx]
     else:
         sub_inst = inst_s
-        
+
     s_trajs = []
     for key, start, end in sub_inst:
         chunk = coordinates[key][start - pre_frames : start + post_frames]
         c = filt_centroids[key][start]
         h = filt_headings[key][start]
         s_trajs.append(kpms.util.np_io(kpms.util.inverse_rigid_transform)(chunk, c, h))
-        
+
     trajectories_dict[s] = (sub_inst, np.array(s_trajs))
     all_trajs_list.extend(s_trajs)
 
@@ -125,38 +124,38 @@ for s in range(100):
     inst_s = instances.get(s, [])
     if len(inst_s) == 0:
         continue
-        
+
     if len(inst_s) < 9:
         # Fewer than 9 instances: sample with replacement
         sub_idx = rng.choice(len(inst_s), 9, replace=True)
         sampled_instances[s] = [inst_s[i] for i in sub_idx]
         continue
-        
+
     sub_inst, s_trajs = trajectories_dict[s]
     N = len(s_trajs)
     k_nn = min(50, N - 1)
-    
+
     if k_nn < 9:
         sub_idx = rng.choice(len(inst_s), 9, replace=False)
         sampled_instances[s] = [inst_s[i] for i in sub_idx]
         continue
-        
+
     X_pca = pca.transform(s_trajs.reshape(N, -1))
     nbrs = NearestNeighbors(n_neighbors=k_nn).fit(X_pca)
     distances, indices = nbrs.kneighbors(X_pca)
     local_density = 1.0 / (distances.mean(1) + 1e-12)
-    
+
     g_dist, _ = all_nbrs.kneighbors(X_pca)
     global_density = 1.0 / (g_dist.mean(1) + 1e-12)
-    
+
     exemplar_idx = np.argmax(local_density / global_density)
     chosen_nbrs = indices[exemplar_idx]
-    
+
     if len(chosen_nbrs) >= 9:
         ch_idx = rng.choice(chosen_nbrs, 9, replace=False)
     else:
         ch_idx = chosen_nbrs[:9]
-        
+
     sampled_instances[s] = [sub_inst[i] for i in ch_idx]
 
 print(f"      Adaptive density sampling completed for {len(sampled_instances)} syllables in {time.time()-t0:.2f}s")
@@ -183,36 +182,36 @@ render_t0 = time.time()
 for s in tqdm(range(100), desc="Rendering Clean Density Movies", ncols=80):
     if s not in sampled_instances:
         continue
-        
+
     inst_list = sampled_instances[s]
     grid_clean_frames = [np.zeros((3 * window_size, 3 * window_size, 3), dtype=np.uint8) for _ in range(total_frames)]
-    
+
     for slot_idx, (key, start, end) in enumerate(inst_list[:9]):
         r_idx = slot_idx // 3
         c_idx = slot_idx % 3
         y1, y2 = r_idx * window_size, (r_idx + 1) * window_size
         x1, x2 = c_idx * window_size, (c_idx + 1) * window_size
-        
+
         cs = filt_centroids[key][start - pre_frames : start + post_frames]
         h_0 = filt_headings[key][start]
         c_0 = cs[pre_frames]
-        
+
         r_mat = np.float32([[np.cos(h_0), np.sin(h_0)], [-np.sin(h_0), np.cos(h_0)]])
         c_rot = r_mat @ c_0 - window_size // 2
         M = np.float32([
             [np.cos(h_0), np.sin(h_0), -c_rot[0]],
             [-np.sin(h_0), np.cos(h_0), -c_rot[1]]
         ])
-        
+
         frame_ixs = video_frame_indexes[key][start - pre_frames : start + post_frames]
         reader = OpenCVReader(video_paths[key])
         raw_clip = [reader[ix] for ix in frame_ixs]
         reader.close()
-        
+
         for t_i, raw_f in enumerate(raw_clip):
             f_clean = cv2.warpAffine(raw_f, M, (window_size, window_size))
             grid_clean_frames[t_i][y1:y2, x1:x2] = f_clean
-            
+
     out_path = OUT_DIR / f"syllable{s}.mp4"
     write_h264_clip(grid_clean_frames, out_path, fps=fps)
 

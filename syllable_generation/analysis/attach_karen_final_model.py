@@ -12,13 +12,15 @@ Pipeline to:
 """
 
 from __future__ import annotations
-import os
-import sys
-import gc
-import pickle
+
 import argparse
+import gc
 import logging
+import os
+import pickle
+import sys
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
@@ -36,8 +38,9 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import keypoint_moseq as kpms
-from syllable_generation.analysis.utils.sampling import flatten_results_to_timeline, build_aligned_dfs
+
 from syllable_generation.analysis.replications.datta_utils import build_aligned_moseq_phot
+from syllable_generation.analysis.utils.sampling import build_aligned_dfs, flatten_results_to_timeline
 
 logging.basicConfig(
     level=logging.INFO,

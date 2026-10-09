@@ -20,16 +20,16 @@ Tiers evaluated:
   P6b:  Ordered Transformer (Action-GPT / Sequential Syntax)
 """
 
-import sys
 import os
-import time
 import pickle
+import sys
+
 import numpy as np
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader, TensorDataset
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GroupKFold
+from torch.utils.data import DataLoader, TensorDataset
 
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
@@ -103,22 +103,22 @@ class LightweightTransformer(nn.Module):
 def run_ladder(clean_mode=True):
     num_sylls = 99 if clean_mode else 100
     sessions = []
-    
+
     for sess_idx, bouts in enumerate(session_bouts):
         if len(bouts) < 100: continue
         N = bouts[-1]["end_frame"] + 1
         fs = np.full(N, -1, dtype=np.int32)
         sp = np.zeros((N, 6), dtype=np.float32)
         pose = np.zeros((N, 30), dtype=np.float32)
-        
+
         oh_bout = np.zeros((N, num_sylls), dtype=np.float32)
         oh_frame = np.zeros((N, num_sylls), dtype=np.float32)
         next_bout_ptrs = np.full(N, N, dtype=np.int32)
-        
+
         clean_tokens = []
         clean_onsets = []
         clean_durs = []
-        
+
         if clean_mode:
             for b in bouts:
                 sf, ef = b["start_frame"], b["end_frame"]
@@ -130,7 +130,7 @@ def run_ladder(clean_mode=True):
                     clean_tokens.append(s_id)
                     clean_onsets.append(sf)
                     clean_durs.append((ef - sf + 1) / FPS)
-                    
+
             b_starts = np.array([b["start_frame"] for b in bouts])
             for t_idx, b_st in enumerate(b_starts):
                 prev_st = b_starts[t_idx-1] if t_idx > 0 else 0
@@ -144,15 +144,15 @@ def run_ladder(clean_mode=True):
                 s_id = min(b["syllable"], num_sylls - 1)
                 fs[sf:ef+1] = s_id
                 oh_frame[sf:ef+1, s_id] = 1.0
-                
+
             diffs = np.where(fs[1:] != fs[:-1])[0] + 1
             onsets = np.zeros(N, dtype=bool); onsets[0] = True; onsets[diffs] = True
             oh_bout[onsets, fs[onsets]] = 1.0
-            
+
             next_bout_ptrs = np.zeros(N, dtype=np.int32); cur = 0
             for d in diffs: next_bout_ptrs[cur:d] = d; cur = d
             next_bout_ptrs[cur:] = N
-            
+
             clean_tokens = fs[onsets]
             clean_onsets = np.where(onsets)[0]
             clean_durs = np.zeros(len(clean_onsets), dtype=np.float32)
@@ -166,12 +166,12 @@ def run_ladder(clean_mode=True):
             if vec is not None and len(vec) >= 14:
                 sp[sf:ef+1, :4] = vec[:4]; sp[sf:ef+1, 4] = vec[10]; sp[sf:ef+1, 5] = vec[12]
                 if len(vec) >= 30: pose[sf:ef+1] = vec[:30]
-                
+
         cum_bout = np.vstack([np.zeros((1, num_sylls), dtype=np.float32), np.cumsum(oh_bout, axis=0)])
         cum_dwell = np.vstack([np.zeros((1, num_sylls), dtype=np.float32), np.cumsum(oh_frame, axis=0)]) / FPS
         cum_spatial = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp, axis=0)])
         cum_spatial_sq = np.vstack([np.zeros((1, 6), dtype=np.float32), np.cumsum(sp**2, axis=0)])
-        
+
         sessions.append({
             "sess_idx": sess_idx, "N": N, "fs": fs, "pose": pose,
             "cum_bout": cum_bout, "cum_dwell": cum_dwell,
@@ -190,13 +190,13 @@ def run_ladder(clean_mode=True):
         N = s["N"]
         if N < W_FRAMES + H_FRAMES + 200: continue
         inj_f = s["inj_frame"]
-        
+
         t_anchors = np.arange(W_FRAMES, N - H_FRAMES, STRIDE_FRAMES)
         t_tgt_start = s["next_bout_ptrs"][t_anchors]
         valid = (t_tgt_start + H_FRAMES < N)
         t_anchors = t_anchors[valid]
         t_tgt_start = t_tgt_start[valid]
-        
+
         past_start = t_anchors - W_FRAMES
         future_end = t_tgt_start + H_FRAMES
         no_straddle = (future_end < inj_f) | (past_start > inj_f)
@@ -204,53 +204,53 @@ def run_ladder(clean_mode=True):
         t_tgt_start = t_tgt_start[no_straddle]
         M = len(t_anchors)
         if M == 0: continue
-        
+
         # P1: Time
         t_norm = t_anchors / float(N)
         p1 = np.column_stack([t_norm, t_norm**2]).astype(np.float32)
-        
+
         # P2: Spatial Context
         sp_sum = s["cum_spatial"][t_anchors] - s["cum_spatial"][t_anchors - W_FRAMES]
         sp_mean = sp_sum / float(W_FRAMES)
         sp_sq = s["cum_spatial_sq"][t_anchors] - s["cum_spatial_sq"][t_anchors - W_FRAMES]
         sp_var = np.maximum(sp_sq / float(W_FRAMES) - sp_mean**2, 1e-6)
         p2 = np.hstack([p1, sp_mean, np.sqrt(sp_var)]).astype(np.float32)
-        
+
         # P2.5: Continuous Pose
         p25 = np.hstack([p2, s["pose"][t_anchors]]).astype(np.float32)
-        
+
         # P3: Current Syllable
         curr_syll = s["fs"][t_anchors]
         curr_oh = np.zeros((M, num_sylls), dtype=np.float32)
         valid_syll = (curr_syll >= 0) & (curr_syll < num_sylls)
         curr_oh[np.arange(M)[valid_syll], curr_syll[valid_syll]] = 1.0
         p3 = np.hstack([p2, curr_oh]).astype(np.float32)
-        
+
         # P3.5: Hybrid Instantaneous (Pose + Syllable + Space)
         p35 = np.hstack([p25, curr_oh]).astype(np.float32)
-        
+
         # P4: Repertoire Counts
         b_cnt = s["cum_bout"][t_anchors] - s["cum_bout"][t_anchors - W_FRAMES]
         p_rep_cnt = (b_cnt + 1e-4) / (np.sum(b_cnt, axis=1, keepdims=True) + 1e-4 * num_sylls)
         p4 = np.hstack([p3, p_rep_cnt]).astype(np.float32)
-        
+
         # P4.5: Repertoire Counts + Dwell Time
         d_cnt = s["cum_dwell"][t_anchors] - s["cum_dwell"][t_anchors - W_FRAMES]
         p_rep_dwell = (d_cnt + 1e-4) / (np.sum(d_cnt, axis=1, keepdims=True) + 1e-4 * num_sylls)
         p45 = np.hstack([p4, p_rep_dwell]).astype(np.float32)
-        
+
         # P5: Full BoW Ceiling
         p5 = np.hstack([p35, p_rep_cnt, p_rep_dwell]).astype(np.float32)
-        
+
         # Target
         f_cnt = s["cum_bout"][t_tgt_start + H_FRAMES] - s["cum_bout"][t_tgt_start]
         target = (f_cnt + 1e-4) / (np.sum(f_cnt, axis=1, keepdims=True) + 1e-4 * num_sylls)
-        
+
         # Tokens
         seq_toks = np.full((M, max_l), num_sylls, dtype=np.int64)
         seq_durs = np.zeros((M, max_l), dtype=np.float32)
         seq_masks = np.ones((M, max_l), dtype=bool)
-        
+
         b_onsets, b_tokens, b_durs = s["onsets"], s["tokens"], s["durs"]
         for i, t_anc in enumerate(t_anchors):
             t_min = t_anc - W_FRAMES
@@ -262,7 +262,7 @@ def run_ladder(clean_mode=True):
                 seq_toks[i, :L_i] = b_tokens[idx_b]
                 seq_durs[i, :L_i] = b_durs[idx_b]
                 seq_masks[i, :L_i] = False
-                
+
         all_p1.append(p1); all_p2.append(p2); all_p25.append(p25)
         all_p3.append(p3); all_p35.append(p35); all_p4.append(p4)
         all_p45.append(p45); all_p5.append(p5); all_tgt.append(target)
@@ -275,23 +275,23 @@ def run_ladder(clean_mode=True):
     X_toks = np.vstack(all_seq_toks)
     X_durs = np.vstack(all_seq_durs)
     X_masks = np.vstack(all_seq_masks)
-    
+
     print(f"Loaded {len(Y_tgt):,} windows. Running 5-fold cross-validation...")
     gkf = GroupKFold(n_splits=5)
-    
+
     results = {k: [] for k in ["Null", "P1", "P2", "P2.5", "P3", "P3.5", "P4", "P4.5", "P5", "P6a_Shuffled", "P6b_Ordered"]}
-    
+
     for fold, (tr, te) in enumerate(gkf.split(X_p1, groups=groups)):
         Y_tr, Y_te = Y_tgt[tr], Y_tgt[te]
         p_glob = np.mean(Y_tr, axis=0, keepdims=True)
         p_glob /= np.sum(p_glob)
-        
+
         Y_te_t = torch.tensor(Y_te, dtype=torch.float32, device=DEVICE)
         p_glob_t = torch.tensor(p_glob, dtype=torch.float32, device=DEVICE).repeat(len(te), 1)
         jb_t = js_divergence_pt(Y_te_t, p_glob_t)
         mean_jb = float(jb_t.mean().cpu().numpy())
         results["Null"].append(mean_jb)
-        
+
         # Linear models
         for name, feat, alpha in [
             ("P1", X_p1, 5.0), ("P2", X_p2, 5.0), ("P2.5", X_p25, 5.0),
@@ -304,11 +304,11 @@ def run_ladder(clean_mode=True):
             js_m = js_divergence_pt(Y_te_t, pred_t)
             gain = float(((mean_jb - js_m.mean().cpu().numpy()) / mean_jb) * 100.0)
             results[name].append(gain)
-            
+
         # P6a: Shuffled Transformer (no positional embeddings)
         tf_shuff = LightweightTransformer(vocab_size=num_sylls, num_targets=num_sylls, use_pos=False).to(DEVICE)
         opt_shuff = torch.optim.AdamW(tf_shuff.parameters(), lr=1e-3, weight_decay=1e-4)
-        
+
         tr_ds = TensorDataset(
             torch.tensor(X_toks[tr], dtype=torch.long),
             torch.tensor(X_durs[tr], dtype=torch.float32),
@@ -316,7 +316,7 @@ def run_ladder(clean_mode=True):
             torch.tensor(Y_tr, dtype=torch.float32)
         )
         tr_loader = DataLoader(tr_ds, batch_size=256, shuffle=True)
-        
+
         tf_shuff.train()
         for epoch in range(5):
             for b_tok, b_dur, b_msk, b_y in tr_loader:
@@ -326,7 +326,7 @@ def run_ladder(clean_mode=True):
                 loss = js_divergence_pt(b_y, pred).mean()
                 loss.backward()
                 opt_shuff.step()
-                
+
         tf_shuff.eval()
         with torch.no_grad():
             pred_shuff = tf_shuff(
@@ -336,11 +336,11 @@ def run_ladder(clean_mode=True):
             )
             js_shuff = js_divergence_pt(Y_te_t, pred_shuff)
             results["P6a_Shuffled"].append(float(((mean_jb - js_shuff.mean().cpu().numpy()) / mean_jb) * 100.0))
-            
+
         # P6b: Ordered Transformer (with positional embeddings)
         tf_ord = LightweightTransformer(vocab_size=num_sylls, num_targets=num_sylls, use_pos=True).to(DEVICE)
         opt_ord = torch.optim.AdamW(tf_ord.parameters(), lr=1e-3, weight_decay=1e-4)
-        
+
         tf_ord.train()
         for epoch in range(5):
             for b_tok, b_dur, b_msk, b_y in tr_loader:
@@ -350,7 +350,7 @@ def run_ladder(clean_mode=True):
                 loss = js_divergence_pt(b_y, pred).mean()
                 loss.backward()
                 opt_ord.step()
-                
+
         tf_ord.eval()
         with torch.no_grad():
             pred_ord = tf_ord(
@@ -360,7 +360,7 @@ def run_ladder(clean_mode=True):
             )
             js_ord = js_divergence_pt(Y_te_t, pred_ord)
             results["P6b_Ordered"].append(float(((mean_jb - js_ord.mean().cpu().numpy()) / mean_jb) * 100.0))
-            
+
         print(f"  Fold {fold+1}: Null={mean_jb:.4f} bits | P4={results['P4'][-1]:.1f}% | P4.5={results['P4.5'][-1]:.1f}% | P5={results['P5'][-1]:.1f}% | P6a={results['P6a_Shuffled'][-1]:.1f}% | P6b={results['P6b_Ordered'][-1]:.1f}%")
 
     ci = lambda arr: float(1.96 * np.std(arr) / np.sqrt(5))
@@ -374,7 +374,7 @@ if __name__ == "__main__":
     print("RUNNING COMPLETE P_n INFORMATION LADDER (P0 -> P6b) ON CLEAN 99-D BOUTS")
     print("=" * 80)
     clean_res = run_ladder(clean_mode=True)
-    
+
     print("\n" + "=" * 80)
     print("COMPLETE CLEAN P_n INFORMATION LADDER SUMMARY:")
     print("=" * 80)

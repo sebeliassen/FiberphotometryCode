@@ -1,9 +1,9 @@
 import os
-import keypoint_moseq as kpms
-import pandas as pd
-import numpy as np
 import shutil
+
 import jax.numpy as jnp
+import keypoint_moseq as kpms
+import numpy as np
 from jax_moseq.utils import unbatch
 
 # --- CONFIGURATION (AMPH PROJECT) ---
@@ -49,7 +49,7 @@ if os.path.exists(vfi_path):
     print(f"Loading video_frame_indexes from {vfi_path}...")
     vfi_data = np.load(vfi_path, allow_pickle=True)
     video_frame_indexes = {k: vfi_data[k] for k in vfi_data.files}
-    
+
     # --- UPSAMPLING LOGIC (User Request) ---
     # The model likely runs at 30Hz, but videos are 60Hz.
     # Logic retrieved from verify_legacy_migration.py:
@@ -57,29 +57,29 @@ if os.path.exists(vfi_path):
     # v_rep = np.repeat(v_scaled, 2)
     # offsets = np.tile(np.arange(2), N)
     # v_final = v_rep + offsets
-    
+
     # We detect rate based on config FPS vs Video FPS?
     # Or just assume 2.0 as per snippet.
     # Config says fps=60? The model usually downsamples by 2 if `use_bodyparts` logic implies it?
-    # Or PCA fitting num frames implied 30Hz? 
+    # Or PCA fitting num frames implied 30Hz?
     # Let's assume rate=2.0 for now as verified in migration script for this project.
-    
+
     upsample_rate = 2
     print(f"Applying VFI Upsampling (Rate={upsample_rate})...")
-    
+
     upsampled_vfi = {}
     for k, v in video_frame_indexes.items():
         # 1. Scale
         v_scaled = v * upsample_rate
-        
+
         # 2. Repeat + Offset
         N = len(v_scaled)
         v_rep = np.repeat(v_scaled, upsample_rate)
         offsets = np.tile(np.arange(upsample_rate), N)
         v_final = (v_rep + offsets).astype(int)
-        
+
         upsampled_vfi[k] = v_final
-        
+
     video_frame_indexes = upsampled_vfi
     print(f"Upsampled {len(video_frame_indexes)} index arrays.")
 
@@ -88,8 +88,6 @@ else:
 
 # --- 4. ADVANCED: Estimate Coordinates from Model (Sync Fix) ---
 print("Estimating coordinates from model states (for perfect sync)...")
-import jax.numpy as jnp
-from jax_moseq.utils import unbatch
 
 # Helper function from load_and_analyze_session_state.py
 def map_syllable_parts_to_videos(video_frame_indexes, video_dir):
@@ -99,18 +97,18 @@ def map_syllable_parts_to_videos(video_frame_indexes, video_dir):
     misses = 0
     for part_key in video_frame_indexes.keys():
         # Heuristic: base name before 'DLC_' or similar suffix
-        base = part_key.split('DLC_')[0] 
+        base = part_key.split('DLC_')[0]
         # Note: adjust split logic if keys differ
-        # User code uses: base = part_key.split('DLC_')[0] 
+        # User code uses: base = part_key.split('DLC_')[0]
         # or base = part_key.split('_part')[0]
-        
+
         match = next((vf for vf in video_files if vf.startswith(base)), None)
         if match:
             m[part_key] = os.path.join(video_dir, match)
         else:
             misses += 1
             # print(f"No match for {part_key}")
-            
+
     print(f"Mapped {len(m)} videos. Misses: {misses}")
     return m
 
@@ -124,15 +122,15 @@ try:
     )
     coordinates = unbatch(Y_est, *metadata)
     print("Coordinates estimated from model.")
-    
+
     print("Computing aligned centroids/headings...")
     cfg = dict(config)
     if 'use_bodyparts' in cfg:
         cfg['bodyparts'] = cfg['use_bodyparts']
-        
+
     centroids, headings = kpms.get_centroids_headings(coordinates, **cfg)
     print("Centroids/Headings computed.")
-    
+
 except ImportError:
     print("Fallback to raw keypoints...")
     coordinates, _, _ = kpms.load_keypoints(filepath_pattern=keypoint_dir, format=format_type)
@@ -156,12 +154,12 @@ for k, v in results.items():
     if 'syllable' in v:
         # Repeat elements: [a, b] -> [a, a, b, b]
         syll_up = np.repeat(v['syllable'], upsample_rate)
-        
+
         # We need to recreate the dict structure
         results_upsampled[k] = v.copy()
         results_upsampled[k]['syllable'] = syll_up
-        
-        # Also upsample latent state if present/needed? 
+
+        # Also upsample latent state if present/needed?
         # Grid movies mostly use 'syllable' to group frames.
     else:
         results_upsampled[k] = v
@@ -190,18 +188,18 @@ print(f"Generating Grid Movies (aligned + mapped + upsampled to {config['fps'] *
 try:
     kpms.generate_grid_movies(
         results,
-        project_dir=project_dir, 
-        model_name=model_name, 
+        project_dir=project_dir,
+        model_name=model_name,
         output_dir=grid_movie_dir,
-        num_examples=10, 
+        num_examples=10,
         sampling_mode="random",
         plot_model_name=False,
         # IMPORTANT: Pass the new upsampled FPS (e.g. 80Hz)
         fps=config.get('fps', 40) * upsample_rate,
-        
+
         # Explicit mapping instead of video_dir
         video_paths=video_paths,
-        
+
         coordinates=coordinates,
         centroids=centroids,
         headings=headings,

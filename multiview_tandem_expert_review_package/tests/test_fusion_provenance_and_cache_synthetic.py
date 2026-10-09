@@ -28,10 +28,10 @@ for p in [PKG_ROOT, PKG_ROOT / "syllable_generation/multiview_top_bot_experiment
     if p.exists() and str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-from core import camera_correspondence as cc
 from core import cache_manifest as cm
+from core import camera_correspondence as cc
 from core.fusion_engine import fuse_single_pair
-from core.schemas import TOP_USE_BODYPARTS, BOT_RAW_BODYPARTS, BOT_RENAME_MAP, TANDEM_BODYPARTS
+from core.schemas import BOT_RAW_BODYPARTS, BOT_RENAME_MAP, TANDEM_BODYPARTS, TOP_USE_BODYPARTS
 
 SID = "synthetic_session_0001"
 N = 300

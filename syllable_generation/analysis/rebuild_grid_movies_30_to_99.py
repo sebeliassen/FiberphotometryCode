@@ -35,20 +35,20 @@ if str(REPO_ROOT) not in sys.path:
 
 import cv2
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 import jax.numpy as jnp
+import keypoint_moseq as kpms
+import keypoint_moseq.util as util
+import keypoint_moseq.viz as viz
+import tqdm
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
 from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
-
-import keypoint_moseq as kpms
-import keypoint_moseq.viz as viz
-import keypoint_moseq.util as util
 from vidio.read import OpenCVReader
-import tqdm
 
 # ==============================================================================
 # FAST-SEEK OPENCVREADER MONKEYPATCH

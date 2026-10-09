@@ -1,5 +1,7 @@
-import numpy as np
 from collections import defaultdict
+
+import numpy as np
+
 from fiberphotometry.config import *
 
 interval_start = peak_interval_config["interval_start"]
@@ -15,7 +17,7 @@ def find_start_end_idxs(event_type, fps):
 def find_session_by_trial_mouse_id(sessions, trial_id, mouse_id):
     if not isinstance(mouse_id, int):
         raise TypeError("mouse_id must be an int")
-    
+
     if not isinstance(trial_id, int):
         raise TypeError("mouse_id must be an int")
 

@@ -14,12 +14,12 @@ import gc
 import hashlib
 import importlib.util
 import itertools
-from pathlib import Path
 import sys
 import types
 import unittest
-from unittest.mock import patch
 import weakref
+from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 

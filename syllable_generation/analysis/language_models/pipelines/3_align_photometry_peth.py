@@ -9,9 +9,10 @@ if ROOT_DIR not in sys.path:
 
 from analysis.language_models.lib.evaluation.photometry_peth import align_photometry_to_strategy_switches
 
+
 def main():
     print("=== Pipeline 3: Fiberphotometry PETH Alignment (Stub Runner) ===")
-    
+
     # Call stub module interface
     res = align_photometry_to_strategy_switches(
         intervals_df=None,
@@ -19,7 +20,7 @@ def main():
         window_before_sec=5.0,
         window_after_sec=5.0
     )
-    
+
     print(f"Photometry PETH alignment runner completed: {res['message']}")
 
 if __name__ == "__main__":

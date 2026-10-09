@@ -26,17 +26,19 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import matplotlib
+
 matplotlib.use("Agg")
 import numpy as np
+
 if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
-from PIL import Image
 import jax.numpy as jnp
-from jax_moseq.utils import unbatch
-from jax_moseq.models.keypoint_slds import estimate_coordinates
 import keypoint_moseq as kpms
-import keypoint_moseq.viz as viz
+from jax_moseq.models.keypoint_slds import estimate_coordinates
+from jax_moseq.utils import unbatch
+from PIL import Image
+
 
 def main():
     project_dir = REPO_ROOT / "syllable_generation/syllabizers/keypoint_moseq_syll/amph_project"

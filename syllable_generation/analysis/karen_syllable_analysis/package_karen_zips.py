@@ -15,7 +15,6 @@ Iteratively packages Karen syllable analysis deliverables into zip files under 2
    Split iteratively into ~24 MB chunks (guaranteeing < 25 MB).
 """
 
-import os
 import sys
 import zipfile
 from pathlib import Path
@@ -60,22 +59,22 @@ def create_iterative_zips(prefix, file_list, base_files=[]):
     created_zips = []
     part_idx = 1
     current_files = list(base_files)
-    
+
     # We will simulate and pack
     remaining = list(file_list)
-    
+
     while remaining or (part_idx == 1 and current_files):
         zip_path = ZIPS_DIR / f"{prefix}_part{part_idx}.zip"
         if zip_path.exists():
             zip_path.unlink()
-            
+
         zf = zipfile.ZipFile(str(zip_path), "w", compression=zipfile.ZIP_DEFLATED)
-        
+
         # Add pre-assigned base files if any
         for src, arc in current_files:
             zf.write(str(src), arcname=arc)
         current_files = []
-        
+
         # Iteratively add remaining files until reaching threshold
         added_count = 0
         while remaining:
@@ -93,10 +92,10 @@ def create_iterative_zips(prefix, file_list, base_files=[]):
             else:
                 remaining.pop(0)
                 added_count += 1
-                
+
         if zf.fp is not None:
             zf.close()
-            
+
         # If we broke out because a file pushed it over:
         # Recreate the zip containing only the files that fit!
         if remaining and added_count == 0 and zip_path.stat().st_size > MAX_ZIP_BYTES:
@@ -106,7 +105,7 @@ def create_iterative_zips(prefix, file_list, base_files=[]):
         created_zips.append(zip_path)
         print(f"  Created {zip_path.name}: {zip_path.stat().st_size / (1024*1024):.2f} MB ({len(zipfile.ZipFile(str(zip_path)).namelist())} files)")
         part_idx += 1
-        
+
     return created_zips
 
 def pack_collection(prefix, items, static_items=[]):
@@ -117,22 +116,22 @@ def pack_collection(prefix, items, static_items=[]):
     part_idx = 1
     remaining_items = list(items)
     pending_static = list(static_items)
-    
+
     while remaining_items or pending_static:
         zip_path = ZIPS_DIR / f"{prefix}_part{part_idx}.zip"
         if zip_path.exists():
             zip_path.unlink()
-            
+
         current_batch = []
         if pending_static:
             current_batch.extend(pending_static)
             pending_static = []
-            
+
         # Add items to current_batch until zip exceeds threshold
         while remaining_items:
             candidate = remaining_items[0]
             test_batch = current_batch + [candidate]
-            
+
             # Test zip size
             test_path = ZIPS_DIR / f"_temp_test_{part_idx}.zip"
             with zipfile.ZipFile(str(test_path), "w", compression=zipfile.ZIP_DEFLATED) as zf:
@@ -140,7 +139,7 @@ def pack_collection(prefix, items, static_items=[]):
                     zf.write(str(src), arcname=arc)
             test_size = test_path.stat().st_size
             test_path.unlink()
-            
+
             if test_size <= MAX_ZIP_BYTES:
                 current_batch.append(remaining_items.pop(0))
             else:
@@ -148,17 +147,17 @@ def pack_collection(prefix, items, static_items=[]):
                 if not current_batch:
                     current_batch.append(remaining_items.pop(0))
                 break
-                
+
         # Now write actual zip
         with zipfile.ZipFile(str(zip_path), "w", compression=zipfile.ZIP_DEFLATED) as zf:
             for src, arc in current_batch:
                 zf.write(str(src), arcname=arc)
-                
+
         actual_size = zip_path.stat().st_size
         created.append(zip_path)
         print(f"  ✅ {zip_path.name}: {actual_size / (1024*1024):.2f} MB ({len(current_batch)} files)")
         part_idx += 1
-        
+
     return created
 
 # ==============================================================================
@@ -204,7 +203,7 @@ with open(manifest_path, "w") as f:
     f.write("=" * 80 + "\n")
     f.write("KAREN DATASET COMPREHENSIVE ZIP ARCHIVE MANIFEST (< 25 MB PER FILE)\n")
     f.write("=" * 80 + "\n\n")
-    
+
     f.write("SERIES A: SUPPLEMENT ARCHIVE (Dendrograms, Trajectory Plots & Clean Movies 31-99)\n")
     f.write("-" * 80 + "\n")
     for z in series_a_zips:
@@ -222,7 +221,7 @@ with open(manifest_path, "w") as f:
             if mp4s:
                 f.write(f"    - Clean Grid Movies: {len(mp4s)} videos ({Path(mp4s[0]).stem} to {Path(mp4s[-1]).stem})\n")
             f.write("\n")
-            
+
     f.write("SERIES B: OVERLAY GRID MOVIES (Keypoint & Skeleton Overlay Movies 0-99)\n")
     f.write("-" * 80 + "\n")
     for z in series_b_zips:
@@ -233,7 +232,7 @@ with open(manifest_path, "w") as f:
             f.write(f"    - Total Files: {len(names)}\n")
             f.write(f"    - Overlay Grid Movies: {len(mp4s)} videos ({Path(mp4s[0]).stem} to {Path(mp4s[-1]).stem})\n")
             f.write("\n")
-            
+
     f.write("PREVIOUS ARCHIVE (Reference):\n")
     f.write("-" * 80 + "\n")
     old_zip = OUT_DIR / "karen_syllables_0_to_30_and_significant.zip"
@@ -241,7 +240,7 @@ with open(manifest_path, "w") as f:
         f.write(f"• {old_zip.name} ({old_zip.stat().st_size / (1024*1024):.2f} MB):\n")
         f.write("    - Clean Grid Movies: syllables 0 to 30 + syllable 72 (32 videos)\n")
         f.write("    - syllables_regulation_pvalues.csv\n\n")
-        
+
     f.write("=" * 80 + "\n")
     f.write("SUMMARY:\n")
     f.write("All zip files are strictly <= 24.5 MB.\n")

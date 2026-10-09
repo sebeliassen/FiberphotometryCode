@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 # Import pandas only for static type checking
 if TYPE_CHECKING:
@@ -124,7 +124,7 @@ class SessionRecord:
             if hasattr(df, "shape"): out[f"photometry:{k}"] = df
         for k, df in self.events.items():
             if hasattr(df, "shape"): out[f"events:{k}"] = df
-        for k, df in self.syllables.items():                         
+        for k, df in self.syllables.items():
             if hasattr(df, "shape"): out[f"syllables:{k}"] = df
         out.update({f"extra:{k}": v for k, v in self.extras.items() if hasattr(v, "shape")})
         return out

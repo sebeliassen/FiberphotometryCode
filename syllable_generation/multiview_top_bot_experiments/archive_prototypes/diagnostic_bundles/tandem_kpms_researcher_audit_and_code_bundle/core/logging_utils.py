@@ -4,12 +4,10 @@ core.logging_utils
 Standardized structured logging and optional alert dispatching.
 """
 
-import os
-import sys
 import logging
+import sys
 import urllib.request
 from typing import Optional
-from datetime import datetime
 
 DEFAULT_LOG_FORMAT = "[%(asctime)s] [%(levelname)s] [%(name)s]: %(message)s"
 DEFAULT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"

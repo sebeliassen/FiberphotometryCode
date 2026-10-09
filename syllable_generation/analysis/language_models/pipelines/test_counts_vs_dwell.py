@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Compute counts-only vs counts+dwell split for the presentation ladder."""
-import sys, time, pickle, numpy as np
+import pickle
+import sys
+import time
+
+import numpy as np
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GroupKFold
 

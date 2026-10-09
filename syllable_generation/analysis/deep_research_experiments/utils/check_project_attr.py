@@ -1,6 +1,4 @@
-import pandas as pd
 import sys
-import os
 
 REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
 if REPO_ROOT not in sys.path:

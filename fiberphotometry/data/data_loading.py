@@ -1,14 +1,12 @@
 import os
-import fnmatch
 import re
+import warnings
+from typing import Any, Dict, List, Optional, Pattern, Tuple
+
 import pandas as pd
 from tqdm import tqdm
+
 from fiberphotometry import config
-import numpy as np
-import warnings
-from pathlib import Path
-from typing import Any, Optional, List, Dict, Tuple, Pattern, Union
-import glob
 
 
 class DataContainer:
@@ -101,7 +99,7 @@ class Session:
                 self.chamber_position = config.CHAMBER_POSITON[self.chamber_id]
             except AttributeError:
                 warnings.warn(
-                    f"config.CHAMBER_POSITON is not defined; cannot set chamber_position for session_type='oft'"
+                    "config.CHAMBER_POSITON is not defined; cannot set chamber_position for session_type='oft'"
                 )
             except KeyError:
                 warnings.warn(
@@ -159,7 +157,7 @@ class Session:
             "saline",
             "baseline",
         )
-        
+
         # Combine NaN‐check and empty‐string check with a walrus:
         if pd.isna(raw) or not (raw_str := str(raw).strip()):
             return {"name": "No Drug", "dose": None, "metric": None}
@@ -365,7 +363,7 @@ def load_all_sessions(
     for dir_info in tqdm(processed_trial_dirs_info, desc="Processing trial directories"):
         trial_dir_name = dir_info['name']
         match_obj = dir_info['match'] # The regex match object for this directory name
-        
+
         trial_dir_path = os.path.join(baseline_dir, trial_dir_name)
 
         trial_id        = match_obj.group(1)                # e.g. "T12"
@@ -421,7 +419,7 @@ def load_all_sessions(
             raise KeyError(
                 f"{trial_id}: trial guide at '{guide_path}' is missing required column(s): {missing_cols}"
             )
-        
+
         # Get segments directly from the stored match object's group
         # Group 1 is T<num>, Group 2 is the segments string, Group 3 is optional suffix
         segments = match_obj.group(2).split('.')
@@ -435,7 +433,7 @@ def load_all_sessions(
         for segment, chamber_id in zip(segments, chambers):
             if segment == 'e':
                 continue  # empty session marker
-            
+
             # 1) make sure that chamber row actually exists
             try:
                 session_guide = current_trial_guide_df.loc[chamber_id]
@@ -443,15 +441,15 @@ def load_all_sessions(
                 raise KeyError(
                     f"{trial_id}: expected chamber '{chamber_id}' not found in trial guide at '{guide_path}'."
                 )
-            
+
             # 2) compare IDs
             if session_guide['mouse_id'] != segment:
                 raise ValueError(
                     f"{trial_id}/{chamber_id}: mouse_id mismatch—"
                     f"folder says '{segment}', guide says '{session_guide['mouse_id']}'."
                 )
-            
-            new_session = Session(chamber_id, trial_dir_path, session_guide, session_type, 
+
+            new_session = Session(chamber_id, trial_dir_path, session_guide, session_type,
                                   remove_bad_signal_sessions=remove_bad_signal_sessions)
             if len(new_session.brain_regions) > 0 or not remove_bad_signal_sessions:
                 all_sessions.append(new_session)

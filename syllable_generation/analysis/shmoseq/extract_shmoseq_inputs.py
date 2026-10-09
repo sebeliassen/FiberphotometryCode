@@ -15,8 +15,9 @@ Methodology:
 """
 
 import os
-import sys
 import pickle
+import sys
+
 import numpy as np
 import pandas as pd
 
@@ -36,14 +37,14 @@ def main():
     print("=" * 80)
     print("EXTRACTING SHMOSEQ INPUT DATA FROM 30 EXPERIMENTAL SESSIONS")
     print("=" * 80)
-    
+
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    
+
     print(f"Loading raw sessions from: {RAW_DATA_PATH}")
     with open(RAW_DATA_PATH, "rb") as f:
         sessions = pickle.load(f)
     print(f"Loaded {len(sessions)} sessions.")
-    
+
     # Load verified event frames table
     event_table_path = os.path.join(OUTPUT_DIR, "..", "tables", "session_event_frames_verified.csv")
     if os.path.exists(event_table_path):
@@ -57,16 +58,16 @@ def main():
     pre_syllables_dict = {}
     centroids_dict = {}
     metadata_dict = {}
-    
+
     unique_sylls_global = set()
     lengths = []
-    
+
     for i, sess in enumerate(sessions):
         meta = sess.metadata
         aid = str(meta.get("animal_id", f"mouse_{i}"))
         genotype = meta.get("genotype", "WT")
         drug = meta.get("drug", "Saline")
-        
+
         if df_events is not None and i < len(df_events):
             ev_row = df_events.iloc[i]
             nom_inj_f = int(ev_row["nominal_injection_frame"])
@@ -80,34 +81,34 @@ def main():
             det_ret_f = nom_inj_f
             det_entry_f = int(meta.get("entry_frame", 0))
             handling_dur_s = 0.0
-        
+
         # Unique session key
         session_key = f"{aid}_{drug}"
-        
+
         # Extract syllable series: STRICTLY starting at detected_return_frame
         # Excludes entire physical handling window from behavioral analysis!
         df_syll = sess.syllables
         post_df = df_syll.iloc[det_ret_f:] if det_ret_f < len(df_syll) else df_syll
         valid_mask = post_df["syllable"].notna()
-        
+
         # Native 40 Hz syllable sequence (int32)
         syll_seq = post_df.loc[valid_mask, "syllable"].values.astype(np.int32)
-        
+
         # Also extract pre-injection baseline (entry -> removal)
         pre_df = df_syll.iloc[det_entry_f:det_rem_f] if det_rem_f > det_entry_f else df_syll.iloc[:nom_inj_f]
         valid_pre = pre_df["syllable"].notna()
         pre_syll_seq = pre_df.loc[valid_pre, "syllable"].values.astype(np.int32)
         pre_syllables_dict[session_key] = pre_syll_seq
-        
+
         # Centroid coordinates (float32)
         if "centroid_0" in post_df.columns and "centroid_1" in post_df.columns:
             centroids = post_df.loc[valid_mask, ["centroid_0", "centroid_1"]].values.astype(np.float32)
         else:
             centroids = np.zeros((len(syll_seq), 2), dtype=np.float32)
-            
+
         syllables_dict[session_key] = syll_seq
         centroids_dict[session_key] = centroids
-        
+
         metadata_dict[session_key] = {
             "session_idx": i,
             "animal_id": aid,
@@ -124,24 +125,24 @@ def main():
             "time_course_reference": "time_since_return",
             "original_session_id": getattr(sess, "session_id", f"sess_{i}"),
         }
-        
+
         lengths.append(len(syll_seq))
         for s in np.unique(syll_seq):
             unique_sylls_global.add(int(s))
-            
-    print(f"\nExtraction Summary (Strict Post-Return Alignment):")
+
+    print("\nExtraction Summary (Strict Post-Return Alignment):")
     print(f"  - Total sessions extracted: {len(syllables_dict)}")
     print(f"  - Total unique syllables observed: {len(unique_sylls_global)} (range {min(unique_sylls_global)}..{max(unique_sylls_global)})")
     print(f"  - Post-injection sequence length (40 Hz frames): min={min(lengths)}, max={max(lengths)}, median={np.median(lengths):.1f}")
     print(f"  - Equivalent duration at 40.0125 Hz: min={min(lengths)/40.0125/60:.1f}m, max={max(lengths)/40.0125/60:.1f}m, median={np.median(lengths)/40.0125/60:.1f}m")
-    
+
     # Cohort breakdown
     cohort_counts = {}
     for k, m in metadata_dict.items():
         c = m["cohort"]
         cohort_counts[c] = cohort_counts.get(c, 0) + 1
     print(f"  - Cohort breakdown: {cohort_counts}")
-    
+
     # Pack into output
     bundle = {
         "syllables_dict": syllables_dict,
@@ -151,10 +152,10 @@ def main():
         "n_syllables": max(unique_sylls_global) + 1,
         "fps": 40.0125,  # Native video/syllable rate (clock timeline is 80 Hz with step 2)
     }
-    
+
     with open(OUTPUT_FILE, "wb") as f:
         pickle.dump(bundle, f)
-        
+
     print(f"\nSuccessfully saved shMoSeq input bundle to:\n  {OUTPUT_FILE}")
     print("=" * 80)
 

@@ -25,15 +25,15 @@ Methodology:
 """
 
 import os
-import sys
-import shutil
 import pickle
+import shutil
+import sys
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.ndimage import binary_closing, binary_opening, label
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 from matplotlib.gridspec import GridSpec
+from scipy.ndimage import binary_closing, binary_opening, label
 
 # Ensure base dir is in path
 BASE_DIR = "/home/fsp585/Desktop/FiberphotometryCode"

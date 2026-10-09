@@ -1,8 +1,9 @@
-import pandas as pd
-import numpy as np
-import warnings
 import re
-from pathlib import Path
+import warnings
+
+import numpy as np
+import pandas as pd
+
 
 def synchronize_session_data(session, downsample_video_by: int = 1, tolerance: float = 0.02):
     print(f"--- Synchronizing all pairs for session: {session.trial_id}/{session.chamber_id} ---")

@@ -15,17 +15,17 @@ Layout Specifications (User Preferences):
 =============================================================================
 """
 
-import os
-import sys
-import pickle
 import itertools
-import numpy as np
-import pandas as pd
+import os
+import pickle
 from pathlib import Path
+
 import matplotlib
+import numpy as np
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw, ImageFont
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")

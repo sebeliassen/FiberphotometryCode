@@ -7,10 +7,11 @@ Generates a visualization of the unconstrained multi-view kappa search convergen
 
 import json
 from pathlib import Path
+
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import numpy as np
 
 EXPERIMENT_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/multiview_kappa_search")
 JSON_PATH = EXPERIMENT_DIR / "kappa_scan_history.json"

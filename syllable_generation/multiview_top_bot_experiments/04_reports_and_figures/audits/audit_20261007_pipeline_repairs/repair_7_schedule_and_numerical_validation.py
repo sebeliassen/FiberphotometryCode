@@ -17,11 +17,12 @@ Objectives:
      for deterministic solves, reconstructions, and parameter updates.
 """
 
-import sys
 import json
 import pickle
+import sys
 from pathlib import Path
-from typing import Dict, List, Tuple, Any
+from typing import List, Tuple
+
 import numpy as np
 
 REPO = Path("/home/fsp585/Desktop/FiberphotometryCode")
@@ -35,9 +36,8 @@ KPMS_UTILS = REPO / "syllable_generation/syllabizers/keypoint_moseq_syll"
 if str(KPMS_UTILS) not in sys.path:
     sys.path.insert(0, str(KPMS_UTILS))
 
-import keypoint_moseq as kpms
-import utils.resample_batching as rb
 from utils.batch_init import batched_init_model_by_video
+
 
 def compute_dynamic_training_schedule(
     num_ar_iters: int,

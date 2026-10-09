@@ -26,6 +26,7 @@ import sys
 import time
 import urllib.request
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
@@ -36,12 +37,10 @@ os.environ["JAX_PLATFORMS"] = "cpu"
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
+from syllable_generation.analysis.sequence_viz.bout_quality_and_spatial_verifier import ChainQualityAndContextVerifier
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+    generate_chain_grid_movie,
     load_chain_movie_resources,
-    generate_chain_grid_movie
-)
-from syllable_generation.analysis.sequence_viz.bout_quality_and_spatial_verifier import (
-    ChainQualityAndContextVerifier
 )
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/output_pilot_movies"
@@ -56,7 +55,7 @@ def log(msg, notify=False, ntfy_title=None):
     print(line, flush=True)
     with open(LOG_FILE, "a") as f:
         f.write(line + "\n")
-        
+
     if notify:
         try:
             req = urllib.request.Request(
@@ -94,7 +93,7 @@ def main():
         b_sylls = [sylls[0]] + sylls[c_idx].tolist()
         b_starts = [0] + c_idx.tolist()
         b_ends = c_idx.tolist() + [len(sylls)]
-        
+
         for i in range(len(b_sylls) - 4):
             if b_sylls[i] == 1 and b_sylls[i+1] == 11 and b_sylls[i+2] == 1 and b_sylls[i+3] == 30:
                 d_raw.append({
@@ -159,7 +158,7 @@ def main():
     if len(variant_df) < 3:
         # If few variants, pick sound tracking with lowest similarity
         variant_df = df[(df["quality_min"] >= 0.8) & (df["similarity_min"] < 0.5)].sort_values(by="similarity_min")
-        
+
     selected_variants = []
     for _, row in variant_df.iterrows():
         aid = row["animal_id"]

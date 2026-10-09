@@ -17,10 +17,9 @@ Addresses collaborator prompt:
 """
 
 import sys
-import os
-import json
 import time
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from scipy import stats
@@ -31,7 +30,7 @@ sys.path.insert(0, str(REPO_ROOT))
 from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import load_chain_movie_resources
 from syllable_generation.analysis.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
     get_level_definitions,
-    get_verified_metadata
+    get_verified_metadata,
 )
 
 EXP_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison"
@@ -244,7 +243,7 @@ def compute_paired_uncertainty_and_summary(df_res, levels):
             })
 
         # Paired differences: Level 4 vs Level 3, Level 3 vs Level 2, Level 2 vs Level 1
-        print(f"\n  [Paired Differences across 15 Mice]:")
+        print("\n  [Paired Differences across 15 Mice]:")
         pairs = [
             (3, 4, "Level 4 vs Level 3 (Cost of Pooling to 14 States)"),
             (2, 3, "Level 3 vs Level 2 (Cost of Pooling to 22 States)"),

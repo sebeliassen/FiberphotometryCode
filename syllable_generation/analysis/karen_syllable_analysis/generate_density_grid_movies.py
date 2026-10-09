@@ -11,20 +11,19 @@ Using sample_instances(mode='density', n_neighbors=50) to sample the canonical
 exemplar and its closest neighborhood mode in trajectory space.
 """
 
-import os
-import sys
 import time
 from pathlib import Path
+
 import numpy as np
+
 np.bool8 = np.bool_
 import cv2
-from tqdm import tqdm
 import jax.numpy as jnp
-
 import keypoint_moseq as kpms
 from jax_moseq.models.keypoint_slds import estimate_coordinates
 from jax_moseq.utils import unbatch
-from keypoint_moseq.viz import OpenCVReader, overlay_keypoints_on_image, get_edges
+from keypoint_moseq.viz import OpenCVReader, get_edges, overlay_keypoints_on_image
+from tqdm import tqdm
 
 PROJECT_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll/karen_project_2")
 MODEL_NAME = "final_karen_model_k240k"
@@ -128,21 +127,21 @@ print("[5/5] Rendering 3x3 Density-Sampled Grid Movies...")
 for s in tqdm(TARGET_SYLLABLES, desc="Rendering Density Movies", ncols=80):
     inst_list = sampled_instances[s]
     total_frames = pre_frames + post_frames
-    
+
     # Pre-allocate frames for 3x3 grid: 3*256 = 768 x 768
     grid_clean_frames = [np.zeros((3 * window_size, 3 * window_size, 3), dtype=np.uint8) for _ in range(total_frames)]
     grid_overlay_frames = [np.zeros((3 * window_size, 3 * window_size, 3), dtype=np.uint8) for _ in range(total_frames)]
-    
+
     for slot_idx, (key, start, end) in enumerate(inst_list):
         r_idx = slot_idx // 3
         c_idx = slot_idx % 3
         y1, y2 = r_idx * window_size, (r_idx + 1) * window_size
         x1, x2 = c_idx * window_size, (c_idx + 1) * window_size
-        
+
         cs = filt_centroids[key][start - pre_frames : start + post_frames]
         h_0 = filt_headings[key][start]
         c_0 = cs[pre_frames]
-        
+
         # Egocentric rotation & alignment matrix
         r_mat = np.float32([[np.cos(h_0), np.sin(h_0)], [-np.sin(h_0), np.cos(h_0)]])
         c_rot = r_mat @ c_0 - window_size // 2
@@ -150,27 +149,27 @@ for s in tqdm(TARGET_SYLLABLES, desc="Rendering Density Movies", ncols=80):
             [np.cos(h_0), np.sin(h_0), -c_rot[0]],
             [-np.sin(h_0), np.cos(h_0), -c_rot[1]]
         ])
-        
+
         syll_coords = coordinates[key][start - pre_frames : start + post_frames].copy()
         frame_ixs = video_frame_indexes[key][start - pre_frames : start + post_frames]
-        
+
         reader = OpenCVReader(video_paths[key])
         raw_clip = [reader[ix] for ix in frame_ixs]
         reader.close()
-        
+
         for t_i, (raw_f, coords_i) in enumerate(zip(raw_clip, syll_coords)):
             # Clean crop
             f_clean = cv2.warpAffine(raw_f, M, (window_size, window_size))
             grid_clean_frames[t_i][y1:y2, x1:x2] = f_clean
-            
+
             # Overlay crop
             f_ov = overlay_keypoints_on_image(raw_f.copy(), coords_i, edges=edges)
             f_ov = cv2.warpAffine(f_ov, M, (window_size, window_size))
             grid_overlay_frames[t_i][y1:y2, x1:x2] = f_ov
-            
+
     out_clean_path = DIR_CLEAN / f"syllable{s}_density.mp4"
     out_overlay_path = DIR_OVERLAY / f"syllable{s}_density.mp4"
-    
+
     write_video_clip(grid_clean_frames, out_clean_path, fps=fps)
     write_video_clip(grid_overlay_frames, out_overlay_path, fps=fps)
 

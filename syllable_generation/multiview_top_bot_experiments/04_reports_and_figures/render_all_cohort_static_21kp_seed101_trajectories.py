@@ -22,22 +22,21 @@ Environment: keypoint_moseq or kpms_gpu_cuml (pure CPU)
 =============================================================================
 """
 
-import os
-import sys
 import argparse
+import pickle
 from pathlib import Path
+
+import h5py
+import matplotlib
 import numpy as np
 import pandas as pd
 import yaml
-import h5py
-import pickle
 from PIL import Image
 
-import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from scipy.ndimage import median_filter
 from scipy.interpolate import interp1d
+from scipy.ndimage import median_filter
 from sklearn.decomposition import PCA
 from sklearn.neighbors import NearestNeighbors
 
@@ -348,7 +347,7 @@ def main():
     pkl_traj_path = OUT_DIR.parent / "sampled_median_trajectories.pkl"
 
     if pkl_density_path.exists() and pkl_traj_path.exists() and not args.overwrite:
-        print(f"  ⚡ Found cached trajectories and density instances! Loading directly...", flush=True)
+        print("  ⚡ Found cached trajectories and density instances! Loading directly...", flush=True)
         with open(pkl_density_path, "rb") as pf:
             sampled_instances = pickle.load(pf)
         with open(pkl_traj_path, "rb") as pf:

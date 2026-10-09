@@ -6,10 +6,11 @@ min_cluster_size sampling to get N≥20 data points for a proper correlation tes
 """
 
 import os
+import pickle
 import sys
 import time
-import pickle
 import urllib.request
+
 import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr, spearmanr
@@ -20,13 +21,13 @@ if ROOT_DIR not in sys.path:
     sys.path.append(os.path.join(ROOT_DIR, "syllable_generation"))
 
 from analysis.language_models.lib.data.dataset import SessionDataset
-from analysis.language_models.lib.models.strategies import StrategyBERTopic
 from analysis.language_models.lib.evaluation.kinematic_encoding import (
-    compute_eta_squared, evaluate_session_kinematic_encoding
+    evaluate_session_kinematic_encoding,
 )
+from analysis.language_models.lib.models.strategies import StrategyBERTopic
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import StratifiedKFold
 
 NTFY_URL = "https://ntfy.sh/woody_videos_seb"
 
@@ -53,30 +54,30 @@ def main():
     out_dir = os.path.join(ROOT_DIR, "syllable_generation/analysis/language_models/output/strategies_extended")
     log_dir = os.path.join(out_dir, "logs")
     os.makedirs(log_dir, exist_ok=True)
-    
+
     log_file = os.path.join(log_dir, "confined_sweep_eta2.log")
-    
+
     def log_msg(msg):
         ts = time.strftime('%Y-%m-%d %H:%M:%S')
         print(msg)
         with open(log_file, "a") as f:
             f.write(f"[{ts}] {msg}\n")
-    
+
     log_msg("=== CONFINED MANIFOLD SWEEP: eta2 vs Decodability (well-conditioned only) ===")
     send_notification("🚀 Starting confined manifold η² sweep")
-    
+
     cache_path = os.path.join(out_dir, "cache/prep_amph_postural_gmm_k3_transition.pkl")
     dataset = SessionDataset(cache_path=cache_path)
     all_win_inputs = dataset.get_window_inputs()
     labels = dataset.get_cohort_labels()
     n_windows_per_session = dataset.n_windows_per_session
-    
+
     pkl_path = os.path.join(ROOT_DIR, "syllable_generation/data/jonathan_amph_sessions_v2_w_sylls.pkl")
     if not os.path.exists(pkl_path):
         pkl_path = os.path.join(ROOT_DIR, "syllable_generation/data/jonathan_amph_sessions_w_sylls.pkl")
     with open(pkl_path, "rb") as f:
         raw_sessions = pickle.load(f)
-    
+
     session_id_list = [meta_tuple[6] for meta_tuple in dataset.session_window_meta]
     session_dfs = {}
     for s in raw_sessions:
@@ -85,11 +86,11 @@ def main():
             if s_id.startswith(exact_id) or exact_id.startswith(s_id):
                 session_dfs[s_id] = s.all_data_df
                 break
-    
+
     # Confined grid: only well-conditioned manifold topologies
     nn_vals = [25, 30, 35]
     mcs_vals = [100, 125, 150, 175, 200, 225, 250, 275, 300, 350, 400, 450, 500]
-    
+
     csv_path = os.path.join(out_dir, "confined_sweep_eta2_results.csv")
     existing_df = None
     if os.path.exists(csv_path):
@@ -116,7 +117,7 @@ def main():
     completed_keys = {(int(r["n_neighbors"]), int(r["min_cluster_size"])) for r in results}
     n_total = len(nn_vals) * len(mcs_vals)
     run_i = 0
-    
+
     for nn in nn_vals:
         for mcs in mcs_vals:
             run_i += 1
@@ -152,7 +153,7 @@ def main():
                 model.fit(all_win_inputs)
                 strat_ids, _ = model.transform(all_win_inputs)
                 n_topics = model.n_topics
-                
+
                 # Session proportions for decodability
                 props = np.zeros((len(labels), max(1, n_topics)))
                 frame_strat_dict = {}
@@ -166,12 +167,12 @@ def main():
                         if 0 <= t_id < n_topics:
                             props[s_idx, t_id] = prop
                     frame_strat_dict[s_id] = np.repeat(w_ids, 800)
-                
+
                 acc = evaluate_decodability(props, np.array(labels))
-                
+
                 # Full kinematic encoding
                 kin = evaluate_session_kinematic_encoding(session_dfs, frame_strat_dict)
-                
+
                 rec = {
                     "n_neighbors": int(nn), "min_cluster_size": int(mcs),
                     "active_K": int(n_topics),
@@ -184,27 +185,27 @@ def main():
                 results.append(rec)
                 completed_keys.add((nn, mcs))
                 pd.DataFrame(results).to_csv(csv_path, index=False)
-                
+
                 log_msg(f"  [{run_i}/{n_total}] nn={nn} mcs={mcs:3d} -> K={n_topics:2d} Acc={acc*100:5.2f}% eta2_speed={kin['eta2_velocity']:.4f}")
-                
+
             except Exception as e:
                 log_msg(f"  [{run_i}/{n_total}] nn={nn} mcs={mcs:3d} -> FAILED: {e}")
-    
+
     df = pd.DataFrame(results)
     df.to_csv(csv_path, index=False)
-    
+
     # Correlations
     acc_arr = df["decodability_acc_pct"].values
     speed_arr = df["eta2_speed"].values
     k_arr = df["active_K"].values.astype(float)
-    
+
     r_raw, p_raw = pearsonr(acc_arr, speed_arr)
     rho_raw, _ = spearmanr(acc_arr, speed_arr)
-    
+
     r_ak, _ = pearsonr(acc_arr, k_arr)
     r_ek, _ = pearsonr(speed_arr, k_arr)
     partial_r = (r_raw - r_ak * r_ek) / np.sqrt((1 - r_ak**2) * (1 - r_ek**2))
-    
+
     # Per-nn correlations
     log_msg(f"\n{'='*70}")
     log_msg(f"CONFINED SWEEP RESULTS (N={len(df)}, nn ∈ {{25, 30, 35}} only)")
@@ -214,16 +215,16 @@ def main():
     log_msg(f"  Partial r(Acc, eta2_speed | K):         {partial_r:+.3f}")
     log_msg(f"  r(K, Acc):                             {r_ak:+.3f}")
     log_msg(f"  r(K, eta2_speed):                      {r_ek:+.3f}")
-    
+
     for nn in nn_vals:
         sub = df[df["n_neighbors"] == nn]
         if len(sub) >= 3:
             r_nn, p_nn = pearsonr(sub["decodability_acc_pct"].values, sub["eta2_speed"].values)
             log_msg(f"  nn={nn} slice (N={len(sub)}): r={r_nn:+.3f} (p={p_nn:.4f})")
-    
+
     log_msg(f"{'='*70}")
     log_msg(f"  CSV saved to: {csv_path}")
-    
+
     summary = (
         f"✅ Confined sweep done (N={len(df)})\n"
         f"r(Acc, eta2_speed) = {r_raw:+.3f} (p={p_raw:.4f})\n"

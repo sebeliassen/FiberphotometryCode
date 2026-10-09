@@ -83,13 +83,13 @@ peak_interval_config = {
 
 # item_attr_dict = {"Hit": "hit",
 #                     "Mistake": "mistake",
-#                     "Missed Hit": "miss",                    
+#                     "Missed Hit": "miss",
 #                     "Correct Rejection": "cor_reject"}
 
 # actions_attr_dict = {"Hit": "hit",
-#                     "Mistake": "mistake", 
-#                     "Missed Hit": "miss",                    
-#                     "Correction Trial Correct Rejection": "cor_reject", 
+#                     "Mistake": "mistake",
+#                     "Missed Hit": "miss",
+#                     "Correction Trial Correct Rejection": "cor_reject",
 #                     "Correct Rejection": "cor_reject"}
 
 # reward_attr_dict = {"Reward Collected Start ITI": "reward_collect"}
@@ -120,7 +120,7 @@ attr_interval_dict = {'hit': (-2.5, 5),
 
 # all_brain_regions = ['VS', 'DMS', 'DLS']
 all_brain_regions = ['LH', 'mPFC']
-all_event_types = ['hit', 'mistake', 'miss', 'cor_reject', 'reward_collect', 
+all_event_types = ['hit', 'mistake', 'miss', 'cor_reject', 'reward_collect',
                    'before_dispimg_mistake', 'before_dispimg_hit', 'before_dispimg_cor_reject', 'before_dispimg_miss', 'dispimg']
 all_metrics = ['c_score', 'd_prime', 'participation', 'disp_to_hit_time', 'hit_to_reward_time', 'num_center_touches']
 
@@ -129,7 +129,7 @@ response_metric_idxs = {0: 'slope_up',
                         2: 'maximal_value',
                         3: 'peak_timing',
                         4: 'auc'}
-  
+
 # Patterns for fiber column matching and column filtering moved from code into config
 # TODO: we need to find a standardization of the pattern below
 FIBER_PATTERN = r'([GR])(\d+)|fiber(\d+)'
@@ -219,7 +219,7 @@ OFT_H5_UPDOWN_REGEX      = r"_(upper|lower)DLC_"
 # # Exact corner in videos appears like “…_top_left_30fps_…”
 # OFT_VIDEO_EXACT_CORNER_REGEX = r"_(top_left|top_right|bottom_left|bottom_right)_"
 
-# # Fallback upper/lower in videos appears like “…_upper_30fps_…” / “…_lower_30fps_…” 
+# # Fallback upper/lower in videos appears like “…_upper_30fps_…” / “…_lower_30fps_…”
 # OFT_VIDEO_UPDOWN_REGEX      = r"_(upper|lower)_"
 
 # Glob to find all .avi video files that contain "Vid_"

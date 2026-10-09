@@ -6,20 +6,19 @@ P(y_t, f_t | k, s) = P(y_t | k, s) * Normal(f_t | mu_{k,s}, sigma_{k,s}^2)
 where f_t = [log(duration_sec), log(mean_vel + 1.0)]
 """
 
-import sys
-import time
 import pickle
+import sys
 from pathlib import Path
-import numpy as np
-import jax
+
 import jax.numpy as jnp
-import pandas as pd
+import numpy as np
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
 from syllable_generation.analysis.sequence_viz.hierarchical_pilot.hierarchical_subroutine_model import (
-    HierarchicalSubroutineModel, jax_forward_backward
+    HierarchicalSubroutineModel,
+    jax_forward_backward,
 )
 
 DATA_PKL = REPO_ROOT / "syllable_generation/analysis/sequence_viz/data/unified_sequence_dataset.pkl"
@@ -98,7 +97,9 @@ class ContinuousHierarchicalModel(HierarchicalSubroutineModel):
         self.var_feat = np.ones((self.K, self.S, self.n_features), dtype=np.float32)
 
     def _build_transition_matrix(self):
-        from syllable_generation.analysis.sequence_viz.hierarchical_pilot.hierarchical_subroutine_model import build_transition_matrix_np
+        from syllable_generation.analysis.sequence_viz.hierarchical_pilot.hierarchical_subroutine_model import (
+            build_transition_matrix_np,
+        )
         return build_transition_matrix_np(self.M, self.K, self.S, self.p_advance, self.A_macro, self.B_routine)
 
     def get_log_emission_seq_joint(self, syllables, features):

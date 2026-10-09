@@ -1,11 +1,13 @@
 # loaders/jonathan/build.py
-from .context import BuildContext
-from syllable_generation.datamodel import SessionRecord
-from .steps import tracking, video, fiberphotometry
-
 # NEW: import project enrich and locate its overrides dir
 from pathlib import Path
+
+from syllable_generation.datamodel import SessionRecord
 from syllable_generation.projects.jonathan_openfield_example import enrich as project_enrich
+
+from .context import BuildContext
+from .steps import fiberphotometry, tracking, video
+
 
 def _project_overrides_dir() -> Path:
     # points to .../projects/jonathan_openfield_example/overrides

@@ -17,14 +17,15 @@ File: syllable_generation/analysis/language_models/pipelines/20_fit_production_m
 """
 
 import os
-import sys
 import pickle
+import sys
+
 import numpy as np
 import pandas as pd
-from sklearn.decomposition import TruncatedSVD
-from sklearn.preprocessing import normalize
 from sklearn.cluster import KMeans
+from sklearn.decomposition import TruncatedSVD
 from sklearn.mixture import GaussianMixture
+from sklearn.preprocessing import normalize
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
 if ROOT_DIR not in sys.path:
@@ -96,11 +97,11 @@ win_mids = np.array([w["mid_frame"] for w in win_meta])
 
 # 3. Fit Each Champion and Generate Intervals
 for model_name, cfg in CHAMPIONS.items():
-    print(f"\n=======================================================")
+    print("\n=======================================================")
     print(f"Fitting Champion Model: {model_name} (K={cfg['k']})")
     print(f"Config: {cfg}")
-    print(f"=======================================================")
-    
+    print("=======================================================")
+
     # Preprocessing
     mat = raw_trans_inputs + cfg["laplace_smooth"]
     if cfg["norm_type"] == "log1p":
@@ -109,10 +110,10 @@ for model_name, cfg in CHAMPIONS.items():
         mat = normalize(mat, norm="l1")
     elif cfg["norm_type"] == "l2":
         mat = normalize(mat, norm="l2")
-        
+
     svd = TruncatedSVD(n_components=cfg["svd_dim"], random_state=42)
     features = svd.fit_transform(mat)
-    
+
     if cfg["family"] == "KMeans":
         clf = KMeans(n_clusters=cfg["k"], init="k-means++", n_init=cfg["n_init"], random_state=42)
         labels = clf.fit_predict(features)
@@ -125,33 +126,33 @@ for model_name, cfg in CHAMPIONS.items():
         clf.fit(features)
         probs = clf.predict_proba(features)
         labels = np.argmax(probs, axis=1)
-        
+
     # Save Model Artifact
     model_save_path = os.path.join(MODEL_DIR, f"{model_name}.pkl")
     with open(model_save_path, "wb") as f:
         pickle.dump({"model": clf, "svd": svd, "config": cfg, "window_labels": labels, "window_probs": probs}, f)
     print(f"Saved model artifact to: {model_save_path}")
-    
+
     # 4. Generate Continuous Intervals for Every Session
     all_intervals = []
-    
+
     for s_idx, session in enumerate(raw_sessions):
         sid = session.session_id
         df = session.all_data_df
         total_frames = len(df)
-        
+
         # Get bouts for this session
         bouts = session_bouts[s_idx]
         if len(bouts) == 0:
             continue
-            
+
         cand_mask = (win_sids == sid)
         if not np.any(cand_mask):
             continue
-            
+
         cand_indices = np.where(cand_mask)[0]
         cand_win_mids = win_mids[cand_indices]
-        
+
         # Map each bout to closest window
         bout_strats = []
         bout_confs = []
@@ -162,7 +163,7 @@ for model_name, cfg in CHAMPIONS.items():
             conf = probs[closest_idx, st]
             bout_strats.append(st)
             bout_confs.append(conf)
-            
+
         # Merge adjacent identical strategy bouts into continuous intervals
         FPS_TRACKING = 80.025
         curr_strat = bout_strats[0]
@@ -170,12 +171,12 @@ for model_name, cfg in CHAMPIONS.items():
         curr_start_time = float(curr_start_frame / FPS_TRACKING)
         curr_confs = [bout_confs[0]]
         curr_bout_count = 1
-        
+
         for b_i in range(1, len(bouts)):
             b = bouts[b_i]
             st = bout_strats[b_i]
             conf = bout_confs[b_i]
-            
+
             if st == curr_strat:
                 curr_confs.append(conf)
                 curr_bout_count += 1
@@ -198,7 +199,7 @@ for model_name, cfg in CHAMPIONS.items():
                 curr_start_time = float(curr_start_frame / FPS_TRACKING)
                 curr_confs = [conf]
                 curr_bout_count = 1
-                
+
         # Final interval
         end_frame = int(bouts[-1]["end_frame"])
         end_time = float(end_frame / FPS_TRACKING)
@@ -213,7 +214,7 @@ for model_name, cfg in CHAMPIONS.items():
             "num_bouts": curr_bout_count,
             "mean_confidence": float(np.mean(curr_confs))
         })
-        
+
     df_intervals = pd.DataFrame(all_intervals)
     csv_path = os.path.join(OUT_DIR, f"session_strategy_intervals_{model_name}.csv")
     df_intervals.to_csv(csv_path, index=False)

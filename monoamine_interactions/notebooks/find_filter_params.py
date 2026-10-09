@@ -1,23 +1,24 @@
+import pickle
 import sys
 from pathlib import Path
-import pickle
+
+import joblib
 import numpy as np
 import pandas as pd
-from tqdm import tqdm
-import joblib
 from scipy.ndimage import gaussian_filter1d
+from tqdm import tqdm
 
 # Add project root to path
 try:
     project_root = Path(__file__).resolve().parents[2]
 except NameError:
     project_root = Path("../../").resolve()
-    
+
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
-from monoamine_interactions.notebooks.utils.photometry import motion_correct_biexponential
 from monoamine_interactions.analysis.phase_1_causality import varlingam
+from monoamine_interactions.notebooks.utils.photometry import motion_correct_biexponential
 
 # CONFIGURATION
 EVENT_KEY = "juvenile_first_sniff_min"
@@ -27,10 +28,10 @@ TARGET_TARGET = "rNAc_DA"
 
 PRE_SEC = 20
 POST_SEC = 40
-SLIDING_WINDOW_SEC = 10 
-STRIDE_SEC = 0.5       
-N_JOBS = -1            
-LAG = 5                
+SLIDING_WINDOW_SEC = 10
+STRIDE_SEC = 0.5
+N_JOBS = -1
+LAG = 5
 FPS = 20
 
 frames_calc_window = int(SLIDING_WINDOW_SEC * FPS)
@@ -67,13 +68,13 @@ def extract_data():
         except:
             adj = None
             success_var = False
-            
+
         for i, r1 in enumerate(regs):
             for j, r2 in enumerate(regs):
                 if i == j: continue
                 metrics['corr'][(r1, r2)] = corr_matrix[i, j]
                 if success_var:
-                    metrics['causal'][(r2, r1)] = adj[i, j] 
+                    metrics['causal'][(r2, r1)] = adj[i, j]
                 else:
                     metrics['causal'][(r2, r1)] = np.nan
         return metrics
@@ -81,33 +82,33 @@ def extract_data():
     all_results = []
     expected_length = None
     time_vec = None
-    
+
     for s in tqdm(sessions, desc=f"Extracting {EVENT_KEY}"):
         tm = s.metadata.get("timing_meta", {})
         t_event_min = tm.get(EVENT_KEY)
         if pd.isna(t_event_min): continue
         if '470' not in s.photometry: continue
-            
+
         df_470 = s.photometry['470']
         df_415 = s.photometry['415']
         ts_array = df_470['SystemTimestamp'].values
         t_start_sys = ts_array[0]
         target_ts_event = t_start_sys + (t_event_min * 60)
-        
+
         start_idx = np.abs(ts_array - (target_ts_event - PRE_SEC)).argmin()
         end_idx = np.abs(ts_array - (target_ts_event + POST_SEC)).argmin()
         if end_idx <= start_idx: continue
-            
+
         curr_len = end_idx - start_idx
         if expected_length is None: expected_length = curr_len
         if curr_len != expected_length:
             end_idx = start_idx + expected_length
-            if end_idx > len(ts_array): continue 
+            if end_idx > len(ts_array): continue
 
         genotype = s.metadata.get('genotype', 'Unknown')
         sm = s.metadata.get("signal_meta", {})
         region_map = {k: v.get("region") for k, v in sm.items() if v.get("region")}
-        
+
         dff_dict = {}
         for r in region_map.values():
             try:
@@ -115,26 +116,26 @@ def extract_data():
                 full_dff = motion_correct_biexponential(df_470[col].values, df_415[col].values)
                 dff_dict[r] = full_dff
             except: pass
-            
+
         valid_regs = list(dff_dict.keys())
         if len(valid_regs) < 2: continue
-        
+
         chunks = []
         peth_times = []
         for i in range(start_idx + frames_calc_window, end_idx, frames_stride):
             chunk_center_idx = i - (frames_calc_window // 2)
-            rel_time_sec = (ts_array[chunk_center_idx] - target_ts_event) / 60.0 * 60.0 
+            rel_time_sec = (ts_array[chunk_center_idx] - target_ts_event) / 60.0 * 60.0
             chunk = pd.DataFrame({r: dff_dict[r][i-frames_calc_window:i] for r in valid_regs})
             chunks.append(chunk)
             peth_times.append(rel_time_sec)
-            
+
         if time_vec is None:
             time_vec = np.array(peth_times)
 
         chunk_results = joblib.Parallel(n_jobs=N_JOBS)(
             joblib.delayed(run_windowed_metrics)(c, valid_regs) for c in chunks
         )
-        
+
         for pair in [("lNAc_5HT", "rNAc_DA")]:
             if pair[0] not in valid_regs or pair[1] not in valid_regs: continue
             corr_series = []
@@ -149,10 +150,10 @@ def extract_data():
                 else:
                     corr_series.append(np.nan)
                     causal_series.append(np.nan)
-                    
+
             interp_corr = np.interp(time_vec, peth_times, corr_series)
             interp_causal = np.interp(time_vec, peth_times, causal_series)
-            
+
             all_results.append({
                 'event': EVENT_KEY,
                 'genotype': genotype,
@@ -174,8 +175,8 @@ else:
     df_results = extract_data()
 
 # 2. Extract the specific Target Group arrays
-df_target = df_results[(df_results['genotype'] == TARGET_GENOTYPE) & 
-                       (df_results['source'] == TARGET_SOURCE) & 
+df_target = df_results[(df_results['genotype'] == TARGET_GENOTYPE) &
+                       (df_results['source'] == TARGET_SOURCE) &
                        (df_results['target'] == TARGET_TARGET)]
 
 caus_arrays = np.vstack(df_target['causal_array'].values)
@@ -201,7 +202,7 @@ print(f"Peak Value: {peak_val:.4f}, Peak Error: {peak_err:.4f}, SNR: {(peak_val/
 
 print("\nTo kill this plot, your parameters must be:")
 print(f"1. `threshold` > {max_smoothed:.4f}")
-print(f"OR")
+print("OR")
 print(f"2. `shadow_rule_multiplier` > {(peak_val/peak_err):.2f}")
 
 # Let's see what threshold is needed for sigma=2.0 and sigma=3.0

@@ -10,25 +10,26 @@ File: syllable_generation/analysis/language_models/pipelines/19_bayes_opt_kmeans
 """
 
 import os
-import sys
-import time
 import pickle
+import sys
 import threading
+import time
 import urllib.request
-import psutil
+
 import numpy as np
-import pandas as pd
 import optuna
-import wandb
-from sklearn.decomposition import TruncatedSVD
-from sklearn.preprocessing import normalize, StandardScaler
-from sklearn.cluster import KMeans
-from sklearn.mixture import GaussianMixture
-from sklearn.linear_model import Ridge
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import accuracy_score
+import psutil
 from scipy.spatial.distance import jensenshannon
+from sklearn.cluster import KMeans
+from sklearn.decomposition import TruncatedSVD
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import Ridge
+from sklearn.metrics import accuracy_score
+from sklearn.mixture import GaussianMixture
+from sklearn.model_selection import StratifiedKFold
+from sklearn.preprocessing import StandardScaler, normalize
+
+import wandb
 
 # Paths
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
@@ -137,18 +138,18 @@ for s_idx, s in enumerate(session_bouts):
     sid = raw_sessions[s_idx].session_id
     sylls = [b['syllable'] for b in s]
     mids = np.array([b['mid_frame'] for b in s])
-    
+
     cand_w_indices = [w_i for w_i, w_sid in enumerate(win_sids) if w_sid == sid]
     if len(cand_w_indices) == 0:
         continue
     cand_mids = win_mids[cand_w_indices]
-    
+
     N = len(sylls)
     if N > HORIZON * 2:
         for t in range(HORIZON, N - HORIZON, 3): # Stride 3 for rapid evaluation
             fut_counts = np.bincount(sylls[t : t + HORIZON], minlength=V)
             fut_dist = (fut_counts + 1e-4) / np.sum(fut_counts + 1e-4)
-            
+
             closest_w = cand_w_indices[np.argmin(np.abs(cand_mids - mids[t]))]
             sample_win_indices.append(closest_w)
             Y_fut_list.append(fut_dist)
@@ -182,12 +183,12 @@ def objective(trial: optuna.Trial) -> float:
     # Model Choice
     model_family = trial.suggest_categorical("model_family", ["KMeans", "GMM"])
     k_clusters = trial.suggest_categorical("k_clusters", [8, 16])
-    
+
     # Preprocessing Hyperparameters
     svd_dim = trial.suggest_categorical("svd_dim", [16, 24, 32, 48, 64, 96])
     norm_type = trial.suggest_categorical("norm_type", ["l2", "l1", "standard", "log1p", "none"])
     laplace_smooth = trial.suggest_float("laplace_smooth", 1e-5, 1.0, log=True)
-    
+
     # Step 1: Preprocess Transition Matrix
     mat = raw_trans_inputs + laplace_smooth
     if norm_type == "log1p":
@@ -196,22 +197,22 @@ def objective(trial: optuna.Trial) -> float:
         mat = normalize(mat, norm="l1")
     elif norm_type == "l2":
         mat = normalize(mat, norm="l2")
-        
+
     svd = TruncatedSVD(n_components=svd_dim, random_state=42)
     features = svd.fit_transform(mat)
-    
+
     if norm_type == "standard":
         features = StandardScaler().fit_transform(features)
     elif norm_type in ["l2", "log1p"]:
         features = normalize(features, norm="l2")
-        
+
     # Step 2: Fit Clustering Model
     if model_family == "KMeans":
         spherical = trial.suggest_categorical("spherical", [False, True])
         init_method = trial.suggest_categorical("init", ["k-means++", "random"])
         n_init = trial.suggest_int("n_init", 5, 20)
         max_iter = trial.suggest_int("max_iter", 100, 400)
-        
+
         km_feats = normalize(features, norm="l2") if spherical else features
         km = KMeans(n_clusters=k_clusters, init=init_method, n_init=n_init, max_iter=max_iter, random_state=42)
         labels = km.fit_predict(km_feats)
@@ -222,7 +223,7 @@ def objective(trial: optuna.Trial) -> float:
         init_params = trial.suggest_categorical("init_params", ["kmeans", "random", "k-means++"])
         n_init = trial.suggest_int("gmm_n_init", 1, 4)
         max_iter = trial.suggest_int("gmm_max_iter", 50, 200)
-        
+
         gmm = GaussianMixture(
             n_components=k_clusters, covariance_type=cov_type,
             reg_covar=reg_covar, init_params=init_params,
@@ -234,21 +235,21 @@ def objective(trial: optuna.Trial) -> float:
 
     # Step 3: Evaluate Future Action Budget Forecasting Gain (JS Error Reduction %)
     sample_strat_probs = probs[sample_win_indices] # (N_SAMPLES, k_clusters)
-    
+
     # Train Ridge regressor on 80% train, evaluate on 20% test
     m = Ridge(alpha=1.0).fit(sample_strat_probs[:N_TRAIN], Y_fut_arr[:N_TRAIN])
     preds = np.clip(m.predict(sample_strat_probs[N_TRAIN:]), 1e-5, 1.0)
     preds = preds / preds.sum(axis=1, keepdims=True)
-    
+
     js_model = float(np.mean([jensenshannon(y, p) for y, p in zip(Y_fut_arr[N_TRAIN:], preds)]))
     gain_future_60s = float((js_global - js_model) / js_global * 100.0)
-    
+
     # Step 4: Evaluate Scalar Probes (Spatial Exploration Entropy R²)
     probes = run_scalar_probing_battery(probs, all_raw_sylls, scalar_targets)
     r2_spatial = float(probes['Spatial Exploration Entropy']['r2_strategy'])
     r2_cadence = float(probes['Switch Cadence']['r2_strategy'])
     r2_chirality = float(probes['Turning Chirality']['r2_strategy'])
-    
+
     # Step 5: Evaluate Phenotype Classifiers
     props_full = np.zeros((len(sids), k_clusters))
     props_post = np.zeros((len(sids), k_clusters))
@@ -259,11 +260,11 @@ def objective(trial: optuna.Trial) -> float:
         p_idx = session_groups[sid]['post_indices']
         if len(p_idx) > 0:
             props_post[s_i] = np.mean(probs[p_idx], axis=0)
-            
+
     acc_gt = eval_rf(props_full, labels_gt)
     acc_drug = eval_rf(props_post, labels_drug)
     acc_4way = eval_rf(props_post, labels_4way)
-    
+
     # Log to WandB
     wandb.log({
         "trial": trial.number,
@@ -280,17 +281,17 @@ def objective(trial: optuna.Trial) -> float:
         "norm_type": norm_type,
         "laplace_smooth": laplace_smooth
     })
-    
+
     return gain_future_60s
 
 # 5. Main Execution
 if __name__ == "__main__":
     start_memory_watchdog(max_mem_pct=90.0)
-    
+
     WANDB_PROJECT = "language_models_in_vivo"
     WANDB_ENTITY = "sebeliassen"
     N_TRIALS = 200
-    
+
     wandb.init(
         project=WANDB_PROJECT,
         entity=WANDB_ENTITY,
@@ -298,13 +299,13 @@ if __name__ == "__main__":
         group="bayes_opt_kmeans_vs_gmm_k8_k16",
         config={"n_trials": N_TRIALS, "primary_metric": "gain_future_60s"}
     )
-    
-    start_msg = f"🚀 Bayesian Optimization Started: 200 Trials (KMeans vs GMM on K=8, 16). WandB logging active. Memory watchdog set to 90% RAM."
+
+    start_msg = "🚀 Bayesian Optimization Started: 200 Trials (KMeans vs GMM on K=8, 16). WandB logging active. Memory watchdog set to 90% RAM."
     print(start_msg)
     send_notification(start_msg)
-    
+
     study = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=42))
-    
+
     def trial_callback(study, trial):
         t_num = trial.number
         if t_num > 0 and (t_num % 25 == 0 or trial.value == study.best_value):
@@ -318,13 +319,13 @@ if __name__ == "__main__":
                 send_notification(update_msg)
 
     study.optimize(objective, n_trials=N_TRIALS, callbacks=[trial_callback], n_jobs=1)
-    
+
     # Save Results
     df_trials = study.trials_dataframe()
     res_path = os.path.join(out_dir, "bayes_opt_kmeans_vs_gmm_results.csv")
     df_trials.to_csv(res_path, index=False)
     print(f"Saved full results CSV to: {res_path}")
-    
+
     best_t = study.best_trial
     summary_msg = (
         f"🏁 Bayesian Optimization Finished ({N_TRIALS} Trials)!\n"

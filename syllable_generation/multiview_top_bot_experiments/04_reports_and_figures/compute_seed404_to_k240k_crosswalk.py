@@ -10,11 +10,11 @@ Generates:
   3. seed404_prelabeled_annotations.csv
 """
 
-import sys
-import re
 import json
+import re
 import time
 from pathlib import Path
+
 import h5py
 import numpy as np
 import pandas as pd
@@ -199,7 +199,7 @@ def main():
             if (idx + 1) % 25 == 0 or idx == len(common_sids) - 1:
                 print(f"  Processed {idx+1}/{len(common_sids)} sessions ({total_aligned_frames:,} frames aligned)...", flush=True)
 
-    print(f"\n[4/5] Computing conditional overlap probabilities & kinematic metrics...", flush=True)
+    print("\n[4/5] Computing conditional overlap probabilities & kinematic metrics...", flush=True)
     row_sums = C.sum(axis=1) # Total Seed 404 frames per syllable
     col_sums = C.sum(axis=0) # Total k240k frames per syllable
 
@@ -294,7 +294,7 @@ def main():
             "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ"),
         })
 
-    print(f"\n[5/5] Writing reports and export files...", flush=True)
+    print("\n[5/5] Writing reports and export files...", flush=True)
     df_prelabel = pd.DataFrame(prelabel_results)
     df_prelabel.to_csv(OUT_CSV, index=False)
     print(f"  ✅ Saved Prelabel CSV: {OUT_CSV}")
@@ -319,7 +319,7 @@ def main():
         "# Seed 404 to k240k Pre-Labeling Crosswalk & Behavioral Mapping",
         "",
         f"**Model:** `{MODEL_NAME}` (EML Champion Seed 404, Rank 1)  ",
-        f"**Reference Model:** `final_karen_model_k240k` (TopCam 17-keypoint baseline)  ",
+        "**Reference Model:** `final_karen_model_k240k` (TopCam 17-keypoint baseline)  ",
         f"**Cohort Co-occurrence Coverage:** {total_aligned_frames:,} precisely aligned frames across 110 shared sessions.  ",
         f"**Generated:** {time.strftime('%Y-%m-%d %H:%M:%S')}  ",
         "",

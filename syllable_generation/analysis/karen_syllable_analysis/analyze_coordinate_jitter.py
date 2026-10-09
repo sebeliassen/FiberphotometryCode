@@ -15,17 +15,20 @@ Also isolates whether the jitter in Y_est originates from:
 """
 
 import sys
+
 sys.path.insert(0, "/home/fsp585/Desktop/FiberphotometryCode")
 import pickle
 from pathlib import Path
+
 import numpy as np
+
 np.bool8 = np.bool_
-import pandas as pd
-from scipy import signal
 import jax.numpy as jnp
 import keypoint_moseq as kpms
-from jax_moseq.models.keypoint_slds import estimate_coordinates, estimate_aligned, rigid_transform
+import pandas as pd
+from jax_moseq.models.keypoint_slds import estimate_aligned, estimate_coordinates, rigid_transform
 from jax_moseq.utils import unbatch
+from scipy import signal
 
 PROJECT_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll/karen_project_2")
 MODEL_NAME = "final_karen_model_k240k"
@@ -129,19 +132,19 @@ def get_psd_metrics(trajectory_2d, fs=40.0):
     # Velocity (px/s)
     vel = np.diff(trajectory_2d, axis=0) * fs
     speed = np.linalg.norm(vel, axis=-1)
-    
+
     # Detrended speed PSD
     f, pxx = signal.welch(speed - np.mean(speed), fs=fs, nperseg=min(len(speed), 512))
-    
+
     total_power = np.trapz(pxx, f)
     hf_10 = np.trapz(pxx[f >= 10.0], f[f >= 10.0]) / (total_power + 1e-12)
     hf_15 = np.trapz(pxx[f >= 15.0], f[f >= 15.0]) / (total_power + 1e-12)
-    
+
     # Jerk (d^3 x / dt^3)
     acc = np.diff(vel, axis=0) * fs
     jerk = np.diff(acc, axis=0) * fs
     mean_jerk = np.mean(np.linalg.norm(jerk, axis=-1))
-    
+
     return {
         "mean_jerk": mean_jerk,
         "hf_power_gt_10hz": hf_10 * 100,

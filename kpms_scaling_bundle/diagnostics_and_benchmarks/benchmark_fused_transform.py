@@ -8,8 +8,10 @@ preallocated multi-threaded Numba kernel vs Current NumPy array allocations.
 """
 
 import time
+
 import numpy as np
 from numba import njit, prange
+
 
 # Current NumPy implementation
 def current_numpy_transform(Y_c, v_c, h_c, N_chunk, T):
@@ -74,7 +76,7 @@ def main():
     print(f"Max numerical difference: {diff:.3e}")
     assert diff < 1e-12, "Parity check failed!"
 
-    print(f"\nAcross 562 sequences (12 chunks of 50):")
+    print("\nAcross 562 sequences (12 chunks of 50):")
     print(f"  * Current NumPy (with 5 GB allocations):  {t_numpy:.3f} s")
     print(f"  * Fused Numba (0 allocations, multi-core): {t_numba:.3f} s")
     print(f"  * Speedup factor:                         {t_numpy / t_numba:.2f}x")

@@ -1,15 +1,15 @@
-import sys
+from pathlib import Path
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
-from pathlib import Path
-from tqdm import tqdm
 from scipy.stats import pearsonr
+from tqdm import tqdm
 
 # --- SETUP ---
 this_file = Path(__file__).resolve()
-repo_root = this_file.parents[3] 
+repo_root = this_file.parents[3]
 
 # --- CONFIGURATION ---
 DATA_DIR = repo_root / "syllable_generation" / "data"
@@ -42,46 +42,46 @@ sns.set(style="whitegrid", context="talk", font_scale=0.8)
 def get_base_records(peth_df):
     print("Melt to long format...")
     long_records = []
-    
+
     # FILTER OUT FLIPPED TRACES
     # Use only the Original (real-world non-flipped) sequences
     peth_df = peth_df[peth_df['true_direction'] == 'Original']
-    
+
     # Parse actual physical layouts from animals.csv
     animals_csv_path = repo_root / "syllable_generation" / "projects" / "jonathan_openfield_amph" / "overrides" / "animals.csv"
     animals_df = pd.read_csv(animals_csv_path)
     animals_df['ID'] = animals_df['ID'].astype(str).str.strip()
-    
+
     layout_map = {}
     for _, row in animals_df.iterrows():
         aid = row['ID']
         left = str(row['Left Hemisphere']).strip()
         right = str(row['Right Hemisphere']).strip()
-        
+
         # We only care about mice with BOTH DLS and DMS
         if ('DLS' in left and 'DMS' in right) or ('DMS' in left and 'DLS' in right):
             layout = f"{left} | {right}"
             layout_map[aid] = layout
-            
+
     print(f"Found {len(layout_map)} mice with dual DLS/DMS implants.")
-    
+
     for idx, row in peth_df.iterrows():
         sid = str(row['session_id'])
         aid = str(row.get('animal_id', '')).strip()
-        
+
         # If we can't find a dual DLS/DMS layout for this trace, skip it
         if not aid or aid not in layout_map:
             continue
-            
+
         mouse_layout = layout_map[aid]
-            
+
         brain_reg = row['brain_reg']
         if brain_reg not in ['DLS', 'DMS']:
             continue
-            
+
         raw_cond = row.get('condition', row['genotype'])
         drug_cond = raw_cond.rsplit('-', 1)[0] if '-' in raw_cond else raw_cond
-        
+
         base_dict = {
             'session_id': sid,
             'animal_id': aid,
@@ -96,7 +96,7 @@ def get_base_records(peth_df):
             'time_axis': row['time_axis']
         }
         long_records.append(base_dict)
-            
+
     return pd.DataFrame(long_records)
 
 def process_and_plot(peth_meta_df, average_by, share_y_axis):
@@ -104,7 +104,7 @@ def process_and_plot(peth_meta_df, average_by, share_y_axis):
     out_dir = BASE_OUTPUT_DIR / out_dir_name
     out_dir.mkdir(parents=True, exist_ok=True)
     print(f"\n--- Generating {out_dir_name} ---")
-    
+
     if average_by == "session":
         print("Averaging traces by session...")
         group_cols = ['session_id', 'animal_id', 'genotype', 'drug_cond', 'brain_reg', 'hemisphere', 'syllable', 'mouse_layout', 'syllable_name']
@@ -114,12 +114,12 @@ def process_and_plot(peth_meta_df, average_by, share_y_axis):
 
     print(f"Melt to long format (n={len(agg_df)} base traces)...")
     final_long_records = []
-    
+
     for idx, row in agg_df.iterrows():
         n_points = len(row['trace_data'])
         times = row['time_axis']
         traces = row['trace_data']
-        
+
         base_dict = {
             'session_id': row['session_id'],
             'animal_id': row.get('animal_id', ''),
@@ -130,7 +130,7 @@ def process_and_plot(peth_meta_df, average_by, share_y_axis):
             'mouse_layout': row['mouse_layout'],
             'syllable_name': row['syllable_name']
         }
-        
+
         for i in range(n_points):
             rec = base_dict.copy()
             rec['time'] = times[i]
@@ -142,22 +142,22 @@ def process_and_plot(peth_meta_df, average_by, share_y_axis):
 
     region_palette = {"DLS": "purple", "DMS": "orange"}
     plot_df = plot_df[plot_df['mouse_layout'] != 'Unknown']
-    
+
     unique_sylls = plot_df['syllable'].unique()
-    
+
     for syll in tqdm(unique_sylls, desc=f"Syllables ({out_dir_name})"):
         syll_df = plot_df[plot_df['syllable'] == syll]
         if syll_df.empty: continue
         syll_name = syll_df['syllable_name'].iloc[0]
-        
+
         row_order = ["WT", "KI"]
         col_order = ["Saline", "Amph-Pre", "Amph-Post"]
-        
+
         # The layouts from animals.csv look like "L-DLS | R-DMS" or "L-DMS | R-DLS"
         for layout in ["L-DLS | R-DMS", "L-DMS | R-DLS"]:
             layout_df = syll_df[syll_df['mouse_layout'] == layout]
             if layout_df.empty: continue
-            
+
             g = sns.relplot(
                 data=layout_df,
                 x="time", y="zdFF", hue="brain_reg",
@@ -166,27 +166,27 @@ def process_and_plot(peth_meta_df, average_by, share_y_axis):
                 height=3.5, aspect=1.2, palette=region_palette,
                 facet_kws={'sharey': share_y_axis}
             )
-            
+
             avg_type = "Sessions Averaged" if average_by == "session" else "All Events Averaged"
             y_axis_type = "Shared Y-Axis" if share_y_axis else "Local Y-Axis"
             g.fig.suptitle(f"Regional Comparison ({avg_type} | {y_axis_type})\n{syll_name} | Layout: {layout}", y=1.05)
             g.set_axis_labels("Time from Onset (s)", "Z-Scored dF/F (Baseline Subtracted)")
-            
+
             for ax in g.axes.flat:
                 title = ax.get_title()
                 parts = title.split('|')
                 geno_val = "WT"
                 drug_val = "Saline"
-                
+
                 for p in parts:
                     if "genotype" in p: geno_val = p.split('=')[-1].strip()
                     elif "drug_cond" in p: drug_val = p.split('=')[-1].strip()
-                        
+
                 n_dls = len(agg_df[(agg_df['syllable']==syll) & (agg_df['genotype']==geno_val) & (agg_df['drug_cond']==drug_val) & (agg_df['brain_reg']=='DLS') & (agg_df['mouse_layout']==layout)])
                 n_dms = len(agg_df[(agg_df['syllable']==syll) & (agg_df['genotype']==geno_val) & (agg_df['drug_cond']==drug_val) & (agg_df['brain_reg']=='DMS') & (agg_df['mouse_layout']==layout)])
-                
+
                 ax.set_title(f"{geno_val} | {drug_val}\n(DLS n={n_dls} | DMS n={n_dms})")
-                
+
                 sub_df = layout_df[(layout_df['genotype']==geno_val) & (layout_df['drug_cond']==drug_val)]
                 if not sub_df.empty:
                     try:
@@ -203,10 +203,10 @@ def process_and_plot(peth_meta_df, average_by, share_y_axis):
                                         verticalalignment='top', bbox=props)
                     except Exception as e:
                         print(f"Error calculating correlation: {e}")
-                
+
                 ax.axvline(0, color='gray', linestyle='--', zorder=0)
                 ax.axhline(0, color='gray', linewidth=0.8, zorder=0)
-                
+
             safe_layout = layout.replace(" ", "").replace("|", "_").replace("(", "").replace(")", "")
             out_path = out_dir / f"Syllable_{syll}_region_compare_{safe_layout}.png"
             g.fig.savefig(out_path, dpi=300, bbox_inches="tight")
@@ -226,17 +226,17 @@ def main():
         return
 
     BASE_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    
+
     peth_meta_df = get_base_records(peth_df)
-    
+
     if peth_meta_df.empty:
         print("[WARNING] No traces remained after applying animals.csv layout filters!")
         return
-    
+
     for avg_by in ["event", "session"]:
         for share_y in [True, False]:
             process_and_plot(peth_meta_df, avg_by, share_y)
-            
+
     print("\nRegional Comparison Plots Generation Completed.")
 
 if __name__ == "__main__":

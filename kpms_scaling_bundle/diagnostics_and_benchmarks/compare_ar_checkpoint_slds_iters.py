@@ -1,13 +1,11 @@
+import copy
 import os
 import sys
-import copy
 import time
+
 import numpy as np
+
 np.bool8 = np.bool_
-import jax
-import jax.numpy as jnp
-import jax.random as jr
-import h5py
 
 REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
 KPMS_DIR = os.path.join(REPO_ROOT, "syllable_generation", "syllabizers", "keypoint_moseq_syll")
@@ -16,11 +14,11 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import keypoint_moseq as kpms
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from utils.resample_batching import apply_optimizations
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+import keypoint_moseq as kpms
 import utils.resample_batching as rb
+from utils.resample_batching import apply_optimizations
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "karen_project_2")
 MODEL_NAME = "final_karen_model_k150k"
@@ -32,7 +30,7 @@ def calculate_duration_stats(z, mask):
         seq_m = mask[i] if mask.ndim > 1 else np.ones_like(seq_z, dtype=bool)
         valid_idx = np.where(seq_m)[0]
         if len(valid_idx) == 0: continue
-        
+
         curr_s = seq_z[valid_idx[0]]
         curr_len = 1
         for j in range(1, len(valid_idx)):
@@ -56,10 +54,10 @@ def run_comparative_experiment():
     print("=" * 85)
     print("  LOADING AR CHECKPOINT (Iteration 50) FROM final_karen_model_k150k")
     print("=" * 85)
-    
+
     # 1. Load full checkpoint at iteration 50
     model, data, metadata, current_iter = kpms.load_checkpoint(PROJECT_DIR, MODEL_NAME, iteration=50)
-    
+
     # 2. Slice to 30 videos (~300k frames) for safe unpatched GPU Kalman memory
     N_SLICED = 30
     print(f"Slicing dataset to first {N_SLICED} videos for exact GPU Kalman memory budgeting...")
@@ -69,9 +67,9 @@ def run_comparative_experiment():
     }
     if 'conf' in data and data['conf'] is not None:
         sliced_data['conf'] = data['conf'][:N_SLICED]
-        
+
     sliced_metadata = tuple(m[:N_SLICED] for m in metadata) if isinstance(metadata, tuple) else metadata
-    
+
     # Slice model states and noise_prior
     sliced_states = {}
     for k, v in model['states'].items():
@@ -79,26 +77,26 @@ def run_comparative_experiment():
             sliced_states[k] = v[:N_SLICED]
         else:
             sliced_states[k] = v
-            
+
     if 'noise_prior' in model and hasattr(model['noise_prior'], '__len__') and len(model['noise_prior']) >= N_SLICED:
         model['noise_prior'] = model['noise_prior'][:N_SLICED]
-            
+
     # Compute initial baseline stats at AR step 50
     nlags = model['hypparams']['ar_hypparams']['nlags']
     mask_z = sliced_data['mask'][:, nlags:]
     z_init = np.array(sliced_states['z'])
     init_stats = calculate_duration_stats(z_init, mask_z)
-    
+
     unq_z, cnts = np.unique(z_init[mask_z > 0], return_counts=True)
     active_99 = np.sum(np.cumsum(np.sort(cnts)[::-1]) / len(z_init[mask_z > 0]) < 0.99) + 1
-    
-    print(f"\n--- Initial AR Checkpoint State (Iteration 50) ---")
+
+    print("\n--- Initial AR Checkpoint State (Iteration 50) ---")
     print(f"  * Median Duration: {init_stats['median_frames']:.1f} frames ({init_stats['median_ms']:.1f} ms @ 40Hz)")
     print(f"  * Mean Duration:   {init_stats['mean_frames']:.2f} frames ({init_stats['mean_ms']:.1f} ms @ 40Hz)")
     print(f"  * Active Syllables (99% usage): {active_99} (Total unique: {len(unq_z)})")
     print(f"  * Total Bouts:     {init_stats['total_bouts']:,}")
     print("=" * 85)
-    
+
     # Save original references
     orig_resample_continuous = slds_gibbs.resample_continuous_stateseqs
     orig_resample_discrete = arhmm_gibbs.resample_discrete_stateseqs
@@ -108,14 +106,14 @@ def run_comparative_experiment():
     orig_resample_loc = slds_gibbs.resample_location
 
     NUM_ITERS = 2
-    
+
     # =========================================================================
     # BRANCH A: UNPATCHED ORIGINAL JAX KEYPOINT-MOSEQ
     # =========================================================================
     print("\n" + "=" * 85)
     print("  BRANCH A: UNPATCHED ORIGINAL JAX KPMS (2 SLDS Iterations)")
     print("=" * 85)
-    
+
     # Ensure unpatched references are active
     slds_gibbs.resample_continuous_stateseqs = orig_resample_continuous
     arhmm_gibbs.resample_discrete_stateseqs = orig_resample_discrete
@@ -123,13 +121,13 @@ def run_comparative_experiment():
     slds_gibbs.resample_scales = orig_resample_scales
     slds_gibbs.resample_heading = orig_resample_heading
     slds_gibbs.resample_location = orig_resample_loc
-    
+
     model_unpatched = copy.deepcopy(model)
     model_unpatched['states'] = copy.deepcopy(sliced_states)
-    
+
     out_dir_unpatched = os.path.join(KPMS_DIR, "scratch_unpatched_test")
     os.makedirs(out_dir_unpatched, exist_ok=True)
-    
+
     t0_unpatched = time.perf_counter()
     model_unpatched, _ = kpms.fit_model(
         model_unpatched, sliced_data, sliced_metadata, out_dir_unpatched,
@@ -141,25 +139,25 @@ def run_comparative_experiment():
         save_every_n_iters=10
     )
     time_unpatched = time.perf_counter() - t0_unpatched
-    
+
     z_unp = np.array(model_unpatched['states']['z'])
     stats_unp = calculate_duration_stats(z_unp, mask_z)
     unq_unp, cnts_unp = np.unique(z_unp[mask_z > 0], return_counts=True)
     active_99_unp = np.sum(np.cumsum(np.sort(cnts_unp)[::-1]) / len(z_unp[mask_z > 0]) < 0.99) + 1
-    
+
     print(f"\n[Unpatched Complete in {time_unpatched:.2f}s]")
     print(f"  * Median Duration: {stats_unp['median_frames']:.1f} frames ({stats_unp['median_ms']:.1f} ms)")
     print(f"  * Mean Duration:   {stats_unp['mean_frames']:.2f} frames ({stats_unp['mean_ms']:.1f} ms)")
     print(f"  * Active Syllables (99%): {active_99_unp}")
     print(f"  * Total Bouts:     {stats_unp['total_bouts']:,}")
-    
+
     # =========================================================================
     # BRANCH B: PATCHED & FIXED (ASCENDING LAG ORDER)
     # =========================================================================
     print("\n" + "=" * 85)
     print("  BRANCH B: PATCHED & FIXED OPTIMIZED KPMS (2 SLDS Iterations)")
     print("=" * 85)
-    
+
     # Define fixed ascending get_lags
     def _numpy_get_lags_fixed(x_np, nlags):
         N, T, D = x_np.shape
@@ -167,13 +165,13 @@ def run_comparative_experiment():
         return np.concatenate(lags, axis=-1)
     rb._numpy_get_lags = _numpy_get_lags_fixed
     apply_optimizations()
-    
+
     model_patched_fixed = copy.deepcopy(model)
     model_patched_fixed['states'] = copy.deepcopy(sliced_states)
-    
+
     out_dir_fixed = os.path.join(KPMS_DIR, "scratch_patched_fixed_test")
     os.makedirs(out_dir_fixed, exist_ok=True)
-    
+
     t0_fixed = time.perf_counter()
     model_patched_fixed, _ = kpms.fit_model(
         model_patched_fixed, sliced_data, sliced_metadata, out_dir_fixed,
@@ -185,25 +183,25 @@ def run_comparative_experiment():
         save_every_n_iters=10
     )
     time_fixed = time.perf_counter() - t0_fixed
-    
+
     z_fix = np.array(model_patched_fixed['states']['z'])
     stats_fix = calculate_duration_stats(z_fix, mask_z)
     unq_fix, cnts_fix = np.unique(z_fix[mask_z > 0], return_counts=True)
     active_99_fix = np.sum(np.cumsum(np.sort(cnts_fix)[::-1]) / len(z_fix[mask_z > 0]) < 0.99) + 1
-    
+
     print(f"\n[Patched (Fixed) Complete in {time_fixed:.2f}s]")
     print(f"  * Median Duration: {stats_fix['median_frames']:.1f} frames ({stats_fix['median_ms']:.1f} ms)")
     print(f"  * Mean Duration:   {stats_fix['mean_frames']:.2f} frames ({stats_fix['mean_ms']:.1f} ms)")
     print(f"  * Active Syllables (99%): {active_99_fix}")
     print(f"  * Total Bouts:     {stats_fix['total_bouts']:,}")
-    
+
     # =========================================================================
     # BRANCH C: BUGGY UNFIXED PATCH (REVERSED LAG ORDER) - NEGATIVE CONTROL
     # =========================================================================
     print("\n" + "=" * 85)
     print("  BRANCH C: BUGGY UNFIXED PATCH (REVERSED LAGS) - NEGATIVE CONTROL")
     print("=" * 85)
-    
+
     # Re-inject the buggy reversed get_lags
     def _numpy_get_lags_buggy(x_np, nlags):
         N, T, D = x_np.shape
@@ -211,13 +209,13 @@ def run_comparative_experiment():
         return np.concatenate(lags, axis=-1)
     rb._numpy_get_lags = _numpy_get_lags_buggy
     apply_optimizations()
-    
+
     model_patched_buggy = copy.deepcopy(model)
     model_patched_buggy['states'] = copy.deepcopy(sliced_states)
-    
+
     out_dir_buggy = os.path.join(KPMS_DIR, "scratch_patched_buggy_test")
     os.makedirs(out_dir_buggy, exist_ok=True)
-    
+
     t0_buggy = time.perf_counter()
     model_patched_buggy, _ = kpms.fit_model(
         model_patched_buggy, sliced_data, sliced_metadata, out_dir_buggy,
@@ -229,12 +227,12 @@ def run_comparative_experiment():
         save_every_n_iters=10
     )
     time_buggy = time.perf_counter() - t0_buggy
-    
+
     z_bug = np.array(model_patched_buggy['states']['z'])
     stats_bug = calculate_duration_stats(z_bug, mask_z)
     unq_bug, cnts_bug = np.unique(z_bug[mask_z > 0], return_counts=True)
     active_99_bug = np.sum(np.cumsum(np.sort(cnts_bug)[::-1]) / len(z_bug[mask_z > 0]) < 0.99) + 1
-    
+
     print(f"\n[Buggy Patch Complete in {time_buggy:.2f}s]")
     print(f"  * Median Duration: {stats_bug['median_frames']:.1f} frames ({stats_bug['median_ms']:.1f} ms)")
     print(f"  * Mean Duration:   {stats_bug['mean_frames']:.2f} frames ({stats_bug['mean_ms']:.1f} ms)")

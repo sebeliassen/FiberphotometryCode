@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-import copy
+
 import numpy as np
 
 # Numpy 2.x compatibility
@@ -15,16 +15,13 @@ if REPO_ROOT not in sys.path:
 if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
-import jax
 import jax.numpy as jnp
 import jax.random as jr
-
-import keypoint_moseq as kpms
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-from jax_moseq.models.arhmm.gibbs import resample_hdp_transitions
-
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+import keypoint_moseq as kpms
 import utils.resample_batching as rb
+from jax_moseq.models.arhmm.gibbs import resample_hdp_transitions
 
 PROJECT_DIR = os.path.join(KPMS_DIR, "karen_project_2")
 TEST_MODEL_NAME = "test_2_sessions_model"
@@ -49,7 +46,7 @@ def main():
     # 1. Load real 2-session checkpoint state in memory (READ ONLY)
     print(f"[1/4] Loading real preprocessed dataset from {TEST_MODEL_NAME}...")
     model, data, metadata, current_iter = kpms.load_checkpoint(PROJECT_DIR, TEST_MODEL_NAME)
-    
+
     # We slice to 4 sequences (~40,000 frames) for fast, realistic benchmarking
     N_SEQS = 4
     data_slice = {
@@ -68,12 +65,12 @@ def main():
     hypparams = model["hypparams"]
     raw_prior = model.get("noise_prior", 1.0)
     noise_prior = jnp.array(raw_prior[:N_SEQS]) if hasattr(raw_prior, "shape") else raw_prior
-    
+
     total_frames = int(data_slice["mask"].sum())
     print(f"      Benchmark dataset: {N_SEQS} sequences, {total_frames:,} active frames.")
-    
+
     seed = jr.PRNGKey(101)
-    
+
     # Check original functions before any patching
     orig_x_fn = slds_gibbs.resample_continuous_stateseqs
     orig_z_fn = arhmm_gibbs.resample_discrete_stateseqs
@@ -96,7 +93,7 @@ def main():
         s_warm = jr.fold_in(seed, 0)
         out = func(s_warm, *args, **kwargs)
         sync(out)
-        
+
         # Timed runs
         durations = []
         for r in range(n_runs):
@@ -244,17 +241,18 @@ def main():
     # [3/4] Checkpoint & Plotting Overhead Analysis
     print("\n[3/4] Measuring Checkpoint I/O & Plotting Overhead...")
     import tempfile
-    from keypoint_moseq.viz import plot_progress
+
     from keypoint_moseq.io import save_hdf5
+    from keypoint_moseq.viz import plot_progress
 
     with tempfile.TemporaryDirectory() as tmpdir:
         fake_ckpt = os.path.join(tmpdir, "test_ckpt.h5")
-        
+
         # Time saving checkpoint
         t0 = time.perf_counter()
         save_hdf5(fake_ckpt, model, "model_snapshots/1", exist_ok=True)
         t_save = time.perf_counter() - t0
-        
+
         # Time plotting progress (which default kpms runs when iteration == num_iters)
         t0 = time.perf_counter()
         try:
@@ -287,7 +285,7 @@ def main():
     print("-" * 90)
     print(f"{'TOTAL CORE COMPUTE ITERATION':<34} | {total_orig:12.4f} s | {total_patch:12.4f} s | {total_orig/total_patch:8.2f}x")
     print("=" * 90)
-    print(f"\nEXTRA OVERHEAD PER END-OF-CHUNK ITERATION:")
+    print("\nEXTRA OVERHEAD PER END-OF-CHUNK ITERATION:")
     print(f"  * Checkpoint Save (save_hdf5):       {t_save:6.3f} s")
     print(f"  * Progress Plots (plot_progress):     {t_plot:6.3f} s")
     print(f"  * AR Temporary Array Footprint:      {ar_temp_bytes/1e6:6.2f} MB (per update for N={N_SEQS})")

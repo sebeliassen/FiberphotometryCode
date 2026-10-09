@@ -1,10 +1,8 @@
 import os
 import sys
 import time
-import json
-import gc
-from pathlib import Path
 from collections import defaultdict
+from pathlib import Path
 
 # GPU / JAX configuration
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -21,21 +19,22 @@ if KPMS_DIR not in sys.path:
     sys.path.insert(0, KPMS_DIR)
 
 import numpy as np
+
 np.bool8 = np.bool_
 
-import jax
-import jax.numpy as jnp
-import jax.random as jr
-import keypoint_moseq as kpms
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
-import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-
-from utils.paths import ref_pairs_from_sessions
-from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg
-from utils.batch_init import batched_init_model_by_video
-from utils.resample_batching import apply_optimizations
-import pandas as pd
 import shutil
+
+import jax
+import jax.random as jr
+import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+import keypoint_moseq as kpms
+import pandas as pd
+from utils.batch_init import batched_init_model_by_video
+from utils.paths import ref_pairs_from_sessions
+from utils.resample_batching import apply_optimizations
+from utils.trimming import clamp_conf_nonneg, filter_with_masks, presence_mask_from_conf
+
 
 def device_put_as_scalar(x):
     as_scalar = lambda arr: arr.item() if hasattr(arr, 'shape') and arr.shape == () else arr
@@ -201,7 +200,7 @@ def main():
     clamp_conf_nonneg(filtered_confs)
     data, metadata = kpms.format_data(filtered_coords, filtered_confs, **kpms.load_config(SCRATCH_PROJECT_DIR))
     pca = kpms.fit_pca(**data, **kpms.load_config(SCRATCH_PROJECT_DIR))
-    
+
     total_frames = int(data['mask'].sum())
     print(f"[Setup] Total modeled frames: {total_frames:,}")
 
@@ -253,13 +252,13 @@ def main():
     Ab_arr = np.array(model["params"]["Ab"])
     Q_arr = np.array(model["params"]["Q"])
     s_arr = np.array(model["states"]["s"])
-    
+
     unique_sylls = len(np.unique(z_arr))
     mean_abs_x = float(np.mean(np.abs(x_arr)))
     mean_frobenius_Ab = float(np.mean(np.linalg.norm(Ab_arr, axis=(1, 2))))
     mean_frobenius_Q = float(np.mean(np.linalg.norm(Q_arr, axis=(1, 2))))
     mean_noise_s = float(np.mean(s_arr))
-    
+
     # -------------------------------------------------------------
     # 4. Results Table & Speedup Metrics
     # -------------------------------------------------------------
@@ -312,21 +311,21 @@ def main():
     print("                    CRITERIA EVALUATION SUMMARY")
     print("=" * 75)
     peak_vram = max(vram_samples) if vram_samples else get_gpu_memory_mb()
-    print(f"1. SPEED CRITERION:")
+    print("1. SPEED CRITERION:")
     print(f"   * SLDS Iteration Speedup : {total_speedup_slds:.2f}x (from {baseline_slds['total']:.2f}s down to {opt_slds_total:.2f}s)")
     print(f"   * AR-HMM Iteration Speedup: {total_speedup_ar:.2f}x (from {baseline_ar_total:.2f}s down to {opt_ar_total:.2f}s)")
     print(f"   * resample_x Speedup     : {baseline_slds['slds_resample_x'] / np.mean(timers['slds_resample_x'][-TIMED_ITERS:]):.2f}x")
     print(f"   * resample_ar_params Speedup: {baseline_slds['ar_resample_ar_params'] / np.mean(timers['ar_resample_ar_params'][-TIMED_ITERS:]):.2f}x")
-    print(f"\n2. MEMORY CRITERION:")
+    print("\n2. MEMORY CRITERION:")
     print(f"   * Peak GPU VRAM Usage    : {peak_vram:.1f} MB / 24,564 MB ({peak_vram/24564*100:.1f}%)")
-    print(f"   * VRAM Overhead Status   : STABLE & BOUNDED (Safe from OOM)")
-    print(f"\n3. STATISTICAL FIDELITY CRITERION:")
+    print("   * VRAM Overhead Status   : STABLE & BOUNDED (Safe from OOM)")
+    print("\n3. STATISTICAL FIDELITY CRITERION:")
     print(f"   * Active Syllable States : {unique_sylls} states sampled")
     print(f"   * Mean Abs Latent X      : {mean_abs_x:.4f}")
     print(f"   * AR Dynamics Norm ||Ab|| : {mean_frobenius_Ab:.4f}")
     print(f"   * Noise Cov Norm ||Q||   : {mean_frobenius_Q:.4f}")
     print(f"   * Mean Noise Scale s     : {mean_noise_s:.4f}")
-    print(f"   * Distribution Status    : CONVERGING NORMALLY & STABLE")
+    print("   * Distribution Status    : CONVERGING NORMALLY & STABLE")
     print("=" * 75)
 
 

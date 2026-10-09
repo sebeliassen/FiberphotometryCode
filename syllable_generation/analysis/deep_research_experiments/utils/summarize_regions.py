@@ -1,6 +1,4 @@
-import pandas as pd
 import sys
-import os
 from collections import Counter
 
 REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
@@ -21,10 +19,10 @@ for proj in ['ifdn', 'amph']:
                 reg = info.get('brain_reg', 'UNK').upper()
                 session_regions.add(reg)
             regions.append(tuple(sorted(list(session_regions))))
-        
+
         counts = Counter(regions)
         for regs, count in counts.items():
             print(f"  {regs}: {count} sessions")
-            
+
     except Exception as e:
         print(f"Error loading {proj}: {e}")

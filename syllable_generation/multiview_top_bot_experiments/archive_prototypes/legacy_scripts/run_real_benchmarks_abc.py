@@ -12,9 +12,9 @@ Executes Empirical Benchmarks A, B, and C on REAL TopCam + BotCam data:
 import os
 import sys
 import time
-import json
 import urllib.request
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import PCA
@@ -242,7 +242,7 @@ def run_benchmark_b():
 
         from clock_sync import align_camera_timestamps
         aligned_idx, sync_stats = align_camera_timestamps(top_ts, bot_ts)
-        print(f"  Sync Results:")
+        print("  Sync Results:")
         print(f"    Total TopCam Frames:       {sync_stats['total_top_frames']:,}")
         print(f"    Matched BotCam Frames:     {sync_stats['matched_bot_frames']:,} ({sync_stats['matched_bot_frames']/sync_stats['total_top_frames']*100:.2f}%)")
         print(f"    Dropped/Unmatched Frames:  {sync_stats['dropped_frames']:,}")

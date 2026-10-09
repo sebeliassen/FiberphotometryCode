@@ -18,11 +18,8 @@ Features:
 =============================================================================
 """
 
-import sys
 import json
-import pickle
 from pathlib import Path
-import numpy as np
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/hierarchical_pilot"
@@ -50,7 +47,7 @@ def build_4state_interactive_html(sessions_data, output_path):
         # Downsample posterior curve for smooth rendering (step of ~0.5s or per bout)
         onsets = s["onsets"]
         gamma = s["gamma_macro"]
-        
+
         # Subsample posterior points every 1-2 bouts to keep HTML compact
         step = max(1, len(onsets) // 2500)
         prob_curve = []
