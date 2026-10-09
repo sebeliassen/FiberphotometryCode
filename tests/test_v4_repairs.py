@@ -10,9 +10,13 @@ import types
 import unittest
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.needs_data
+
 import matplotlib
 import numpy as np
-from PIL import Image
+import PIL
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt

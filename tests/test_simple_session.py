@@ -2,6 +2,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.needs_data
+
 from fiberphotometry.config import PLOTTING_CONFIG
 from fiberphotometry.data.data_loading import DataContainer, load_all_sessions
 from fiberphotometry.data.session_loading import populate_containers
@@ -16,6 +18,8 @@ SRC = Path("/Users/fsp585/Desktop/GetherLabCode/FiberphotometryCode/src")
 @pytest.fixture(scope="module")
 def raw_sessions():
     """Discover & load up to 30 'cpt' sessions (but do NOT populate .dfs yet)."""
+    if not SRC.exists():
+        pytest.skip(f"Dataset root {SRC} does not exist")
     all_dirs = [
         d for d in SRC.iterdir()
         if d.is_dir() and any(c.is_dir() and c.name.startswith("T1_")

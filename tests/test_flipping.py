@@ -3,6 +3,9 @@ import os
 import sys
 
 import numpy as np
+import pytest
+
+pytestmark = pytest.mark.needs_data
 
 # Add parent directory to path to find utils
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'syllabizers', 'keypoint_moseq_syll')))

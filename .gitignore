@@ -13,6 +13,7 @@ __pycache__/
 .installed.cfg
 *.egg
 .pytest_cache/
+.ruff_cache/
 .ipynb_checkpoints/
 .vscode/
 .idea/
