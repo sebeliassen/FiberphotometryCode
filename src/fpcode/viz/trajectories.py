@@ -89,6 +89,9 @@ def plot_syllable_trajectories(
             ax.plot(traj[:, 0], traj[:, 1], alpha=0.5, linewidth=1.2)
             plotted += 1
 
+    if plotted == 0:
+        plt.close(fig)
+        raise ValueError(f"No bouts of at least 3 frames available for syllable {syllable_id}")
     ax.set_title(f"Syllable {syllable_id} Trajectories ({plotted} bouts)")
     ax.set_xlabel("X (px)" if not centered else "dX (px)")
     ax.set_ylabel("Y (px)" if not centered else "dY (px)")

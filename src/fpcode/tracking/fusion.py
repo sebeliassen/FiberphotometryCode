@@ -68,10 +68,12 @@ except ImportError:
 _CORE_DIR = Path(__file__).resolve().parent
 # Implementation files whose content changes invalidate fused caches.
 _FUSION_CODE_FILES = [
-    _CORE_DIR / "fusion_engine.py",
+    _CORE_DIR / "fusion.py",
     _CORE_DIR / "camera_correspondence.py",
-    _CORE_DIR / "ttl_sync.py",
-    _CORE_DIR / "schemas.py",
+    _CORE_DIR / "clock_sync.py",
+    _CORE_DIR.parent / "common" / "schemas.py",
+    _CORE_DIR.parent / "contracts" / "pose.py",
+    _CORE_DIR.parent / "behavior" / "kinematics.py",
 ]
 
 
@@ -97,18 +99,10 @@ def rot2d(angle: np.ndarray) -> np.ndarray:
     return R
 
 
-def smooth_heading_circular(theta: np.ndarray, window: int = 11) -> np.ndarray:
-    """Performs circular median smoothing on an angular trajectory."""
-    sin_s = median_filter(np.sin(theta), size=window, mode="nearest")
-    cos_s = median_filter(np.cos(theta), size=window, mode="nearest")
-    return np.arctan2(sin_s, cos_s)
-
-
-def smooth_centroid_median(c: np.ndarray, window: int = 11) -> np.ndarray:
-    """Performs median smoothing on an (N, 2) centroid trajectory."""
-    return np.column_stack(
-        [median_filter(c[:, 0], size=window, mode="nearest"), median_filter(c[:, 1], size=window, mode="nearest")]
-    )
+from fpcode.behavior.kinematics import (
+    smooth_heading_circular_legacy_fusion as smooth_heading_circular,
+    smooth_centroid_median_legacy_fusion as smooth_centroid_median,
+)
 
 
 def fuse_single_pair(

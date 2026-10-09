@@ -16,7 +16,6 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
 import h5py
-import keypoint_moseq as kpms
 import numpy as np
 import pandas as pd
 from scipy.ndimage import median_filter
@@ -35,18 +34,7 @@ TEMPLATE_PHOT_COLS = [
 ]
 
 
-def extract_and_export_results(
-    model: dict,
-    metadata: tuple,
-    project_dir: Union[Path, str],
-    model_name: str,
-    save_results: bool = True,
-) -> Dict[str, Any]:
-    """
-    Extract syllable and latent state results using keypoint_moseq.fitting.extract_results.
-    """
-    project_dir = str(project_dir)
-    return kpms.extract_results(model, metadata, project_dir, model_name, save_results=save_results)
+from fpcode.kpms.results import extract_and_export_results
 
 
 def export_tandem_cohort_results(

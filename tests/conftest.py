@@ -77,9 +77,5 @@ def golden_dir(repo_root):
     return repo_root / "tests" / "golden"
 
 
-def pytest_collection_modifyitems(config, items):
-    """Automatically assigns 'cpu' marker to all tests that do not explicitly require gpu or external data."""
-    cpu_mark = pytest.mark.cpu
-    for item in items:
-        if "gpu" not in item.keywords and "needs_data" not in item.keywords:
-            item.add_marker(cpu_mark)
+# The default testpaths in pyproject.toml are an explicit functional suite.
+# CPU is not a runtime guarantee: empirical/model tests require explicit paths.

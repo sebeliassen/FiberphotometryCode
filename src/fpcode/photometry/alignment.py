@@ -17,6 +17,10 @@ import pandas as pd
 _SIGNALISH_RE = re.compile(r"^signal_\d+(?:_.+)?$")
 _TS_RE = re.compile(r"^SystemTimestamp(?:_.+)?$")
 
+# Historical pandas interpolation is by row position, including endpoint fill.
+# New coordinate-aware consumers use fpcode.alignment.align_signal explicitly.
+LEGACY_ROW_LINEAR_BOTH_ENDS = "legacy_row_linear_both_ends"
+
 
 def _signalish_cols(df: pd.DataFrame) -> List[str]:
     return [c for c in df.columns if _SIGNALISH_RE.match(str(c))]
@@ -120,12 +124,16 @@ def combined_photometry_and_syllables(
     phot_ts_col: str = "SystemTimestamp",
     frame_idx_col: str = "frame_idx",
     interpolation_limit: int = 4,
+    *,
+    policy: str = LEGACY_ROW_LINEAR_BOTH_ENDS,
 ) -> pd.DataFrame:
     """
     Merge photometry channel(s) onto the syllables frame index via frame_idx,
     keep SystemTimestamp and signal_* columns, and linearly interpolate missing values.
     Returns a dataframe with the same index as session.syllables.
     """
+    if policy != LEGACY_ROW_LINEAR_BOTH_ENDS:
+        raise ValueError("unsupported legacy alignment policy; use fpcode.alignment for strict alignment")
     if freqs is None:
         freqs = ["470"]
 

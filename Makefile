@@ -1,54 +1,40 @@
-# ==============================================================================
-# FiberphotometryCode Automation Makefile
-# Reads environment paths dynamically with graceful defaults.
-# ==============================================================================
-
 PYTHON ?= python3
 PYTEST ?= $(PYTHON) -m pytest
 RUFF ?= $(PYTHON) -m ruff
+BACKUP_DEST ?= /mnt/hdd/backups/FiberphotometryCode
+SNAPSHOT ?=
+RESTORE_DEST ?=
 
-.PHONY: help test lint inventory backup verify-backup dry-run shims-report metrics
+.PHONY: help test lint architecture backup-plan backup verify-backup restore-backup shims-report metrics
 
 help:
-	@echo "Available Makefile targets:"
-	@echo "  make test          - Run fast CPU tests (unit and synthetic regression)"
-	@echo "  make lint          - Lint code files using ruff"
-	@echo "  make shims-report  - Display backward-compatibility shims inventory"
-	@echo "  make inventory     - Re-generate ARTIFACT_INVENTORY.tsv"
-	@echo "  make backup        - Execute Phase 0 Tier-A physical backup to /mnt/hdd"
-	@echo "  make verify-backup - Verify SHA-256 hashes between source and /mnt/hdd backup"
-	@echo "  make dry-run       - Execute read-only dry-runs (EML & calibration)"
-
+	@echo "test, lint, architecture, backup-plan, backup, verify-backup, restore-backup, shims-report, metrics"
 
 test:
-	@echo "Running fast CPU test suite via unified pyproject.toml configuration..."
-	$(PYTEST) -v
+	$(PYTEST) -q
 
 lint:
-	@echo "Running ruff linter across core codebase..."
-	$(RUFF) check core src/fpcode pipelines
+	$(RUFF) check src/fpcode pipelines ops/backup ops/repo/dependencies.py
 
-inventory:
-	@echo "Recomputing repository artifact inventory..."
-	$(PYTHON) scripts/generate_inventory.py
+architecture:
+	$(PYTHON) -B ops/repo/dependencies.py
+
+backup-plan:
+	$(PYTHON) -B ops/backup/snapshot.py plan --root "$(CURDIR)" --policy configs/backup.yaml
 
 backup:
-	@echo "Executing Tier-A physical backup..."
-	$(PYTHON) scripts/run_phase0_backup.py
+	$(PYTHON) -B ops/backup/snapshot.py create --root "$(CURDIR)" --destination "$(BACKUP_DEST)" --policy configs/backup.yaml
 
 verify-backup:
-	@echo "Verifying Tier-A cryptographic hashes against live originals..."
-	$(PYTHON) scripts/verify_tier_a_backup.py
+	@test -n "$(SNAPSHOT)" || (echo 'Supply SNAPSHOT=/path/to/sealed/snapshot'; exit 2)
+	$(PYTHON) -B ops/backup/snapshot.py verify --snapshot "$(SNAPSHOT)"
 
-dry-run:
-	@echo "Executing EML ranking dry-run..."
-	$(PYTHON) syllable_generation/multiview_top_bot_experiments/03_evaluation_and_eml/compute_tandem_cohort_eml_rankings.py --dry-run
-	@echo "Executing calibration validity audit..."
-	$(PYTHON) syllable_generation/multiview_top_bot_experiments/01_data_and_fusion/audit_calibration_validity.py
+restore-backup:
+	@test -n "$(SNAPSHOT)" -a -n "$(RESTORE_DEST)" || (echo 'Supply SNAPSHOT and a NEW RESTORE_DEST'; exit 2)
+	$(PYTHON) -B ops/backup/snapshot.py restore --snapshot "$(SNAPSHOT)" --destination "$(RESTORE_DEST)"
 
 shims-report:
-	@$(PYTHON) ops/repo/shims_report.py
+	$(PYTHON) -B ops/repo/shims_report.py
 
 metrics:
-	@$(PYTHON) ops/repo/metrics.py
-
+	$(PYTHON) -B ops/repo/metrics.py

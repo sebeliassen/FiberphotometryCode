@@ -1,0 +1,14 @@
+{
+  "wheel": "fiberphotometry_suite-0.2.0-py3-none-any.whl",
+  "work_directory": "/tmp/fpcode-package-0mptqz8h",
+  "status": "PASS",
+  "console_scripts": [
+    "fpcode-evaluate",
+    "fpcode-fuse",
+    "fpcode-render",
+    "fpcode-train"
+  ],
+  "calibration_files": 3,
+  "imports_from_outside_checkout": true,
+  "optional_model_backends_loaded": false
+}

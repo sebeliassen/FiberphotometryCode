@@ -168,10 +168,9 @@ def source_fingerprint(paths: Iterable[PathLike]) -> str:
     h = hashlib.sha256()
     for p in sorted(str(x) for x in paths):
         h.update(p.encode())
-        try:
-            h.update(Path(p).read_bytes())
-        except OSError:
-            h.update(b"<missing>")
+        # Missing implementation files are configuration errors, not stable
+        # fingerprints. Silently hashing '<missing>' hid stale paths after moves.
+        h.update(Path(p).read_bytes())
     return h.hexdigest()
 
 
@@ -252,16 +251,33 @@ def read_manifest(artifact: PathLike) -> Optional[Dict[str, Any]]:
     if not mp.exists():
         return None
     try:
-        return json.loads(mp.read_text())
+        value = json.loads(mp.read_text())
+        return value if isinstance(value, dict) else {"_corrupt": True}
     except (OSError, json.JSONDecodeError):
         return {"_corrupt": True}
+
+
+def _manifest_shape_valid(manifest: Dict[str, Any]) -> bool:
+    artifact = manifest.get("artifact")
+    inputs = manifest.get("inputs")
+    return (
+        isinstance(artifact, dict)
+        and isinstance(artifact.get("name"), str)
+        and isinstance(artifact.get("size"), int)
+        and isinstance(artifact.get("mtime_ns"), int)
+        and isinstance(manifest.get("config_hash"), str)
+        and isinstance(inputs, list)
+        and all(isinstance(item, dict) and isinstance(item.get("path"), str)
+                and isinstance(item.get("exists"), bool) for item in inputs)
+        and len({item["path"] for item in inputs}) == len(inputs)
+    )
 
 
 def verify_manifest(
     artifact: PathLike,
     *,
     kind: Optional[str] = None,
-    inputs: Sequence[PathLike] = (),
+    inputs: Optional[Sequence[PathLike]] = None,
     config: Optional[Dict[str, Any]] = None,
     code_files: Sequence[PathLike] = (),
     set_id: Optional[str] = None,
@@ -279,13 +295,15 @@ def verify_manifest(
     m = read_manifest(artifact)
     if m is None:
         return UNVERIFIED_NO_MANIFEST, ["no manifest sidecar; artifact provenance unknown"]
-    if m.get("_corrupt") or m.get("schema_version") != MANIFEST_SCHEMA_VERSION:
+    if (m.get("_corrupt") or m.get("schema_version") != MANIFEST_SCHEMA_VERSION
+            or not _manifest_shape_valid(m)):
         return CORRUPT_MANIFEST, ["manifest unreadable or unsupported schema_version"]
 
     reasons: List[str] = []
     st = artifact.stat()
     rec = m.get("artifact", {})
-    if rec.get("size") != int(st.st_size) or rec.get("mtime_ns") != int(st.st_mtime_ns):
+    if (rec.get("name") != artifact.name or rec.get("size") != int(st.st_size)
+            or rec.get("mtime_ns") != int(st.st_mtime_ns)):
         reasons.append("artifact size/mtime differs from manifest (modified or truncated after publication)")
     if kind is not None and m.get("kind") != kind:
         reasons.append(f"kind mismatch: manifest={m.get('kind')} expected={kind}")
@@ -296,7 +314,9 @@ def verify_manifest(
             reasons.append("implementation source changed since artifact was built")
     if set_id is not None and m.get("set_id") != set_id:
         reasons.append(f"set_id mismatch: manifest={m.get('set_id')} expected={set_id}")
-    if check_inputs and inputs:
+    # Omitted inputs skip input comparison; an explicit empty sequence means
+    # there are now no inputs and must detect removal of the last dependency.
+    if check_inputs and inputs is not None:
         why = _inputs_match(m.get("inputs", []), [fingerprint_file(p) for p in inputs])
         if why:
             reasons.append(why)
@@ -321,7 +341,7 @@ def verify_artifact_set(
         status, reasons = verify_manifest(path, set_id=set_id, config=config, check_inputs=False)
         per[name] = (status, reasons)
         m = read_manifest(path)
-        if m and not m.get("_corrupt"):
+        if m and _manifest_shape_valid(m):
             hashes.add(m.get("config_hash"))
     overall = OK
     for status, _ in per.values():

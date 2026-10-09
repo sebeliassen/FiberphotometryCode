@@ -22,7 +22,11 @@ def load_yaml_config(config_path: Union[str, Path]) -> Dict[str, Any]:
 
     with open(p, "r", encoding="utf-8") as f:
         data = yaml.safe_load(f)
-    return data or {}
+    if data is None:
+        return {}
+    if not isinstance(data, dict):
+        raise ValueError(f"Configuration must be a mapping: {p}")
+    return data
 
 
 def compute_config_hash(config_dict: Dict[str, Any]) -> str:

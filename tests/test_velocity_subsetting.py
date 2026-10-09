@@ -64,7 +64,9 @@ def test_subset_by_activity_logic():
 
     assert len(sub_c['test']) == 4
 
-    print("Selected VFI:", sub_v['test'])
+    np.testing.assert_array_equal(sub_v['test'], [2, 3, 4, 5])
+    np.testing.assert_array_equal(sub_c['test'], coords[[2, 3, 4, 5]])
+    np.testing.assert_array_equal(sub_conf['test'], confs[[2, 3, 4, 5]])
 
     # Expected: The window covering the high velocity steps.
     # Ideally it should include indices 2,3,4,5

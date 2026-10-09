@@ -1,30 +1,15 @@
-# analysis/signal_processing.py
+"""Exploratory compatibility APIs backed by the shared library."""
 
-from collections import defaultdict
-
-import numpy as np
-from scipy import stats
+from fpcode.photometry.aggregation import group_signals as _group_signals
+from fpcode.statistics import compute_mean_ci as _compute_mean_ci
 
 
 def group_signals(sessions, key_fn):
-    """
-    Collect all non-empty signal_matrix arrays into groups.
-    key_fn: (session, signal_key) → grouping key (e.g. (genotype, event, region))
-    Returns dict: key → np.vstack(list_of_matrices)
-    """
-    groups = defaultdict(list)
-    for s in sessions:
-        for sig_key, info in s.signal_info.items():
-            mat = info.get('signal_matrix')
-            if mat is not None and mat.size:
-                groups[key_fn(s, sig_key)].append(mat)
-    return {k: np.vstack(v) for k, v in groups.items() if v}
+    return _group_signals(sessions, key_fn, missing="raise")
+
 
 def compute_mean_ci(mat, alpha=0.95):
-    """
-    Given mat shape (n_trials, n_time), return (mean, lower_ci, upper_ci).
-    """
-    ys = np.mean(mat, axis=0)
-    sem = np.std(mat, axis=0) / np.sqrt(mat.shape[0])
-    lo, hi = stats.norm.interval(alpha, loc=ys, scale=sem)
-    return ys, lo, hi
+    return _compute_mean_ci(mat, alpha, empty_policy="numpy")
+
+
+__all__ = ["group_signals", "compute_mean_ci"]

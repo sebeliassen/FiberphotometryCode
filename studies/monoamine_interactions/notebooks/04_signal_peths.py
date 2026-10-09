@@ -23,7 +23,7 @@ except NameError:
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
-from monoamine_interactions.notebooks.utils.photometry import motion_correct_biexponential
+from fpcode.photometry.session_signals import prepare_region_traces, legacy_nearest_window
 
 # %%
 # CONFIGURATION
@@ -87,8 +87,9 @@ for event in events_to_process:
         t_start_sys = ts_array[0]
         target_ts_event = t_start_sys + (t_event_min * 60)
 
-        start_idx = np.abs(ts_array - (target_ts_event - PRE_SEC)).argmin()
-        end_idx = np.abs(ts_array - (target_ts_event + POST_SEC)).argmin()
+        start_idx, end_idx = legacy_nearest_window(
+            ts_array, target_ts_event - PRE_SEC, target_ts_event + POST_SEC
+        )
 
         if end_idx <= start_idx: continue
 
@@ -105,23 +106,13 @@ for event in events_to_process:
         genotype = s.metadata.get('genotype', 'Unknown')
         sm = s.metadata.get("signal_meta", {})
         region_map = {k: v.get("region") for k, v in sm.items() if v.get("region")}
+        prepared = prepare_region_traces(s, normalization="global_zscore", errors="skip")
+        if prepared.failures:
+            print(f"Signal preparation skipped regions: {prepared.failures}")
 
         for r in region_map.values():
             try:
-                col = next((k for k, v in region_map.items() if v == r))
-                raw_470 = df_470[col].values
-                raw_415 = df_415[col].values
-
-                # Iso correction
-                full_dff = motion_correct_biexponential(raw_470, raw_415)
-
-                # Z-score globally
-                valid_z = ~np.isnan(full_dff)
-                z_dff = np.empty_like(full_dff)
-                z_dff[:] = np.nan
-                z_dff[valid_z] = (full_dff[valid_z] - np.nanmean(full_dff[valid_z])) / np.nanstd(full_dff[valid_z])
-
-                slice_dff = z_dff[start_idx:end_idx]
+                slice_dff = prepared.traces[r][start_idx:end_idx]
 
                 # Infer sensor
                 sensor = "Unknown"

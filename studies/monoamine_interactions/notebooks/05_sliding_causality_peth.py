@@ -31,7 +31,7 @@ if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
 from monoamine_interactions.analysis.phase_1_causality import varlingam
-from monoamine_interactions.notebooks.utils.photometry import motion_correct_biexponential
+from fpcode.photometry.session_signals import prepare_region_traces, legacy_nearest_window
 
 # %%
 # CONFIGURATION
@@ -152,8 +152,9 @@ for event in events_to_process:
         t_start_sys = ts_array[0]
         target_ts_event = t_start_sys + (t_event_min * 60)
 
-        start_idx = np.abs(ts_array - (target_ts_event - PRE_SEC)).argmin()
-        end_idx = np.abs(ts_array - (target_ts_event + POST_SEC)).argmin()
+        start_idx, end_idx = legacy_nearest_window(
+            ts_array, target_ts_event - PRE_SEC, target_ts_event + POST_SEC
+        )
 
         if end_idx <= start_idx: continue
 
@@ -166,16 +167,10 @@ for event in events_to_process:
             if end_idx > len(ts_array): continue
 
         genotype = s.metadata.get('genotype', 'Unknown')
-        sm = s.metadata.get("signal_meta", {})
-        region_map = {k: v.get("region") for k, v in sm.items() if v.get("region")}
-
-        dff_dict = {}
-        for r in region_map.values():
-            try:
-                col = next((k for k, v in region_map.items() if v == r))
-                full_dff = motion_correct_biexponential(df_470[col].values, df_415[col].values)
-                dff_dict[r] = full_dff
-            except: pass
+        prepared = prepare_region_traces(s, normalization="none", errors="skip")
+        dff_dict = prepared.traces
+        if prepared.failures:
+            print(f"Signal preparation skipped regions: {prepared.failures}")
 
         valid_regs = list(dff_dict.keys())
         if len(valid_regs) < 2: continue

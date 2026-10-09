@@ -18,6 +18,80 @@ from fpcode.common.logging import get_logger
 logger = get_logger("fpcode.viz.grid_movies")
 
 
+def exact_grid_layout(tiles: int) -> tuple[int, int]:
+    """Factor a tile count into a landscape grid without adding extra tiles."""
+    if isinstance(tiles, bool) or not isinstance(tiles, int) or tiles < 1:
+        raise ValueError("grid_size must be a positive integer")
+    rows = int(np.sqrt(tiles))
+    while tiles % rows:
+        rows -= 1
+    return rows, tiles // rows
+
+
+def _generate_selected_grid_movies(
+    viz, results, output_dir, video_paths, coordinates, centroids, headings,
+    video_frame_indexes, fps, rows, cols, min_frequency, min_duration,
+    overlay_keypoints, sampling_options, syllables, options,
+):
+    """Use backend primitives to select IDs before rendering, without relabeling.
+
+    The installed KPMS high-level renderer accepts arbitrary kwargs but ignores
+    ``syllables``. Selection therefore happens between its existing instance
+    extraction and sampling operations; source labels and timelines stay intact.
+    """
+    supported = {"pre", "post", "filter_size", "window_size", "max_video_size", "quality",
+                 "dot_radius", "dot_color", "bodyparts", "use_bodyparts", "skeleton",
+                 "plot_options", "use_dims", "keypoint_colormap"}
+    unknown = set(options) - supported
+    if unknown:
+        raise ValueError(f"Unsupported subset rendering options: {', '.join(sorted(unknown))}")
+    pre = round(options.get("pre", 1.0) * fps)
+    post = round(options.get("post", 2.0) * fps)
+    if coordinates is None:
+        raise ValueError("Subset grid movies require coordinates")
+    if options.get("bodyparts") is not None and options.get("use_bodyparts") is not None:
+        coordinates = viz.reindex_by_bodyparts(coordinates, options["bodyparts"], options["use_bodyparts"])
+    centroids = centroids if centroids is not None else {key: record["centroid"] for key, record in results.items()}
+    headings = headings if headings is not None else {key: record["heading"] for key, record in results.items()}
+    centroids, headings = viz.filter_centroids_headings(centroids, headings, filter_size=options.get("filter_size", 9))
+    labels = {key: record["syllable"] for key, record in results.items()}
+    viz.check_video_paths(video_paths, results.keys())
+    if video_frame_indexes is None:
+        video_frame_indexes = {key: np.arange(len(value)) for key, value in labels.items()}
+    if set(video_frame_indexes) != set(results) or any(len(video_frame_indexes[key]) != len(labels[key]) for key in labels):
+        raise ValueError("Video frame indexes must match all recording keys and label lengths")
+    instances = viz.get_syllable_instances(labels, pre=pre, post=post, min_duration=min_duration,
+                                         min_frequency=min_frequency, min_instances=rows * cols)
+    requested = set(syllables)
+    instances = {key: value for key, value in instances.items() if key in requested}
+    missing = requested - set(instances)
+    if missing:
+        raise ValueError(f"Requested syllables lack enough eligible bouts for the grid: {sorted(missing)}")
+    sampled = viz.sample_instances(instances, rows * cols, coordinates=coordinates,
+                                   centroids=centroids, headings=headings, **sampling_options)
+    window = options.get("window_size")
+    if window is None:
+        window = viz.get_grid_movie_window_size(sampled, centroids, headings, coordinates, pre, post)
+    window = int(window)
+    if window <= 0:
+        raise ValueError("Grid movie window_size must be positive")
+    scaled = min(int(np.floor(options.get("max_video_size", 1920) / max(rows, cols) / 16) * 16), window)
+    if scaled <= 0:
+        raise ValueError("max_video_size is too small for the requested grid")
+    edges = viz.get_edges(options.get("use_bodyparts"), options.get("skeleton", [])) if overlay_keypoints else []
+    plot_options = dict(options.get("plot_options", {}))
+    plot_options["keypoint_colormap"] = options.get("keypoint_colormap", "autumn")
+    for syllable, bouts in sampled.items():
+        frames = viz.grid_movie(
+            bouts, rows, cols, video_paths, centroids, headings, window, video_frame_indexes,
+            edges=edges, scaled_window_size=scaled, dot_color=options.get("dot_color", (255, 255, 255)),
+            pre=pre, post=post, dot_radius=options.get("dot_radius", 4),
+            overlay_keypoints=overlay_keypoints, coordinates=coordinates,
+            plot_options=plot_options, use_dims=options.get("use_dims", [0, 1]),
+        )
+        viz.write_video_clip(frames, str(output_dir / f"syllable{syllable}.mp4"), fps=fps, quality=options.get("quality", 7))
+
+
 def generate_grid_movies(
     results: Dict[str, Any],
     project_dir: Optional[Union[str, Path]] = None,
@@ -70,6 +144,8 @@ def generate_grid_movies(
             output_dir = Path("grid_movies")
     output_dir = Path(output_dir).resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
+    previous = {path.name: (path.stat().st_size, path.stat().st_mtime_ns)
+                for path in output_dir.glob("*.mp4")}
 
     logger.info(f"Generating grid movies ({sampling_mode} sampling) into {output_dir}...")
 
@@ -81,7 +157,15 @@ def generate_grid_movies(
             if sampling_mode == "density"
             else {"mode": "random"}
         )
-        kpms.generate_grid_movies(
+        if syllables is not None:
+            from keypoint_moseq import viz
+            _generate_selected_grid_movies(
+                viz, results, output_dir, video_paths, coordinates, centroids, headings,
+                video_frame_indexes, fps, rows, cols, min_frequency, min_duration,
+                overlay_keypoints, sampling_options, syllables, kwargs,
+            )
+        else:
+            kpms.generate_grid_movies(
             results=results,
             project_dir=str(project_dir) if project_dir else None,
             model_name=model_name,
@@ -99,8 +183,13 @@ def generate_grid_movies(
             overlay_keypoints=overlay_keypoints,
             sampling_options=sampling_options,
             **kwargs,
-        )
-        generated = list(output_dir.glob("*.mp4"))
+            )
+        generated = sorted(output_dir.glob("*.mp4"))
+        generated = [path for path in generated
+                     if previous.get(path.name) != (path.stat().st_size, path.stat().st_mtime_ns)]
+        if syllables is not None:
+            wanted = {f"syllable{syllable}.mp4" for syllable in syllables}
+            generated = [path for path in generated if path.name in wanted]
         return {
             "output_dir": str(output_dir),
             "sampling_mode": sampling_mode,

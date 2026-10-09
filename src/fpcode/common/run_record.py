@@ -5,6 +5,7 @@ Execution provenance tracking emitting atomic run.json manifests.
 """
 
 import hashlib
+from copy import deepcopy
 import json
 import os
 import platform
@@ -17,6 +18,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
 from .paths import resolve_path, to_relative_path
+from .cache_manifest import atomic_write_json
 
 
 def _get_git_info() -> Dict[str, Any]:
@@ -30,15 +32,16 @@ def _get_git_info() -> Dict[str, Any]:
 
 
 def _get_gpu_info() -> Dict[str, Any]:
-    gpu_info = {"available": False, "device_name": "None", "cuda_version": "None"}
+    """Inspect an already initialized backend without importing or starting one."""
+    gpu_info = {"available": False, "device_name": "None", "cuda_version": "None", "inspection": "not_initialized"}
     try:
-        import torch
-
-        if torch.cuda.is_available():
+        torch = sys.modules.get("torch")
+        if torch is not None and torch.cuda.is_initialized():
             gpu_info["available"] = True
             gpu_info["device_name"] = torch.cuda.get_device_name(0)
             gpu_info["device_count"] = torch.cuda.device_count()
             gpu_info["cuda_version"] = torch.version.cuda
+            gpu_info["inspection"] = "initialized_torch"
     except Exception:
         pass
     return gpu_info
@@ -61,14 +64,10 @@ class RunRecord:
     ):
         self.run_name = pipeline or run_name
         self.output_dir = Path(output_dir) if output_dir else Path(".")
-        self.config = config or {}
-        if config_path:
-            self.config["config_path"] = config_path
-        if config_hash:
-            self.config["config_hash"] = config_hash
-        if seed is not None:
-            self.config["seed"] = seed
-        self.extra = extra or {}
+        self.config = deepcopy(config or {})
+        self.source_config = {"path": config_path, "hash": config_hash}
+        self.seed = seed
+        self.extra = deepcopy(extra or {})
         self.start_time = time.time()
         self.start_time_iso = datetime.now(timezone.utc).isoformat()
         self.input_fingerprints: Dict[str, Any] = {}
@@ -129,6 +128,8 @@ class RunRecord:
             "git": _get_git_info(),
             "config_hash": config_hash,
             "config": self.config,
+            "source_config": self.source_config,
+            "seed": self.seed,
             "environment": {
                 "python_version": sys.version.split()[0],
                 "executable": sys.executable,
@@ -142,12 +143,5 @@ class RunRecord:
 
         self.output_dir.mkdir(parents=True, exist_ok=True)
         run_json_path = self.output_dir / "run.json"
-        temp_path = self.output_dir / f"run.json.tmp.{os.getpid()}"
-
-        with open(temp_path, "w", encoding="utf-8") as f:
-            json.dump(record_data, f, indent=2)
-            f.flush()
-            os.fsync(f.fileno())
-
-        os.replace(temp_path, run_json_path)
+        atomic_write_json(run_json_path, record_data)
         return run_json_path

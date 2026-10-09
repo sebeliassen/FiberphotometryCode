@@ -11,27 +11,31 @@ import numpy as np
 from scipy.ndimage import median_filter
 
 
-def smooth_heading_circular(theta: np.ndarray, window: int = 11) -> np.ndarray:
+def smooth_heading_circular(theta: np.ndarray, window: int = 11, *, policy: str = "behavior") -> np.ndarray:
     """
     Applies median filtering to heading angles by smoothing complex phasors
     e^(i*theta), avoiding phase wrap discontinuities around +/- pi.
     """
-    if len(theta) <= 2:
+    if policy not in {"behavior", "legacy_fusion"}:
+        raise ValueError("unknown smoothing policy")
+    if policy == "behavior" and len(theta) <= 2:
         return np.asarray(theta, dtype=float)
-    if window % 2 == 0:
+    if policy == "behavior" and window % 2 == 0:
         window += 1
     sin_smooth = median_filter(np.sin(theta), size=window, mode="nearest")
     cos_smooth = median_filter(np.cos(theta), size=window, mode="nearest")
     return np.arctan2(sin_smooth, cos_smooth)
 
 
-def smooth_centroid_median(c: np.ndarray, window: int = 11) -> np.ndarray:
+def smooth_centroid_median(c: np.ndarray, window: int = 11, *, policy: str = "behavior") -> np.ndarray:
     """
     Applies axis-wise median filtering to 2D centroid coordinates.
     """
-    if len(c) <= 2:
+    if policy not in {"behavior", "legacy_fusion"}:
+        raise ValueError("unknown smoothing policy")
+    if policy == "behavior" and len(c) <= 2:
         return np.asarray(c, dtype=float)
-    if window % 2 == 0:
+    if policy == "behavior" and window % 2 == 0:
         window += 1
     return np.column_stack(
         [
@@ -41,9 +45,9 @@ def smooth_centroid_median(c: np.ndarray, window: int = 11) -> np.ndarray:
     )
 
 
-def clean_short_runs(mask: np.ndarray, min_true: int = 1, min_false: int = 1) -> np.ndarray:
+def clean_short_runs(mask: np.ndarray, min_true: int = 1, min_false: int = 1, *, coerce_bool: bool = True) -> np.ndarray:
     """Remove ON runs shorter than min_true, and OFF runs shorter than min_false."""
-    m = np.asarray(mask, dtype=bool).copy()
+    m = np.asarray(mask, dtype=bool).copy() if coerce_bool else mask.copy()
     if m.size == 0:
         return m
 
@@ -158,3 +162,66 @@ def subset_by_activity(
         vfi_sub[k] = video_frame_indexes[k][best_start:best_end]
 
     return coords_sub, confs_sub, vfi_sub
+
+def smooth_heading_circular_legacy_fusion(theta: np.ndarray, window: int = 11) -> np.ndarray:
+    """Preserve fusion's historical short-series and even-window behavior."""
+    return smooth_heading_circular(theta, window, policy="legacy_fusion")
+
+
+def smooth_centroid_median_legacy_fusion(c: np.ndarray, window: int = 11) -> np.ndarray:
+    """Preserve fusion's historical short-series and even-window behavior."""
+    return smooth_centroid_median(c, window, policy="legacy_fusion")
+
+
+def presence_mask_from_conf_kpms(
+    conf: np.ndarray,
+    p_thresh: float = 0.9,
+    frac_min_parts: float = 0.4,
+    smooth_win: int = 7,
+    enter_thresh: float = 0.65,
+    exit_thresh: float = 0.45,
+    off_grace_frames: int = 6,
+    min_on_frames: int = 10,
+    min_off_frames: int = 6,
+) -> np.ndarray:
+    """
+    Generate boolean presence mask from bodypart confidence array (T, N).
+    Uses hysteresis and smoothing to avoid rapid flapping on brief occlusions.
+    """
+    T, N = conf.shape
+
+    valid = conf >= p_thresh
+    count = valid.sum(axis=1)
+    frac = count / float(N)
+
+    if smooth_win > 1:
+        k = np.ones(smooth_win, float) / smooth_win
+        sm = np.convolve(frac, k, mode="same")
+    else:
+        sm = frac
+
+    k_min = max(1, int(np.ceil(frac_min_parts * N)))
+    seed = count >= k_min
+
+    on = np.zeros(T, dtype=bool)
+    inside = False
+    below = 0
+    for t in range(T):
+        if not inside:
+            if (sm[t] >= enter_thresh) or seed[t]:
+                inside = True
+                below = 0
+        else:
+            if (sm[t] <= exit_thresh) and (not seed[t]):
+                below += 1
+                if below >= off_grace_frames:
+                    inside = False
+                    below = 0
+            else:
+                below = 0
+        on[t] = inside
+
+    if min_on_frames > 1 or min_off_frames > 1:
+        on = clean_short_runs(on, min_true=min_on_frames, min_false=min_off_frames, coerce_bool=False)
+
+    return on

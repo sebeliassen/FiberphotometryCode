@@ -20,9 +20,7 @@ def get_repo_root() -> Path:
     via project anchor files (pyproject.toml / ARTIFACT_INVENTORY.tsv).
     """
     if ENV_ROOT_VAR in os.environ and os.environ[ENV_ROOT_VAR].strip():
-        env_path = Path(os.environ[ENV_ROOT_VAR].strip()).resolve()
-        if env_path.exists():
-            return env_path
+        return Path(os.environ[ENV_ROOT_VAR].strip()).expanduser().resolve()
 
     # Discover upwards from current file
     current = Path(__file__).resolve().parent
@@ -30,7 +28,9 @@ def get_repo_root() -> Path:
         if (parent / "pyproject.toml").exists() or (parent / "ARTIFACT_INVENTORY.tsv").exists():
             return parent
 
-    return Path("/home/fsp585/Desktop/FiberphotometryCode")
+    # An installed wheel has no checkout anchor; callers can supply a root or
+    # resolve explicit inputs relative to their current working directory.
+    return Path.cwd().resolve()
 
 
 REPO_ROOT = get_repo_root()
@@ -43,9 +43,7 @@ def get_data_root() -> Path:
     without requiring physical file relocations.
     """
     if ENV_DATA_ROOT_VAR in os.environ and os.environ[ENV_DATA_ROOT_VAR].strip():
-        data_env = Path(os.environ[ENV_DATA_ROOT_VAR].strip()).resolve()
-        if data_env.exists():
-            return data_env
+        return Path(os.environ[ENV_DATA_ROOT_VAR].strip()).expanduser().resolve()
     return REPO_ROOT
 
 

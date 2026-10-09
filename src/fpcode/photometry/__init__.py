@@ -4,7 +4,7 @@ fpcode.photometry
 Fiber photometry signal processing, response metrics, and temporal alignment.
 """
 
-from .metrics import (
+from .response_metrics import (
     calculate_signal_response_metrics,
     calculate_signal_response_metrics_matrix,
 )

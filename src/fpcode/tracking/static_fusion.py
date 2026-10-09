@@ -60,11 +60,13 @@ def get_session_epoch(ts_str: str) -> str:
 
 
 _FUSION_CODE_FILES = [
-    _CORE_DIR / "static_fusion_engine.py",
+    _CORE_DIR / "static_fusion.py",
     _CORE_DIR / "static_arena_transforms.json",
     _CORE_DIR / "epoch_arena_transforms.json",
     _CORE_DIR / "camera_correspondence.py",
-    _CORE_DIR / "schemas.py",
+    _CORE_DIR / "clock_sync.py",
+    _CORE_DIR.parent / "common" / "schemas.py",
+    _CORE_DIR.parent / "contracts" / "pose.py",
 ]
 
 PAW_MAP = {
@@ -89,6 +91,7 @@ def fuse_single_pair_static(
     truncate_aborted_tail: bool = True,
     use_epochs: bool = False,
     overwrite: bool = False,
+    unmanifested_policy: str = "trust",
 ) -> Dict[str, Any]:
     """
     Fuses a matched TopCam and BotCam session using static per-arena affine projection.
@@ -112,6 +115,8 @@ def fuse_single_pair_static(
     """
     if keypoint_mode not in ("21kp", "23kp"):
         raise ValueError(f"Invalid keypoint_mode '{keypoint_mode}'. Must be '21kp' or '23kp'.")
+    if unmanifested_policy not in ("trust", "rebuild"):
+        raise ValueError("unmanifested_policy must be 'trust' or 'rebuild'")
 
     sid = pair_info["sid"]
     arena = pair_info.get("arena", "Arena1")
@@ -162,10 +167,11 @@ def fuse_single_pair_static(
             config=manifest_config,
             code_files=_FUSION_CODE_FILES,
         )
-        if cache_status in (_CACHE_OK, _CACHE_UNVERIFIED):
+        if cache_status == _CACHE_OK or (cache_status == _CACHE_UNVERIFIED and unmanifested_policy == "trust"):
             return {
                 "sid": sid,
                 "status": "CACHED",
+                "cache_verification": cache_status,
                 "keypoint_mode": keypoint_mode,
                 "path": str(out_h5_path),
                 "time": 0.0,
