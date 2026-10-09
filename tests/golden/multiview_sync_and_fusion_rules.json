@@ -1,0 +1,16 @@
+{
+  "baseline_name": "multiview_sync_and_fusion_rules",
+  "provenance": {
+    "source_file": "syllable_generation/multiview_top_bot_experiments/cohort_alignment_audit.csv",
+    "description": "Golden thresholds for North Star 4.2 dual-camera spatial-temporal synchronization",
+    "date_recorded": "2026-09-30"
+  },
+  "invariants": {
+    "min_total_sessions": 118,
+    "min_median_corr_x": 0.95,
+    "min_median_corr_y": 0.95,
+    "total_fused_keypoints": 23,
+    "dorsal_keypoints_count": 17,
+    "ventral_keypoints_count": 6
+  }
+}

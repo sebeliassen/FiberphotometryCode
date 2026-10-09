@@ -71,4 +71,22 @@ This document tracks known issues, historical incidents, and engineering defects
 - **Status**: **`[NOT FIXED]`**
 - **Location**: `tests/test_multiview_north_stars_4_1_to_4_3.py`
 - **Description**: Test asserts hardcoded legacy 118-session EML numbers and reads legacy relative rankings paths without fallback.
-- **Impact**: Fails if legacy rankings files are moved or if data is updated.
+- **Impact**: Fails if legacy rankings files are moved or if data is updated. Preserved in `tests/golden/eml_baseline_118sess_legacy_tandem.json`.
+
+### Issue 4.4: Signature Drift in `tests/test_flipping.py`
+- **Status**: **`[NOT FIXED]`**
+- **Location**: `tests/test_flipping.py`
+- **Description**: Calls `flip_data(data, conf_dict, bodyparts, mode='augmentation')` without the `image_width` parameter. The canonical `flip_data` function was updated to require `image_width` (correctly validated in `tests/test_flipping_width.py`).
+- **Impact**: Fails with `TypeError: flip_data() missing 1 required positional argument: 'image_width'`.
+
+### Issue 4.5: AST Pattern Mismatch in `tests/test_v4_repairs.py`
+- **Status**: **`[NOT FIXED]`**
+- **Location**: `tests/test_v4_repairs.py:123`, `tests/test_v4_repairs.py:136`
+- **Description**: AST inspections search for `render_superimposed` and `for b in manifest_bouts:` within `render_all_cohort_static_21kp_v2_seed101_trajectories.py`, which was refactored during visualization repairs.
+- **Impact**: Raises `KeyError` and `StopIteration` during AST traversal.
+
+### Issue 4.6: Module-Level Heavy Execution in `tests/test_oft_session_full_data.py`
+- **Status**: **`[NOT FIXED]`**
+- **Location**: `tests/test_oft_session_full_data.py:52`
+- **Description**: Exported Jupyter notebook executes `sessions = load_all_sessions(path, ...)` at global module import time rather than deferred inside a test function.
+- **Impact**: Ingests multi-gigabyte OFT datasets into RAM during test collection. Ignored in `pytest.ini` (`--ignore=tests/test_oft_session_full_data.py`).
