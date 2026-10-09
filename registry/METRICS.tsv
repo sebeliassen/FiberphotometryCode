@@ -1,5 +1,5 @@
 metric	phase0_baseline	current_head	delta	pct_change
-python_files	1609	1157	-452	-28.09%
+python_files	1609	1159	-450	-27.97%
 redundant_copies	767	82	-685	-89.31%
 files_with_home_path	841	337	-504	-59.93%
 sys_path_hacks	792	348	-444	-56.06%
