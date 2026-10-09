@@ -90,7 +90,8 @@ diagnostics/
 outputs/
 output/
 _backups/
-archive/
+archive/*
+!archive/ARCHIVE_INDEX.md
 **/visualizations_*/
 **/grid_movies*/
 **/trajectories/
