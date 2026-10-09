@@ -186,3 +186,36 @@ def assert_unchanged(before: Dict[str, Tuple[int, int]], after: Dict[str, Tuple[
         raise RuntimeError(
             "Source checkpoint(s) were modified during evaluation (must be read-only): " + ", ".join(changed)
         )
+
+
+def evaluate_checkpoints(
+    checkpoints: Sequence[PathLike],
+    output_dir: Optional[PathLike] = None,
+) -> Dict[str, Any]:
+    """Evaluates one or more model checkpoints, calculating identity, frequencies, and compatibility."""
+    import h5py
+
+    ckpt_paths = [Path(p) for p in checkpoints]
+    identities = {str(ck): read_checkpoint_identity(ck) for ck in ckpt_paths}
+    if len(ckpt_paths) > 1:
+        validate_model_compatibility(identities)
+
+    results = {}
+    for ck in ckpt_paths:
+        ident = identities[str(ck)]
+        with h5py.File(ck, "r") as f:
+            snap = f[f"model_snapshots/{ident['iteration']}"]
+            z = snap["states/z"][()]
+            counts = np.bincount(z.ravel(), minlength=ident["num_states"])
+            total = counts.sum()
+            freqs = counts / total if total > 0 else counts
+            reindex = stable_frequency_order(freqs)
+
+        results[str(ck)] = {
+            "identity": ident,
+            "reindex_order": reindex.tolist(),
+            "active_states": int(np.count_nonzero(counts)),
+            "max_frequency": float(freqs.max()) if len(freqs) > 0 else 0.0,
+        }
+    return results
+

@@ -65,9 +65,9 @@ def evaluate_model_checkpoints(
     checkpoints: list[Path], output_dir: Optional[Path] = None
 ) -> dict:
     """Core KPMS model cross-likelihood evaluation engine. Wired to fpcode.kpms.evaluation."""
-    raise NotImplementedError(
-        "not wired to syllable_generation/multiview_top_bot_experiments/03_evaluation_and_eml/compute_tandem_cohort_eml_rankings.py"
-    )
+    from fpcode.kpms.evaluation import evaluate_checkpoints
+    return evaluate_checkpoints(checkpoints, output_dir=output_dir)
+
 
 
 def run_evaluation(args: argparse.Namespace) -> int:

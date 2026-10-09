@@ -9,13 +9,13 @@ Automated Verification Suite for the Multiview KPMS Pipeline:
 
 import sys
 import unittest
-from pathlib import Path
 
 import h5py
 import numpy as np
 import pandas as pd
 
 from fpcode.common.paths import REPO_ROOT
+
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 

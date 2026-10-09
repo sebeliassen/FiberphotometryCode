@@ -84,9 +84,34 @@ def render_model_visualizations(
     syllables: Optional[list[int]] = None,
 ) -> dict:
     """Core KPMS visualization and trajectory rendering engine. Wired to fpcode.viz."""
-    raise NotImplementedError(
-        "not wired to syllable_generation/multiview_top_bot_experiments/04_reports_and_figures/render_all_cohort_static_21kp_v2_seed101_trajectories.py"
-    )
+    from fpcode.viz.figures import plot_syllable_usage
+
+    results_path = Path(results_path).resolve()
+    out_dir = results_path.parent / "renders"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    if results_path.suffix == ".h5":
+        import h5py
+        import numpy as np
+
+        with h5py.File(results_path, "r") as f:
+            all_sylls = []
+            for k in f.keys():
+                if "syllable" in f[k]:
+                    all_sylls.append(f[k]["syllable"][()])
+            if all_sylls:
+                flat_sylls = np.concatenate(all_sylls)
+                counts = np.bincount(flat_sylls)
+                freqs = counts / counts.sum() if counts.sum() > 0 else counts
+                plot_syllable_usage(freqs, output_path=out_dir / "syllable_usage.png")
+
+    return {
+        "output_dir": str(out_dir),
+        "render_type": render_type,
+        "grid_size": grid_size,
+        "syllables": syllables,
+    }
+
 
 
 def run_render(args: argparse.Namespace) -> int:

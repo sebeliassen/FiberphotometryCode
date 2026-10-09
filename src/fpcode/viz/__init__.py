@@ -5,6 +5,9 @@ Visualization tools for posture tracking, syllable grid movies,
 density-sampled trajectory renders, and quality control.
 """
 
+from .figures import plot_syllable_usage, plot_transition_matrix
+from .grid_movies import generate_grid_movies
+from .trajectories import plot_syllable_trajectories
 from .v2 import (
     HashCache,
     QCConfig,
@@ -55,4 +58,8 @@ __all__ = [
     "sha256_file",
     "sha256_json",
     "HashCache",
+    "generate_grid_movies",
+    "plot_syllable_trajectories",
+    "plot_syllable_usage",
+    "plot_transition_matrix",
 ]

@@ -75,9 +75,9 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
 
 def fit_model(cfg: dict, model_dir: Path, seed: int, device: str = "gpu") -> Path:
     """Core KPMS model training engine. Wired to fpcode.kpms.fit."""
-    raise NotImplementedError(
-        "not wired to syllable_generation/multiview_top_bot_experiments/02_training_runners"
-    )
+    from fpcode.kpms.fit import fit_model as _real_fit_model
+    return _real_fit_model(cfg, model_dir, seed=seed, device=device)
+
 
 
 def run_training(args: argparse.Namespace) -> int:

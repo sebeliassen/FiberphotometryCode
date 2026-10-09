@@ -18,6 +18,7 @@ from pathlib import Path
 import pandas as pd
 
 from fpcode.common.paths import REPO_ROOT
+
 EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
