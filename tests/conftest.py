@@ -75,3 +75,11 @@ def repo_root():
 def golden_dir(repo_root):
     """Return the absolute Path to tests/golden."""
     return repo_root / "tests" / "golden"
+
+
+def pytest_collection_modifyitems(config, items):
+    """Automatically assigns 'cpu' marker to all tests that do not explicitly require gpu or external data."""
+    cpu_mark = pytest.mark.cpu
+    for item in items:
+        if "gpu" not in item.keywords and "needs_data" not in item.keywords:
+            item.add_marker(cpu_mark)

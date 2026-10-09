@@ -6,9 +6,9 @@ Prevents accidental in-place mutations (the 'r+' incident) by refusing write mod
 on registered Tier-A artifacts.
 """
 
-import os
 from pathlib import Path
-from typing import Union, Any
+from typing import Any, Union
+
 import h5py
 
 IMMUTABLE_PATTERNS = [

@@ -6,19 +6,19 @@ Emits run.json recording git state, CLI arguments, configuration hashes,
 environment metadata, hardware specs, and input/output fingerprints.
 """
 
-import os
-import sys
-import json
-import time
-import socket
-import platform
 import hashlib
+import json
+import os
+import platform
+import socket
 import subprocess
-from pathlib import Path
+import sys
+import time
 from datetime import datetime, timezone
-from typing import Dict, Any, Optional, List, Union
+from pathlib import Path
+from typing import Any, Dict, Optional, Union
 
-from .paths import to_relative_path, resolve_path
+from .paths import resolve_path, to_relative_path
 
 
 def _get_git_info() -> Dict[str, Any]:

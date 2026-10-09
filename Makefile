@@ -1,38 +1,30 @@
 # ==============================================================================
 # FiberphotometryCode Automation Makefile
+# Reads environment paths dynamically with graceful defaults.
 # ==============================================================================
 
-PYTHON ?= /home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python
-PYTEST ?= /home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/pytest
+PYTHON ?= $(shell which python3 2>/dev/null || echo /home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python)
+PYTEST ?= $(shell which pytest 2>/dev/null || echo /home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/pytest)
+RUFF ?= $(shell which ruff 2>/dev/null || echo /home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/ruff)
 
 .PHONY: help test lint inventory backup verify-backup dry-run
 
 help:
 	@echo "Available Makefile targets:"
 	@echo "  make test          - Run fast CPU tests (unit and synthetic regression)"
-	@echo "  make lint          - Lint code files using ruff / compile checks"
+	@echo "  make lint          - Lint code files using ruff"
 	@echo "  make inventory     - Re-generate ARTIFACT_INVENTORY.tsv"
 	@echo "  make backup        - Execute Phase 0 Tier-A physical backup to /mnt/hdd"
-	@echo "  make verify-backup - Verify checksums between source and backup storage"
+	@echo "  make verify-backup - Verify SHA-256 hashes between source and /mnt/hdd backup"
 	@echo "  make dry-run       - Execute read-only dry-runs (EML & calibration)"
 
 test:
-	@echo "Running fast CPU test suite..."
-	$(PYTEST) tests/test_camera_correspondence_synthetic.py \
-	          tests/test_cache_manifest_synthetic.py \
-	          tests/test_eval_artifacts_synthetic.py \
-	          tests/test_fusion_provenance_and_cache_synthetic.py \
-	          tests/test_io_utils_hardening.py \
-	          tests/test_multiview_sync_and_renderer_regression.py \
-	          tests/test_velocity_subsetting.py \
-	          tests/test_flipping_width.py \
-	          tests/test_config_equivalence.py \
-	          -v
+	@echo "Running fast CPU test suite via unified pyproject.toml configuration..."
+	$(PYTEST) -v
 
 lint:
-	@echo "Validating syntax across core modules..."
-	$(PYTHON) -m py_compile core/*.py
-	@echo "Core syntax validated successfully."
+	@echo "Running ruff linter across core codebase..."
+	$(RUFF) check core
 
 inventory:
 	@echo "Recomputing repository artifact inventory..."
@@ -43,20 +35,8 @@ backup:
 	$(PYTHON) scripts/run_phase0_backup.py
 
 verify-backup:
-	@echo "Verifying Tier-A backup checksums against live originals..."
-	$(PYTHON) -c "\
-	import os, csv; \
-	h_dir = '/mnt/hdd/backups/TierA_backup_20261009'; \
-	inv = 'ARTIFACT_INVENTORY.tsv'; \
-	matches, checked = 0, 0; \
-	with open(inv) as f: \
-	    for row in csv.DictReader(f, delimiter='\t'): \
-	        if row['tier'] == 'A' and int(row['size']) < 2*1024**3: \
-	            p = os.path.join(h_dir, row['path']); \
-	            if os.path.exists(p): \
-	                checked += 1; \
-	print(f'Backup verification: {checked} Tier-A files verified present on /mnt/hdd.')\
-	"
+	@echo "Verifying Tier-A cryptographic hashes against live originals..."
+	$(PYTHON) scripts/verify_tier_a_backup.py
 
 dry-run:
 	@echo "Executing EML ranking dry-run..."

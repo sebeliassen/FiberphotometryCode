@@ -6,11 +6,11 @@ Provides structured logging with console + file handlers, and a unified
 ntfy.sh notification helper with graceful network failure handling.
 """
 
+import logging
 import os
 import sys
-import logging
-import urllib.request
 import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Optional, Union
 
@@ -93,7 +93,7 @@ def send_ntfy(
                 "Tags": str(tags),
             },
         )
-        with urllib.request.urlopen(req, timeout=8) as resp:
+        with urllib.request.urlopen(req, timeout=8):
             pass
         return True
     except Exception as e:
