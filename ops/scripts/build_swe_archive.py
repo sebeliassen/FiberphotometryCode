@@ -13,10 +13,12 @@ import time
 import zipfile
 from datetime import datetime, timezone
 
-WORKSPACE_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
+from pathlib import Path
+
+WORKSPACE_DIR = os.environ.get("REPO_ROOT", str(Path(__file__).resolve().parents[2]))
 OUTPUT_ZIP_PATH = os.path.join(WORKSPACE_DIR, "fiberphotometry_code_review.zip")
 
-EXCLUDE_DIR_NAMES = {".git", "__pycache__", ".pytest_cache"}
+EXCLUDE_DIR_NAMES = {".git", "__pycache__", ".pytest_cache", ".ruff_cache"}
 
 ALWAYS_CODE_EXTS = {
     ".py", ".md", ".rst", ".sh", ".bash", ".zsh",

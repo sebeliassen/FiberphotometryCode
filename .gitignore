@@ -147,6 +147,7 @@ fused_h5*/
 *concat*.tsv
 *review_package*.txt
 fiberphotometry_code_review.zip*
+SWE_ORGANIZATION_BOT_PROMPT.md
 
 # ------------------------------------------------------------------------------
 # 9. Whitelist Essential Repository Code, Configs, Documentation
