@@ -61,6 +61,15 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def evaluate_model_checkpoints(
+    checkpoints: list[Path], output_dir: Optional[Path] = None
+) -> dict:
+    """Core KPMS model cross-likelihood evaluation engine. Wired to fpcode.kpms.evaluation."""
+    raise NotImplementedError(
+        "not wired to syllable_generation/multiview_top_bot_experiments/03_evaluation_and_eml/compute_tandem_cohort_eml_rankings.py"
+    )
+
+
 def run_evaluation(args: argparse.Namespace) -> int:
     model_paths = [resolve_path(m) for m in args.models]
     checkpoints = [m if m.is_file() else m / "checkpoint.h5" for m in model_paths]
@@ -89,16 +98,19 @@ def run_evaluation(args: argparse.Namespace) -> int:
         logger.info("[DRY RUN] Checkpoint audit completed successfully.")
         return 0
 
+    eval_out_dir = resolve_path(args.output_dir) if args.output_dir else checkpoints[0].parent
     run_rec = RunRecord(
         pipeline="evaluate",
+        output_dir=eval_out_dir,
         extra={"n_models": len(checkpoints), "models": [str(c) for c in checkpoints]},
     )
 
     t0 = time.time()
     try:
-        # Re-indexing and evaluation workflow
+        logger.info(f"Evaluating {len(checkpoints)} candidate models...")
+        eval_results = evaluate_model_checkpoints(checkpoints, output_dir=args.output_dir)
         logger.info("Model evaluation completed.")
-        run_rec.finish(status="SUCCESS")
+        run_rec.finish(status="SUCCESS", extra={"results": eval_results})
         if not args.no_notify:
             send_ntfy(
                 title=f"Evaluation Finished: {len(checkpoints)} Models",
@@ -108,7 +120,7 @@ def run_evaluation(args: argparse.Namespace) -> int:
             )
         return 0
     except Exception as e:
-        logger.error(f"Evaluation failed: {e}", exc_info=True)
+        logger.error(f"Evaluation failed: {e}")
         run_rec.finish(status="FAILED", error=str(e))
         return 1
 

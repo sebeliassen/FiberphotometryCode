@@ -87,6 +87,7 @@ def run_fusion(args: argparse.Namespace) -> int:
 
     run_rec = RunRecord(
         pipeline="fuse",
+        output_dir=out_dir,
         config_path=str(config_path),
         config_hash=cfg_hash,
         extra={"mode": mode, "n_pairs": len(pairs)},

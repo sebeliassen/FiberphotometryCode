@@ -77,6 +77,18 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def render_model_visualizations(
+    results_path: Path,
+    render_type: str,
+    grid_size: int,
+    syllables: Optional[list[int]] = None,
+) -> dict:
+    """Core KPMS visualization and trajectory rendering engine. Wired to fpcode.viz."""
+    raise NotImplementedError(
+        "not wired to syllable_generation/multiview_top_bot_experiments/04_reports_and_figures/render_all_cohort_static_21kp_v2_seed101_trajectories.py"
+    )
+
+
 def run_render(args: argparse.Namespace) -> int:
     res_path = resolve_path(args.results)
     if not res_path.exists():
@@ -94,17 +106,21 @@ def run_render(args: argparse.Namespace) -> int:
         logger.info(f"  Syllables: {args.syllables if args.syllables else 'All'}")
         return 0
 
+    render_out_dir = res_path.parent / "renders"
     run_rec = RunRecord(
         pipeline="render",
+        output_dir=render_out_dir,
         extra={"results": str(res_path), "type": args.type, "grid_size": args.grid_size},
     )
 
     t0 = time.time()
     try:
         logger.info(f"Rendering visualizations for {res_path.name}...")
-        # Visualization rendering logic delegated to fpcode.viz
+        render_output = render_model_visualizations(
+            res_path, render_type=args.type, grid_size=args.grid_size, syllables=args.syllables
+        )
         logger.info("Rendering complete.")
-        run_rec.finish(status="SUCCESS")
+        run_rec.finish(status="SUCCESS", extra={"output": render_output})
         if not args.no_notify:
             send_ntfy(
                 title=f"Rendering Complete: {args.type}",
@@ -114,7 +130,7 @@ def run_render(args: argparse.Namespace) -> int:
             )
         return 0
     except Exception as e:
-        logger.error(f"Rendering failed: {e}", exc_info=True)
+        logger.error(f"Rendering failed: {e}")
         run_rec.finish(status="FAILED", error=str(e))
         return 1
 

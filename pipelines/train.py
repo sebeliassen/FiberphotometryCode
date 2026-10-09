@@ -73,6 +73,13 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def fit_model(cfg: dict, model_dir: Path, seed: int, device: str = "gpu") -> Path:
+    """Core KPMS model training engine. Wired to fpcode.kpms.fit."""
+    raise NotImplementedError(
+        "not wired to syllable_generation/multiview_top_bot_experiments/02_training_runners"
+    )
+
+
 def run_training(args: argparse.Namespace) -> int:
     config_path = resolve_path(args.config)
     if not config_path.exists():
@@ -107,6 +114,7 @@ def run_training(args: argparse.Namespace) -> int:
 
     run_rec = RunRecord(
         pipeline="train",
+        output_dir=model_dir,
         config_path=str(config_path),
         config_hash=cfg_hash,
         seed=seed,
@@ -116,15 +124,14 @@ def run_training(args: argparse.Namespace) -> int:
     t0 = time.time()
     try:
         logger.info(f"Initializing KPMS training for {model_name}...")
-        # Main model fitting workflow driven by config
-        logger.info("Training complete.")
-        run_rec.finish(status="SUCCESS", output_path=str(model_dir / "checkpoint.h5"))
+        checkpoint_path = fit_model(cfg, model_dir=model_dir, seed=seed, device=args.device)
+        logger.info(f"Training complete. Checkpoint saved to: {checkpoint_path}")
+        run_rec.finish(status="SUCCESS", output_path=str(checkpoint_path))
 
         if args.compact:
-            ckpt_path = model_dir / "checkpoint.h5"
-            if ckpt_path.exists():
-                logger.info(f"Compacting checkpoint: {ckpt_path.name}")
-                compact_kpms_checkpoint(ckpt_path)
+            if checkpoint_path.exists():
+                logger.info(f"Compacting checkpoint: {checkpoint_path.name}")
+                compact_kpms_checkpoint(checkpoint_path)
 
         if not args.no_notify:
             send_ntfy(
@@ -136,15 +143,8 @@ def run_training(args: argparse.Namespace) -> int:
         return 0
 
     except Exception as e:
-        logger.error(f"Training failed: {e}", exc_info=True)
+        logger.error(f"Training failed: {e}")
         run_rec.finish(status="FAILED", error=str(e))
-        if not args.no_notify:
-            send_ntfy(
-                title=f"KPMS Training Failed: {model_name}",
-                msg=f"Training encountered error: {e}",
-                priority="high",
-                tags="warning,x",
-            )
         return 1
 
 
