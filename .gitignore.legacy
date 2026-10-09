@@ -1,0 +1,41 @@
+#############################################
+# Positive gitignore: include only specified files
+#############################################
+# explicitly include these three notebooks
+!/fiberphotometry/notebooks/julia/test.ipynb
+!/fiberphotometry/notebooks/marco/test.ipynb
+!/fiberphotometry/notebooks/sebastian/session_averages.ipynb
+
+# Ignore all files by default
+*
+
+# Unignore directories for recursion
+!*/
+
+# Allow top-level boilerplate files
+!/.gitignore
+!/LICENSE
+!/README.md
+
+# Allow code directories
+!/fiberphotometry/
+!/scripts/
+!/tests/
+
+# Unignore subdirectories for recursion
+!/fiberphotometry/**/
+!/scripts/**/
+!/tests/**/
+
+# Only include Python and Notebook files in code directories
+!/fiberphotometry/**/*.py
+!/fiberphotometry/**/*.ipynb
+!/scripts/**/*.py
+!/scripts/**/*.ipynb
+!/tests/**/*.py
+!/tests/**/*.ipynb
+
+# Ignore caches and checkpoints everywhere
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
