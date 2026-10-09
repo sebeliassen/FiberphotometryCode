@@ -26,6 +26,7 @@ test:
 	          tests/test_multiview_sync_and_renderer_regression.py \
 	          tests/test_velocity_subsetting.py \
 	          tests/test_flipping_width.py \
+	          tests/test_config_equivalence.py \
 	          -v
 
 lint:
