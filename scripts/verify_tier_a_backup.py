@@ -1,1 +1,0 @@
-../ops/backup/verify_tier_a_backup.py

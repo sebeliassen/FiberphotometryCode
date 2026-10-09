@@ -1,1 +1,0 @@
-# Optimization library initialization

@@ -291,10 +291,10 @@ def main():
         refs = ref_counts[rel]
         mtime = ast_data["mtime"]
 
-        # Duplicate check
+        # Duplicate check (ignore 0-byte or empty __init__.py files)
         dup_of = ""
         same_hashes = hash_to_files[h]
-        if len(same_hashes) > 1 and same_hashes[0] != rel:
+        if lines > 0 and not rel.endswith("__init__.py") and len(same_hashes) > 1 and same_hashes[0] != rel:
             dup_of = same_hashes[0]
 
         # Classification rules:
@@ -304,7 +304,8 @@ def main():
             or "legacy" in rel.lower()
             or "dre_bk" in rel.lower()
             or "archive_prototypes" in rel.lower()
-            or dup_of != ""
+            or "scratch_expert_package" in rel.lower()
+            or (dup_of != "" and not rel.endswith("__init__.py"))
         )
 
         is_vendor = "keypoint_moseq_syll" in rel
