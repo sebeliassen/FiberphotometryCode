@@ -1,19 +1,22 @@
-#!/usr/bin/env python3
-"""[FORWARDER] Relocated to pipelines/train.py --config configs/training/cohort_calibrated_retrain_seed101.yaml"""
-import subprocess
-import sys
-from fpcode.common.paths import REPO_ROOT
+"""
+[DEPRECATED SHIM] syllable_generation/multiview_top_bot_experiments/02_training_runners/run_cohort_calibrated_retrain_seed101.py
+==================================================
+Relocated to: studies/behavior/multiview_experiments/02_training_runners/run_cohort_calibrated_retrain_seed101.py
+"""
 
-MODEL_NAME = "tandem_cohort_calibrated_50ar_200slds_seed101"
-TARGET_FPS = 60
-NUM_AR_ITERS = 50
-NUM_SLDS_ITERS = 200
-TOTAL_ITERS = 250
-SAVE_EVERY_N_ITERS = 25
-INIT_KAPPA = 7.5e13
-DECREASE_KAPPA_FACTOR = 10.0
-SLDS_KAPPA = 7.5e12
+import importlib
+import sys
+import warnings
+
+warnings.warn(
+    "syllable_generation.multiview_top_bot_experiments.02_training_runners.run_cohort_calibrated_retrain_seed101 is deprecated; import from studies.behavior.multiview_experiments.02_training_runners.run_cohort_calibrated_retrain_seed101 instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+_real = importlib.import_module("studies.behavior.multiview_experiments.02_training_runners.run_cohort_calibrated_retrain_seed101")
+sys.modules[__name__] = _real
 
 if __name__ == "__main__":
-    cfg = REPO_ROOT / "configs/training/cohort_calibrated_retrain_seed101.yaml"
-    sys.exit(subprocess.call([sys.executable, str(REPO_ROOT / "pipelines/train.py"), "--config", str(cfg)] + sys.argv[1:]))
+    if hasattr(_real, "main"):
+        _real.main()

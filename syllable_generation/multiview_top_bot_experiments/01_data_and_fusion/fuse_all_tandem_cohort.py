@@ -1,12 +1,22 @@
-#!/usr/bin/env python3
-"""[FORWARDER] Relocated to pipelines/fuse.py --config configs/fusion/all_tandem_cohort.yaml"""
-import subprocess
-import sys
-from fpcode.common.paths import REPO_ROOT
+"""
+[DEPRECATED SHIM] syllable_generation/multiview_top_bot_experiments/01_data_and_fusion/fuse_all_tandem_cohort.py
+==================================================
+Relocated to: studies/behavior/multiview_experiments/01_data_and_fusion/fuse_all_tandem_cohort.py
+"""
 
-MODE = "tandem_23kp"
-ARENA_WIDTH = 972.0
+import importlib
+import sys
+import warnings
+
+warnings.warn(
+    "syllable_generation.multiview_top_bot_experiments.01_data_and_fusion.fuse_all_tandem_cohort is deprecated; import from studies.behavior.multiview_experiments.01_data_and_fusion.fuse_all_tandem_cohort instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+_real = importlib.import_module("studies.behavior.multiview_experiments.01_data_and_fusion.fuse_all_tandem_cohort")
+sys.modules[__name__] = _real
 
 if __name__ == "__main__":
-    cfg = REPO_ROOT / "configs/fusion/all_tandem_cohort.yaml"
-    sys.exit(subprocess.call([sys.executable, str(REPO_ROOT / "pipelines/fuse.py"), "--config", str(cfg)] + sys.argv[1:]))
+    if hasattr(_real, "main"):
+        _real.main()

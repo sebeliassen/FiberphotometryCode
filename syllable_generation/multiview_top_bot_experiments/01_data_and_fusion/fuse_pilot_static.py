@@ -1,12 +1,22 @@
-#!/usr/bin/env python3
-"""[FORWARDER] Relocated to pipelines/fuse.py --config configs/fusion/pilot_static.yaml"""
-import subprocess
-import sys
-from fpcode.common.paths import REPO_ROOT
+"""
+[DEPRECATED SHIM] syllable_generation/multiview_top_bot_experiments/01_data_and_fusion/fuse_pilot_static.py
+==================================================
+Relocated to: studies/behavior/multiview_experiments/01_data_and_fusion/fuse_pilot_static.py
+"""
 
-MODE = "pilot_static"
-ARENA_WIDTH = 972.0
+import importlib
+import sys
+import warnings
+
+warnings.warn(
+    "syllable_generation.multiview_top_bot_experiments.01_data_and_fusion.fuse_pilot_static is deprecated; import from studies.behavior.multiview_experiments.01_data_and_fusion.fuse_pilot_static instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+_real = importlib.import_module("studies.behavior.multiview_experiments.01_data_and_fusion.fuse_pilot_static")
+sys.modules[__name__] = _real
 
 if __name__ == "__main__":
-    cfg = REPO_ROOT / "configs/fusion/pilot_static.yaml"
-    sys.exit(subprocess.call([sys.executable, str(REPO_ROOT / "pipelines/fuse.py"), "--config", str(cfg)] + sys.argv[1:]))
+    if hasattr(_real, "main"):
+        _real.main()

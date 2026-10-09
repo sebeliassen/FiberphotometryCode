@@ -1,18 +1,22 @@
-#!/usr/bin/env python3
-"""[FORWARDER] Relocated to pipelines/train.py --config configs/training/pilot_17kp_vs_21kp_comparison.yaml"""
-import subprocess
-import sys
-from fpcode.common.paths import REPO_ROOT
+"""
+[DEPRECATED SHIM] syllable_generation/multiview_top_bot_experiments/02_training_runners/run_pilot_17kp_vs_21kp_comparison.py
+==================================================
+Relocated to: studies/behavior/multiview_experiments/02_training_runners/run_pilot_17kp_vs_21kp_comparison.py
+"""
 
-MODEL_NAME = "pilot_17kp_vs_21kp_comparison"
-TARGET_FPS = 60
-NUM_AR_ITERS = 50
-NUM_SLDS_ITERS = 150
-TOTAL_ITERS = 200
-SAVE_EVERY_N_ITERS = 25
-INIT_KAPPA = 1.0e6
-SLDS_KAPPA = 1.5e12
+import importlib
+import sys
+import warnings
+
+warnings.warn(
+    "syllable_generation.multiview_top_bot_experiments.02_training_runners.run_pilot_17kp_vs_21kp_comparison is deprecated; import from studies.behavior.multiview_experiments.02_training_runners.run_pilot_17kp_vs_21kp_comparison instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+_real = importlib.import_module("studies.behavior.multiview_experiments.02_training_runners.run_pilot_17kp_vs_21kp_comparison")
+sys.modules[__name__] = _real
 
 if __name__ == "__main__":
-    cfg = REPO_ROOT / "configs/training/pilot_17kp_vs_21kp_comparison.yaml"
-    sys.exit(subprocess.call([sys.executable, str(REPO_ROOT / "pipelines/train.py"), "--config", str(cfg)] + sys.argv[1:]))
+    if hasattr(_real, "main"):
+        _real.main()
