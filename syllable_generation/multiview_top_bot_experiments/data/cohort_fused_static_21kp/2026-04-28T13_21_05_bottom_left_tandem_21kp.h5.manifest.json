@@ -1,0 +1,73 @@
+{
+  "artifact": {
+    "mtime_ns": 1791310476414207375,
+    "name": "2026-04-28T13_21_05_bottom_left_tandem_21kp.h5",
+    "size": 64537752
+  },
+  "code_files": [
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/static_fusion_engine.py",
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/static_arena_transforms.json",
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/camera_correspondence.py",
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/schemas.py"
+  ],
+  "code_hash": "381d19e565283604ba177a2e34f2e3607cb2330b81ee735401577a2f4e6e26a3",
+  "config": {
+    "affine_matrix": [
+      [
+        0.37591832876205444,
+        -0.005051410291343927
+      ],
+      [
+        0.0029903531540185213,
+        0.37878209352493286
+      ]
+    ],
+    "affine_translation": [
+      24.63942527770996,
+      -3.835340738296509
+    ],
+    "arena": "Arena2",
+    "arena_width": 972.0,
+    "keypoint_mode": "21kp",
+    "truncate_aborted_tail": true
+  },
+  "config_hash": "32294878a0703a310029567aa5f85a36daf3375c50b50a2702f82df34f55a45e",
+  "created_unix": 1791310476.4336963,
+  "dependencies": {
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "python": "3.10.19"
+  },
+  "extra": {
+    "arena": "Arena2",
+    "calibration_status": "VALID_CRYSTAL",
+    "frames": 248172,
+    "keypoint_mode": "21kp",
+    "matched_frames": 248164,
+    "sid": "2026-04-28T13_21_05_bottom_left"
+  },
+  "inputs": [
+    {
+      "exists": true,
+      "mtime_ns": 1784207804086952839,
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T5_15.16.22_28.04.2026_Arena1234_CenterTopCamVid_2026-04-28T13_21_05_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+      "size": 163000949
+    },
+    {
+      "exists": true,
+      "mtime_ns": 1790310766270357345,
+      "path": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/24_weeks_PI_T5_15_16_22_28_04_2026_active_Arena2_BotCamVid_2026-04-28T13_21_05/24_weeks_PI_T5_15_16_22_28_04_2026_active_Arena2_BotCamVid_2026-04-28T13_21_05DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5",
+      "size": 20092790
+    },
+    {
+      "exists": true,
+      "mtime_ns": 1791210365308689582,
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/static_arena_transforms.json",
+      "sha256": "b71672210bf0ceae6c56f30a8d80c64375b36c1cc7c8b447974cb44271b1ced9",
+      "size": 3336
+    }
+  ],
+  "kind": "fused_static_21kp",
+  "schema_version": 1,
+  "set_id": null
+}

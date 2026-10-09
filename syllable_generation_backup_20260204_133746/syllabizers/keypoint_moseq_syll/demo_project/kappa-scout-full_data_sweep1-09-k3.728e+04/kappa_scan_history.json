@@ -1,0 +1,91 @@
+{
+  "project_dir": "demo_project",
+  "target_frames": 24,
+  "tol_frames": 0,
+  "max_steps": 10,
+  "step_fraction": 0.25,
+  "start_kappa": 10000000.0,
+  "bounds": [
+    100.0,
+    10000000000.0
+  ],
+  "num_ar_iters": 10,
+  "num_slds_iters": 40,
+  "decrease_kappa_factor": 10,
+  "subset_fraction": 1,
+  "subset_blocks": 3,
+  "subset_block_len": null,
+  "subset_seed": 0,
+  "history": [
+    {
+      "kappa": 10000000.000000006,
+      "median_frames": 102.0,
+      "model_name": "kappa-scout-full_data_sweep1-01-k1.000e+07",
+      "frames_used": 4127025,
+      "model_dir": "demo_project/kappa-scout-full_data_sweep1-01-k1.000e+07"
+    },
+    {
+      "kappa": 562341.3251903491,
+      "median_frames": 51.0,
+      "model_name": "kappa-scout-full_data_sweep1-02-k5.623e+05",
+      "frames_used": 4127025,
+      "model_dir": "demo_project/kappa-scout-full_data_sweep1-02-k5.623e+05"
+    },
+    {
+      "kappa": 64938.163157621144,
+      "median_frames": 27.0,
+      "model_name": "kappa-scout-full_data_sweep1-03-k6.494e+04",
+      "frames_used": 4127025,
+      "model_dir": "demo_project/kappa-scout-full_data_sweep1-03-k6.494e+04"
+    },
+    {
+      "kappa": 12863.969449369743,
+      "median_frames": 18.0,
+      "model_name": "kappa-scout-full_data_sweep1-04-k1.286e+04",
+      "frames_used": 4127025,
+      "model_dir": "demo_project/kappa-scout-full_data_sweep1-04-k1.286e+04"
+    },
+    {
+      "kappa": 19282.185207891947,
+      "median_frames": 20.0,
+      "model_name": "kappa-scout-full_data_sweep1-05-k1.928e+04",
+      "frames_used": 4127025,
+      "model_dir": "demo_project/kappa-scout-full_data_sweep1-05-k1.928e+04"
+    },
+    {
+      "kappa": 26121.14364792204,
+      "median_frames": 22.0,
+      "model_name": "kappa-scout-full_data_sweep1-06-k2.612e+04",
+      "frames_used": 4127025,
+      "model_dir": "demo_project/kappa-scout-full_data_sweep1-06-k2.612e+04"
+    },
+    {
+      "kappa": 32799.6448022845,
+      "median_frames": 23.0,
+      "model_name": "kappa-scout-full_data_sweep1-07-k3.280e+04",
+      "frames_used": 4127025,
+      "model_dir": "demo_project/kappa-scout-full_data_sweep1-07-k3.280e+04"
+    },
+    {
+      "kappa": 38906.92031235266,
+      "median_frames": 25.0,
+      "model_name": "kappa-scout-full_data_sweep1-08-k3.891e+04",
+      "frames_used": 4127025,
+      "model_dir": "demo_project/kappa-scout-full_data_sweep1-08-k3.891e+04"
+    },
+    {
+      "kappa": 37280.98915824472,
+      "median_frames": 24.0,
+      "model_name": "kappa-scout-full_data_sweep1-09-k3.728e+04",
+      "frames_used": 4127025,
+      "model_dir": "demo_project/kappa-scout-full_data_sweep1-09-k3.728e+04"
+    }
+  ],
+  "best": {
+    "kappa": 37280.98915824472,
+    "median_frames": 24.0,
+    "model_name": "kappa-scout-full_data_sweep1-09-k3.728e+04",
+    "frames_used": 4127025,
+    "model_dir": "demo_project/kappa-scout-full_data_sweep1-09-k3.728e+04"
+  }
+}

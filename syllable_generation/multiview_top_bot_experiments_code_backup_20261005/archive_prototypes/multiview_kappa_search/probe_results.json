@@ -1,0 +1,23 @@
+[
+  {
+    "probe": 1,
+    "kappa": 3000000000000.0,
+    "median_frames": 24.0,
+    "median_ms": 400.0,
+    "elapsed_seconds": 228.561821
+  },
+  {
+    "probe": 2,
+    "kappa": 10000000000000.0,
+    "median_frames": 27.0,
+    "median_ms": 450.0,
+    "elapsed_seconds": 210.404339
+  },
+  {
+    "probe": 3,
+    "kappa": 30000000000000.0,
+    "median_frames": 29.0,
+    "median_ms": 483.3333333333333,
+    "elapsed_seconds": 210.634268
+  }
+]

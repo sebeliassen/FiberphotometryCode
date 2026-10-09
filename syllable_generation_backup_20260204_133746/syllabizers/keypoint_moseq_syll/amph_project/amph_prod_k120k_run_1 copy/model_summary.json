@@ -1,0 +1,9 @@
+{
+  "project_dir": "amph_project",
+  "video_dir": "/home/fsp585/Desktop/FiberphotometryCode/src_oft/jonathan_amph_workspace/video_files",
+  "frames_used": 5534285,
+  "median_duration_frames": 17.0,
+  "model_name": "amph_prod_k120k_run_1",
+  "iters_done": 450,
+  "kappa_slds": 12000.0
+}

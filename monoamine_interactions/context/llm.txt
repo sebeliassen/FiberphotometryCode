@@ -1,0 +1,16 @@
+# Monoamine Interactions - LLM Rules
+
+## Architecture Rules
+1. **Modular Steps**: Do not allow `build_sessions.py` or `enrich.py` to grow excessively. If a new processing step or custom discovery logic is needed, offload it to the `steps/` folder.
+   - Example: Custom session discovery should live in `steps/tracking.py`.
+2. **Project Isolation**: Sub-project specific logic (like `enrich.py`) should remain in the sub-project folder (e.g., `jonathan_oft_baseline/`).
+3. **Shared Infrastructure**: The root `loaders/`, `steps/`, and `data/` folders are intended for multi-project utility.
+
+## Data Handling
+1. **Video-First Discovery**: Sessions should be discoverable via video files even if H5 tracking is missing, to allow photometry analysis to proceed early.
+2. **HDD Storage**: Large video binaries live on `/mnt/hdd` and are symlinked into the local `video_files` source folder.
+3. **Ignore Unknown Data**: Ignore "unk" or "unknown" (case-insensitive) values for genotypes and signals. These are typically placeholders for non-labeled items in `animals.csv`.
+
+## Core Logic Preservation
+1. **Immutable Core**: The `syllable_generation` library contains the core logic and should NOT be modified.
+2. **Structural Inspiration**: While you should not modify the core, you should use it as the primary reference for reasoning and structure. For example, if you need a new tracking step, look at how `syllable_generation` organizes its tracking steps and mirror that structure in the project's `steps/` folder within `monoamine_interactions`.

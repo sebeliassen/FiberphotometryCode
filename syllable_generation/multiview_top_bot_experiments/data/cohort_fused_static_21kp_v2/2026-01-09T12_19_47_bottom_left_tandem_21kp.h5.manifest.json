@@ -1,0 +1,77 @@
+{
+  "artifact": {
+    "mtime_ns": 1791328120895062887,
+    "name": "2026-01-09T12_19_47_bottom_left_tandem_21kp.h5",
+    "size": 49003792
+  },
+  "code_files": [
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/static_fusion_engine.py",
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/static_arena_transforms.json",
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/epoch_arena_transforms.json",
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/camera_correspondence.py",
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/schemas.py"
+  ],
+  "code_hash": "d8ceb312d580f09501c4a1e56f6fa0237bb64bd52af3397753ca3c0d0dbd38ea",
+  "config": {
+    "affine_matrix": [
+      [
+        0.37591832876205444,
+        -0.005051410291343927
+      ],
+      [
+        0.0029903531540185213,
+        0.37878209352493286
+      ]
+    ],
+    "affine_translation": [
+      24.63942527770996,
+      -3.835340738296509
+    ],
+    "arena": "Arena2",
+    "arena_width": 972.0,
+    "epoch": "epoch1_winter_spring_2026",
+    "keypoint_mode": "21kp",
+    "truncate_aborted_tail": true,
+    "use_epochs": true
+  },
+  "config_hash": "0de804a4f9872f2379556788d394b6ea318dcc62775380cfa41d263b9652fd2a",
+  "created_unix": 1791328120.9057813,
+  "dependencies": {
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "python": "3.10.19"
+  },
+  "extra": {
+    "arena": "Arena2",
+    "calibration_status": "VALID_CRYSTAL",
+    "frames": 188426,
+    "keypoint_mode": "21kp",
+    "matched_frames": 188425,
+    "sid": "2026-01-09T12_19_47_bottom_left"
+  },
+  "inputs": [
+    {
+      "exists": true,
+      "mtime_ns": 1784033944318848347,
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T8_23.18_bothRepeated_090126_Arena1234_CenterTopCamVid_2026-01-09T12_19_47_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+      "size": 123969535
+    },
+    {
+      "exists": true,
+      "mtime_ns": 1790556396058555566,
+      "path": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/8_weeks_PI_T8_23_18_bothRepeated_090126_active_Arena2_BotCamVid_2026-01-09T12_19_47/8_weeks_PI_T8_23_18_bothRepeated_090126_active_Arena2_BotCamVid_2026-01-09T12_19_47DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5",
+      "sha256": "f9f60fd9227b6e541249e935570cdb8b7673a011a45e1f7c2a44c869407a2e0f",
+      "size": 15346433
+    },
+    {
+      "exists": true,
+      "mtime_ns": 1791326720594536732,
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/epoch_arena_transforms.json",
+      "sha256": "ff95ee09b441266791c54c40dc19b5bfdc134cd49f5e303c2159aabc4f032356",
+      "size": 6749
+    }
+  ],
+  "kind": "fused_static_21kp",
+  "schema_version": 1,
+  "set_id": null
+}

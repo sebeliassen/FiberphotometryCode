@@ -1,0 +1,91 @@
+{
+  "model_name": "fullmodel_multiview_23kp_k6e12",
+  "total_iters": 200,
+  "num_ar_iters": 50,
+  "num_slds_iters": 150,
+  "init_kappa": 6000000000000.0,
+  "decrease_kappa_factor": 10.0,
+  "slds_kappa": 600000000000.0,
+  "target_fps": 60.0,
+  "total_frames_modeled": 1243240,
+  "final_median_frames": 18.0,
+  "final_median_ms": 300.0,
+  "num_active_syllables": 100,
+  "top_15_syllables": [
+    {
+      "syllable": 52,
+      "count": 164887,
+      "usage_pct": 13.262684598307647
+    },
+    {
+      "syllable": 15,
+      "count": 113286,
+      "usage_pct": 9.112158553457096
+    },
+    {
+      "syllable": 79,
+      "count": 104660,
+      "usage_pct": 8.418326308677326
+    },
+    {
+      "syllable": 4,
+      "count": 103537,
+      "usage_pct": 8.327997812168206
+    },
+    {
+      "syllable": 55,
+      "count": 78172,
+      "usage_pct": 6.287764228950163
+    },
+    {
+      "syllable": 26,
+      "count": 50348,
+      "usage_pct": 4.049740999324346
+    },
+    {
+      "syllable": 6,
+      "count": 44904,
+      "usage_pct": 3.6118529004858275
+    },
+    {
+      "syllable": 34,
+      "count": 39522,
+      "usage_pct": 3.1789517711785336
+    },
+    {
+      "syllable": 25,
+      "count": 36314,
+      "usage_pct": 2.920916315433866
+    },
+    {
+      "syllable": 48,
+      "count": 34292,
+      "usage_pct": 2.7582767607219845
+    },
+    {
+      "syllable": 84,
+      "count": 26348,
+      "usage_pct": 2.119301180785689
+    },
+    {
+      "syllable": 98,
+      "count": 25025,
+      "usage_pct": 2.0128856857887456
+    },
+    {
+      "syllable": 50,
+      "count": 24170,
+      "usage_pct": 1.9441137672533058
+    },
+    {
+      "syllable": 96,
+      "count": 23518,
+      "usage_pct": 1.8916701521830055
+    },
+    {
+      "syllable": 81,
+      "count": 15389,
+      "usage_pct": 1.2378140986454746
+    }
+  ]
+}

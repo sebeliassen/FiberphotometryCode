@@ -1,0 +1,109 @@
+--- a/utils/resample_batching.py
++++ b/utils/resample_batching.py
+@@ -188,71 +188,87 @@
+     """
+     _cached_x = None
+     _cached_x_id = None
++    _cached_x_source = None
+     _cached_z = None
+     _cached_z_id = None
++    _cached_z_source = None
+     _cached_mask = None
+     _cached_mask_id = None
++    _cached_mask_source = None
+     _cached_Y = None
+     _cached_Y_id = None
++    _cached_Y_source = None
+ 
+     @classmethod
+     def clear(cls):
+         cls._cached_x = None
+         cls._cached_x_id = None
++        cls._cached_x_source = None
+         cls._cached_z = None
+         cls._cached_z_id = None
++        cls._cached_z_source = None
+         cls._cached_mask = None
+         cls._cached_mask_id = None
++        cls._cached_mask_source = None
+         cls._cached_Y = None
+         cls._cached_Y_id = None
++        cls._cached_Y_source = None
+ 
+     @classmethod
+     def get_x(cls, x_arr):
+         if isinstance(x_arr, np.ndarray):
+             cls._cached_x = x_arr
+             cls._cached_x_id = id(x_arr)
++            cls._cached_x_source = x_arr
+             return x_arr
+-        if cls._cached_x is not None and cls._cached_x_id == id(x_arr):
++        if cls._cached_x is not None and cls._cached_x_source is x_arr:
+             return cls._cached_x
+         cpu_x = np.asarray(x_arr, dtype=np.float64)
+         cls._cached_x = cpu_x
+         cls._cached_x_id = id(x_arr)
++        cls._cached_x_source = x_arr
+         return cpu_x
+ 
+     @classmethod
+     def update_x(cls, cpu_x, dev_x):
+         cls._cached_x = cpu_x
+         cls._cached_x_id = id(dev_x)
++        cls._cached_x_source = dev_x
+ 
+     @classmethod
+     def get_z(cls, z_arr):
+         if isinstance(z_arr, np.ndarray):
+             cls._cached_z = z_arr
+             cls._cached_z_id = id(z_arr)
++            cls._cached_z_source = z_arr
+             return z_arr
+-        if cls._cached_z is not None and cls._cached_z_id == id(z_arr):
++        if cls._cached_z is not None and cls._cached_z_source is z_arr:
+             return cls._cached_z
+         cpu_z = np.asarray(z_arr, dtype=np.int32)
+         cls._cached_z = cpu_z
+         cls._cached_z_id = id(z_arr)
++        cls._cached_z_source = z_arr
+         return cpu_z
+ 
+     @classmethod
+     def update_z(cls, cpu_z, dev_z):
+         cls._cached_z = cpu_z
+         cls._cached_z_id = id(dev_z)
++        cls._cached_z_source = dev_z
+ 
+     @classmethod
+     def get_mask(cls, mask_arr):
+         if isinstance(mask_arr, np.ndarray):
+             cls._cached_mask = mask_arr
+             cls._cached_mask_id = id(mask_arr)
++            cls._cached_mask_source = mask_arr
+             return mask_arr
+-        if cls._cached_mask is not None and cls._cached_mask_id == id(mask_arr):
++        if cls._cached_mask is not None and cls._cached_mask_source is mask_arr:
+             return cls._cached_mask
+         cpu_mask = np.asarray(mask_arr, dtype=bool)
+         cls._cached_mask = cpu_mask
+         cls._cached_mask_id = id(mask_arr)
++        cls._cached_mask_source = mask_arr
+         return cpu_mask
+ 
+     @classmethod
+@@ -260,12 +276,14 @@
+         if isinstance(Y_arr, np.ndarray):
+             cls._cached_Y = Y_arr
+             cls._cached_Y_id = id(Y_arr)
++            cls._cached_Y_source = Y_arr
+             return Y_arr
+-        if cls._cached_Y is not None and cls._cached_Y_id == id(Y_arr):
++        if cls._cached_Y is not None and cls._cached_Y_source is Y_arr:
+             return cls._cached_Y
+         cpu_Y = np.asarray(Y_arr, dtype=np.float64)
+         cls._cached_Y = cpu_Y
+         cls._cached_Y_id = id(Y_arr)
++        cls._cached_Y_source = Y_arr
+         return cpu_Y
+ 
+ 

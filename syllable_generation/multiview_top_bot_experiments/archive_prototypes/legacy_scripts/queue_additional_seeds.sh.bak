@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo=/home/fsp585/Desktop/FiberphotometryCode
+python=/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python
+runner="$repo/syllable_generation/multiview_top_bot_experiments/02_training_runners/run_cohort_calibrated_retrain_seed101.py"
+project="$repo/syllable_generation/multiview_top_bot_experiments/kpms_tandem_cohort_continuous_calibrated"
+logs="$repo/syllable_generation/multiview_top_bot_experiments/02_training_runners/logs"
+current_log="$logs/tandem_calibrated_50ar_200slds_seed101_20261001_204337.log"
+
+exec 9>"$project/additional_seed_queue.lock"
+flock -n 9 || { echo "Another seed queue is active."; exit 1; }
+
+echo "Waiting for production PID 935611; pending seeds: 202 303 404 505"
+
+"$python" - <<'PYWAIT'
+import time, psutil
+try:
+    p = psutil.Process(935611)
+    if not any(a.endswith("run_cohort_calibrated_retrain_seed101.py") for a in p.cmdline()):
+        raise RuntimeError("PID 935611 now belongs to another process")
+    while p.is_running() and p.status() != psutil.STATUS_ZOMBIE:
+        time.sleep(30)
+except psutil.NoSuchProcess:
+    pass
+PYWAIT
+
+if ! grep -Fq '[FIT COMPLETE] Iteration 250;' "$current_log"; then
+    echo "STOP: seed 101 did not report successful completion. Check $current_log"
+    exit 1
+fi
+
+# Release initialization-cache references before sampling new seeds.
+"$python" - "$runner" <<'PYPATCH'
+from pathlib import Path
+from datetime import datetime
+import shutil, sys
+
+p = Path(sys.argv[1])
+s = p.read_text()
+if "del cpu_states, cache_dict" not in s:
+    matches = [x for x in s.splitlines() if "[CACHE SAVED] Initial model cached" in x]
+    if len(matches) != 1:
+        raise RuntimeError("Cannot safely locate initialization-cache cleanup point")
+    line = matches[0]
+    indent = line[:len(line)-len(line.lstrip())]
+    s = s.replace(line, line+"\n"+indent+"del cpu_states, cache_dict\n"+indent+"gc.collect()", 1)
+    compile(s, str(p), "exec")
+    backup = p.with_name(p.name+".before_queue_"+datetime.now().strftime("%Y%m%d_%H%M%S"))
+    shutil.copy2(p, backup)
+    p.write_text(s)
+    print("Added initialization-cache cleanup for future runs.")
+PYPATCH
+
+queue_tag="$(date +%Y%m%d_%H%M%S)_$$"
+
+for seed in 202 303 404 505; do
+    if pgrep -f '[r]un_cohort_calibrated_retrain_seed101.py' >/dev/null; then
+        echo "STOP: another cohort training process is active."
+        exit 1
+    fi
+
+    free_bytes=$(df -PB1 "$project" | awk 'NR==2 {print $4}')
+    if (( free_bytes < 100000000000 )); then
+        echo "STOP: less than 100 GB disk space available."
+        exit 1
+    fi
+
+    # Preserve any existing cache and initialize this seed afresh.
+    cache="$project/init_model_seed_${seed}.pkl"
+    if [[ -e "$cache" ]]; then
+        mv -- "$cache" "${cache}.before_queue_${queue_tag}"
+    fi
+
+    name="tandem_calibrated_50ar_200slds_seed${seed}_${queue_tag}"
+    log="$logs/$name.log"
+    echo "START seed=$seed model=$name log=$log"
+
+    if "$python" -u "$runner" \
+        --seed "$seed" --num-ar-iters 50 --num-slds-iters 200 \
+        --save-every-n-iters 25 --model-name "$name" --fit-only \
+        >"$log" 2>&1; then
+        if ! grep -Fq '[FIT COMPLETE] Iteration 250;' "$log"; then
+            echo "STOP: seed $seed lacks completion marker. Check $log"
+            exit 1
+        fi
+    else
+        echo "STOP: seed $seed failed. Check $log"
+        exit 1
+    fi
+
+    echo "COMPLETE seed=$seed"
+done
+
+echo "QUEUE COMPLETE: all four additional seeds finished."

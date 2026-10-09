@@ -1,0 +1,262 @@
+--- original_bundle/core_patches/resample_batching.py
++++ auxiliary_bundle/core_patches/resample_batching.py
+@@ -540,7 +540,8 @@
+         results.append(jax.device_put(s_batch, cpu_device))
+     with jax.default_device(cpu_device):
+         s_full = jnp.concatenate(results, axis=0)
+-    return jax.device_put(s_full, gpu_device)
++    # Return as host CPU array to avoid 3.4 GB persistent VRAM allocation
++    return np.asarray(s_full)
+ 
+ @jax.jit
+ def _resample_heading_kernel(seed, Y, x, v, s, Cd, sigmasq):
+@@ -553,6 +554,7 @@
+         return _resample_heading_kernel(seed, Y, x, v, s, Cd, sigmasq)
+     
+     Y_np = KPMSStateCache.get_Y(Y)
++    s_np = np.asarray(s)
+     cpu_device = jax.devices('cpu')[0]
+     gpu_device = jax.devices()[0]
+ 
+@@ -561,8 +563,9 @@
+         end = min(i + bs, N)
+         batch_seed = jr.fold_in(seed, i)
+         Y_b = jnp.asarray(Y_np[i:end])
++        s_b = jnp.asarray(s_np[i:end])
+         h_batch = _resample_heading_kernel(
+-            batch_seed, Y_b, x[i:end], v[i:end], s[i:end], Cd, sigmasq
++            batch_seed, Y_b, x[i:end], v[i:end], s_b, Cd, sigmasq
+         )
+         results.append(jax.device_put(h_batch, cpu_device))
+     with jax.default_device(cpu_device):
+@@ -1003,6 +1006,7 @@
+     
+     Y_np = KPMSStateCache.get_Y(Y)
+     mask_np = KPMSStateCache.get_mask(mask)
++    s_np = np.asarray(s)
+     cpu_device = jax.devices('cpu')[0]
+     gpu_device = jax.devices()[0]
+ 
+@@ -1012,8 +1016,9 @@
+         batch_seed = jr.fold_in(seed, i)
+         Y_b = jnp.asarray(Y_np[i:end])
+         mask_b = jnp.asarray(mask_np[i:end])
++        s_b = jnp.asarray(s_np[i:end])
+         v_b = _jit_resample_v_batch(
+-            batch_seed, Y_b, mask_b, x[i:end], h[i:end], s[i:end],
++            batch_seed, Y_b, mask_b, x[i:end], h[i:end], s_b,
+             Cd, sigmasq, sigmasq_loc
+         )
+         results.append(jax.device_put(v_b, cpu_device))
+--- original_bundle/production_and_test_runners/launch_2ar_2slds_test.sh
++++ auxiliary_bundle/production_and_test_runners/launch_2ar_2slds_test.sh
+@@ -17,7 +17,7 @@
+ echo "  Log File:   $LOG_FILE"
+ echo "================================================================================"
+ 
+-nohup "$PYTHON_BIN" -u "$SCRIPT_DIR/run_cohort_2ar_2slds_test.py" > "$LOG_FILE" 2>&1 &
++nohup "$PYTHON_BIN" -u "$SCRIPT_DIR/run_cohort_2ar_2slds_test.py" "$@" > "$LOG_FILE" 2>&1 &
+ TEST_PID=$!
+ disown -h "$TEST_PID"
+ 
+--- original_bundle/production_and_test_runners/run_cohort_2ar_2slds_test.py
++++ auxiliary_bundle/production_and_test_runners/run_cohort_2ar_2slds_test.py
+@@ -19,6 +19,7 @@
+ import pickle
+ from pathlib import Path
+ import numpy as np
++import argparse
+ 
+ # Live unbuffered stdout/stderr
+ sys.stdout.reconfigure(line_buffering=True)
+@@ -137,6 +138,11 @@
+     rb.KPMSStateCache.clear()
+     rb.precompute_optimal_batch_config(data, verbose=True)
+ 
++    parser = argparse.ArgumentParser(description="Empirical test on full cohort")
++    parser.add_argument("--skip-ar", action="store_true", help="Skip AR phase and jump straight to testing SLDS")
++    parser.add_argument("--num-slds", type=int, default=2, help="Number of SLDS iterations to test")
++    args = parser.parse_args()
++
+     # 4. Initialize Fresh Model (with disk cache)
+     print("\n[Step 3/5] Loading or initializing fresh AR-HMM model...", flush=True)
+     init_model_cache = PROD_KPMS_DIR / "init_model.pkl"
+@@ -148,9 +154,12 @@
+         with open(init_model_cache, "rb") as f:
+             cached_model = pickle.load(f)
+         model = copy.deepcopy(cached_model)
+-        # Restore GPU states
+-        model["states"] = {k: jax.device_put(jnp.asarray(v), gpu_device) for k, v in cached_model["states"].items()}
+-        print(f"  [CACHE HIT] Model loaded and states placed on GPU in 0.5s.", flush=True)
++        # Restore GPU states for x, v, h, z, while keeping s on CPU to save 3.4GB VRAM
++        model["states"] = {
++            k: (np.asarray(v) if k == "s" else jax.device_put(jnp.asarray(v), gpu_device))
++            for k, v in cached_model["states"].items()
++        }
++        print(f"  [CACHE HIT] Model loaded and active states placed on GPU in 0.5s.", flush=True)
+     else:
+         print("  [CACHE MISS] Initializing fresh AR-HMM model via batched init...", flush=True)
+         t0_init = time.time()
+@@ -177,44 +186,52 @@
+             pickle.dump(cache_dict, f, protocol=pickle.HIGHEST_PROTOCOL)
+         print(f"  [CACHE SAVED] Initial model cached ({init_model_cache.stat().st_size / 1e6:.1f} MB).", flush=True)
+ 
+-    # 5. Phase 1: 2 AR Iterations
+-    print("\n" + "=" * 80, flush=True)
+-    print("🔥 PHASE 1: EXECUTING 2 AR-HMM ITERATIONS (0 -> 1 -> 2)...", flush=True)
+-    print("=" * 80, flush=True)
+-
+-    # Iteration 0 (Cold JIT)
+-    t0_ar0 = time.time()
+-    model, _ = kpms.fit_model(
+-        model, data, metadata,
+-        project_dir=str(PROD_KPMS_DIR),
+-        model_name=MODEL_NAME,
+-        ar_only=True,
+-        start_iter=0,
+-        num_iters=1,
+-        parallel_message_passing=False,
+-        save_every_n_iters=0,
+-        generate_progress_plots=False,
+-        verbose=True
+-    )
+-    t_ar_cold = time.time() - t0_ar0
+-    print(f"  >>> AR Iteration 0 (Cold JIT): {t_ar_cold:.2f}s", flush=True)
+-
+-    # Iteration 1 (Warm)
+-    t0_ar1 = time.time()
+-    model, _ = kpms.fit_model(
+-        model, data, metadata,
+-        project_dir=str(PROD_KPMS_DIR),
+-        model_name=MODEL_NAME,
+-        ar_only=True,
+-        start_iter=1,
+-        num_iters=2,
+-        parallel_message_passing=False,
+-        save_every_n_iters=0,
+-        generate_progress_plots=False,
+-        verbose=True
+-    )
+-    t_ar_warm = time.time() - t0_ar1
+-    print(f"  >>> AR Iteration 1 (WARM):     {t_ar_warm:.2f}s", flush=True)
++    t_ar_warm = 5.5
++    if not args.skip_ar:
++        # 5. Phase 1: 2 AR Iterations
++        print("\n" + "=" * 80, flush=True)
++        print("🔥 PHASE 1: EXECUTING 2 AR-HMM ITERATIONS (0 -> 1 -> 2)...", flush=True)
++        print("=" * 80, flush=True)
++
++        # Iteration 0 (Cold JIT)
++        t0_ar0 = time.time()
++        model, _ = kpms.fit_model(
++            model, data, metadata,
++            project_dir=str(PROD_KPMS_DIR),
++            model_name=MODEL_NAME,
++            ar_only=True,
++            start_iter=0,
++            num_iters=1,
++            parallel_message_passing=False,
++            save_every_n_iters=0,
++            generate_progress_plots=False,
++            verbose=True
++        )
++        t_ar_cold = time.time() - t0_ar0
++        print(f"  >>> AR Iteration 0 (Cold JIT): {t_ar_cold:.2f}s", flush=True)
++
++        # Iteration 1 (Warm)
++        t0_ar1 = time.time()
++        model, _ = kpms.fit_model(
++            model, data, metadata,
++            project_dir=str(PROD_KPMS_DIR),
++            model_name=MODEL_NAME,
++            ar_only=True,
++            start_iter=1,
++            num_iters=2,
++            parallel_message_passing=False,
++            save_every_n_iters=0,
++            generate_progress_plots=False,
++            verbose=True
++        )
++        t_ar_warm = time.time() - t0_ar1
++        print(f"  >>> AR Iteration 1 (WARM):     {t_ar_warm:.2f}s", flush=True)
++        start_slds = 2
++    else:
++        print("\n" + "=" * 80, flush=True)
++        print("⏩ SKIPPING AR-HMM PHASE (--skip-ar flag set). Directly testing SLDS!", flush=True)
++        print("=" * 80, flush=True)
++        start_slds = 0
+ 
+     # Transition Kappa to SLDS
+     print("\n" + "=" * 80, flush=True)
+@@ -223,44 +240,44 @@
+     print(f"  New SLDS Kappa: {SLDS_KAPPA:.2e}", flush=True)
+     print("=" * 80, flush=True)
+ 
+-    # 6. Phase 2: 2 SLDS Iterations
++    # 6. Phase 2: SLDS Iterations
+     print("\n" + "=" * 80, flush=True)
+-    print("🔥 PHASE 2: EXECUTING 2 FULL SLDS ITERATIONS (2 -> 3 -> 4)...", flush=True)
+-    print("=" * 80, flush=True)
+-
+-    # Iteration 2 (Cold JIT for continuous samplers: x, v, h, s)
++    print(f"🔥 PHASE 2: EXECUTING {args.num_slds} FULL SLDS ITERATIONS ({start_slds} -> {start_slds + args.num_slds})...", flush=True)
++    print("=" * 80, flush=True)
++
++    # Iteration (Cold JIT for continuous samplers: x, v, h, s)
+     t0_slds0 = time.time()
+     model, _ = kpms.fit_model(
+         model, data, metadata,
+         project_dir=str(PROD_KPMS_DIR),
+         model_name=MODEL_NAME,
+         ar_only=False,
+-        start_iter=2,
+-        num_iters=3,
++        start_iter=start_slds,
++        num_iters=start_slds + 1,
+         parallel_message_passing=False,
+         save_every_n_iters=0,
+         generate_progress_plots=False,
+         verbose=True
+     )
+     t_slds_cold = time.time() - t0_slds0
+-    print(f"  >>> SLDS Iteration 2 (Cold JIT): {t_slds_cold:.2f}s", flush=True)
+-
+-    # Iteration 3 (Warm)
++    print(f"  >>> SLDS Iteration {start_slds} (Cold JIT): {t_slds_cold:.2f}s", flush=True)
++
++    # Iteration (Warm)
+     t0_slds1 = time.time()
+     model, _ = kpms.fit_model(
+         model, data, metadata,
+         project_dir=str(PROD_KPMS_DIR),
+         model_name=MODEL_NAME,
+         ar_only=False,
+-        start_iter=3,
+-        num_iters=4,
++        start_iter=start_slds + 1,
++        num_iters=start_slds + 2,
+         parallel_message_passing=False,
+         save_every_n_iters=0,
+         generate_progress_plots=False,
+         verbose=True
+     )
+     t_slds_warm = time.time() - t0_slds1
+-    print(f"  >>> SLDS Iteration 3 (WARM):     {t_slds_warm:.2f}s", flush=True)
++    print(f"  >>> SLDS Iteration {start_slds + 1} (WARM):     {t_slds_warm:.2f}s", flush=True)
+ 
+     # State Auditing
+     print("\n[Step 5/5] Auditing State Consistency and Syllables...", flush=True)
+--- original_bundle/production_and_test_runners/run_tandem_cohort_production_50ar_200slds.py
++++ auxiliary_bundle/production_and_test_runners/run_tandem_cohort_production_50ar_200slds.py
+@@ -364,7 +364,10 @@
+             with open(init_model_cache, "rb") as f:
+                 cached_model = pickle.load(f)
+             model = copy.deepcopy(cached_model)
+-            model["states"] = {k: jax.device_put(jnp.asarray(v), gpu_device) for k, v in cached_model["states"].items()}
++            model["states"] = {
++                k: (np.asarray(v) if k == "s" else jax.device_put(jnp.asarray(v), gpu_device))
++                for k, v in cached_model["states"].items()
++            }
+             model = kpms.update_hypparams(model, kappa=float(init_kappa))
+             print(f"  [CACHE HIT] Model loaded and states placed on GPU in 0.5s.", flush=True)
+         else:

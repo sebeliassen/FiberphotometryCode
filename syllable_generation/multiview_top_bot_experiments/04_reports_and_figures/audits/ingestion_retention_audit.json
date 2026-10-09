@@ -1,0 +1,5360 @@
+{
+  "timestamp": "2026-10-07 22:38:30",
+  "audit_duration_seconds": 12.65,
+  "total_sessions": 118,
+  "cohort_totals": {
+    "raw_frames": 23861208,
+    "supported_frames": 18977003,
+    "supported_fraction": 0.7953077228948342,
+    "retained_frames": 18939881,
+    "retained_fraction": 0.7937519760106027,
+    "discarded_total_frames": 4921327,
+    "short_lost_frames": 37122,
+    "short_lost_fraction_of_supported": 0.001956157144518552,
+    "y_divergence_frames": 0
+  },
+  "distributions": {
+    "all_supported_run_lengths_frames": {
+      "p10": 1.0,
+      "p25": 1.0,
+      "median": 2.0,
+      "p75": 9.0,
+      "p90": 54.0,
+      "max": 222093.0,
+      "mean": 3796.159831966393,
+      "count": 4999
+    },
+    "retained_run_lengths_frames": {
+      "p10": 774.8999999999999,
+      "p25": 8825.75,
+      "median": 25245.5,
+      "p75": 78761.5,
+      "p90": 153628.6,
+      "max": 222093.0,
+      "mean": 51188.86756756757,
+      "count": 370
+    },
+    "discarded_run_lengths_frames": {
+      "p10": 1.0,
+      "p25": 1.0,
+      "median": 2.0,
+      "p75": 6.0,
+      "p90": 20.0,
+      "max": 173.0,
+      "mean": 8.01944264419961,
+      "count": 4629
+    },
+    "gap_lengths_frames": {
+      "p10": 1.0,
+      "p25": 1.0,
+      "median": 2.0,
+      "p75": 6.0,
+      "p90": 35.0,
+      "max": 188814.0,
+      "mean": 961.8363528948405,
+      "count": 5078
+    }
+  },
+  "alignment_check": {
+    "retained_segments_matching_vfi_and_results": 338,
+    "misaligned_segments": 32,
+    "total_vfi_segments": 338,
+    "exact_alignment_verified": false
+  },
+  "gap_bridging_simulations": {
+    "0ms_raw_split": {
+      "retained_frames": 18939881,
+      "retained_fraction": 0.7937519760106027,
+      "retained_fraction_of_supported": 0.9980438428554814,
+      "delta_frames_vs_raw": 0,
+      "delta_pct_vs_raw": 0.0,
+      "total_segments": 370
+    },
+    "50ms_3frames": {
+      "retained_frames": 18958064,
+      "retained_fraction": 0.7945140078406759,
+      "retained_fraction_of_supported": 0.9990020025817564,
+      "delta_frames_vs_raw": 18183,
+      "delta_pct_vs_raw": 0.09600377109021963,
+      "total_segments": 220
+    },
+    "100ms_6frames": {
+      "retained_frames": 18965592,
+      "retained_fraction": 0.7948294989926746,
+      "retained_fraction_of_supported": 0.9993986932499299,
+      "delta_frames_vs_raw": 25711,
+      "delta_pct_vs_raw": 0.13575058892925462,
+      "total_segments": 208
+    },
+    "200ms_12frames": {
+      "retained_frames": 18974409,
+      "retained_fraction": 0.7951990108799186,
+      "retained_fraction_of_supported": 0.9998633082368169,
+      "delta_frames_vs_raw": 34528,
+      "delta_pct_vs_raw": 0.18230315174630718,
+      "total_segments": 206
+    },
+    "500ms_30frames": {
+      "retained_frames": 18985379,
+      "retained_fraction": 0.7956587529013619,
+      "retained_fraction_of_supported": 1.0004413763332387,
+      "delta_frames_vs_raw": 45498,
+      "delta_pct_vs_raw": 0.24022326222641,
+      "total_segments": 194
+    },
+    "1000ms_60frames": {
+      "retained_frames": 18993186,
+      "retained_fraction": 0.7959859366717729,
+      "retained_fraction_of_supported": 1.0008527690067814,
+      "delta_frames_vs_raw": 53305,
+      "delta_pct_vs_raw": 0.2814431621824868,
+      "total_segments": 183
+    }
+  },
+  "sessions": [
+    {
+      "sid": "2025-12-03T09_51_05_bottom_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 219515,
+      "supported_frames": 170508,
+      "supported_pct": 77.6748741543858,
+      "retained_frames": 170237,
+      "retained_pct": 77.55142017629775,
+      "short_lost_frames": 271,
+      "short_lost_pct_of_supported": 0.1589368240786356,
+      "discarded_total_frames": 49278,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 37,
+      "n_gaps": 40,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 170237,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 170241,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 170241,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 170457,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 170617,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 170617,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T09_51_05_bottom_right",
+      "stage": "3_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 219515,
+      "supported_frames": 168987,
+      "supported_pct": 76.9819830079949,
+      "retained_frames": 168891,
+      "retained_pct": 76.93825023346925,
+      "short_lost_frames": 96,
+      "short_lost_pct_of_supported": 0.056809103658861326,
+      "discarded_total_frames": 50624,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 41,
+      "n_gaps": 44,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 168891,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 168930,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 168930,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 168930,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 168930,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 169331,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T09_51_05_top_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 219515,
+      "supported_frames": 172541,
+      "supported_pct": 78.60100676491356,
+      "retained_frames": 171803,
+      "retained_pct": 78.26481106074755,
+      "short_lost_frames": 738,
+      "short_lost_pct_of_supported": 0.4277244249192945,
+      "discarded_total_frames": 47712,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 106,
+      "n_gaps": 109,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 171803,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 172033,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 172452,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 172658,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 172738,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 173203,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T10_58_48_bottom_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 222025,
+      "supported_frames": 175598,
+      "supported_pct": 79.08929174642495,
+      "retained_frames": 175286,
+      "retained_pct": 78.94876703073979,
+      "short_lost_frames": 312,
+      "short_lost_pct_of_supported": 0.17767856125923986,
+      "discarded_total_frames": 46739,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 34,
+      "n_gaps": 39,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 175286,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 175397,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 175484,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 175700,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 175700,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 175700,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T10_58_48_bottom_right",
+      "stage": "3_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 222025,
+      "supported_frames": 169483,
+      "supported_pct": 76.33509739894157,
+      "retained_frames": 169304,
+      "retained_pct": 76.2544758473145,
+      "short_lost_frames": 179,
+      "short_lost_pct_of_supported": 0.10561531245021624,
+      "discarded_total_frames": 52721,
+      "n_retained_segments": 5,
+      "n_short_discarded_runs": 28,
+      "n_gaps": 34,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 169304,
+          "n_segments": 5
+        },
+        "50ms_3frames": {
+          "retained_frames": 169438,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 169457,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 169516,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 169557,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 169640,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T10_58_48_top_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 222025,
+      "supported_frames": 75344,
+      "supported_pct": 33.93491723904965,
+      "retained_frames": 74418,
+      "retained_pct": 33.51784708929175,
+      "short_lost_frames": 926,
+      "short_lost_pct_of_supported": 1.229029517944362,
+      "discarded_total_frames": 147607,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 100,
+      "n_gaps": 105,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 74418,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 74868,
+          "n_segments": 4
+        },
+        "100ms_6frames": {
+          "retained_frames": 74956,
+          "n_segments": 4
+        },
+        "200ms_12frames": {
+          "retained_frames": 74966,
+          "n_segments": 4
+        },
+        "500ms_30frames": {
+          "retained_frames": 75743,
+          "n_segments": 5
+        },
+        "1000ms_60frames": {
+          "retained_frames": 75829,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T13_02_27_bottom_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 208852,
+      "supported_frames": 168187,
+      "supported_pct": 80.52927431865628,
+      "retained_frames": 167908,
+      "retained_pct": 80.39568689789898,
+      "short_lost_frames": 279,
+      "short_lost_pct_of_supported": 0.1658867807856731,
+      "discarded_total_frames": 40944,
+      "n_retained_segments": 5,
+      "n_short_discarded_runs": 39,
+      "n_gaps": 45,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 167908,
+          "n_segments": 5
+        },
+        "50ms_3frames": {
+          "retained_frames": 167942,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 167992,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 168203,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 168217,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 168266,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T13_02_27_bottom_right",
+      "stage": "3_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 208852,
+      "supported_frames": 169495,
+      "supported_pct": 81.15555512994848,
+      "retained_frames": 169120,
+      "retained_pct": 80.97600214505965,
+      "short_lost_frames": 375,
+      "short_lost_pct_of_supported": 0.22124546446797838,
+      "discarded_total_frames": 39732,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 52,
+      "n_gaps": 57,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 169120,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 169289,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 169289,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 169633,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 169647,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 169687,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T13_02_27_top_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 208852,
+      "supported_frames": 167802,
+      "supported_pct": 80.34493325417041,
+      "retained_frames": 167585,
+      "retained_pct": 80.24103192691476,
+      "short_lost_frames": 217,
+      "short_lost_pct_of_supported": 0.1293190784376825,
+      "discarded_total_frames": 41267,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 23,
+      "n_gaps": 26,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 167585,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 167629,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 167686,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 167686,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 167701,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 167958,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T14_06_45_bottom_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 195134,
+      "supported_frames": 169719,
+      "supported_pct": 86.97561675566534,
+      "retained_frames": 169536,
+      "retained_pct": 86.88183504668586,
+      "short_lost_frames": 183,
+      "short_lost_pct_of_supported": 0.10782528768140279,
+      "discarded_total_frames": 25598,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 29,
+      "n_gaps": 32,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 169536,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 169550,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 169755,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 169764,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 169806,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 169854,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T14_06_45_bottom_right",
+      "stage": "3_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 195134,
+      "supported_frames": 170446,
+      "supported_pct": 87.34818124980782,
+      "retained_frames": 170029,
+      "retained_pct": 87.13448194573985,
+      "short_lost_frames": 417,
+      "short_lost_pct_of_supported": 0.2446522652335637,
+      "discarded_total_frames": 25105,
+      "n_retained_segments": 11,
+      "n_short_discarded_runs": 31,
+      "n_gaps": 43,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 170029,
+          "n_segments": 11
+        },
+        "50ms_3frames": {
+          "retained_frames": 170377,
+          "n_segments": 5
+        },
+        "100ms_6frames": {
+          "retained_frames": 170445,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 170445,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 170588,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 170588,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T14_06_45_top_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 195134,
+      "supported_frames": 168593,
+      "supported_pct": 86.3985773878463,
+      "retained_frames": 168373,
+      "retained_pct": 86.2858343497289,
+      "short_lost_frames": 220,
+      "short_lost_pct_of_supported": 0.13049177605238652,
+      "discarded_total_frames": 26761,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 50,
+      "n_gaps": 54,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 168373,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 168484,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 168489,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 168527,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 168817,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 168864,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T15_26_16_bottom_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 205084,
+      "supported_frames": 176810,
+      "supported_pct": 86.21345399933685,
+      "retained_frames": 176675,
+      "retained_pct": 86.1476273136861,
+      "short_lost_frames": 135,
+      "short_lost_pct_of_supported": 0.0763531474464114,
+      "discarded_total_frames": 28409,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 17,
+      "n_gaps": 20,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 176675,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 176676,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 176676,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 176676,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 176899,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 176899,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T15_26_16_bottom_right",
+      "stage": "3_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 205084,
+      "supported_frames": 175208,
+      "supported_pct": 85.43231066294787,
+      "retained_frames": 175004,
+      "retained_pct": 85.33283922685338,
+      "short_lost_frames": 204,
+      "short_lost_pct_of_supported": 0.11643303958723346,
+      "discarded_total_frames": 30080,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 23,
+      "n_gaps": 26,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 175004,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 175206,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 175212,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 175278,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 175292,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 175292,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T15_26_16_top_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 205084,
+      "supported_frames": 179158,
+      "supported_pct": 87.35835072458114,
+      "retained_frames": 179061,
+      "retained_pct": 87.31105303192838,
+      "short_lost_frames": 97,
+      "short_lost_pct_of_supported": 0.05414215385302359,
+      "discarded_total_frames": 26023,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 22,
+      "n_gaps": 24,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 179061,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 179061,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 179119,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 179215,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 179230,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 179230,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T16_38_48_bottom_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 217341,
+      "supported_frames": 172584,
+      "supported_pct": 79.40701478322084,
+      "retained_frames": 171792,
+      "retained_pct": 79.04261046006046,
+      "short_lost_frames": 792,
+      "short_lost_pct_of_supported": 0.458906967042136,
+      "discarded_total_frames": 45549,
+      "n_retained_segments": 7,
+      "n_short_discarded_runs": 120,
+      "n_gaps": 128,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 171792,
+          "n_segments": 7
+        },
+        "50ms_3frames": {
+          "retained_frames": 172135,
+          "n_segments": 6
+        },
+        "100ms_6frames": {
+          "retained_frames": 172210,
+          "n_segments": 5
+        },
+        "200ms_12frames": {
+          "retained_frames": 172432,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 172932,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 173129,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T16_38_48_bottom_right",
+      "stage": "3_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 217341,
+      "supported_frames": 167644,
+      "supported_pct": 77.13408882815483,
+      "retained_frames": 167092,
+      "retained_pct": 76.8801100574673,
+      "short_lost_frames": 552,
+      "short_lost_pct_of_supported": 0.32926916561284625,
+      "discarded_total_frames": 50249,
+      "n_retained_segments": 7,
+      "n_short_discarded_runs": 62,
+      "n_gaps": 70,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 167092,
+          "n_segments": 7
+        },
+        "50ms_3frames": {
+          "retained_frames": 167115,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 167115,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 167466,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 167632,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 167682,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2025-12-03T16_38_48_top_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 217341,
+      "supported_frames": 201309,
+      "supported_pct": 92.62357309481413,
+      "retained_frames": 200782,
+      "retained_pct": 92.38109698584253,
+      "short_lost_frames": 527,
+      "short_lost_pct_of_supported": 0.2617866066594141,
+      "discarded_total_frames": 16559,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 81,
+      "n_gaps": 86,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 200782,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 200846,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 200846,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 201094,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 201264,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 201791,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2025-12-04T09_04_02_bottom_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 251305,
+      "supported_frames": 167788,
+      "supported_pct": 66.76667794114721,
+      "retained_frames": 167346,
+      "retained_pct": 66.59079604464694,
+      "short_lost_frames": 442,
+      "short_lost_pct_of_supported": 0.26342765871218443,
+      "discarded_total_frames": 83959,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 34,
+      "n_gaps": 37,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 167346,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 167492,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 167820,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 167864,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 167910,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 167910,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-04T09_04_02_bottom_right",
+      "stage": "3_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 251305,
+      "supported_frames": 173476,
+      "supported_pct": 69.03006307077058,
+      "retained_frames": 173322,
+      "retained_pct": 68.96878295298542,
+      "short_lost_frames": 154,
+      "short_lost_pct_of_supported": 0.08877308676704558,
+      "discarded_total_frames": 77983,
+      "n_retained_segments": 14,
+      "n_short_discarded_runs": 12,
+      "n_gaps": 27,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 173322,
+          "n_segments": 14
+        },
+        "50ms_3frames": {
+          "retained_frames": 173493,
+          "n_segments": 4
+        },
+        "100ms_6frames": {
+          "retained_frames": 173501,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 173511,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 173532,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 173532,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-04T09_04_02_top_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 251305,
+      "supported_frames": 203784,
+      "supported_pct": 81.09030858916456,
+      "retained_frames": 203384,
+      "retained_pct": 80.93113945206024,
+      "short_lost_frames": 400,
+      "short_lost_pct_of_supported": 0.19628626388725318,
+      "discarded_total_frames": 47921,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 41,
+      "n_gaps": 46,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 203384,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 203642,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 203660,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 203707,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 203707,
+          "n_segments": 3
+        },
+        "1000ms_60frames": {
+          "retained_frames": 204050,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2025-12-04T10_27_49_bottom_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 218523,
+      "supported_frames": 181534,
+      "supported_pct": 83.07317765178036,
+      "retained_frames": 181362,
+      "retained_pct": 82.99446740160074,
+      "short_lost_frames": 172,
+      "short_lost_pct_of_supported": 0.09474809126664978,
+      "discarded_total_frames": 37161,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 11,
+      "n_gaps": 16,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 181362,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 181496,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 181500,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 181500,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 181518,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 181518,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-04T10_27_49_bottom_right",
+      "stage": "3_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 218523,
+      "supported_frames": 187176,
+      "supported_pct": 85.65505690476517,
+      "retained_frames": 186818,
+      "retained_pct": 85.49122975613551,
+      "short_lost_frames": 358,
+      "short_lost_pct_of_supported": 0.19126383724409113,
+      "discarded_total_frames": 31705,
+      "n_retained_segments": 9,
+      "n_short_discarded_runs": 19,
+      "n_gaps": 29,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 186818,
+          "n_segments": 9
+        },
+        "50ms_3frames": {
+          "retained_frames": 187177,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 187189,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 187189,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 187213,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 187284,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2025-12-04T10_27_49_top_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 218523,
+      "supported_frames": 166443,
+      "supported_pct": 76.16726843398635,
+      "retained_frames": 165902,
+      "retained_pct": 75.91969724010745,
+      "short_lost_frames": 541,
+      "short_lost_pct_of_supported": 0.32503619857849236,
+      "discarded_total_frames": 52621,
+      "n_retained_segments": 5,
+      "n_short_discarded_runs": 45,
+      "n_gaps": 51,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 165902,
+          "n_segments": 5
+        },
+        "50ms_3frames": {
+          "retained_frames": 166129,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 166430,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 166480,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 166598,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 166598,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2025-12-04T11_41_50_bottom_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 4: Broken/Truncated",
+      "raw_frames": 4015,
+      "supported_frames": 0,
+      "supported_pct": 0.0,
+      "retained_frames": 0,
+      "retained_pct": 0.0,
+      "short_lost_frames": 0,
+      "short_lost_pct_of_supported": 0.0,
+      "discarded_total_frames": 4015,
+      "n_retained_segments": 0,
+      "n_short_discarded_runs": 0,
+      "n_gaps": 1,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "50ms_3frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "100ms_6frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "200ms_12frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "500ms_30frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "1000ms_60frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        }
+      }
+    },
+    {
+      "sid": "2025-12-04T11_41_50_bottom_right",
+      "stage": "3_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 4: Broken/Truncated",
+      "raw_frames": 4015,
+      "supported_frames": 0,
+      "supported_pct": 0.0,
+      "retained_frames": 0,
+      "retained_pct": 0.0,
+      "short_lost_frames": 0,
+      "short_lost_pct_of_supported": 0.0,
+      "discarded_total_frames": 4015,
+      "n_retained_segments": 0,
+      "n_short_discarded_runs": 0,
+      "n_gaps": 1,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "50ms_3frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "100ms_6frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "200ms_12frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "500ms_30frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "1000ms_60frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        }
+      }
+    },
+    {
+      "sid": "2025-12-04T11_41_50_top_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 4: Broken/Truncated",
+      "raw_frames": 4015,
+      "supported_frames": 0,
+      "supported_pct": 0.0,
+      "retained_frames": 0,
+      "retained_pct": 0.0,
+      "short_lost_frames": 0,
+      "short_lost_pct_of_supported": 0.0,
+      "discarded_total_frames": 4015,
+      "n_retained_segments": 0,
+      "n_short_discarded_runs": 0,
+      "n_gaps": 1,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "50ms_3frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "100ms_6frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "200ms_12frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "500ms_30frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "1000ms_60frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        }
+      }
+    },
+    {
+      "sid": "2025-12-04T12_56_44_top_left",
+      "stage": "3_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 4: Broken/Truncated",
+      "raw_frames": 83403,
+      "supported_frames": 0,
+      "supported_pct": 0.0,
+      "retained_frames": 0,
+      "retained_pct": 0.0,
+      "short_lost_frames": 0,
+      "short_lost_pct_of_supported": 0.0,
+      "discarded_total_frames": 83403,
+      "n_retained_segments": 0,
+      "n_short_discarded_runs": 0,
+      "n_gaps": 1,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "50ms_3frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "100ms_6frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "200ms_12frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "500ms_30frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "1000ms_60frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T10_06_18_bottom_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 259094,
+      "supported_frames": 172926,
+      "supported_pct": 66.74257219387559,
+      "retained_frames": 172551,
+      "retained_pct": 66.59783707843485,
+      "short_lost_frames": 375,
+      "short_lost_pct_of_supported": 0.21685576489365394,
+      "discarded_total_frames": 86543,
+      "n_retained_segments": 6,
+      "n_short_discarded_runs": 46,
+      "n_gaps": 53,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 172551,
+          "n_segments": 6
+        },
+        "50ms_3frames": {
+          "retained_frames": 172740,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 172812,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 172899,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 172956,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 173203,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T10_06_18_bottom_right",
+      "stage": "8_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 259094,
+      "supported_frames": 201142,
+      "supported_pct": 77.6328282399438,
+      "retained_frames": 200401,
+      "retained_pct": 77.34683165183293,
+      "short_lost_frames": 741,
+      "short_lost_pct_of_supported": 0.36839645623489875,
+      "discarded_total_frames": 58693,
+      "n_retained_segments": 8,
+      "n_short_discarded_runs": 83,
+      "n_gaps": 92,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 200401,
+          "n_segments": 8
+        },
+        "50ms_3frames": {
+          "retained_frames": 200748,
+          "n_segments": 4
+        },
+        "100ms_6frames": {
+          "retained_frames": 200838,
+          "n_segments": 4
+        },
+        "200ms_12frames": {
+          "retained_frames": 200958,
+          "n_segments": 4
+        },
+        "500ms_30frames": {
+          "retained_frames": 201066,
+          "n_segments": 3
+        },
+        "1000ms_60frames": {
+          "retained_frames": 201143,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T10_06_18_top_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 259094,
+      "supported_frames": 175455,
+      "supported_pct": 67.71866581240785,
+      "retained_frames": 175037,
+      "retained_pct": 67.55733440372993,
+      "short_lost_frames": 418,
+      "short_lost_pct_of_supported": 0.23823772477273375,
+      "discarded_total_frames": 84057,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 45,
+      "n_gaps": 49,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 175037,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 175388,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 175411,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 175465,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 175668,
+          "n_segments": 3
+        },
+        "1000ms_60frames": {
+          "retained_frames": 175768,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T11_31_36_bottom_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 204453,
+      "supported_frames": 180253,
+      "supported_pct": 88.1635388084303,
+      "retained_frames": 180175,
+      "retained_pct": 88.12538823103598,
+      "short_lost_frames": 78,
+      "short_lost_pct_of_supported": 0.04327251141451182,
+      "discarded_total_frames": 24278,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 17,
+      "n_gaps": 21,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 180175,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 180232,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 180232,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 180241,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 180241,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 180241,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T11_31_36_bottom_right",
+      "stage": "8_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 204453,
+      "supported_frames": 187184,
+      "supported_pct": 91.55355998689186,
+      "retained_frames": 187084,
+      "retained_pct": 91.50464899023247,
+      "short_lost_frames": 100,
+      "short_lost_pct_of_supported": 0.05342336951876229,
+      "discarded_total_frames": 17369,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 2,
+      "n_gaps": 4,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 187084,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 187191,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 187191,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 187191,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 187191,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 187191,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T11_31_36_top_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 3: Divergent/Noisy",
+      "raw_frames": 204453,
+      "supported_frames": 167131,
+      "supported_pct": 81.7454378267866,
+      "retained_frames": 166807,
+      "retained_pct": 81.58696619761021,
+      "short_lost_frames": 324,
+      "short_lost_pct_of_supported": 0.19385990630104527,
+      "discarded_total_frames": 37646,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 25,
+      "n_gaps": 27,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 166807,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 167012,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 167027,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 167036,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 167307,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 167307,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T12_41_05_bottom_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 215335,
+      "supported_frames": 176726,
+      "supported_pct": 82.07026261406646,
+      "retained_frames": 176358,
+      "retained_pct": 81.89936610397753,
+      "short_lost_frames": 368,
+      "short_lost_pct_of_supported": 0.20823195228772223,
+      "discarded_total_frames": 38977,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 18,
+      "n_gaps": 21,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 176358,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 176653,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 176658,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 176666,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 176775,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 176775,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T12_41_05_bottom_right",
+      "stage": "8_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 215335,
+      "supported_frames": 183041,
+      "supported_pct": 85.00290245431536,
+      "retained_frames": 182779,
+      "retained_pct": 84.88123156941509,
+      "short_lost_frames": 262,
+      "short_lost_pct_of_supported": 0.14313732988783934,
+      "discarded_total_frames": 32556,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 36,
+      "n_gaps": 41,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 182779,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 182860,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 182878,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 182889,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 183174,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 183243,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T12_41_05_top_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 3: Divergent/Noisy",
+      "raw_frames": 215335,
+      "supported_frames": 166591,
+      "supported_pct": 77.36364269626395,
+      "retained_frames": 166579,
+      "retained_pct": 77.35806998397845,
+      "short_lost_frames": 12,
+      "short_lost_pct_of_supported": 0.007203270284709258,
+      "discarded_total_frames": 48756,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 5,
+      "n_gaps": 7,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 166579,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 166591,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 166591,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 166591,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 166648,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 166648,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T14_28_55_bottom_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 214674,
+      "supported_frames": 178076,
+      "supported_pct": 82.95182462710902,
+      "retained_frames": 177911,
+      "retained_pct": 82.8749638987488,
+      "short_lost_frames": 165,
+      "short_lost_pct_of_supported": 0.09265706776881781,
+      "discarded_total_frames": 36763,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 27,
+      "n_gaps": 30,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 177911,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 178016,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 178016,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 178084,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 178193,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 178193,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T14_28_55_bottom_right",
+      "stage": "8_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 214674,
+      "supported_frames": 186723,
+      "supported_pct": 86.9797926157802,
+      "retained_frames": 186057,
+      "retained_pct": 86.66955476676263,
+      "short_lost_frames": 666,
+      "short_lost_pct_of_supported": 0.35667807393840073,
+      "discarded_total_frames": 28617,
+      "n_retained_segments": 5,
+      "n_short_discarded_runs": 67,
+      "n_gaps": 73,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 186057,
+          "n_segments": 5
+        },
+        "50ms_3frames": {
+          "retained_frames": 186222,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 186651,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 186728,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 186829,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 187042,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T14_28_55_top_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 3: Divergent/Noisy",
+      "raw_frames": 214674,
+      "supported_frames": 173621,
+      "supported_pct": 80.8765849613833,
+      "retained_frames": 173461,
+      "retained_pct": 80.80205334600372,
+      "short_lost_frames": 160,
+      "short_lost_pct_of_supported": 0.09215475086539071,
+      "discarded_total_frames": 41213,
+      "n_retained_segments": 5,
+      "n_short_discarded_runs": 27,
+      "n_gaps": 33,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 173461,
+          "n_segments": 5
+        },
+        "50ms_3frames": {
+          "retained_frames": 173545,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 173593,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 173702,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 173702,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 173702,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T15_56_40_bottom_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 205844,
+      "supported_frames": 168929,
+      "supported_pct": 82.06651639105343,
+      "retained_frames": 168126,
+      "retained_pct": 81.67641514933639,
+      "short_lost_frames": 803,
+      "short_lost_pct_of_supported": 0.47534763125336676,
+      "discarded_total_frames": 37718,
+      "n_retained_segments": 5,
+      "n_short_discarded_runs": 51,
+      "n_gaps": 57,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 168126,
+          "n_segments": 5
+        },
+        "50ms_3frames": {
+          "retained_frames": 168418,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 168743,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 169044,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 169044,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 169044,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T15_56_40_bottom_right",
+      "stage": "8_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 205844,
+      "supported_frames": 176329,
+      "supported_pct": 85.66147179417423,
+      "retained_frames": 176058,
+      "retained_pct": 85.52981869765453,
+      "short_lost_frames": 271,
+      "short_lost_pct_of_supported": 0.15368997725842035,
+      "discarded_total_frames": 29786,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 16,
+      "n_gaps": 20,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 176058,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 176287,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 176287,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 176327,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 176381,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 176381,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-08T15_56_40_top_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 205844,
+      "supported_frames": 172326,
+      "supported_pct": 83.71679524299955,
+      "retained_frames": 171014,
+      "retained_pct": 83.07941936612193,
+      "short_lost_frames": 1312,
+      "short_lost_pct_of_supported": 0.7613476782377586,
+      "discarded_total_frames": 34830,
+      "n_retained_segments": 7,
+      "n_short_discarded_runs": 142,
+      "n_gaps": 150,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 171014,
+          "n_segments": 7
+        },
+        "50ms_3frames": {
+          "retained_frames": 171496,
+          "n_segments": 6
+        },
+        "100ms_6frames": {
+          "retained_frames": 171719,
+          "n_segments": 6
+        },
+        "200ms_12frames": {
+          "retained_frames": 172084,
+          "n_segments": 6
+        },
+        "500ms_30frames": {
+          "retained_frames": 172559,
+          "n_segments": 6
+        },
+        "1000ms_60frames": {
+          "retained_frames": 172804,
+          "n_segments": 5
+        }
+      }
+    },
+    {
+      "sid": "2026-01-09T09_41_59_bottom_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 222982,
+      "supported_frames": 176948,
+      "supported_pct": 79.3552842830363,
+      "retained_frames": 176480,
+      "retained_pct": 79.14540187100305,
+      "short_lost_frames": 468,
+      "short_lost_pct_of_supported": 0.264484481316545,
+      "discarded_total_frames": 46502,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 36,
+      "n_gaps": 39,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 176480,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 176747,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 176761,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 176788,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 176990,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 177236,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-01-09T09_41_59_bottom_right",
+      "stage": "8_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 222982,
+      "supported_frames": 179357,
+      "supported_pct": 80.43564054497672,
+      "retained_frames": 178947,
+      "retained_pct": 80.25176920110142,
+      "short_lost_frames": 410,
+      "short_lost_pct_of_supported": 0.2285943676577998,
+      "discarded_total_frames": 44035,
+      "n_retained_segments": 11,
+      "n_short_discarded_runs": 53,
+      "n_gaps": 65,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 178947,
+          "n_segments": 11
+        },
+        "50ms_3frames": {
+          "retained_frames": 179216,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 179248,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 179426,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 179515,
+          "n_segments": 3
+        },
+        "1000ms_60frames": {
+          "retained_frames": 179691,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2026-01-09T09_41_59_top_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 222982,
+      "supported_frames": 157596,
+      "supported_pct": 70.6765568521226,
+      "retained_frames": 157124,
+      "retained_pct": 70.46488057331982,
+      "short_lost_frames": 472,
+      "short_lost_pct_of_supported": 0.2994999873093226,
+      "discarded_total_frames": 65858,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 46,
+      "n_gaps": 49,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 157124,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 157389,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 157601,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 157601,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 157696,
+          "n_segments": 3
+        },
+        "1000ms_60frames": {
+          "retained_frames": 157696,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2026-01-09T10_56_56_bottom_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 223119,
+      "supported_frames": 171854,
+      "supported_pct": 77.0234717796333,
+      "retained_frames": 171518,
+      "retained_pct": 76.87287949479874,
+      "short_lost_frames": 336,
+      "short_lost_pct_of_supported": 0.1955147974443423,
+      "discarded_total_frames": 51601,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 35,
+      "n_gaps": 38,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 171518,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 171677,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 171694,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 171729,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 171798,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 171798,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-09T10_56_56_bottom_right",
+      "stage": "8_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 223119,
+      "supported_frames": 179528,
+      "supported_pct": 80.46289199933668,
+      "retained_frames": 179116,
+      "retained_pct": 80.27823717388479,
+      "short_lost_frames": 412,
+      "short_lost_pct_of_supported": 0.22949066440889443,
+      "discarded_total_frames": 44003,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 53,
+      "n_gaps": 56,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 179116,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 179176,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 179468,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 179627,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 179729,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 179729,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-01-09T10_56_56_top_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 223119,
+      "supported_frames": 165359,
+      "supported_pct": 74.11246913082256,
+      "retained_frames": 165086,
+      "retained_pct": 73.99011289939449,
+      "short_lost_frames": 273,
+      "short_lost_pct_of_supported": 0.16509533802212156,
+      "discarded_total_frames": 58033,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 19,
+      "n_gaps": 22,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 165086,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 165250,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 165378,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 165378,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 165378,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 165378,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-09T12_19_47_bottom_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 188426,
+      "supported_frames": 168009,
+      "supported_pct": 89.1644465201193,
+      "retained_frames": 167966,
+      "retained_pct": 89.14162589026992,
+      "short_lost_frames": 43,
+      "short_lost_pct_of_supported": 0.025593866995220493,
+      "discarded_total_frames": 20460,
+      "n_retained_segments": 8,
+      "n_short_discarded_runs": 11,
+      "n_gaps": 19,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 167966,
+          "n_segments": 8
+        },
+        "50ms_3frames": {
+          "retained_frames": 167995,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 168011,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 168049,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 168049,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 168049,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-01-09T12_19_47_top_left",
+      "stage": "8_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 188426,
+      "supported_frames": 161465,
+      "supported_pct": 85.69146508443633,
+      "retained_frames": 161084,
+      "retained_pct": 85.48926368972435,
+      "short_lost_frames": 381,
+      "short_lost_pct_of_supported": 0.23596445050010836,
+      "discarded_total_frames": 27342,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 28,
+      "n_gaps": 30,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 161084,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 161188,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 161188,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 161375,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 161608,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 161641,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-05T11_01_01_bottom_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 208016,
+      "supported_frames": 179429,
+      "supported_pct": 86.25730713022075,
+      "retained_frames": 178895,
+      "retained_pct": 86.00059610799168,
+      "short_lost_frames": 534,
+      "short_lost_pct_of_supported": 0.29761075411444077,
+      "discarded_total_frames": 29121,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 63,
+      "n_gaps": 67,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 178895,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 179094,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 179300,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 179393,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 179497,
+          "n_segments": 3
+        },
+        "1000ms_60frames": {
+          "retained_frames": 179807,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2026-03-05T11_01_01_bottom_right",
+      "stage": "16_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 208016,
+      "supported_frames": 168133,
+      "supported_pct": 80.82695561879856,
+      "retained_frames": 167728,
+      "retained_pct": 80.63225905699561,
+      "short_lost_frames": 405,
+      "short_lost_pct_of_supported": 0.24088073132579568,
+      "discarded_total_frames": 40288,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 31,
+      "n_gaps": 34,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 167728,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 167797,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 167934,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 167934,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 167963,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 168015,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-05T11_01_01_top_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 208016,
+      "supported_frames": 172185,
+      "supported_pct": 82.77488270133067,
+      "retained_frames": 171690,
+      "retained_pct": 82.53692023690485,
+      "short_lost_frames": 495,
+      "short_lost_pct_of_supported": 0.2874814879344891,
+      "discarded_total_frames": 36326,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 27,
+      "n_gaps": 29,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 171690,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 172005,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 172231,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 172243,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 172243,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 172243,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-05T12_46_18_bottom_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 207716,
+      "supported_frames": 182182,
+      "supported_pct": 87.70725413545418,
+      "retained_frames": 182078,
+      "retained_pct": 87.6571857728822,
+      "short_lost_frames": 104,
+      "short_lost_pct_of_supported": 0.057085771371485655,
+      "discarded_total_frames": 25638,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 10,
+      "n_gaps": 14,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 182078,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 182181,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 182181,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 182196,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 182196,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 182196,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-05T12_46_18_bottom_right",
+      "stage": "16_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 207716,
+      "supported_frames": 183371,
+      "supported_pct": 88.27967031908953,
+      "retained_frames": 183371,
+      "retained_pct": 88.27967031908953,
+      "short_lost_frames": 0,
+      "short_lost_pct_of_supported": 0.0,
+      "discarded_total_frames": 24345,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 0,
+      "n_gaps": 1,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 183371,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 183371,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 183371,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 183371,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 183371,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 183371,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-05T12_46_18_top_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 207716,
+      "supported_frames": 173398,
+      "supported_pct": 83.47840320437521,
+      "retained_frames": 173181,
+      "retained_pct": 83.37393364016253,
+      "short_lost_frames": 217,
+      "short_lost_pct_of_supported": 0.1251456187499279,
+      "discarded_total_frames": 34535,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 22,
+      "n_gaps": 24,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 173181,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 173242,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 173242,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 173242,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 173507,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 173507,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T09_48_02_bottom_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 249525,
+      "supported_frames": 165671,
+      "supported_pct": 66.39454964432421,
+      "retained_frames": 165365,
+      "retained_pct": 66.27191664161907,
+      "short_lost_frames": 306,
+      "short_lost_pct_of_supported": 0.18470341822044894,
+      "discarded_total_frames": 84160,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 23,
+      "n_gaps": 25,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 165365,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 165653,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 165663,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 165672,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 165760,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 165760,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T09_48_02_bottom_right",
+      "stage": "16_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 249525,
+      "supported_frames": 170998,
+      "supported_pct": 68.52940587115519,
+      "retained_frames": 170751,
+      "retained_pct": 68.43041779380825,
+      "short_lost_frames": 247,
+      "short_lost_pct_of_supported": 0.14444613387291078,
+      "discarded_total_frames": 78774,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 30,
+      "n_gaps": 33,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 170751,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 170753,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 170949,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 171095,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 171095,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 171150,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T09_48_02_top_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 249525,
+      "supported_frames": 184189,
+      "supported_pct": 73.81585011521892,
+      "retained_frames": 184189,
+      "retained_pct": 73.81585011521892,
+      "short_lost_frames": 0,
+      "short_lost_pct_of_supported": 0.0,
+      "discarded_total_frames": 65336,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 0,
+      "n_gaps": 1,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 184189,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 184189,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 184189,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 184189,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 184189,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 184189,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T11_14_44_bottom_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 244044,
+      "supported_frames": 192373,
+      "supported_pct": 78.82717870547934,
+      "retained_frames": 191879,
+      "retained_pct": 78.62475619150645,
+      "short_lost_frames": 494,
+      "short_lost_pct_of_supported": 0.2567927931674403,
+      "discarded_total_frames": 52165,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 87,
+      "n_gaps": 92,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 191879,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 192034,
+          "n_segments": 4
+        },
+        "100ms_6frames": {
+          "retained_frames": 192109,
+          "n_segments": 4
+        },
+        "200ms_12frames": {
+          "retained_frames": 192276,
+          "n_segments": 4
+        },
+        "500ms_30frames": {
+          "retained_frames": 192326,
+          "n_segments": 4
+        },
+        "1000ms_60frames": {
+          "retained_frames": 193192,
+          "n_segments": 5
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T11_14_44_bottom_right",
+      "stage": "16_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 244044,
+      "supported_frames": 165528,
+      "supported_pct": 67.82711314353149,
+      "retained_frames": 165111,
+      "retained_pct": 67.65624231695924,
+      "short_lost_frames": 417,
+      "short_lost_pct_of_supported": 0.25192112512686676,
+      "discarded_total_frames": 78933,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 32,
+      "n_gaps": 35,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 165111,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 165248,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 165384,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 165440,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 165469,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 165469,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T11_14_44_top_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 244044,
+      "supported_frames": 159194,
+      "supported_pct": 65.23167953319893,
+      "retained_frames": 158172,
+      "retained_pct": 64.81290259133598,
+      "short_lost_frames": 1022,
+      "short_lost_pct_of_supported": 0.6419839943716471,
+      "discarded_total_frames": 85872,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 114,
+      "n_gaps": 118,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 158172,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 158660,
+          "n_segments": 4
+        },
+        "100ms_6frames": {
+          "retained_frames": 158772,
+          "n_segments": 4
+        },
+        "200ms_12frames": {
+          "retained_frames": 159137,
+          "n_segments": 5
+        },
+        "500ms_30frames": {
+          "retained_frames": 159443,
+          "n_segments": 4
+        },
+        "1000ms_60frames": {
+          "retained_frames": 159736,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T13_32_37_bottom_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 230838,
+      "supported_frames": 176959,
+      "supported_pct": 76.65938883546036,
+      "retained_frames": 176273,
+      "retained_pct": 76.36221072786977,
+      "short_lost_frames": 686,
+      "short_lost_pct_of_supported": 0.38766041851502325,
+      "discarded_total_frames": 54565,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 37,
+      "n_gaps": 42,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 176273,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 176936,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 176954,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 176954,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 177061,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 177095,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T13_32_37_bottom_right",
+      "stage": "16_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 230838,
+      "supported_frames": 187593,
+      "supported_pct": 81.2660827073532,
+      "retained_frames": 187246,
+      "retained_pct": 81.11576083660403,
+      "short_lost_frames": 347,
+      "short_lost_pct_of_supported": 0.18497491910678968,
+      "discarded_total_frames": 43592,
+      "n_retained_segments": 6,
+      "n_short_discarded_runs": 31,
+      "n_gaps": 38,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 187246,
+          "n_segments": 6
+        },
+        "50ms_3frames": {
+          "retained_frames": 187514,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 187572,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 187572,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 187572,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 187663,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T13_32_37_top_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 230838,
+      "supported_frames": 167400,
+      "supported_pct": 72.51838951992306,
+      "retained_frames": 167053,
+      "retained_pct": 72.36806764917388,
+      "short_lost_frames": 347,
+      "short_lost_pct_of_supported": 0.2072879330943847,
+      "discarded_total_frames": 63785,
+      "n_retained_segments": 5,
+      "n_short_discarded_runs": 60,
+      "n_gaps": 66,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 167053,
+          "n_segments": 5
+        },
+        "50ms_3frames": {
+          "retained_frames": 167223,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 167351,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 167366,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 167487,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 167619,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T14_44_36_bottom_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 294914,
+      "supported_frames": 198289,
+      "supported_pct": 67.23621123446158,
+      "retained_frames": 197777,
+      "retained_pct": 67.06260130071817,
+      "short_lost_frames": 512,
+      "short_lost_pct_of_supported": 0.2582089778051228,
+      "discarded_total_frames": 97137,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 52,
+      "n_gaps": 56,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 197777,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 198160,
+          "n_segments": 4
+        },
+        "100ms_6frames": {
+          "retained_frames": 198183,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 198280,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 198487,
+          "n_segments": 3
+        },
+        "1000ms_60frames": {
+          "retained_frames": 198487,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T14_44_36_bottom_right",
+      "stage": "16_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 294914,
+      "supported_frames": 219487,
+      "supported_pct": 74.42406938972039,
+      "retained_frames": 218919,
+      "retained_pct": 74.23147086947381,
+      "short_lost_frames": 568,
+      "short_lost_pct_of_supported": 0.2587852583524309,
+      "discarded_total_frames": 75995,
+      "n_retained_segments": 6,
+      "n_short_discarded_runs": 71,
+      "n_gaps": 78,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 218919,
+          "n_segments": 6
+        },
+        "50ms_3frames": {
+          "retained_frames": 219324,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 219343,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 219391,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 219412,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 219412,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T14_44_36_top_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 294914,
+      "supported_frames": 135769,
+      "supported_pct": 46.036810731264026,
+      "retained_frames": 135659,
+      "retained_pct": 45.99951172206135,
+      "short_lost_frames": 110,
+      "short_lost_pct_of_supported": 0.08101996773932194,
+      "discarded_total_frames": 159255,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 18,
+      "n_gaps": 20,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 135659,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 135699,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 135699,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 135699,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 135821,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 135821,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T16_15_25_bottom_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 4: Broken/Truncated",
+      "raw_frames": 215107,
+      "supported_frames": 8,
+      "supported_pct": 0.0037190793419089106,
+      "retained_frames": 0,
+      "retained_pct": 0.0,
+      "short_lost_frames": 8,
+      "short_lost_pct_of_supported": 100.0,
+      "discarded_total_frames": 215107,
+      "n_retained_segments": 0,
+      "n_short_discarded_runs": 1,
+      "n_gaps": 2,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "50ms_3frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "100ms_6frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "200ms_12frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "500ms_30frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        },
+        "1000ms_60frames": {
+          "retained_frames": 0,
+          "n_segments": 0
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T16_15_25_bottom_right",
+      "stage": "16_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 215107,
+      "supported_frames": 167391,
+      "supported_pct": 77.8175512651843,
+      "retained_frames": 167238,
+      "retained_pct": 77.7464238727703,
+      "short_lost_frames": 153,
+      "short_lost_pct_of_supported": 0.09140276358944029,
+      "discarded_total_frames": 47869,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 9,
+      "n_gaps": 13,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 167238,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 167383,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 167383,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 167383,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 167383,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 167509,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-06T16_15_25_top_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 215107,
+      "supported_frames": 163235,
+      "supported_pct": 75.88548954706262,
+      "retained_frames": 162605,
+      "retained_pct": 75.5926120488873,
+      "short_lost_frames": 630,
+      "short_lost_pct_of_supported": 0.3859466413452997,
+      "discarded_total_frames": 52502,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 98,
+      "n_gaps": 102,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 162605,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 162756,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 162838,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 163103,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 163330,
+          "n_segments": 3
+        },
+        "1000ms_60frames": {
+          "retained_frames": 163484,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2026-03-15T09_51_36_bottom_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 73249,
+      "supported_frames": 32003,
+      "supported_pct": 43.690698849131046,
+      "retained_frames": 31706,
+      "retained_pct": 43.28523256290188,
+      "short_lost_frames": 297,
+      "short_lost_pct_of_supported": 0.9280379964378339,
+      "discarded_total_frames": 41543,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 16,
+      "n_gaps": 20,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 31706,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 31950,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 31961,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 31961,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 31961,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 31961,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-03-15T09_51_36_bottom_right",
+      "stage": "16_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 111212,
+      "supported_frames": 58519,
+      "supported_pct": 52.61932165593641,
+      "retained_frames": 58337,
+      "retained_pct": 52.455670251411725,
+      "short_lost_frames": 182,
+      "short_lost_pct_of_supported": 0.31101009928399326,
+      "discarded_total_frames": 52875,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 13,
+      "n_gaps": 14,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 58337,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 58475,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 58475,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 58475,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 58475,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 58475,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-15T09_51_36_top_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 96845,
+      "supported_frames": 67786,
+      "supported_pct": 69.99432082193195,
+      "retained_frames": 67539,
+      "retained_pct": 69.73927409778511,
+      "short_lost_frames": 247,
+      "short_lost_pct_of_supported": 0.3643820257870357,
+      "discarded_total_frames": 29306,
+      "n_retained_segments": 5,
+      "n_short_discarded_runs": 36,
+      "n_gaps": 41,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 67539,
+          "n_segments": 5
+        },
+        "50ms_3frames": {
+          "retained_frames": 67680,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 67748,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 67764,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 67939,
+          "n_segments": 3
+        },
+        "1000ms_60frames": {
+          "retained_frames": 67939,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2026-03-15T10_52_02_bottom_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 4: Broken/Truncated",
+      "raw_frames": 4255,
+      "supported_frames": 4255,
+      "supported_pct": 100.0,
+      "retained_frames": 4255,
+      "retained_pct": 100.0,
+      "short_lost_frames": 0,
+      "short_lost_pct_of_supported": 0.0,
+      "discarded_total_frames": 0,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 0,
+      "n_gaps": 0,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 4255,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 4255,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 4255,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 4255,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 4255,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 4255,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-15T10_52_02_bottom_right",
+      "stage": "16_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 4: Broken/Truncated",
+      "raw_frames": 4255,
+      "supported_frames": 4254,
+      "supported_pct": 99.9764982373678,
+      "retained_frames": 4254,
+      "retained_pct": 99.9764982373678,
+      "short_lost_frames": 0,
+      "short_lost_pct_of_supported": 0.0,
+      "discarded_total_frames": 1,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 0,
+      "n_gaps": 1,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 4254,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 4254,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 4254,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 4254,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 4254,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 4254,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-15T10_52_02_top_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 4: Broken/Truncated",
+      "raw_frames": 4255,
+      "supported_frames": 4255,
+      "supported_pct": 100.0,
+      "retained_frames": 4255,
+      "retained_pct": 100.0,
+      "short_lost_frames": 0,
+      "short_lost_pct_of_supported": 0.0,
+      "discarded_total_frames": 0,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 0,
+      "n_gaps": 0,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 4255,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 4255,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 4255,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 4255,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 4255,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 4255,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-15T10_54_25_bottom_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 176471,
+      "supported_frames": 168129,
+      "supported_pct": 95.2728776966187,
+      "retained_frames": 168122,
+      "retained_pct": 95.26891103920757,
+      "short_lost_frames": 7,
+      "short_lost_pct_of_supported": 0.004163469716705625,
+      "discarded_total_frames": 8349,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 4,
+      "n_gaps": 5,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 168122,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 168125,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 168125,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 168144,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 168144,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 168144,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-15T10_54_25_bottom_right",
+      "stage": "16_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 176471,
+      "supported_frames": 172775,
+      "supported_pct": 97.90560488692192,
+      "retained_frames": 172533,
+      "retained_pct": 97.76847187356563,
+      "short_lost_frames": 242,
+      "short_lost_pct_of_supported": 0.14006656055563593,
+      "discarded_total_frames": 3938,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 51,
+      "n_gaps": 52,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 172533,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 172533,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 172533,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 172834,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 172853,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 172853,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-15T10_54_25_top_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 176471,
+      "supported_frames": 147866,
+      "supported_pct": 83.79053782207842,
+      "retained_frames": 147080,
+      "retained_pct": 83.34513886134266,
+      "short_lost_frames": 786,
+      "short_lost_pct_of_supported": 0.5315623605156019,
+      "discarded_total_frames": 29391,
+      "n_retained_segments": 6,
+      "n_short_discarded_runs": 68,
+      "n_gaps": 73,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 147080,
+          "n_segments": 6
+        },
+        "50ms_3frames": {
+          "retained_frames": 147573,
+          "n_segments": 5
+        },
+        "100ms_6frames": {
+          "retained_frames": 147683,
+          "n_segments": 5
+        },
+        "200ms_12frames": {
+          "retained_frames": 147935,
+          "n_segments": 5
+        },
+        "500ms_30frames": {
+          "retained_frames": 148116,
+          "n_segments": 5
+        },
+        "1000ms_60frames": {
+          "retained_frames": 148219,
+          "n_segments": 5
+        }
+      }
+    },
+    {
+      "sid": "2026-03-15T11_48_09_bottom_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 190048,
+      "supported_frames": 165031,
+      "supported_pct": 86.83648341471628,
+      "retained_frames": 165017,
+      "retained_pct": 86.82911685468933,
+      "short_lost_frames": 14,
+      "short_lost_pct_of_supported": 0.008483254661245464,
+      "discarded_total_frames": 25031,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 2,
+      "n_gaps": 3,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 165017,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 165035,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 165035,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 165035,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 165035,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 165035,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-15T11_48_09_bottom_right",
+      "stage": "16_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 190048,
+      "supported_frames": 167327,
+      "supported_pct": 88.04459925913454,
+      "retained_frames": 167134,
+      "retained_pct": 87.94304596733457,
+      "short_lost_frames": 193,
+      "short_lost_pct_of_supported": 0.11534301099045581,
+      "discarded_total_frames": 22914,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 18,
+      "n_gaps": 23,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 167134,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 167267,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 167317,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 167317,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 167339,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 167414,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-03-15T11_48_09_top_left",
+      "stage": "16_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 4: Broken/Truncated",
+      "raw_frames": 190048,
+      "supported_frames": 1185,
+      "supported_pct": 0.623526687994612,
+      "retained_frames": 1136,
+      "retained_pct": 0.5977437279003199,
+      "short_lost_frames": 49,
+      "short_lost_pct_of_supported": 4.135021097046414,
+      "discarded_total_frames": 188912,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 12,
+      "n_gaps": 13,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 1136,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 1136,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 1136,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 1136,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 1234,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 1234,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-04-27T14_05_05_top_left",
+      "stage": "24_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 204983,
+      "supported_frames": 171188,
+      "supported_pct": 83.51326695384496,
+      "retained_frames": 170911,
+      "retained_pct": 83.37813379646117,
+      "short_lost_frames": 277,
+      "short_lost_pct_of_supported": 0.16181040727153773,
+      "discarded_total_frames": 34072,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 37,
+      "n_gaps": 40,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 170911,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 170994,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 170994,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 171120,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 171162,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 171402,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-04-27T15_09_59_top_left",
+      "stage": "24_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 191163,
+      "supported_frames": 177661,
+      "supported_pct": 92.93691770897088,
+      "retained_frames": 177578,
+      "retained_pct": 92.89349926502514,
+      "short_lost_frames": 83,
+      "short_lost_pct_of_supported": 0.046718188009748904,
+      "discarded_total_frames": 13585,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 1,
+      "n_gaps": 2,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 177578,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 177662,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 177662,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 177662,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 177662,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 177662,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-04-27T16_17_19_top_left",
+      "stage": "24_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 208001,
+      "supported_frames": 172013,
+      "supported_pct": 82.6981601049995,
+      "retained_frames": 171524,
+      "retained_pct": 82.46306508141788,
+      "short_lost_frames": 489,
+      "short_lost_pct_of_supported": 0.28428083923889474,
+      "discarded_total_frames": 36477,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 66,
+      "n_gaps": 70,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 171524,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 171601,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 171802,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 171848,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 172040,
+          "n_segments": 3
+        },
+        "1000ms_60frames": {
+          "retained_frames": 172390,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2026-04-27T17_52_14_top_left",
+      "stage": "24_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 250571,
+      "supported_frames": 222369,
+      "supported_pct": 88.74490663324966,
+      "retained_frames": 222093,
+      "retained_pct": 88.63475821224324,
+      "short_lost_frames": 276,
+      "short_lost_pct_of_supported": 0.12411802004775846,
+      "discarded_total_frames": 28478,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 46,
+      "n_gaps": 48,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 222093,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 222156,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 222307,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 222307,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 222491,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 222491,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-04-28T13_21_05_bottom_left",
+      "stage": "24_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 248172,
+      "supported_frames": 197147,
+      "supported_pct": 79.43966281449963,
+      "retained_frames": 196834,
+      "retained_pct": 79.31354060893251,
+      "short_lost_frames": 313,
+      "short_lost_pct_of_supported": 0.15876477958071897,
+      "discarded_total_frames": 51338,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 35,
+      "n_gaps": 39,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 196834,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 196940,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 196940,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 197032,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 197278,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 197278,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-04-28T13_21_05_bottom_right",
+      "stage": "24_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 248172,
+      "supported_frames": 173442,
+      "supported_pct": 69.88781973792369,
+      "retained_frames": 171593,
+      "retained_pct": 69.14277194848734,
+      "short_lost_frames": 1849,
+      "short_lost_pct_of_supported": 1.066062430091904,
+      "discarded_total_frames": 76579,
+      "n_retained_segments": 8,
+      "n_short_discarded_runs": 742,
+      "n_gaps": 751,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 171593,
+          "n_segments": 8
+        },
+        "50ms_3frames": {
+          "retained_frames": 172912,
+          "n_segments": 8
+        },
+        "100ms_6frames": {
+          "retained_frames": 173692,
+          "n_segments": 7
+        },
+        "200ms_12frames": {
+          "retained_frames": 174368,
+          "n_segments": 7
+        },
+        "500ms_30frames": {
+          "retained_frames": 174727,
+          "n_segments": 6
+        },
+        "1000ms_60frames": {
+          "retained_frames": 174771,
+          "n_segments": 5
+        }
+      }
+    },
+    {
+      "sid": "2026-04-28T13_21_05_top_left",
+      "stage": "24_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 248172,
+      "supported_frames": 210768,
+      "supported_pct": 84.92819496155892,
+      "retained_frames": 210579,
+      "retained_pct": 84.85203810260626,
+      "short_lost_frames": 189,
+      "short_lost_pct_of_supported": 0.08967205647916192,
+      "discarded_total_frames": 37593,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 27,
+      "n_gaps": 29,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 210579,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 210675,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 210675,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 210685,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 210685,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 210750,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-04-28T14_58_25_bottom_left",
+      "stage": "24_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 204684,
+      "supported_frames": 181592,
+      "supported_pct": 88.7182193039026,
+      "retained_frames": 181217,
+      "retained_pct": 88.53501006429423,
+      "short_lost_frames": 375,
+      "short_lost_pct_of_supported": 0.20650689457685362,
+      "discarded_total_frames": 23467,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 48,
+      "n_gaps": 53,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 181217,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 181224,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 181230,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 181413,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 181753,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 181914,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-04-28T14_58_25_bottom_right",
+      "stage": "24_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 204684,
+      "supported_frames": 174768,
+      "supported_pct": 85.38429970100252,
+      "retained_frames": 174308,
+      "retained_pct": 85.15956303374959,
+      "short_lost_frames": 460,
+      "short_lost_pct_of_supported": 0.26320607891604875,
+      "discarded_total_frames": 30376,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 61,
+      "n_gaps": 64,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 174308,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 174541,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 174627,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 174810,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 174850,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 174850,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-04-28T14_58_25_top_left",
+      "stage": "24_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 204684,
+      "supported_frames": 181673,
+      "supported_pct": 88.75779249965801,
+      "retained_frames": 181238,
+      "retained_pct": 88.54526978171229,
+      "short_lost_frames": 435,
+      "short_lost_pct_of_supported": 0.2394411937932439,
+      "discarded_total_frames": 23446,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 46,
+      "n_gaps": 51,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 181238,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 181288,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 181295,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 181435,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 181744,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 181744,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-04-28T16_38_02_bottom_left",
+      "stage": "24_weeks_PI",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 248685,
+      "supported_frames": 204550,
+      "supported_pct": 82.25264893338962,
+      "retained_frames": 203826,
+      "retained_pct": 81.96151758248386,
+      "short_lost_frames": 724,
+      "short_lost_pct_of_supported": 0.3539476900513322,
+      "discarded_total_frames": 44859,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 79,
+      "n_gaps": 83,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 203826,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 204102,
+          "n_segments": 4
+        },
+        "100ms_6frames": {
+          "retained_frames": 204240,
+          "n_segments": 3
+        },
+        "200ms_12frames": {
+          "retained_frames": 204481,
+          "n_segments": 3
+        },
+        "500ms_30frames": {
+          "retained_frames": 204789,
+          "n_segments": 3
+        },
+        "1000ms_60frames": {
+          "retained_frames": 204848,
+          "n_segments": 3
+        }
+      }
+    },
+    {
+      "sid": "2026-04-28T16_38_02_bottom_right",
+      "stage": "24_weeks_PI",
+      "arena": "Arena3",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 248685,
+      "supported_frames": 195607,
+      "supported_pct": 78.65653336550254,
+      "retained_frames": 194914,
+      "retained_pct": 78.37786758348916,
+      "short_lost_frames": 693,
+      "short_lost_pct_of_supported": 0.35428179973109347,
+      "discarded_total_frames": 53771,
+      "n_retained_segments": 5,
+      "n_short_discarded_runs": 65,
+      "n_gaps": 71,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 194914,
+          "n_segments": 5
+        },
+        "50ms_3frames": {
+          "retained_frames": 195409,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 195441,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 195641,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 195677,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 195786,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-04-28T16_38_02_top_left",
+      "stage": "24_weeks_PI",
+      "arena": "Arena1",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 248685,
+      "supported_frames": 204837,
+      "supported_pct": 82.36805597442547,
+      "retained_frames": 204157,
+      "retained_pct": 82.09461768904437,
+      "short_lost_frames": 680,
+      "short_lost_pct_of_supported": 0.3319712747208756,
+      "discarded_total_frames": 44528,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 52,
+      "n_gaps": 56,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 204157,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 204528,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 204528,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 204550,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 204721,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 204867,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-05-16T10_41_38_bottom_left",
+      "stage": "L_DOPA",
+      "arena": "Arena2",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 198078,
+      "supported_frames": 184516,
+      "supported_pct": 93.1532022738517,
+      "retained_frames": 184506,
+      "retained_pct": 93.14815375761064,
+      "short_lost_frames": 10,
+      "short_lost_pct_of_supported": 0.005419584209499447,
+      "discarded_total_frames": 13572,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 4,
+      "n_gaps": 8,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 184506,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 184510,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 184510,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 184539,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 184539,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 184539,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-16T10_41_38_bottom_right",
+      "stage": "L_DOPA",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 198078,
+      "supported_frames": 154560,
+      "supported_pct": 78.02986702208221,
+      "retained_frames": 154443,
+      "retained_pct": 77.97079938206161,
+      "short_lost_frames": 117,
+      "short_lost_pct_of_supported": 0.07569875776397515,
+      "discarded_total_frames": 43635,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 14,
+      "n_gaps": 17,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 154443,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 154551,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 154563,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 154586,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 154620,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 154620,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-05-16T10_41_38_top_left",
+      "stage": "L_DOPA",
+      "arena": "Arena1",
+      "quality_tier": "Tier 3: Divergent/Noisy",
+      "raw_frames": 198078,
+      "supported_frames": 193239,
+      "supported_pct": 97.55702299094297,
+      "retained_frames": 193232,
+      "retained_pct": 97.55348902957421,
+      "short_lost_frames": 7,
+      "short_lost_pct_of_supported": 0.0036224571644440304,
+      "discarded_total_frames": 4846,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 4,
+      "n_gaps": 6,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 193232,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 193236,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 193244,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 193258,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 193258,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 193258,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-16T12_28_03_bottom_left",
+      "stage": "L_DOPA",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 187773,
+      "supported_frames": 175332,
+      "supported_pct": 93.37444680545126,
+      "retained_frames": 175290,
+      "retained_pct": 93.35207937243374,
+      "short_lost_frames": 42,
+      "short_lost_pct_of_supported": 0.02395455478748888,
+      "discarded_total_frames": 12483,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 1,
+      "n_gaps": 2,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 175290,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 175334,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 175334,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 175334,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 175334,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 175334,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-16T12_28_03_bottom_right",
+      "stage": "L_DOPA",
+      "arena": "Arena3",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 187773,
+      "supported_frames": 168461,
+      "supported_pct": 89.71524127536973,
+      "retained_frames": 168420,
+      "retained_pct": 89.69340640028119,
+      "short_lost_frames": 41,
+      "short_lost_pct_of_supported": 0.024337977336000616,
+      "discarded_total_frames": 19353,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 6,
+      "n_gaps": 7,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 168420,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 168472,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 168472,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 168472,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 168472,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 168472,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-16T12_28_03_top_left",
+      "stage": "L_DOPA",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 187773,
+      "supported_frames": 183175,
+      "supported_pct": 97.55129864250985,
+      "retained_frames": 183127,
+      "retained_pct": 97.52573586191838,
+      "short_lost_frames": 48,
+      "short_lost_pct_of_supported": 0.02620444929712024,
+      "discarded_total_frames": 4646,
+      "n_retained_segments": 8,
+      "n_short_discarded_runs": 5,
+      "n_gaps": 13,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 183127,
+          "n_segments": 8
+        },
+        "50ms_3frames": {
+          "retained_frames": 183190,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 183190,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 183190,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 183190,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 183190,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-16T14_47_09_bottom_left",
+      "stage": "L_DOPA",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 198324,
+      "supported_frames": 180362,
+      "supported_pct": 90.9431032048567,
+      "retained_frames": 180362,
+      "retained_pct": 90.9431032048567,
+      "short_lost_frames": 0,
+      "short_lost_pct_of_supported": 0.0,
+      "discarded_total_frames": 17962,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 0,
+      "n_gaps": 1,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 180362,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 180362,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 180362,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 180362,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 180362,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 180362,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-16T14_47_09_bottom_right",
+      "stage": "L_DOPA",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 198324,
+      "supported_frames": 170510,
+      "supported_pct": 85.97547447610981,
+      "retained_frames": 170510,
+      "retained_pct": 85.97547447610981,
+      "short_lost_frames": 0,
+      "short_lost_pct_of_supported": 0.0,
+      "discarded_total_frames": 27814,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 0,
+      "n_gaps": 1,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 170510,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 170510,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 170510,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 170510,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 170510,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 170510,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-16T14_47_09_top_left",
+      "stage": "L_DOPA",
+      "arena": "Arena1",
+      "quality_tier": "Tier 3: Divergent/Noisy",
+      "raw_frames": 198324,
+      "supported_frames": 188371,
+      "supported_pct": 94.9814445049515,
+      "retained_frames": 188239,
+      "retained_pct": 94.91488675097315,
+      "short_lost_frames": 132,
+      "short_lost_pct_of_supported": 0.07007448067908542,
+      "discarded_total_frames": 10085,
+      "n_retained_segments": 9,
+      "n_short_discarded_runs": 17,
+      "n_gaps": 26,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 188239,
+          "n_segments": 9
+        },
+        "50ms_3frames": {
+          "retained_frames": 188378,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 188404,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 188404,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 188419,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 188478,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-05-16T16_34_48_bottom_left",
+      "stage": "L_DOPA",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 191462,
+      "supported_frames": 172190,
+      "supported_pct": 89.934295055938,
+      "retained_frames": 171893,
+      "retained_pct": 89.77917289070416,
+      "short_lost_frames": 297,
+      "short_lost_pct_of_supported": 0.17248388408153784,
+      "discarded_total_frames": 19569,
+      "n_retained_segments": 3,
+      "n_short_discarded_runs": 38,
+      "n_gaps": 41,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 171893,
+          "n_segments": 3
+        },
+        "50ms_3frames": {
+          "retained_frames": 171951,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 171965,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 172131,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 172306,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 172306,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-05-16T16_34_48_bottom_right",
+      "stage": "L_DOPA",
+      "arena": "Arena3",
+      "quality_tier": "Tier 2: Acceptable",
+      "raw_frames": 191462,
+      "supported_frames": 173730,
+      "supported_pct": 90.73863220900232,
+      "retained_frames": 173693,
+      "retained_pct": 90.71930722545466,
+      "short_lost_frames": 37,
+      "short_lost_pct_of_supported": 0.02129741552984516,
+      "discarded_total_frames": 17769,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 2,
+      "n_gaps": 3,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 173693,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 173708,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 173735,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 173735,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 173735,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 173735,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-16T16_34_48_top_left",
+      "stage": "L_DOPA",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 191462,
+      "supported_frames": 187459,
+      "supported_pct": 97.90924569888541,
+      "retained_frames": 187373,
+      "retained_pct": 97.86432816955845,
+      "short_lost_frames": 86,
+      "short_lost_pct_of_supported": 0.04587669837137721,
+      "discarded_total_frames": 4089,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 2,
+      "n_gaps": 3,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 187373,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 187461,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 187461,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 187461,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 187461,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 187461,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-17T10_05_10_bottom_left",
+      "stage": "L_DOPA",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 199304,
+      "supported_frames": 184197,
+      "supported_pct": 92.42012202464576,
+      "retained_frames": 184179,
+      "retained_pct": 92.41109059527155,
+      "short_lost_frames": 18,
+      "short_lost_pct_of_supported": 0.009772146126158406,
+      "discarded_total_frames": 15125,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 3,
+      "n_gaps": 5,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 184179,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 184198,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 184205,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 184205,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 184205,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 184205,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-17T10_05_10_bottom_right",
+      "stage": "L_DOPA",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 199304,
+      "supported_frames": 176793,
+      "supported_pct": 88.70519407538234,
+      "retained_frames": 176638,
+      "retained_pct": 88.62742343354874,
+      "short_lost_frames": 155,
+      "short_lost_pct_of_supported": 0.0876731544800982,
+      "discarded_total_frames": 22666,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 11,
+      "n_gaps": 13,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 176638,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 176670,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 176670,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 176670,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 176670,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 176770,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-17T10_05_10_top_left",
+      "stage": "L_DOPA",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 199304,
+      "supported_frames": 187002,
+      "supported_pct": 93.82751976879541,
+      "retained_frames": 186748,
+      "retained_pct": 93.70007626540361,
+      "short_lost_frames": 254,
+      "short_lost_pct_of_supported": 0.1358274243056224,
+      "discarded_total_frames": 12556,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 33,
+      "n_gaps": 37,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 186748,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 186898,
+          "n_segments": 3
+        },
+        "100ms_6frames": {
+          "retained_frames": 187047,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 187069,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 187133,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 187133,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-05-17T13_14_46_bottom_left",
+      "stage": "L_DOPA",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 221491,
+      "supported_frames": 204426,
+      "supported_pct": 92.29539800714251,
+      "retained_frames": 204235,
+      "retained_pct": 92.20916425498102,
+      "short_lost_frames": 191,
+      "short_lost_pct_of_supported": 0.09343234226566093,
+      "discarded_total_frames": 17256,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 33,
+      "n_gaps": 35,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 204235,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 204311,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 204311,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 204311,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 204522,
+          "n_segments": 2
+        },
+        "1000ms_60frames": {
+          "retained_frames": 204522,
+          "n_segments": 2
+        }
+      }
+    },
+    {
+      "sid": "2026-05-17T13_14_46_bottom_right",
+      "stage": "L_DOPA",
+      "arena": "Arena3",
+      "quality_tier": "Tier 3: Divergent/Noisy",
+      "raw_frames": 221491,
+      "supported_frames": 179967,
+      "supported_pct": 81.2525113887246,
+      "retained_frames": 179325,
+      "retained_pct": 80.96265762491478,
+      "short_lost_frames": 642,
+      "short_lost_pct_of_supported": 0.35673206754571674,
+      "discarded_total_frames": 42166,
+      "n_retained_segments": 4,
+      "n_short_discarded_runs": 73,
+      "n_gaps": 77,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 179325,
+          "n_segments": 4
+        },
+        "50ms_3frames": {
+          "retained_frames": 179764,
+          "n_segments": 5
+        },
+        "100ms_6frames": {
+          "retained_frames": 179795,
+          "n_segments": 5
+        },
+        "200ms_12frames": {
+          "retained_frames": 180007,
+          "n_segments": 5
+        },
+        "500ms_30frames": {
+          "retained_frames": 180270,
+          "n_segments": 4
+        },
+        "1000ms_60frames": {
+          "retained_frames": 180270,
+          "n_segments": 4
+        }
+      }
+    },
+    {
+      "sid": "2026-05-17T13_14_46_top_left",
+      "stage": "L_DOPA",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 221491,
+      "supported_frames": 212049,
+      "supported_pct": 95.73707283817402,
+      "retained_frames": 211953,
+      "retained_pct": 95.69373021928656,
+      "short_lost_frames": 96,
+      "short_lost_pct_of_supported": 0.045272554928342035,
+      "discarded_total_frames": 9538,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 3,
+      "n_gaps": 4,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 211953,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 212052,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 212052,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 212052,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 212052,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 212052,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-17T15_13_17_bottom_left",
+      "stage": "L_DOPA",
+      "arena": "Arena2",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 215441,
+      "supported_frames": 203453,
+      "supported_pct": 94.43559953769245,
+      "retained_frames": 203390,
+      "retained_pct": 94.40635719292057,
+      "short_lost_frames": 63,
+      "short_lost_pct_of_supported": 0.030965382668232958,
+      "discarded_total_frames": 12051,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 4,
+      "n_gaps": 5,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 203390,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 203390,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 203390,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 203467,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 203467,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 203467,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-17T15_13_17_bottom_right",
+      "stage": "L_DOPA",
+      "arena": "Arena3",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 215441,
+      "supported_frames": 194455,
+      "supported_pct": 90.2590500415427,
+      "retained_frames": 194285,
+      "retained_pct": 90.18014212707888,
+      "short_lost_frames": 170,
+      "short_lost_pct_of_supported": 0.08742382556375511,
+      "discarded_total_frames": 21156,
+      "n_retained_segments": 1,
+      "n_short_discarded_runs": 21,
+      "n_gaps": 23,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 194285,
+          "n_segments": 1
+        },
+        "50ms_3frames": {
+          "retained_frames": 194325,
+          "n_segments": 1
+        },
+        "100ms_6frames": {
+          "retained_frames": 194489,
+          "n_segments": 1
+        },
+        "200ms_12frames": {
+          "retained_frames": 194489,
+          "n_segments": 1
+        },
+        "500ms_30frames": {
+          "retained_frames": 194489,
+          "n_segments": 1
+        },
+        "1000ms_60frames": {
+          "retained_frames": 194489,
+          "n_segments": 1
+        }
+      }
+    },
+    {
+      "sid": "2026-05-17T15_13_17_top_left",
+      "stage": "L_DOPA",
+      "arena": "Arena1",
+      "quality_tier": "Tier 1: Pristine",
+      "raw_frames": 215441,
+      "supported_frames": 202788,
+      "supported_pct": 94.1269303428781,
+      "retained_frames": 201971,
+      "retained_pct": 93.74770818924902,
+      "short_lost_frames": 817,
+      "short_lost_pct_of_supported": 0.40288379983036465,
+      "discarded_total_frames": 13470,
+      "n_retained_segments": 2,
+      "n_short_discarded_runs": 69,
+      "n_gaps": 71,
+      "y_divergence_frames": 0,
+      "simulations": {
+        "0ms_raw_split": {
+          "retained_frames": 201971,
+          "n_segments": 2
+        },
+        "50ms_3frames": {
+          "retained_frames": 202318,
+          "n_segments": 2
+        },
+        "100ms_6frames": {
+          "retained_frames": 202575,
+          "n_segments": 2
+        },
+        "200ms_12frames": {
+          "retained_frames": 202729,
+          "n_segments": 2
+        },
+        "500ms_30frames": {
+          "retained_frames": 203029,
+          "n_segments": 3
+        },
+        "1000ms_60frames": {
+          "retained_frames": 203142,
+          "n_segments": 2
+        }
+      }
+    }
+  ],
+  "breakdown_by_stage": {
+    "3_weeks_PI": {
+      "sessions": 28,
+      "raw": 5308785,
+      "supported": 4099617,
+      "retained": 4091030,
+      "short_lost": 8587,
+      "supported_pct": 77.22326294999704,
+      "retained_pct": 77.06151219158433,
+      "short_lost_pct_of_supported": 0.2094585908878805
+    },
+    "8_weeks_PI": {
+      "sessions": 23,
+      "raw": 5013355,
+      "supported": 4026569,
+      "retained": 4017719,
+      "short_lost": 8850,
+      "supported_pct": 80.31685368381054,
+      "retained_pct": 80.14032519141374,
+      "short_lost_pct_of_supported": 0.21979009921349912
+    },
+    "16_weeks_PI": {
+      "sessions": 33,
+      "raw": 6344108,
+      "supported": 4506167,
+      "retained": 4496548,
+      "short_lost": 9619,
+      "supported_pct": 71.0291659599742,
+      "retained_pct": 70.87754495982729,
+      "short_lost_pct_of_supported": 0.21346301635070336
+    },
+    "24_weeks_PI": {
+      "sessions": 13,
+      "raw": 2959341,
+      "supported": 2467615,
+      "retained": 2460772,
+      "short_lost": 6843,
+      "supported_pct": 83.38393581544,
+      "retained_pct": 83.15270190221405,
+      "short_lost_pct_of_supported": 0.27731230358058284
+    },
+    "L_DOPA": {
+      "sessions": 21,
+      "raw": 4235619,
+      "supported": 3877035,
+      "retained": 3873812,
+      "short_lost": 3223,
+      "supported_pct": 91.5340827397365,
+      "retained_pct": 91.45798996557528,
+      "short_lost_pct_of_supported": 0.08313053660851656
+    }
+  }
+}

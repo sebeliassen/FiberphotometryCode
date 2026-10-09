@@ -1,0 +1,18 @@
+Backend: live; target: /home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll/utils/resample_batching.py
+SHA256: c7f7ef58f0b9400304a5634047496a264e12b437394b52a068810106d13a7e30
+JAX 0.6.2; devices=[CudaDevice(id=0)]; x64=True
+test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests) ... ok
+test_02_numpy_mutation_is_visible (__main__.PrecomputeTests) ... ok
+test_03_continuous_sample_matches_independent_dense_oracle (__main__.PrecomputeTests) ... ok
+test_04_full_continuous_chunk_reuse_and_partial_chunks (__main__.PrecomputeTests) ... ok
+test_05_dependency_changes_match_forced_fresh_evaluation (__main__.PrecomputeTests) ... ok
+test_06_banded_noise_map_has_correct_full_covariance (__main__.PrecomputeTests) ... ok
+test_07_ffbs_matches_enumerated_joint_not_just_state_counts (__main__.PrecomputeTests) ... ok
+test_08_ar_statistics_use_new_x_z_mask_and_correct_lags (__main__.PrecomputeTests) ... ok
+test_09_batch_sizer_changes_only_config_and_preserves_sample (__main__.PrecomputeTests) ... ok
+test_10_continuous_inputs_are_not_mutated (__main__.PrecomputeTests) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 6.452s
+
+OK

@@ -1,0 +1,230 @@
+[
+  {
+    "level_id": 1,
+    "level_name": "Level 1: Original Syllables",
+    "theme_id": "theme_A_rear_descent",
+    "theme_title": "Theme A: Wall-Rear & Descent Launch",
+    "p80_similarity": 0.457,
+    "mp4_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_1_original_syllables/movies/theme_A_rear_descent_p80.mp4",
+    "gif_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_1_original_syllables/thumbnails/theme_A_rear_descent_p80.gif",
+    "animals": [
+      "1767",
+      "1680",
+      "1658"
+    ],
+    "sims": [
+      0.457,
+      0.456,
+      0.468
+    ]
+  },
+  {
+    "level_id": 1,
+    "level_name": "Level 1: Original Syllables",
+    "theme_id": "theme_B_turn_slalom",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "p80_similarity": 0.767,
+    "mp4_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_1_original_syllables/movies/theme_B_turn_slalom_p80.mp4",
+    "gif_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_1_original_syllables/thumbnails/theme_B_turn_slalom_p80.gif",
+    "animals": [
+      "1664",
+      "1658",
+      "1771"
+    ],
+    "sims": [
+      0.766,
+      0.765,
+      0.763
+    ]
+  },
+  {
+    "level_id": 1,
+    "level_name": "Level 1: Original Syllables",
+    "theme_id": "theme_C_sensory_rest",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "p80_similarity": 0.629,
+    "mp4_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_1_original_syllables/movies/theme_C_sensory_rest_p80.mp4",
+    "gif_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_1_original_syllables/thumbnails/theme_C_sensory_rest_p80.gif",
+    "animals": [
+      "740",
+      "1773",
+      "1666"
+    ],
+    "sims": [
+      0.629,
+      0.61,
+      0.592
+    ]
+  },
+  {
+    "level_id": 2,
+    "level_name": "Level 2: Conservative Synonym Merging",
+    "theme_id": "theme_A_rear_descent",
+    "theme_title": "Theme A: Wall-Rear & Descent Launch",
+    "p80_similarity": 0.541,
+    "mp4_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_2_conservative_synonyms/movies/theme_A_rear_descent_p80.mp4",
+    "gif_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_2_conservative_synonyms/thumbnails/theme_A_rear_descent_p80.gif",
+    "animals": [
+      "1680",
+      "1694",
+      "1658"
+    ],
+    "sims": [
+      0.541,
+      0.542,
+      0.533
+    ]
+  },
+  {
+    "level_id": 2,
+    "level_name": "Level 2: Conservative Synonym Merging",
+    "theme_id": "theme_B_turn_slalom",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "p80_similarity": 0.767,
+    "mp4_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_2_conservative_synonyms/movies/theme_B_turn_slalom_p80.mp4",
+    "gif_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_2_conservative_synonyms/thumbnails/theme_B_turn_slalom_p80.gif",
+    "animals": [
+      "1664",
+      "1658",
+      "1771"
+    ],
+    "sims": [
+      0.766,
+      0.765,
+      0.763
+    ]
+  },
+  {
+    "level_id": 2,
+    "level_name": "Level 2: Conservative Synonym Merging",
+    "theme_id": "theme_C_sensory_rest",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "p80_similarity": 0.616,
+    "mp4_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_2_conservative_synonyms/movies/theme_C_sensory_rest_p80.mp4",
+    "gif_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_2_conservative_synonyms/thumbnails/theme_C_sensory_rest_p80.gif",
+    "animals": [
+      "740",
+      "1775",
+      "1773"
+    ],
+    "sims": [
+      0.616,
+      0.622,
+      0.61
+    ]
+  },
+  {
+    "level_id": 3,
+    "level_name": "Level 3: Functional Families with Distinctions Preserved",
+    "theme_id": "theme_A_rear_descent",
+    "theme_title": "Theme A: Wall-Rear & Descent Launch",
+    "p80_similarity": 0.622,
+    "mp4_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_3_functional_distinctions/movies/theme_A_rear_descent_p80.mp4",
+    "gif_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_3_functional_distinctions/thumbnails/theme_A_rear_descent_p80.gif",
+    "animals": [
+      "1767",
+      "1749",
+      "1666"
+    ],
+    "sims": [
+      0.622,
+      0.624,
+      0.608
+    ]
+  },
+  {
+    "level_id": 3,
+    "level_name": "Level 3: Functional Families with Distinctions Preserved",
+    "theme_id": "theme_B_turn_slalom",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "p80_similarity": 0.7,
+    "mp4_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_3_functional_distinctions/movies/theme_B_turn_slalom_p80.mp4",
+    "gif_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_3_functional_distinctions/thumbnails/theme_B_turn_slalom_p80.gif",
+    "animals": [
+      "1658",
+      "1767",
+      "1749"
+    ],
+    "sims": [
+      0.702,
+      0.681,
+      0.659
+    ]
+  },
+  {
+    "level_id": 3,
+    "level_name": "Level 3: Functional Families with Distinctions Preserved",
+    "theme_id": "theme_C_sensory_rest",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "p80_similarity": 0.189,
+    "mp4_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_3_functional_distinctions/movies/theme_C_sensory_rest_p80.mp4",
+    "gif_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_3_functional_distinctions/thumbnails/theme_C_sensory_rest_p80.gif",
+    "animals": [
+      "1658",
+      "1749",
+      "1773"
+    ],
+    "sims": [
+      0.195,
+      0.18,
+      0.2
+    ]
+  },
+  {
+    "level_id": 4,
+    "level_name": "Level 4: Broad Functional Families",
+    "theme_id": "theme_A_rear_descent",
+    "theme_title": "Theme A: Wall-Rear & Descent Launch",
+    "p80_similarity": 0.732,
+    "mp4_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_4_broad_families/movies/theme_A_rear_descent_p80.mp4",
+    "gif_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_4_broad_families/thumbnails/theme_A_rear_descent_p80.gif",
+    "animals": [
+      "1658",
+      "1767",
+      "1694"
+    ],
+    "sims": [
+      0.732,
+      0.733,
+      0.731
+    ]
+  },
+  {
+    "level_id": 4,
+    "level_name": "Level 4: Broad Functional Families",
+    "theme_id": "theme_B_turn_slalom",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "p80_similarity": 0.635,
+    "mp4_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_4_broad_families/movies/theme_B_turn_slalom_p80.mp4",
+    "gif_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_4_broad_families/thumbnails/theme_B_turn_slalom_p80.gif",
+    "animals": [
+      "1765",
+      "1680",
+      "1759"
+    ],
+    "sims": [
+      0.633,
+      0.638,
+      0.643
+    ]
+  },
+  {
+    "level_id": 4,
+    "level_name": "Level 4: Broad Functional Families",
+    "theme_id": "theme_C_sensory_rest",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "p80_similarity": 0.525,
+    "mp4_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_4_broad_families/movies/theme_C_sensory_rest_p80.mp4",
+    "gif_file": "syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/level_4_broad_families/thumbnails/theme_C_sensory_rest_p80.gif",
+    "animals": [
+      "728",
+      "740",
+      "1775"
+    ],
+    "sims": [
+      0.524,
+      0.526,
+      0.522
+    ]
+  }
+]

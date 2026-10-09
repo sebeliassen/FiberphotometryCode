@@ -1,0 +1,87 @@
+{
+  "files": {
+    "preprocessed_data.pkl": {
+      "exists": true,
+      "size_bytes": 8917475449,
+      "mtime": 1791310797.3308065,
+      "mtime_iso": "2026-10-06T18:19:57.330806494"
+    },
+    "pca.p": {
+      "exists": true,
+      "size_bytes": 14798,
+      "mtime": 1791310805.2595603,
+      "mtime_iso": "2026-10-06T18:20:05.259560347"
+    },
+    "video_frame_indexes.npz": {
+      "exists": true,
+      "size_bytes": 26277225,
+      "mtime": 1791310761.391248,
+      "mtime_iso": "2026-10-06T18:19:21.391247988"
+    },
+    "config.yml": {
+      "exists": true,
+      "size_bytes": 3727,
+      "mtime": 1791310952.9127588,
+      "mtime_iso": "2026-10-06T18:22:32.912758827"
+    },
+    "results.h5": {
+      "exists": true,
+      "size_bytes": 2045246248,
+      "mtime": 1791321077.0612621,
+      "mtime_iso": "2026-10-06T21:11:17.061262131"
+    },
+    "checkpoint.h5": {
+      "exists": true,
+      "size_bytes": 91509444568,
+      "mtime": 1791321074.8983767,
+      "mtime_iso": "2026-10-06T21:11:14.898376703"
+    }
+  },
+  "use_bodyparts": [
+    "nose",
+    "left_ear_tip",
+    "right_ear_tip",
+    "neck",
+    "mid_back",
+    "mouse_center",
+    "mid_backend",
+    "mid_backend2",
+    "mid_backend3",
+    "tail_base",
+    "left_shoulder",
+    "left_midside",
+    "left_hip",
+    "right_shoulder",
+    "right_midside",
+    "right_hip",
+    "head_midpoint",
+    "left_front_paw",
+    "right_front_paw",
+    "left_hind_paw",
+    "right_hind_paw"
+  ],
+  "n_bodyparts": 21,
+  "total_valid_frames": 18982286,
+  "total_padded_frames": 20834387,
+  "paw_nan_percentage": {
+    "left_front_paw": 0.0,
+    "right_front_paw": 0.0,
+    "left_hind_paw": 0.0,
+    "right_hind_paw": 0.0
+  },
+  "n_fused_files": 118,
+  "sample_fused_vs_prep": {
+    "h5_val": -1.0,
+    "prep_val": -0.9452087879180908
+  },
+  "vfi_session_count": 338,
+  "results_session_count": 338,
+  "vfi_vs_results_diff_count": 0,
+  "fused_manifests_count": 118,
+  "sample_manifest_inputs": [
+    "",
+    "",
+    ""
+  ],
+  "manifest_tracks_timestamp_csvs": false
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "sid": "2026-03-05T11_01_01_top_left",
+    "best_lag_fit_frames": -3,
+    "best_lag_val_frames": -1,
+    "corr_at_lag_0": -0.02739916275182868,
+    "corr_at_best_lag": -0.022727824817556495,
+    "is_concordant": false
+  },
+  {
+    "sid": "2026-03-05T11_01_01_bottom_left",
+    "best_lag_fit_frames": 3,
+    "best_lag_val_frames": -3,
+    "corr_at_lag_0": -0.022332544185518232,
+    "corr_at_best_lag": -0.02171275844907145,
+    "is_concordant": false
+  },
+  {
+    "sid": "2026-03-05T11_01_01_bottom_right",
+    "best_lag_fit_frames": -3,
+    "best_lag_val_frames": 2,
+    "corr_at_lag_0": -0.029060505128531172,
+    "corr_at_best_lag": -0.027844260712492564,
+    "is_concordant": false
+  },
+  {
+    "sid": "2026-03-05T12_46_18_top_left",
+    "best_lag_fit_frames": -3,
+    "best_lag_val_frames": -3,
+    "corr_at_lag_0": -0.0049357517769930736,
+    "corr_at_best_lag": -0.002604352056255344,
+    "is_concordant": false
+  },
+  {
+    "sid": "2026-03-05T12_46_18_bottom_left",
+    "best_lag_fit_frames": 0,
+    "best_lag_val_frames": 1,
+    "corr_at_lag_0": -0.031033913932818086,
+    "corr_at_best_lag": -0.030612074975679828,
+    "is_concordant": false
+  },
+  {
+    "sid": "2026-05-17T13_14_46_bottom_left",
+    "best_lag_fit_frames": 1,
+    "best_lag_val_frames": 0,
+    "corr_at_lag_0": 0.0766079842051391,
+    "corr_at_best_lag": 0.0766079842051391,
+    "is_concordant": false
+  },
+  {
+    "sid": "2026-05-17T13_14_46_bottom_right",
+    "best_lag_fit_frames": -3,
+    "best_lag_val_frames": 1,
+    "corr_at_lag_0": -0.013129755289537857,
+    "corr_at_best_lag": -0.009933385037145102,
+    "is_concordant": false
+  },
+  {
+    "sid": "2026-05-17T15_13_17_top_left",
+    "best_lag_fit_frames": -3,
+    "best_lag_val_frames": 2,
+    "corr_at_lag_0": 0.01882352222179077,
+    "corr_at_best_lag": 0.02187515476910474,
+    "is_concordant": false
+  },
+  {
+    "sid": "2026-05-17T15_13_17_bottom_left",
+    "best_lag_fit_frames": -3,
+    "best_lag_val_frames": -2,
+    "corr_at_lag_0": 0.07887842255585462,
+    "corr_at_best_lag": 0.09376482278734449,
+    "is_concordant": false
+  },
+  {
+    "sid": "2026-05-17T15_13_17_bottom_right",
+    "best_lag_fit_frames": -3,
+    "best_lag_val_frames": 1,
+    "corr_at_lag_0": -0.07306292052861352,
+    "corr_at_best_lag": -0.07191606312108491,
+    "is_concordant": false
+  }
+]

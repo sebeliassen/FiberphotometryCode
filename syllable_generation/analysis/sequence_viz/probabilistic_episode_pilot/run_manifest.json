@@ -1,0 +1,156 @@
+{
+  "experiment_title": "seqNMF-Adjacent Probabilistic Behavioral Episode Pilot",
+  "version": "1.0.0",
+  "timestamp": "2026-09-11T12:50:00+02:00",
+  "repository_root": "/home/fsp585/Desktop/FiberphotometryCode",
+  "pilot_directory": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot",
+  "data_clock": {
+    "clock_type": "macro_bouts",
+    "description": "Discrete macro-bout transitions from KPMS segmentation. Raw frame start/end indices preserved for exact 40 fps video alignment.",
+    "duration_representation": "Bout count for explicit HSMM phase duration; continuous physical seconds (frames / 40.0) logged in parallel for kinematics and video HUD."
+  },
+  "cohort_split": {
+    "strategy": "Strict animal-level partition (10 Train / 5 Validation)",
+    "train_animals": [
+      "728",
+      "740",
+      "1680",
+      "1759",
+      "1765",
+      "1658",
+      "1664",
+      "1666",
+      "1694",
+      "1749"
+    ],
+    "validation_animals": [
+      "1767",
+      "1773",
+      "1775",
+      "1771",
+      "1781"
+    ],
+    "total_sessions": 30,
+    "total_macro_bouts": 182627
+  },
+  "vocabulary": {
+    "type": "Level 4 Aggregated Meta-Syllables",
+    "n_classes": 14,
+    "token_names": [
+      "Walk_Right",
+      "Walk_Left",
+      "Walk_Forward",
+      "Sprint_Run",
+      "Turn_Right",
+      "Turn_Left",
+      "Rear_Elevate",
+      "Touchdown_Descent",
+      "Sniff_Investigate",
+      "Look_Orient",
+      "Groom_Module",
+      "Stationary_Rest",
+      "Tracker_Artifact",
+      "Tail_Unlabeled"
+    ],
+    "model_alphabet_size": 16,
+    "special_tokens": {
+      "BOS": 14,
+      "EOS": 15
+    },
+    "raw_provenance": "Original KPMS syllable IDs (0-99) retained for every bout to enable raw overlay and fine-grained verification.",
+    "human_labels_source": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/run12_human_labels.csv",
+    "chain_length_constraint": "Strictly 3 to 5 syllables per candidate chain for immediate deduction and visual tracking"
+  },
+  "continuous_features": {
+    "feature_dim": 7,
+    "feature_names": [
+      "speed_px_per_s",
+      "dheading_rad",
+      "log_duration_sec",
+      "disp_ratio",
+      "pca_latent_0",
+      "pca_latent_1",
+      "pca_latent_2"
+    ],
+    "pca_fitting": "PCA(n_components=3) fit strictly on training cohort animals (124,310 macro-bouts) from KPMS 10D latent_state."
+  },
+  "models_evaluated": {
+    "arm_1": {
+      "name": "Arm 1: seqNMF Baseline",
+      "description": "Rigid temporal template convolution with factorized syllable loading matrix W and activation matrix H.",
+      "motif_ids": {
+        "theme_A": 7,
+        "theme_B": 4,
+        "theme_C": 1
+      }
+    },
+    "arm_2": {
+      "name": "Arm 2: Categorical HSMM (Syllables Only)",
+      "description": "Staged hidden semi-Markov model with discrete Level-4 syllable emissions and explicit bout duration transitions.",
+      "hyperparameters": {
+        "n_themes": 3,
+        "phases_per_theme": 5,
+        "alphabet_size": 16
+      }
+    },
+    "arm_3": {
+      "name": "Arm 3: Mixed HSMM (Syllables + Kinematics + Pose Latents)",
+      "description": "Staged HSMM combining categorical syllable emissions with regularized Gaussian continuous kinematic emissions.",
+      "hyperparameters": {
+        "n_themes": 3,
+        "phases_per_theme": 5,
+        "alphabet_size": 16,
+        "feature_dim": 7,
+        "cov_regularization": 0.05
+      }
+    }
+  },
+  "standardized_trajectory_scorer": {
+    "representation": "240D Kinematic Trajectory Vector (48 uniform temporal samples x 5 features: x, y, dx, dy, speed_norm)",
+    "reference_construction": "Model-independent pooled reference: median trajectory calculated across all high-confidence training episodes for each theme.",
+    "metric": "Cosine Similarity (-1.0 to +1.0) against the pooled reference."
+  },
+  "operating_points": {
+    "canonical": {
+      "name": "Canonical Exemplar (P0 Convention)",
+      "description": "Episode with the highest continuous trajectory similarity to the canonical execution reference."
+    },
+    "p80": {
+      "name": "P80 Fidelity",
+      "description": "80th percentile similarity candidate, showing high quality with natural variability."
+    },
+    "p99": {
+      "name": "P99 Extreme Boundary",
+      "description": "1st percentile similarity candidate (lower 99th quantile bound), testing tail flexibility."
+    },
+    "ordinary": {
+      "name": "Ordinary / P-nothing",
+      "description": "Representative median/random occurrence reflecting typical everyday motif execution."
+    }
+  },
+  "renderer_configuration": {
+    "layout": "1x3 Widescreen Canvas (1920x400 total resolution; 3 synchronized panels of 640x360)",
+    "framerate": 20,
+    "features": [
+      "Synchronized multi-animal comparison (different animals across panels wherever available)",
+      "Observed Syllable HUD: Real-time display of actual observed raw KPMS syllable ID, observed Level 4 meta-token, and bout duration in seconds",
+      "Inferred Phase State: Current motif progression stage displayed in brackets alongside observed token",
+      "2D Trajectory Inset: Centered animal path trace with past/future trajectory context",
+      "Multi-format export: High-definition MP4, first-frame PNG thumbnail, and animated GIF preview"
+    ]
+  },
+  "primary_artifacts": {
+    "master_episodes_csv": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/data/pilot_episodes_master.csv",
+    "master_candidates_pkl": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/data/pilot_master_candidates.pkl",
+    "quantitative_benchmarks_csv": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/data/quantitative_performance_benchmarks.csv",
+    "cross_arm_overlap_csv": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/data/cross_arm_temporal_overlap_analysis.csv",
+    "video_gallery_manifest_json": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/data/video_gallery_manifest.json",
+    "plots": [
+      "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/plots/fig_similarity_vs_qualifying_episodes.png",
+      "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/plots/fig_shared_occurrence_embedding.png",
+      "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/plots/fig_duration_and_kinematic_distributions.png"
+    ],
+    "movies_directory": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies",
+    "thumbnails_directory": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "category": "good_example_synchronous",
+  "sid": "2025-12-03T14_06_45_bottom_right",
+  "arena": "Arena3",
+  "chamber": "bottom_right",
+  "syllable_id": 1,
+  "grid_position": "Row 1, Col 3 (Instance 02)",
+  "top_onset_vid_frame": 138878,
+  "duration_frames": 55,
+  "ttl_offset": 0,
+  "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T4_12.14.13_03122025_Arena1234_CenterTopCamVid_2025-12-03T14_06_45_bottom_right.avi",
+  "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/3_week_PI_T4_12.14.13_03122025_active_Arena3_BotCamVid_2025-12-03T14_06_45.avi",
+  "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T4_12.14.13_03122025_Arena1234_CenterTopCamVid_2025-12-03T14_06_45_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+  "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/3_week_PI_T4_12_14_13_03122025_active_Arena3_BotCamVid_2025-12-03T14_06_45/3_week_PI_T4_12_14_13_03122025_active_Arena3_BotCamVid_2025-12-03T14_06_45DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5",
+  "top_csv": "/mnt/hdd/karen_project/3_week_PI/T4_12.14.13_03122025/CenterTopCam_AllTimestampsCombined2025-12-03T14_06_45.csv",
+  "bot_csv": "/mnt/hdd/karen_project/3_week_PI/T4_12.14.13_03122025/BotCam3_AllTimestampsCombined2025-12-03T14_06_45.csv"
+}

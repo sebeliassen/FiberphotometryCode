@@ -1,0 +1,19 @@
+{
+  "total_sessions": 118,
+  "verified_sessions": 118,
+  "epoch_counts": {
+    "epoch1_winter_spring_2026": 84,
+    "epoch2_spring_post_shift_2026": 34
+  },
+  "arena_counts": {
+    "epoch1_winter_spring_2026_Arena1": 29,
+    "epoch1_winter_spring_2026_Arena2": 28,
+    "epoch1_winter_spring_2026_Arena3": 27,
+    "epoch2_spring_post_shift_2026_Arena1": 14,
+    "epoch2_spring_post_shift_2026_Arena2": 10,
+    "epoch2_spring_post_shift_2026_Arena3": 10
+  },
+  "total_frames": 23861208,
+  "errors": [],
+  "passed": true
+}

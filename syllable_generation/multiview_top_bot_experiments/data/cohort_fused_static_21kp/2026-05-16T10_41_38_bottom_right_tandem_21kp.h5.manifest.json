@@ -1,0 +1,74 @@
+{
+  "artifact": {
+    "mtime_ns": 1791310485887920918,
+    "name": "2026-05-16T10_41_38_bottom_right_tandem_21kp.h5",
+    "size": 51513312
+  },
+  "code_files": [
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/static_fusion_engine.py",
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/static_arena_transforms.json",
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/camera_correspondence.py",
+    "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/schemas.py"
+  ],
+  "code_hash": "381d19e565283604ba177a2e34f2e3607cb2330b81ee735401577a2f4e6e26a3",
+  "config": {
+    "affine_matrix": [
+      [
+        0.3820766508579254,
+        -0.005303638521581888
+      ],
+      [
+        0.008189047686755657,
+        0.3820453882217407
+      ]
+    ],
+    "affine_translation": [
+      -7.239677906036377,
+      -2.7019591331481934
+    ],
+    "arena": "Arena3",
+    "arena_width": 972.0,
+    "keypoint_mode": "21kp",
+    "truncate_aborted_tail": true
+  },
+  "config_hash": "aa76d86ba2947efe0867dcdb91c2a1ab29fa9e33c3aa8df9fa493835f3e59697",
+  "created_unix": 1791310485.9215877,
+  "dependencies": {
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "python": "3.10.19"
+  },
+  "extra": {
+    "arena": "Arena3",
+    "calibration_status": "VALID_CRYSTAL",
+    "frames": 198078,
+    "keypoint_mode": "21kp",
+    "matched_frames": 198068,
+    "sid": "2026-05-16T10_41_38_bottom_right"
+  },
+  "inputs": [
+    {
+      "exists": true,
+      "mtime_ns": 1782344849667679641,
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T1_6.4.2_16.05.2026_Arena1234_CenterTopCamVid_2026-05-16T10_41_38_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+      "size": 130255014
+    },
+    {
+      "exists": true,
+      "mtime_ns": 1790564325348995479,
+      "path": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/L_dopa_T1_6_4_2_16_05_2026_active_Arena3_BotCamVid_2026-05-16T10_41_38/L_dopa_T1_6_4_2_16_05_2026_active_Arena3_BotCamVid_2026-05-16T10_41_38DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5",
+      "sha256": "b636b582b72430e20ab25114eeae6246ed914c827670d747bdfd81051dee6cbc",
+      "size": 16005171
+    },
+    {
+      "exists": true,
+      "mtime_ns": 1791210365308689582,
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/core/static_arena_transforms.json",
+      "sha256": "b71672210bf0ceae6c56f30a8d80c64375b36c1cc7c8b447974cb44271b1ced9",
+      "size": 3336
+    }
+  ],
+  "kind": "fused_static_21kp",
+  "schema_version": 1,
+  "set_id": null
+}

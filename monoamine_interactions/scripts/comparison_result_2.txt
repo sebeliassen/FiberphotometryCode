@@ -1,0 +1,40 @@
+Loading /home/fsp585/Desktop/FiberphotometryCode/monoamine_interactions/data/sessions_dirty.pkl...
+Loading /home/fsp585/Desktop/FiberphotometryCode/syllable_generation/data/jonathan_ifdn_sessions_dirty.pkl...
+
+Total New Sessions: 2
+Total Ref Sessions: 19
+
+--- NEW (Session 1) Session Inspection (2026-01-23T10_36_39_top_left) ---
+Type: <class 'syllable_generation.datamodel.SessionRecord'>
+Metadata Keys: ['timestamp', 'chamber', 'camsets_present', 'cam_slots_present', 'arenas_present', 'chamber_index', 'original_video_path', 'trial_id', 'animal_id', 'n_chambers', 'photometry_ts_csv', 'photometry_csv_path', 'photometry_source', 'genotype', 'signal_0', 'signal_1', 'signal_2', 'signal_3', 'fiber_indices_auto', 'fiber_select_mode', 'effective_indices', 'signal_meta', 'alltimestamps_csv_path', 'alltimestamps_camera', 'photometry_non_fiber_cols', 'signal_keys', 'led_col_name', 'photometry_channels', 'dff_iso_channel', 'dff_computed_channels', 'datta_replication_enabled', 'reference_interpolation']
+Metadata Sample: {'timestamp': '2026-01-23T10_36_39', 'chamber': 'top_left', 'camsets_present': ['BotCamVid', 'CenterTopCamVid', 'LeftTopCamVid', 'RightTopCamVid'], 'cam_slots_present': ['BotCamVid', 'center_cam', 'left_cam', 'right_cam'], 'arenas_present': ['Arena1', 'Arena1234', 'Arena1and2', 'Arena2', 'Arena3', 'Arena3and4']}
+Photometry keys: ['combined_filtered', '415', '470']
+Photometry Combined Shape: (303560, 9)
+Photometry Columns: ['FrameCounter', 'SystemTimestamp', 'LedState', 'ComputerTimestamp', 'signal_0', 'signal_1', 'signal_2', 'signal_3', 'frame_idx']
+Tracking Refs DF: Empty DataFrame
+Columns: []
+Index: []
+Tracking Shape: (0, 0)
+Syllables: Present
+
+--- REF (IFDN) Session Inspection (2024-12-13T12_20_06_bottom_left) ---
+Type: <class 'syllable_generation.datamodel.SessionRecord'>
+Metadata Keys: ['timestamp', 'chamber', 'camsets_present', 'cam_slots_present', 'arenas_present', 'chamber_index', 'trial_id', 'animal_id', 'n_chambers', 'photometry_ts_csv', 'photometry_csv_path', 'photometry_source', 'genotype', 'signal_0', 'signal_1', 'signal_2', 'signal_3', 'fiber_indices_auto', 'fiber_select_mode', 'effective_indices', 'signal_meta', 'alltimestamps_csv_path', 'alltimestamps_camera', 'photometry_non_fiber_cols', 'signal_keys', 'led_col_name', 'photometry_channels', 'dff_iso_channel', 'dff_computed_channels', 'datta_replication_enabled', 'reference_interpolation']
+Metadata Sample: {'timestamp': '2024-12-13T12_20_06', 'chamber': 'bottom_left', 'camsets_present': ['CenterTopCamVid', 'LeftTopCamVid'], 'cam_slots_present': ['center_cam', 'left_cam'], 'arenas_present': ['Arena1234', 'Arena1and2']}
+Photometry keys: ['combined_filtered', '415', '470', '560']
+Photometry Combined Shape: (319144, 9)
+Photometry Columns: ['FrameCounter', 'SystemTimestamp', 'LedState', 'ComputerTimestamp', 'signal_0', 'signal_1', 'signal_2', 'signal_3', 'frame_idx']
+Tracking Refs DF:                                                 path  ... chamber_index
+0  /home/fsp585/Desktop/FiberphotometryCode/src_o...  ...             1
+1  /home/fsp585/Desktop/FiberphotometryCode/src_o...  ...             1
+
+[2 rows x 11 columns]
+Tracking Shape: (2, 11)
+Syllables: Present
+
+--- Detailed Comparison ---
+New Geno: None
+Ref Geno: WT
+New Signal 0: None
+Ref Signal 0: L-DMS
+

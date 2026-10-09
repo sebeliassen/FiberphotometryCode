@@ -1,0 +1,74 @@
+{
+  "num_syllables_evaluated": 5,
+  "mean_dorsal_compactness_ratio": 0.6706675158393326,
+  "mean_paws_compactness_ratio": 0.0059333435497614965,
+  "dorsal_stereotypy_pass_rate_pct": 80.0,
+  "paws_stereotypy_pass_rate_pct": 100.0,
+  "detailed_syllables": [
+    {
+      "syllable": 3,
+      "n_bouts": 10,
+      "median_duration_frames": 18,
+      "dorsal_syllable_variance": 21293.791226184076,
+      "dorsal_random_control_variance": 80271.45174532142,
+      "dorsal_compactness_ratio": 0.26527228252633633,
+      "dorsal_is_more_compact_than_random": true,
+      "paws_syllable_variance": 14301.624326168492,
+      "paws_random_control_variance": 2123647.7050361387,
+      "paws_compactness_ratio": 0.006734461790556319,
+      "paws_is_more_compact_than_random": true
+    },
+    {
+      "syllable": 14,
+      "n_bouts": 10,
+      "median_duration_frames": 15,
+      "dorsal_syllable_variance": 50713.779737276884,
+      "dorsal_random_control_variance": 33674.264904760304,
+      "dorsal_compactness_ratio": 1.5060100014271676,
+      "dorsal_is_more_compact_than_random": false,
+      "paws_syllable_variance": 24154.731732756627,
+      "paws_random_control_variance": 4441943.972368367,
+      "paws_compactness_ratio": 0.005437874021602696,
+      "paws_is_more_compact_than_random": true
+    },
+    {
+      "syllable": 37,
+      "n_bouts": 10,
+      "median_duration_frames": 73,
+      "dorsal_syllable_variance": 8135.83596736615,
+      "dorsal_random_control_variance": 253056.9202454451,
+      "dorsal_compactness_ratio": 0.032150221220881986,
+      "dorsal_is_more_compact_than_random": true,
+      "paws_syllable_variance": 7281.604769668663,
+      "paws_random_control_variance": 3105827.4666185463,
+      "paws_compactness_ratio": 0.002344497512476594,
+      "paws_is_more_compact_than_random": true
+    },
+    {
+      "syllable": 45,
+      "n_bouts": 10,
+      "median_duration_frames": 19,
+      "dorsal_syllable_variance": 134675.2100395386,
+      "dorsal_random_control_variance": 201322.62714897926,
+      "dorsal_compactness_ratio": 0.6689521786335453,
+      "dorsal_is_more_compact_than_random": true,
+      "paws_syllable_variance": 37322.02200588932,
+      "paws_random_control_variance": 3579869.110094721,
+      "paws_compactness_ratio": 0.010425526983834837,
+      "paws_is_more_compact_than_random": true
+    },
+    {
+      "syllable": 95,
+      "n_bouts": 10,
+      "median_duration_frames": 34,
+      "dorsal_syllable_variance": 69811.1567762829,
+      "dorsal_random_control_variance": 79245.05060566017,
+      "dorsal_compactness_ratio": 0.8809528953887318,
+      "dorsal_is_more_compact_than_random": true,
+      "paws_syllable_variance": 15248.718279921435,
+      "paws_random_control_variance": 3227680.901052564,
+      "paws_compactness_ratio": 0.004724357440337038,
+      "paws_is_more_compact_than_random": true
+    }
+  ]
+}

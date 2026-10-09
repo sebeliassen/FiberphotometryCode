@@ -62,14 +62,14 @@ sessions = load_all_sessions(
 populate_containers(sessions)
 
 
-# In[ ]:
+# In[7]:
 
 
 populate_oft_containers(sessions, '/home/fsp585/Desktop/FiberphotometryCode/src_oft/jonathan_full/h5_files', 
                         '/home/fsp585/Desktop/FiberphotometryCode/src_oft/jonathan_full/video_files')
 
 
-# In[ ]:
+# In[8]:
 
 
 import pandas as pd
@@ -158,20 +158,20 @@ summary_df = summary_df.sort_values(by=['Session ID', 'Data Type', 'Source Key']
 #     display(summary_df)
 
 
-# In[ ]:
+# In[9]:
 
 
 for df_name, df in sessions[0].dfs.data.items():
     print(df_name, df.columns)
 
 
-# In[ ]:
+# In[10]:
 
 
 PlottingSetup(**PLOTTING_CONFIG['cpt']).apply_plotting_setup_to_sessions(sessions)
 
 
-# In[ ]:
+# In[11]:
 
 
 # In your notebook
@@ -233,7 +233,7 @@ else:
         pprint.pprint(final_df.columns.to_list())
 
 
-# In[ ]:
+# In[12]:
 
 
 from fiberphotometry.kpms.syllable_generator import generate_syllable_models
@@ -242,34 +242,42 @@ from fiberphotometry.kpms.syllable_appender import extract_and_append_results
 print("Successfully imported syllable analysis modules!")
 
 
-# In[ ]:
+# In[13]:
 
 
 import keypoint_moseq as kpms
 
 
+# In[14]:
+
+
+model_names = [f'final_model_1.20e+06_idx{i}' for i in range(5)]
+
+
 # In[ ]:
 
 
+import numpy as np
+
 # # params
 curr_frac = 1
-latent_dim = 9
+latent_dim = 3
 n_jax_batches = 24
 
 # --- Define parameters for the FULL run ---
-PROJECT_DIR_FULL = f"./kpms_all_sessions_frac_{curr_frac}_ld{latent_dim}_jn{n_jax_batches}"  # Using a new directory for the full analysis
-KAPPA = 1.205e+06
+PROJECT_DIR_FULL = f"./kpms_few_bp_150ms_frac_{curr_frac}_ld{latent_dim}_jn{n_jax_batches}"  # Using a new directory for the full analysis
+#KAPPA = 1.205e+06
+KAPPA = 1.21e+04
 
 # --- Run the model generation process on ALL sessions ---
 print("--- 🚀 STARTING SYLLABLE MODEL GENERATION (FULL RUN) ---")
 
-# Capture all three return values from the function
 model_names, original_lengths, video_frame_indexes, final_metadata = generate_syllable_models(
     sessions=sessions,
     project_dir=PROJECT_DIR_FULL, # Use the new directory
     kappa=KAPPA,
     subset_fraction=curr_frac,
-    num_models=5,               # You can increase this for a more robust model (e.g., 3)
+    num_models=10,               # You can increase this for a more robust model (e.g., 3)
     ar_iters=50,
     fitting_iters=200,
     n_jax_batches=n_jax_batches,
@@ -280,53 +288,112 @@ model_names, original_lengths, video_frame_indexes, final_metadata = generate_sy
 print(f"\n--- ✅ FULL MODEL GENERATION FINISHED. {len(model_names)} model(s) created. ---")
 
 
-# In[ ]:
+# In[24]:
+
+
+from trimming import create_trimmed_coords_and_confs
+
+
+# In[17]:
+
+
+# # --- Step 1 & 2: Setup and H5 Path finding (no changes needed) ---
+# project_path = Path(PROJECT_DIR_FULL)
+# if not project_path.exists():
+#     kpms.setup_project(PROJECT_DIR_FULL)
+# config = kpms.load_config(PROJECT_DIR_FULL)
+
+# all_h5_paths = []
+# for session in sessions:
+#     session.kpms_h5_path = None
+#     for df_name, df in session.dfs.data.items():
+#         if (df_name.startswith('tracking_') and 'h5_path' in df.columns and
+#             not df['h5_path'].empty and pd.notna(df['h5_path'].iloc[0]) and
+#             'Center' in df['h5_path'].iloc[0]):
+#             session.kpms_h5_path = df['h5_path'].iloc[0]
+#             all_h5_paths.append(session.kpms_h5_path)
+#             break
+
+# # --- Step 3: Load and preprocess data (Consolidated Logic) ---
+# coordinates, confidences, _ = kpms.load_keypoints(all_h5_paths, 'deeplabcut')
+
+# # Get ground-truth info from the FULL data
+# original_lengths = {key: len(arr) for key, arr in coordinates.items()}
+# trimmed_coords, trimmed_confs, _, full_video_frame_indexes = create_trimmed_coords_and_confs(
+#     coordinates, confidences, errors=None
+# )
+
+# # Prepare the data for fitting, calling the new helper function
+# coords_for_fitting = trimmed_coords
+# confs_for_fitting = trimmed_confs
+# video_indexes_for_fitting = full_video_frame_indexes
+
+
+# # Format the data for the model
+# data, metadata = kpms.format_data(coords_for_fitting, confs_for_fitting, **config)
+
+
+# In[18]:
 
 
 import numpy as np
 
 
-# In[ ]:
+# In[19]:
 
 
+# remember to rename to video_frame_indexes
 for model_name in model_names:
     print(f"--- 📎 Appending and aligning results for model: {model_name} ---")
     extract_and_append_results(
         sessions=sessions,
         project_dir=PROJECT_DIR_FULL,
         model_name=model_name,
-        video_frame_indexes=video_indexes_for_fitting,
+        video_frame_indexes=video_frame_indexes,
         original_lengths=original_lengths,
-        metadata=metadata
+        metadata=final_metadata
     )
 
 
-# In[ ]:
+# In[20]:
 
 
-# --- 🔎 VERIFY RESULTS ---
-print("\n--- Verifying that syllable data was appended to sessions ---")
-
-# The default key where results are stored
-data_key = 'all_results' 
+print("\n--- Verifying that per-model syllable data was appended to sessions ---")
 
 for session in sessions:
-    # Check if the new attribute was successfully added
-    if hasattr(session, data_key):
-        # Access the dictionary of results
-        results_dict = getattr(session, data_key)
-        
-        # Check if the 'syllable' array exists and print its shape
-        if 'syllable' in results_dict:
-            syllable_shape = results_dict['syllable'].shape
-            print(f"✅ Success! Session {session.trial_id} now has '{data_key}' with syllable data shape: {syllable_shape}")
-        else:
-            print(f"⚠️ Warning: Session {session.trial_id} has '{data_key}' but is missing the 'syllable' key.")
-    else:
-        print(f"❌ Error: Session {session.trial_id} is missing the '{data_key}' attribute.")
+    store = getattr(session, 'kpms_results_by_model', None)
+
+    if not store:
+        print(f"❌ Error: Session {getattr(session, 'trial_id', '?')} has no 'kpms_results_by_model' or it's empty.")
+        continue
+
+    for model_name, results_dict in store.items():
+        # be tolerant of key naming
+        key = 'syllables' if 'syllables' in results_dict else ('syllable' if 'syllable' in results_dict else None)
+
+        if key is None:
+            print(
+                f"⚠️ Warning: Session {getattr(session, 'trial_id', '?')} [{model_name}] "
+                f"missing 'syllables'/'syllable' key. Available keys: {list(results_dict.keys())}"
+            )
+            continue
+
+        arr = results_dict[key]
+        nans = float(np.isnan(arr).mean()) if arr.dtype.kind in {'f'} else 0.0
+
+        # quick consistency check: all arrays share the same first dimension
+        shapes = {k: v.shape for k, v in results_dict.items()}
+        first_dims = {k: v.shape[0] for k, v in results_dict.items()}
+        consistent = len(set(first_dims.values())) == 1
+
+        print(
+            f"✅ Session {getattr(session, 'trial_id', '?')} [{model_name}] "
+            f"'{key}' shape: {arr.shape} | dtype: {arr.dtype} | NaN%: {nans:.1%} | "
+            f"consistent first dim across keys: {consistent} (shapes: {shapes})"
+        )
 
 
-# In[ ]:
+# In[21]:
 
 
 import matplotlib.pyplot as plt
@@ -335,44 +402,42 @@ import pandas as pd
 
 print("--- 📊 Generating data availability plots for all processed sessions ---")
 
-# --- Loop through every session ---
+selected_model = model_names[0]  # <-- pick one, e.g., 'final_model_1' or final_model_names[0]
 plots_generated = 0
-for s in sessions:
-    # Check if the current session has the `all_results` attribute
-    if hasattr(s, 'all_results'):
-        
-        # --- Create and display the plot for this specific session ---
-        print(f"\nPlotting for session with trial_id: {s.trial_id}")
-        
-        results_dict = s.all_results
-        syllable_array = results_dict['syllable']
-        data_exists_mask = ~np.isnan(syllable_array)
-        
-        fig, ax = plt.subplots(figsize=(18, 4))
-        ax.plot(data_exists_mask, color='#007acc', linewidth=1.5)
-        
-        # Use the current session's ID in the title
-        ax.set_title(f"Data Availability for Session {s.trial_id}", fontsize=16)
-        ax.set_xlabel("Frame Number (Full Original Timeline)", fontsize=12)
-        ax.set_ylabel("Data Status", fontsize=12)
-        ax.set_yticks([0, 1])
-        ax.set_yticklabels(['NaN (Gap)', 'Valid Data'])
-        ax.grid(axis='y', linestyle='--', alpha=0.7)
-        ax.set_ylim(-0.1, 1.1)
-        
-        plt.tight_layout()
-        plt.show() # Display the plot for this session before creating the next one
-        
-        plots_generated += 1
 
-# --- Final Summary ---
+for s in sessions:
+    break
+    store = getattr(s, 'kpms_results_by_model', None)
+    if not store or selected_model not in store:
+        print(f"⚠️ Skipping {getattr(s, 'trial_id', '?')}: no results for model '{selected_model}'.")
+        continue
+
+    results_dict = store[selected_model]
+    key = 'syllables' if 'syllables' in results_dict else 'syllable'
+    syllable_array = results_dict[key]
+    data_exists_mask = ~np.isnan(syllable_array)
+
+    print(f"\nPlotting for session: {s.trial_id}  |  model: {selected_model}")
+    fig, ax = plt.subplots(figsize=(18, 4))
+    ax.plot(data_exists_mask, linewidth=1.5)
+    ax.set_title(f"Data Availability — Session {s.trial_id} — {selected_model}", fontsize=16)
+    ax.set_xlabel("Frame Number (Full Original Timeline)", fontsize=12)
+    ax.set_ylabel("Data Status", fontsize=12)
+    ax.set_yticks([0, 1])
+    ax.set_yticklabels(['NaN (Gap)', 'Valid Data'])
+    ax.grid(axis='y', linestyle='--', alpha=0.7)
+    ax.set_ylim(-0.1, 1.1)
+    plt.tight_layout()
+    plt.show()
+    plots_generated += 1
+
 if plots_generated == 0:
-    print("\n❌ No processed sessions with 'all_results' found in memory to plot.")
+    print("\n❌ No sessions had results for the selected model to plot.")
 else:
     print(f"\n--- ✅ Plot generation complete. {plots_generated} plots created. ---")
 
 
-# In[ ]:
+# In[22]:
 
 
 import pickle
@@ -380,25 +445,24 @@ import pickle
 # 1. Bundle all the "juice" (essential, slow-to-generate variables) into one dictionary.
 #    This ensures you don't lose the outputs of your long computation.
 print("--- Bundling essential variables for saving... ---")
+
+# keep both keys for compatibility; they can point to the same list
 state_to_save = {
-    'sessions': sessions,
-    'model_names': model_names,
+    'sessions': sessions,                           # contains kpms_results_by_model per session
+    'final_model_names': model_names,         # new, explicit
+    'model_names': model_names,               # legacy alias for older notebooks
     'video_frame_indexes': video_frame_indexes,
     'original_lengths': original_lengths,
-    'project_dir_full': PROJECT_DIR_FULL, # Saving for reference
-    'kappa': KAPPA                      # Saving for reference
+    'project_dir_full': PROJECT_DIR_FULL,
+    'kappa': KAPPA
 }
+
 print("✅ Bundle complete.")
 
-# 2. Define a new, more descriptive filename for the complete state.
-save_filename = f'full_analysis_state_full_data_{curr_frac}_fst_3_models.pkl'
-
-# 3. Save the entire dictionary to the file.
+save_filename = 'kpms_few_bp_150ms_frac_1_ld3_jn24_test.pkl'
 print(f"\n--- 💾 Saving the complete analysis state to '{save_filename}'... ---")
 with open(save_filename, 'wb') as f:
-    # We are now saving the 'state_to_save' dictionary, which contains everything.
     pickle.dump(state_to_save, f)
-
 print(f"--- ✅ Save complete. All important data is now in '{save_filename}'. ---")
 
 
@@ -406,7 +470,14 @@ print(f"--- ✅ Save complete. All important data is now in '{save_filename}'. -
 
 # ### Imports and session loading
 
-# In[1]:
+# In[25]:
+
+
+PROJECT_DIR = "./kpms_few_bp_150ms_frac_1_ld3_jn24"  # Using a new directory for the full analysis
+MODEL_NAME = 'final_model_1.21e+04_idx0'
+
+
+# In[26]:
 
 
 # --- IMPORTS & SETUP ---
@@ -468,46 +539,72 @@ except ImportError as e:
     print("   Please ensure your notebook is in the correct project directory.")
 
 
-# In[2]:
+# In[ ]:
 
 
 import pickle
 import pandas as pd
 import numpy as np
 
-# 1. This filename must exactly match the new file where you saved the dictionary.
-#load_filename = f'full_analysis_state_full_data_{curr_frac}.pkl'
-# load_filename = 'full_analysis_state_full_data_1.pkl'
-load_filename = 'full_analysis_state_full_data_1_500_iters.pkl'
+#load_filename = 'final_model_1.21e+04_idx0.pkl'
+load_filename = 'kpms_few_bp_150ms_frac_1_ld3_jn24.pkl'
 print(f"--- 🚀 Loading complete analysis state from '{load_filename}'... ---")
 
-try:
-    # Use 'with open' to safely open the file.
-    with open(load_filename, 'rb') as f:
-        # 2. Load the entire dictionary object that you saved.
-        loaded_state = pickle.load(f)
+with open(load_filename, 'rb') as f:
+    loaded_state = pickle.load(f)
 
-    # 3. Unpack all the variables from the dictionary back into your notebook's workspace.
-    sessions = loaded_state['sessions']
-    model_names = loaded_state['model_names']
-    video_frame_indexes = loaded_state['video_frame_indexes']
-    original_lengths = loaded_state['original_lengths']
-    PROJECT_DIR_FULL = loaded_state['project_dir_full']
-    KAPPA = loaded_state['kappa']
+# unpack
+sessions = loaded_state['sessions']
+PROJECT_DIR_FULL = loaded_state.get('project_dir_full')
+KAPPA = loaded_state.get('kappa')
+video_frame_indexes = loaded_state['video_frame_indexes']
+original_lengths = loaded_state['original_lengths']
+final_model_names = loaded_state.get('final_model_names', loaded_state.get('model_names', []))
 
-    print(f"--- ✅ Load complete. Unpacked data for {len(sessions)} sessions into memory. ---")
+print(f"--- ✅ Base state loaded. Sessions: {len(sessions)}. Candidate models: {len(final_model_names)} ---")
 
-    # 4. A more comprehensive verification to ensure everything loaded correctly.
-    if 'sessions' in locals() and 'model_names' in locals() and 'video_frame_indexes' in locals():
-         print("\n✅ Verification successful: 'sessions', 'model_names', and other key variables are loaded.")
-         print("You can now proceed directly to your analysis and plotting cells.")
-    else:
-        print("\n⚠️ Verification failed. Some key variables are missing from the loaded data.")
+# ---- materialize a single-model view into session.all_results ----
+def _materialize_single_model_view(sessions, model_name):
+    updated, missing = 0, []
+    for s in sessions:
+        store = getattr(s, 'kpms_results_by_model', None)
+        if not store or model_name not in store:
+            missing.append(getattr(s, 'trial_id', '?'))
+            # ensure no stale legacy attribute lingers
+            if hasattr(s, 'all_results'):
+                delattr(s, 'all_results')
+            continue
 
-except FileNotFoundError:
-    print(f"\n❌ ERROR: The file '{load_filename}' was not found. Make sure it's in the same directory as your notebook.")
-except KeyError as e:
-    print(f"\n❌ ERROR: A key was missing from the loaded dictionary: {e}. The save file might be from an older version of your code.")
+        res = store[model_name]
+
+        # tolerate 'syllables' vs 'syllable' naming by creating a local alias if needed
+        if 'syllable' not in res and 'syllables' in res:
+            # make a shallow copy so we don't mutate the stored dict
+            res = {**res, 'syllable': res['syllables']}
+
+        # ensure no stale attr, then set the single-model projection
+        if hasattr(s, 'all_results'):
+            delattr(s, 'all_results')
+        setattr(s, 'all_results', res)
+        updated += 1
+    return updated, missing
+
+if 'MODEL_NAME' not in globals():
+    raise NameError("Please set MODEL_NAME before loading (e.g., MODEL_NAME = final_model_names[0]).")
+
+updated, missing = _materialize_single_model_view(sessions, MODEL_NAME)
+
+print(f"✅ Materialized single-model view: {updated} sessions now have 'all_results' for '{MODEL_NAME}'.")
+if missing:
+    print(f"⚠️ {len(missing)} sessions lacked results for '{MODEL_NAME}': {missing[:6]}{' ...' if len(missing)>6 else ''}")
+
+# quick sanity: do we actually have syllable vectors accessible like before?
+any_ok = any(
+    hasattr(s, 'all_results') and isinstance(s.all_results, dict) and
+    (('syllable' in s.all_results) or ('syllables' in s.all_results))
+    for s in sessions
+)
+print("🔎 Post-load check:", "OK ✅" if any_ok else "Issue ❌ — no sessions expose syllables via all_results")
 
 
 # ### Sanity checks
@@ -570,18 +667,11 @@ else:
 
 # ### Model loading and more sanity checks
 
-# In[6]:
-
-
-PROJECT_DIR = "./kpms_all_sessions_frac_1_ld9_jn24"  # Using a new directory for the full analysis
-MODEL_NAME = 'final_model_1.20e+06_idx4'
-
-
-# In[ ]:
+# In[5]:
 
 
 # # define your ten model names
-# model_names = [f'final_model_1.20e+06_idx{i}' for i in [0, 1, 2, 4]]
+# model_names = [f'final_model_1.20e+06_idx{i}' for i in range(5)]
 
 # # compute EML scores and their standard errors
 # eml_scores, eml_std_errs = kpms.expected_marginal_likelihoods(PROJECT_DIR, model_names)
@@ -594,7 +684,7 @@ MODEL_NAME = 'final_model_1.20e+06_idx4'
 # kpms.plot_eml_scores(eml_scores, eml_std_errs, model_names)
 
 
-# In[7]:
+# In[6]:
 
 
 import keypoint_moseq as kpms
@@ -602,26 +692,26 @@ model, data, metadata, current_iter = kpms.load_checkpoint(PROJECT_DIR, MODEL_NA
 results = kpms.extract_results(model, metadata, PROJECT_DIR, MODEL_NAME, save_results=False)
 
 
-# In[8]:
+# In[7]:
 
 
-model_names = [f'final_model_1.20e+06_idx{i}' for i in [0, 1, 2, 4]]
+# model_names = [f'final_model_1.20e+06_idx{i}' for i in range(5)]
 
-for model_name in model_names:
-    # load the specific checkpoint
-    model, data, metadata, current_iter = kpms.load_checkpoint(PROJECT_DIR, model_name)
+# for model_name in model_names:
+#     # load the specific checkpoint
+#     model, data, metadata, current_iter = kpms.load_checkpoint(PROJECT_DIR, model_name)
     
-    # extract results for this model
-    results = kpms.extract_results(model, metadata, PROJECT_DIR, model_name, save_results=True)
+#     # extract results for this model
+#     results = kpms.extract_results(model, metadata, PROJECT_DIR, model_name, save_results=True)
 
 
-# In[9]:
+# In[8]:
 
 
 config = kpms.load_config(PROJECT_DIR)
 
 
-# In[10]:
+# In[9]:
 
 
 import os
@@ -643,27 +733,27 @@ Y_est = estimate_coordinates(
 coordinates_est = unbatch(Y_est, *metadata)
 
 
-# In[11]:
+# In[10]:
 
 
 coordinates_est['Arena1234_CenterTopCamVid_2024-12-13T12_20_06_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020'].shape
 
 
-# In[12]:
+# In[11]:
 
 
 for k, v in model['states'].items():
     print(k, v.shape)
 
 
-# In[13]:
+# In[12]:
 
 
 for k, v in model['params'].items():
     print(k, v.shape)
 
 
-# In[14]:
+# In[13]:
 
 
 for k, v in config.items():
@@ -679,7 +769,7 @@ for k, v in config.items():
     print(k, shape)
 
 
-# In[15]:
+# In[14]:
 
 
 for k, v in coordinates_est.items():
@@ -688,10 +778,10 @@ for k, v in coordinates_est.items():
 
 # ### Trajectory plots
 
-# In[16]:
+# In[15]:
 
 
-perm = kpms.reindex_syllables_in_checkpoint(PROJECT_DIR, MODEL_NAME)
+#perm = kpms.reindex_syllables_in_checkpoint(PROJECT_DIR, MODEL_NAME)
 
 config['bodyparts'] = config['use_bodyparts']
 kpms.generate_trajectory_plots(coordinates_est, results, PROJECT_DIR, MODEL_NAME, fps=60, min_frequency=0.000, min_duration=1, **config)
@@ -699,7 +789,7 @@ kpms.generate_trajectory_plots(coordinates_est, results, PROJECT_DIR, MODEL_NAME
 
 # ### Grid movie preprocessing and generation
 
-# In[17]:
+# In[16]:
 
 
 import os
@@ -757,7 +847,7 @@ def map_syllable_parts_to_videos(video_frame_indexes: dict, video_dir: str) -> d
     return video_path_map
 
 
-# In[18]:
+# In[17]:
 
 
 # --- Define the paths to your directories ---
@@ -775,39 +865,19 @@ print("--- Corrected File Mapping Results ---")
 pprint.pprint(h5_to_video_map_corrected)
 
 
-# In[19]:
+# In[18]:
 
 
 centroids, headings = kpms.get_centroids_headings(coordinates_est, **config)
 
 
-# In[20]:
+# In[19]:
 
 
 video_frame_indexes
 
 
-# In[21]:
-
-
-import numpy as np
-
-# --- 1. Correct the video frame indexes for 30 FPS ---
-# We use integer division (//) to ensure the result is a valid frame index.
-print("--- Adjusting video_frame_indexes for 30 FPS videos... ---")
-# video_frame_indexes_30fps = {
-#     key: (arr // 2) for key, arr in video_frame_indexes.items()
-# }
-
-# --- 2. (Optional) Verification Step ---
-# Let's verify the change for one of the recordings
-first_key = list(video_frame_indexes.keys())[0]
-print(f"\nVerifying for key: {first_key}")
-print(f"  Original indexes (first 5): {video_frame_indexes[first_key][:5]}")
-print(f"  Corrected indexes (first 5):  {video_frame_indexes[first_key][:5]}")
-
-
-# In[ ]:
+# In[20]:
 
 
 # --- 1. Align Dictionaries to a Common Set of Keys ---
@@ -866,7 +936,7 @@ kpms.generate_grid_movies(
 
 # ### Group assignment and syllable labeling
 
-# In[ ]:
+# In[23]:
 
 
 import re
@@ -885,7 +955,7 @@ for sess in sessions:
             sess.result_names.append(name)
 
 
-# In[ ]:
+# In[24]:
 
 
 import pandas as pd
@@ -909,19 +979,19 @@ index_df.to_csv(os.path.join(PROJECT_DIR, "index.csv"), index=False)
 print(index_df.head())
 
 
-# In[ ]:
+# In[25]:
 
 
 moseq_df = kpms.compute_moseq_df(PROJECT_DIR, MODEL_NAME, smooth_heading=True)
 
 
-# In[ ]:
+# In[26]:
 
 
 moseq_df
 
 
-# In[ ]:
+# In[27]:
 
 
 stats_df = kpms.compute_stats_df(
@@ -936,19 +1006,25 @@ stats_df = kpms.compute_stats_df(
 stats_df
 
 
-# In[ ]:
+# In[28]:
 
 
 MODEL_NAME
 
 
-# In[ ]:
+# In[30]:
+
+
+PROJECT_DIR
+
+
+# In[29]:
 
 
 kpms.label_syllables(PROJECT_DIR, MODEL_NAME, moseq_df)
 
 
-# In[ ]:
+# In[31]:
 
 
 sessions[0].kpms_h5_path
@@ -962,38 +1038,38 @@ kpms.interactive_group_setting
 
 # ### Plotting setup and more checks
 
-# In[ ]:
+# In[32]:
 
 
 from fiberphotometry.config import PLOTTING_CONFIG
 from fiberphotometry.processing.plotting_setup import PlottingSetup
 
 
-# In[ ]:
+# In[33]:
 
 
 PlottingSetup(**PLOTTING_CONFIG['cpt']).apply_plotting_setup_to_sessions(sessions)
 
 
-# In[ ]:
+# In[34]:
 
 
 plt.plot(sessions[0].all_results['syllable'])
 
 
-# In[ ]:
+# In[35]:
 
 
 sessions[0].dfs.data.keys()
 
 
-# In[ ]:
+# In[36]:
 
 
 sessions[0].dfs.data['synchronized_data_tracking_0']
 
 
-# In[ ]:
+# In[37]:
 
 
 sessions[0].dfs.data['phot_470']
@@ -1020,32 +1096,16 @@ WINDOW_SAMPLES = int(WINDOW_SECONDS * SAMPLING_RATE)
 TOTAL_SAMPLES = 2 * WINDOW_SAMPLES
 SIGNAL_COLS = ['signal_0_470_dff_z', 'signal_1_470_dff_z']
 
-# --- Syllable Mapping Setup ---
-
-# 1. This map orders syllables by frequency (new_index 0 = most frequent).
-
-reindex_map = np.arange(100)
-old_id_to_new_idx = {old_id: new_idx for new_idx, old_id in enumerate(reindex_map)}
-
-# 2. Load human-readable labels from CSV.
-LABEL_CSV_PATH = '/home/fsp585/Desktop/FiberphotometryCode/tests/kpms_all_sessions_frac_1_ld9_jn24/final_model_1.20e+06_idx3_backup/syll_info.csv' # Adjust path as needed
+# --- Syllable Label Setup (no reindexing) ---
+LABEL_CSV_PATH = '/home/fsp585/Desktop/FiberphotometryCode/tests/kpms_all_sessions_frac_1_ld9_jn24/final_model_1.20e+06_idx1/syll_info.csv'
 labels_df = pd.read_csv(LABEL_CSV_PATH)
 labels_df['label'] = labels_df['label'].fillna('').str.strip()
-new_idx_to_label = {
-    row.syllable: row.label
-    for _, row in labels_df.iterrows() if row.label
+
+# Map original syllable ID to label; fallback to "non-common" if missing/empty
+syllable_id_to_label = {
+    int(row.syllable): row.label if row.label else "non-common"
+    for _, row in labels_df.iterrows()
 }
-
-# 3. Create a final map from original ID to final label.
-syllable_id_to_label = {}
-for old_id in range(100):
-    new_idx = old_id_to_new_idx.get(old_id)
-    if new_idx is not None:
-        label = new_idx_to_label.get(new_idx, "non-common")
-        syllable_id_to_label[old_id] = label
-    else:
-        syllable_id_to_label[old_id] = "non-common"
-
 
 # --- Data Processing Function ---
 def process_session_data(session):
@@ -1081,66 +1141,83 @@ def process_session_data(session):
 # --- Analysis & Plotting ---
 
 # 1. Process every session
-# This part assumes 'sessions' is a pre-loaded list of session objects
 processed_list = [process_session_data(s) for s in sessions]
 
-# 2. Select the top 20 syllables to plot
-# Since reindex_map is sorted by frequency, we can just take the first 20.
-top_20_syllables = reindex_map[:100]
-print("Top 20 original syllable IDs:", top_20_syllables.tolist())
+# 2. Gather all syllables present across sessions
+all_syllables = sorted({
+    syll for proc in processed_list for syll in proc.keys()
+})
+print("Syllables to plot:", all_syllables)
 
-# 3. Determine unique brain regions and create time vector
+# 3. Determine unique brain regions and hemispheres from sessions' metadata
 regions = sorted({region for s in sessions for region, _, _ in s.brain_regions})
+hemispheres = sorted({
+    s.signal_meta["_".join(col.split("_")[:2])][1]
+    for s in sessions
+    for col in SIGNAL_COLS
+    if "_".join(col.split("_")[:2]) in s.signal_meta
+})
 time_vector = np.linspace(-WINDOW_SECONDS, WINDOW_SECONDS, TOTAL_SAMPLES)
 
-# 4. Plot each syllable
-for syl_idx, syllable in enumerate(top_20_syllables): # 'syllable' here is the ORIGINAL integer ID
-    final_label = syllable_id_to_label.get(syllable, f"Unknown ID: {syllable}")
+# 4. Plot each syllable with hemisphere rows (top=left, bottom=right) and region columns
+for syl_idx, syllable in enumerate(all_syllables):
+    final_label = syllable_id_to_label.get(int(syllable), f"Unknown ID: {syllable}")
     
-    fig, axes = plt.subplots(1, len(regions), figsize=(22, 6))
+    hemis_order = ['left', 'right']  # top row = left, bottom = right
+    n_rows = 2
+    n_cols = len(regions)
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(5 * n_cols + 2, 8))  # width scales with regions
     fig.suptitle(f"Syllable Onset: '{final_label}' (Original ID: {int(syllable)})", fontsize=18)
 
-    for ax, region in zip(axes, regions):
-        traces_by_genotype = {'KI': [], 'WT': []}
-        for s, proc_data in zip(sessions, processed_list):
-            meta = s.signal_meta
-            for col in SIGNAL_COLS:
-                prefix = "_".join(col.split("_")[:2])
-                if meta[prefix][0] == region:
-                    traces = proc_data.get(syllable, {}).get(col, [])
-                    traces_by_genotype[s.genotype].extend(traces)
+    time_vector = np.linspace(-WINDOW_SECONDS, WINDOW_SECONDS, TOTAL_SAMPLES)
 
-        for geno, traces in traces_by_genotype.items():
-            if len(traces):
-                # skip any traces containing NaNs
+    for row_idx, hemisphere in enumerate(hemis_order):
+        for col_idx, region in enumerate(regions):
+            ax = axes[row_idx, col_idx] if n_rows > 1 else axes[col_idx]
+            traces_by_genotype = {'KI': [], 'WT': []}
+
+            for s, proc_data in zip(sessions, processed_list):
+                meta = s.signal_meta
+                for col in SIGNAL_COLS:
+                    prefix = "_".join(col.split("_")[:2])
+                    if prefix not in meta:
+                        continue
+                    region_meta = meta[prefix][0]
+                    hemi_meta = meta[prefix][1]
+                    if region_meta == region and hemi_meta == hemisphere:
+                        traces = proc_data.get(syllable, {}).get(col, [])
+                        traces_by_genotype[s.genotype].extend(traces)
+
+            for geno, traces in traces_by_genotype.items():
+                if not traces:
+                    continue
                 valid_traces = [t for t in traces if not np.isnan(t).any()]
                 n_skipped = len(traces) - len(valid_traces)
                 if n_skipped > 0:
-                    print(f"Skipped {n_skipped} {geno} traces for syllable {syllable}, region {region} due to NaNs")
+                    print(f"Skipped {n_skipped} {geno} traces for syllable {syllable}, region {region}, hemisphere {hemisphere} due to NaNs")
                 if not valid_traces:
                     continue
-                arr = np.stack(valid_traces)
 
+                arr = np.stack(valid_traces)
                 m = arr.mean(axis=0)
                 e = sem(arr, axis=0)
+                lower = m - CONFIDENCE_LEVEL * e
+                upper = m + CONFIDENCE_LEVEL * e
+
                 color = 'darkblue' if geno == 'KI' else 'green'
                 ax.plot(time_vector, m, label=f"{geno} (n={len(traces)})", color=color)
-                ax.fill_between(time_vector,
-                                m - CONFIDENCE_LEVEL * e,
-                                m + CONFIDENCE_LEVEL * e,
-                                color=color, alpha=0.2)
-                
-                ax.relim()
-                ax.autoscale_view()
+                ax.fill_between(time_vector, lower, upper, color=color, alpha=0.2)
 
-        ax.set_title(region, fontsize=14)
-        ax.axvline(0, color='crimson', linestyle='--', lw=2)
-        ax.axhline(0, color='grey', linestyle=':', lw=1)
-        ax.set_xlabel("Time from Onset (s)")
-        ax.grid(True, linestyle=':')
-        ax.legend()
+            ax.set_title(f"{region} | {hemisphere}", fontsize=13)
+            ax.axvline(0, color='crimson', linestyle='--', lw=2)
+            ax.axhline(0, color='grey', linestyle=':', lw=1)
+            if row_idx == n_rows - 1:
+                ax.set_xlabel("Time from Onset (s)")
+            if col_idx == 0:
+                ax.set_ylabel("Normalized Signal (z-score)")
+            ax.grid(True, linestyle=':')
+            ax.legend(fontsize='small')
 
-    axes[0].set_ylabel("Normalized Signal (z‑score)")
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     if syl_idx < 30:
         plt.savefig(f'syl_{syl_idx}.png')
@@ -1224,10 +1301,4 @@ kpms.plot_transition_graph_group(
 kpms.plot_transition_graph_difference(
     PROJECT_DIR, MODEL_NAME, groups, trans_mats, usages, syll_include, layout="circular", show_syllable_names=True
 )  # transition graph layout ("circular" or "spring")
-
-
-# In[ ]:
-
-
-
 

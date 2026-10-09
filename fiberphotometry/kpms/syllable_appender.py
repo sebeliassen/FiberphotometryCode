@@ -2,7 +2,7 @@
 import os
 import logging
 from pathlib import Path
-from typing import List, Any, Dict
+from typing import List, Any, Dict, Optional
 import pandas as pd
 import numpy as np
 
@@ -14,74 +14,188 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
-def extract_and_append_results(
-    sessions: List[Any],
-    project_dir: str,
-    model_name: str,
-    video_frame_indexes: Dict,
-    original_lengths: Dict,
-    metadata: tuple, # <-- ADD THIS ARGUMENT
-    data_key_name: str = 'all_results'
-):
-    """
-    ... (docstring) ...
-    """
-    logging.info(f"--- Starting syllable extraction and alignment for model: {model_name} ---")
+def _basename_and_stem(path: str):
+    base = os.path.basename(path)
+    stem, _ext = os.path.splitext(base)
+    return base, stem
 
-    kpms.reindex_syllables_in_checkpoint(project_dir, model_name)
-    # 1. Load ONLY the model object from the checkpoint
+
+def _ensure_kpms_h5_paths(objs):
+    """
+    Best effort to populate obj.kpms_h5_path when missing.
+    Mirrors the generator logic lightly:
+      - if obj.kpms_h5_path exists, keep it
+      - else if obj has .tracking (single DLC path), use that
+      - else if obj has .dfs.data with a 'tracking_*' df and 'h5_path' col, use first row
+    """
+    for obj in objs:
+        if getattr(obj, "kpms_h5_path", None):
+            continue
+        dlc_path = None
+        if getattr(obj, "tracking", None):
+            dlc_path = str(obj.tracking)
+        elif hasattr(obj, "dfs") and hasattr(obj.dfs, "data"):
+            for df_name, df in obj.dfs.data.items():
+                if df_name.startswith("tracking_") and "h5_path" in df.columns and not df["h5_path"].empty:
+                    candidate = df["h5_path"].iloc[0]
+                    if pd.notna(candidate):
+                        dlc_path = str(candidate)
+                        break
+        if dlc_path:
+            setattr(obj, "kpms_h5_path", dlc_path)
+
+def _normalize_root_from_result_key(k: str) -> str:
+    base = k.split("_part")[0]
+    base = base.split("_DLC_")[0]
+    return base
+
+def _normalize_root_from_path(p: str) -> str:
+    name = os.path.splitext(os.path.basename(str(p)))[0]
+    if "_DLC_" in name:
+        name = name.split("_DLC_")[0]
+    if name.endswith("_Crop_"):
+        name = name[:-1]   # '..._Crop_' -> '..._Crop'
+    return name
+
+def get_aligned_results(session, model_name):
+    store = getattr(session, 'kpms_results_by_model', None)
+    if not store or model_name not in store:
+        raise KeyError(f"No kpms results for model '{model_name}' on session {getattr(session, 'trial_id', '?')}")
+    return store[model_name]
+
+def get_aligned_syllables(session, model_name, key='syllables'):
+    return get_aligned_results(session, model_name)[key]
+
+def list_models_for_session(session):
+    store = getattr(session, 'kpms_results_by_model', None)
+    return list(store.keys()) if store else []
+
+def stack_syllables_by_model(session, model_names, key='syllables'):
+    return np.column_stack([get_aligned_results(session, m)[key] for m in model_names])
+
+def extract_and_append_results(
+    objs,
+    project_dir,
+    model_name,
+    video_frame_indexes,
+    original_lengths,
+    metadata=None,
+    data_key_name='all_results',
+    verbose: bool = False,
+):
+    log = logging.getLogger(__name__)
+    log.info("=== Starting syllable extraction/alignment for model: %s ===", model_name)
+
+    # Load checkpoint + extract results
     try:
-        model, _, _, current_iter = kpms.load_checkpoint(project_dir, model_name)
-        logging.info(f"Successfully loaded model '{model_name}' from checkpoint {current_iter}.")
-    except (FileNotFoundError, IndexError):
-        logging.error(f"Could not find any checkpoints for model '{model_name}'. Aborting.")
+        try:
+            kpms.reindex_syllables_in_checkpoint(project_dir, model_name)
+        except Exception:
+            if verbose:
+                log.debug("reindex_syllables_in_checkpoint skipped/failed (non-fatal).")
+        model, _, metadata_ckpt, ckpt_iter = kpms.load_checkpoint(project_dir, model_name)
+        if verbose:
+            log.info("Loaded checkpoint: %s (iter=%s)", model_name, ckpt_iter)
+    except (FileNotFoundError, IndexError) as e:
+        log.error("No checkpoints for model '%s': %s", model_name, e)
         return
 
-    # 2. Extract results using the CORRECT metadata that was passed into this function
-    results = kpms.extract_results(model, metadata, project_dir, model_name, save_results=False)
-    logging.info(f"Successfully extracted results for {len(results)} video parts.")
+    results = kpms.extract_results(model, metadata_ckpt, project_dir, model_name, save_results=False)
+    log.info("Extracted results for %d parts.", len(results))
 
-    # 3. Create the final NaN-padded data structure for each session
-    sessions_updated = 0
-    for session in sessions:
-        if not hasattr(session, 'kpms_h5_path') or not session.kpms_h5_path:
+    # Group result part keys by normalized root
+    results_by_root = {}
+    for k in results.keys():
+        r = _normalize_root_from_result_key(k)
+        results_by_root.setdefault(r, []).append(k)
+
+    # 🔧 Normalize original_lengths keys to the same root convention
+    orig_len_by_root = {}
+    for k, L in original_lengths.items():
+        r = _normalize_root_from_result_key(k)  # safe for DLC keys or already-root keys
+        L = int(L)
+        # if multiple entries map to same root, keep the max (or first; max is safest)
+        orig_len_by_root[r] = max(orig_len_by_root.get(r, 0), L)
+
+    if verbose:
+        log.info("[DEBUG] sample roots from results: %s",
+                 sorted(results_by_root.keys())[:8])
+        log.info("[DEBUG] sample roots from orig_len_by_root: %s",
+                 sorted(orig_len_by_root.keys())[:8])
+        log.info("[DEBUG] sample keys from video_frame_indexes: %s",
+                 sorted(video_frame_indexes.keys())[:5])
+
+    updated = 0
+    for i, obj in enumerate(objs):
+        obj_id = getattr(obj, 'trial_id', getattr(obj, 'name', f'obj{i+1}'))
+        kp = getattr(obj, "kpms_h5_path", None) or getattr(obj, "tracking", None)
+        if not kp:
+            if verbose:
+                log.warning("[%s] no kpms_h5_path/tracking path on object; skipping", obj_id)
             continue
 
-        h5_basename = os.path.basename(session.kpms_h5_path)
-        h5_key_prefix = h5_basename.removesuffix('.h5')
-
-        # --- THIS IS THE FIX ---
-        # The key for the `original_lengths` dictionary does not have the .h5 extension.
-        lookup_key = h5_basename.removesuffix('.h5')
-        original_len = original_lengths.get(lookup_key)
-        # -----------------------
-        
-        if original_len is None:
-            logging.warning(f"Could not find original length for {h5_basename}. Skipping alignment.")
+        root = _normalize_root_from_path(kp)
+        part_keys = results_by_root.get(root, [])
+        if not part_keys:
+            log.warning("[%s] no results parts found for root=%s (from path=%s)", obj_id, root, kp)
             continue
 
-        session_part_keys = [k for k in results if k.startswith(h5_key_prefix)]
-        if not session_part_keys:
-            logging.warning(f"No result parts found for H5 file '{h5_basename}'.")
+        orig_len = orig_len_by_root.get(root)
+        if orig_len is None:
+            log.warning("[%s] missing original length for root=%s; keys available: %s",
+                        obj_id, root, list(orig_len_by_root.keys())[:3])
             continue
 
-        # Initialize the final, full-length NaN arrays based on the structure of the first part
-        final_aligned_results = {}
-        first_part_data = results[session_part_keys[0]]
-        for data_key, sample_array in first_part_data.items():
-            nan_shape = (original_len,) if sample_array.ndim == 1 else (original_len, sample_array.shape[1])
-            final_aligned_results[data_key] = np.full(nan_shape, np.nan, dtype=np.float32)
+        if verbose:
+            log.info("[%s] root=%s | parts=%d | orig_len=%d", obj_id, root, len(part_keys), orig_len)
 
-        # Loop through all parts and place their data onto the final arrays
-        for part_key in session_part_keys:
-            original_indices = video_frame_indexes[part_key]
-            trimmed_data_dict = results[part_key]
-            for data_key, trimmed_array in trimmed_data_dict.items():
-                final_aligned_results[data_key][original_indices] = trimmed_array
-        
-        # Attach the single dictionary of full-length arrays to the session
-        setattr(session, data_key_name, final_aligned_results)
-        logging.info(f"Created final aligned data structure for session {session.trial_id}.")
-        sessions_updated += 1
+        # Initialize full-length arrays from first part's shapes
+        template = results[part_keys[0]]
+        final_aligned = {}
+        for key, arr in template.items():
+            shape = (orig_len,) if arr.ndim == 1 else (orig_len, arr.shape[1])
+            final_aligned[key] = np.full(shape, np.nan, dtype=np.float32)
 
-    logging.info(f"--- Finished alignment. Updated {sessions_updated} sessions. ---")
+        # Stitch each part using its exact part key in video_frame_indexes
+        missing_idx_parts = []
+        for pk in part_keys:
+            idx = video_frame_indexes.get(pk)
+            if idx is None:
+                missing_idx_parts.append(pk)
+                continue
+
+            idx = np.asarray(idx, dtype=int)
+            trimmed = results[pk]
+
+            # sanity: keep only in-range indices
+            good = (idx >= 0) & (idx < orig_len)
+            if not np.all(good) and verbose:
+                log.debug("[%s] clipping %d out-of-range indices for part=%s",
+                          obj_id, (~good).sum(), pk)
+            idx = idx[good]
+
+            for key, arr in trimmed.items():
+                arr_use = arr[:len(good)] if len(arr) != len(good) else arr
+                arr_use = arr_use[good]
+                final_aligned[key][idx] = arr_use
+
+        if missing_idx_parts:
+            log.warning("[%s] root=%s: missing frame indexes for parts: %s",
+                        obj_id, root, missing_idx_parts)
+
+        # Attach to object
+        if not hasattr(obj, 'kpms_results_by_model') or getattr(obj, 'kpms_results_by_model') is None:
+            setattr(obj, 'kpms_results_by_model', {})
+        obj.kpms_results_by_model[model_name] = final_aligned
+
+        # remove legacy projection to avoid confusion
+        if hasattr(obj, data_key_name):
+            try:
+                delattr(obj, data_key_name)
+            except Exception:
+                pass
+
+        updated += 1
+        log.info("[%s] aligned results attached for model '%s'.", obj_id, model_name)
+
+    log.info("=== Finished alignment. Updated %d objects. ===", updated)

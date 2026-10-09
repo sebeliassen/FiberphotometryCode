@@ -1,0 +1,85 @@
+{
+  "all_passed": true,
+  "sessions": [
+    {
+      "sid": "2026-03-05T11_01_01_bottom_left",
+      "arena": "Arena2",
+      "n_frames": 208016,
+      "max_dorsal_diff_px": 0.0,
+      "dorsal_passed": true,
+      "bot_anchor_independent": true
+    },
+    {
+      "sid": "2026-03-05T11_01_01_bottom_right",
+      "arena": "Arena3",
+      "n_frames": 208016,
+      "max_dorsal_diff_px": 0.0,
+      "dorsal_passed": true,
+      "bot_anchor_independent": true
+    },
+    {
+      "sid": "2026-03-05T11_01_01_top_left",
+      "arena": "Arena1",
+      "n_frames": 208016,
+      "max_dorsal_diff_px": 0.0,
+      "dorsal_passed": true,
+      "bot_anchor_independent": true
+    },
+    {
+      "sid": "2026-03-05T12_46_18_bottom_left",
+      "arena": "Arena2",
+      "n_frames": 207716,
+      "max_dorsal_diff_px": 0.0,
+      "dorsal_passed": true,
+      "bot_anchor_independent": true
+    },
+    {
+      "sid": "2026-03-05T12_46_18_bottom_right",
+      "arena": "Arena3",
+      "n_frames": 207716,
+      "max_dorsal_diff_px": 0.0,
+      "dorsal_passed": true,
+      "bot_anchor_independent": true
+    },
+    {
+      "sid": "2026-03-05T12_46_18_top_left",
+      "arena": "Arena1",
+      "n_frames": 207716,
+      "max_dorsal_diff_px": 0.0,
+      "dorsal_passed": true,
+      "bot_anchor_independent": true
+    },
+    {
+      "sid": "2026-03-06T09_48_02_bottom_left",
+      "arena": "Arena2",
+      "n_frames": 249525,
+      "max_dorsal_diff_px": 0.0,
+      "dorsal_passed": true,
+      "bot_anchor_independent": true
+    },
+    {
+      "sid": "2026-03-06T09_48_02_bottom_right",
+      "arena": "Arena3",
+      "n_frames": 249525,
+      "max_dorsal_diff_px": 0.0,
+      "dorsal_passed": true,
+      "bot_anchor_independent": true
+    },
+    {
+      "sid": "2026-03-06T09_48_02_top_left",
+      "arena": "Arena1",
+      "n_frames": 249525,
+      "max_dorsal_diff_px": 0.0,
+      "dorsal_passed": true,
+      "bot_anchor_independent": true
+    },
+    {
+      "sid": "2026-03-06T11_14_44_top_left",
+      "arena": "Arena1",
+      "n_frames": 244044,
+      "max_dorsal_diff_px": 0.0,
+      "dorsal_passed": true,
+      "bot_anchor_independent": true
+    }
+  ]
+}

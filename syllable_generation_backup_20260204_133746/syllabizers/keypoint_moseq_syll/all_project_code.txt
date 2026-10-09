@@ -1,0 +1,988 @@
+=========================================
+FILE: ./run_pipeline.py
+=========================================
+# run_pipeline.py
+
+import os
+import sys  # Added sys
+import json
+from pathlib import Path
+from kpms_pipeline import run_pipeline
+import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # repo root
+
+# ========= constants (edit these) =========
+PROJECT_DIR = "demo_project"
+DETECTOR = "deeplabcut"
+CAM = "center_cam"
+SUBROUTINE = "jonathan"
+LATENT_DIM = 10
+NUM_AR_ITERS = 50
+TOTAL_ITERS = 200                    # UPDATED to 200 as requested
+VIDEO_EXTENSION_OVERRIDE = None
+PCA_MODE = "load"
+
+# Optional: bake in the kappa you found + control model name
+INIT_KAPPA = 100000                  # UPDATED to 10^5
+DECREASE_KAPPA_FACTOR = 10
+MIXED_MAP_ITERS = 32
+
+SESSIONS_PKL = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/loaders/jonathan_ifdn_sessions_datta.pkl"
+
+# ========= PARSE ARGUMENTS =========
+# usage: python run_pipeline.py <model_name> <seed_integer>
+if len(sys.argv) > 1:
+    MODEL_NAME = sys.argv[1]
+else:
+    MODEL_NAME = "test-run-default"
+
+if len(sys.argv) > 2:
+    SEED = int(sys.argv[2])
+else:
+    SEED = 42 # Default if not provided
+
+# ========= sessions provider =========
+def get_sessions():
+    sessions = pd.read_pickle(SESSIONS_PKL)
+    if not sessions:
+        raise ValueError(f"No sessions in {SESSIONS_PKL}")
+    return sessions
+
+# ========= tiny io helper =========
+def _write_json(path, obj):
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(obj, f, indent=2)
+
+# =====================================
+if __name__ == "__main__":
+    print(f"--- STARTING PIPELINE ---")
+    print(f"Name: {MODEL_NAME}")
+    print(f"Seed: {SEED}")
+
+    sessions = get_sessions()
+    summary = run_pipeline(
+        sessions,
+        project_dir=PROJECT_DIR,
+        detector=DETECTOR,
+        cam=CAM,
+        subroutine=SUBROUTINE,
+        latent_dim=LATENT_DIM,
+        num_ar_iters=NUM_AR_ITERS,
+        total_iters=TOTAL_ITERS,
+        override_video_extension=VIDEO_EXTENSION_OVERRIDE,
+        pca_mode=PCA_MODE,
+        model_name=MODEL_NAME,
+        init_kappa=INIT_KAPPA,
+        decrease_kappa_factor=DECREASE_KAPPA_FACTOR,
+        mixed_map_iters=MIXED_MAP_ITERS,
+        seed=SEED,
+    )
+
+    model_dir = os.path.join(PROJECT_DIR, summary["model_name"])
+    model_summary_path = os.path.join(model_dir, "model_summary.json")
+    _write_json(model_summary_path, summary)
+
+    print("\n=== Run summary ===")
+    for k, v in summary.items():
+        print(f"{k}: {v}")
+    print(f"\nSaved model summary to: {model_summary_path}")
+
+
+=========================================
+FILE: ./regen_vfi_once.py
+=========================================
+# regen_vfi_once.py  — one-off helper
+
+import os, json
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+
+
+# --- make the package importable for unpickling ---
+import sys
+from pathlib import Path
+
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # repo root
+SESSIONS_PKL = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/loaders/jonathan_ifdn_sessions.pkl"
+# now it's safe to unpickle
+import pandas as pd
+sessions = pd.read_pickle(SESSIONS_PKL)
+
+
+from syllable_generation.syllabizers.keypoint_moseq_syll.utils.trimming import presence_mask_from_conf
+from syllable_generation.syllabizers.keypoint_moseq_syll.utils.paths import ref_pairs_from_sessions
+
+
+
+def regenerate_and_save_vfi(
+    sessions_pkl: str | Path,
+    model_path: str | Path,           # model dir OR its checkpoint.h5
+    project_dir: str | Path,
+    *,
+    detector="deeplabcut",
+    subroutine="jonathan",
+    cam="center_cam",
+    # must match your original trimming params:
+    p_thresh=0.9,
+    frac_min_parts=0.4,
+    smooth_win=7,
+    enter_thresh=0.65,
+    exit_thresh=0.45,
+    off_grace_frames=6,
+    min_on_frames=10,
+    min_off_frames=6,
+    use_cpu=True,
+):
+    """
+    Rebuilds video_frame_indexes for a finished KPMS model (no retraining).
+    Saves {model_dir}/video_frame_indexes.npz and a JSON manifest.
+    """
+    # Avoid grabbing the GPU for a read-only task
+    if use_cpu:
+        os.environ.setdefault("JAX_PLATFORMS", "cpu")
+
+    import keypoint_moseq as kpms  # safe on CPU
+
+    sessions_pkl = Path(sessions_pkl).resolve()
+    p = Path(model_path).resolve()
+    model_dir   = p if p.is_dir() else p.parent
+    project_dir = Path(project_dir).resolve()
+    model_name  = model_dir.name
+
+    # 0) Load sessions & derive paths
+    sessions = pd.read_pickle(sessions_pkl)
+    if not sessions:
+        raise ValueError(f"No sessions in {sessions_pkl}")
+
+    keypoint_paths, video_paths = ref_pairs_from_sessions(sessions, subroutine=subroutine, cam=cam)
+
+    # 1) Load keypoints
+    coords, confs, bodyparts = kpms.load_keypoints(keypoint_paths, detector)
+
+    # 2) Build deterministic masks with your original parameters
+    masks = {
+        name: presence_mask_from_conf(
+            conf,
+            p_thresh=p_thresh,
+            frac_min_parts=frac_min_parts,
+            smooth_win=smooth_win,
+            enter_thresh=enter_thresh,
+            exit_thresh=exit_thresh,
+            off_grace_frames=off_grace_frames,
+            min_on_frames=min_on_frames,
+            min_off_frames=min_off_frames,
+        )
+        for name, conf in confs.items()
+    }
+
+    # 3) Compute kept indices (this is exactly what we saved earlier)
+    keep = {k: np.flatnonzero(np.asarray(m, bool)).astype(int) for k, m in masks.items()}
+
+    # 4) Load KPMS results to sanity-check & align keys
+    model, data, metadata, current_iter = kpms.load_checkpoint(str(project_dir), model_name)
+    results = kpms.extract_results(model, metadata, str(project_dir), model_name, save_results=False)
+
+    # Intersect with results keys (KPMS may drop empties)
+    common = sorted(set(keep).intersection(results))
+    if not common:
+        raise RuntimeError("No overlap between mask keys and results keys — check subroutine/cam/detector settings.")
+
+    # Sanity: lengths must match trimmed sequence length for each recording
+    bad = []
+    for k in common:
+        n_keep = int(keep[k].size)
+        n_res  = int(np.asarray(results[k]["syllable"]).shape[0])
+        if n_keep != n_res:
+            bad.append((k, n_keep, n_res))
+    if bad:
+        msg = "\n".join([f"  {k}: keep={nk} vs results={nr}" for k, nk, nr in bad])
+        raise AssertionError(f"Length mismatch for some recordings:\n{msg}")
+
+    # 5) Save .npz + manifest in the model directory
+    vfi_path = model_dir / "video_frame_indexes.npz"
+    np.savez(vfi_path, **{k: keep[k] for k in common})
+    manifest = {
+        "generated_for_model": model_name,
+        "project_dir": str(project_dir),
+        "n_recordings": len(common),
+        "keys": common,
+        "params": {
+            "p_thresh": p_thresh,
+            "frac_min_parts": frac_min_parts,
+            "smooth_win": smooth_win,
+            "enter_thresh": enter_thresh,
+            "exit_thresh": exit_thresh,
+            "off_grace_frames": off_grace_frames,
+            "min_on_frames": min_on_frames,
+            "min_off_frames": min_off_frames,
+            "detector": detector,
+            "subroutine": subroutine,
+            "cam": cam,
+        },
+    }
+    (model_dir / "video_frame_indexes_manifest.json").write_text(json.dumps(manifest, indent=2))
+    print(f"Saved: {vfi_path}\nSaved: {model_dir / 'video_frame_indexes_manifest.json'}")
+
+# --- example call (edit paths & params to match your run) ---
+regenerate_and_save_vfi(
+    sessions_pkl="/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/loaders/jonathan_ifdn_sessions.pkl",
+    model_path="/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll/demo_project/kappa-scout-full_data_sweep1-09-k3.728e+04/checkpoint.h5",
+    project_dir="/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll/demo_project",
+    detector="deeplabcut",
+    subroutine="jonathan",
+    cam="center_cam",
+    # make sure these match the trimming you used for the run:
+    p_thresh=0.9, frac_min_parts=0.4, smooth_win=7,
+    enter_thresh=0.65, exit_thresh=0.45,
+    off_grace_frames=6, min_on_frames=10, min_off_frames=6,
+    use_cpu=True,
+)
+
+
+
+=========================================
+FILE: ./kpms_pipeline.py
+=========================================
+# kpms_pipeline.py
+
+import os
+os.environ.setdefault("MPLBACKEND", "Agg")  # use non-interactive backend
+os.environ.setdefault("DISPLAY", "")        # ensure no X server is used
+
+import matplotlib
+matplotlib.use("Agg", force=True)
+
+from pathlib import Path
+import numpy as np
+import keypoint_moseq as kpms
+from keypoint_moseq.viz import get_durations
+import jax
+from utils.paths import ref_pairs_from_sessions
+from utils.trimming import presence_mask_from_conf, filter_with_masks, clamp_conf_nonneg, subset_after_filter
+
+
+def run_pipeline(
+    sessions,
+    project_dir,
+    detector="deeplabcut",
+    cam="center_cam",
+    subroutine="jonathan",        # choose how to build paths
+    latent_dim=8,
+    num_ar_iters=1,
+    total_iters=1,
+    override_video_extension=None,   # e.g. "mkv"
+    pca_mode="load",                 # "load" or "load_or_fit"
+    model_name=None,                 # let caller control names on disk
+    init_kappa=None,                 # if set, use this kappa during AR-only stage
+    decrease_kappa_factor=None,      # if set, use init_kappa/decrease before SLDS
+    subset_fraction=1.0,             # < 1.0 -> run subset subroutine
+    subset_blocks=5,                 # number of spread blocks per recording
+    subset_block_len=None,           # optional explicit block length
+    subset_seed=None,                # deterministic jitter if you want
+    mixed_map_iters=24,
+    seed=None
+):
+    """
+    sessions -> load keypoints -> trim (with outlier removal) -> format -> PCA (load or fit) -> init & fit
+    Saves artifacts into project_dir (kpms side effects). Returns a small summary.
+    """
+    # 0) derive file lists
+    keypoint_paths, video_paths = ref_pairs_from_sessions(sessions, subroutine=subroutine, cam=cam)
+    vid_dir = str(Path(video_paths[0]).parent)
+    ext = (override_video_extension or Path(video_paths[0]).suffix.lstrip(".").lower())
+
+    # 1) load keypoints
+    coordinates, confidences, bodyparts = kpms.load_keypoints(keypoint_paths, detector)
+
+    # 2) presence masks (trimming)
+    all_masks = {name: presence_mask_from_conf(conf) for name, conf in confidences.items()}
+
+    # 3) compress + outlier removal (inside filter_with_masks)
+    filtered_coords, filtered_confs, video_frame_indexes = filter_with_masks(
+        coordinates, confidences, all_masks, project_dir,
+        return_video_frame_indexes=True, **kpms.load_config(project_dir)
+    )
+    clamp_conf_nonneg(filtered_confs)
+
+    if subset_fraction < 1.0:
+        filtered_coords, filtered_confs, video_frame_indexes = subset_after_filter(
+            filtered_coords, filtered_confs, video_frame_indexes,
+            frac=subset_fraction, n_blocks=subset_blocks,
+            block_len=subset_block_len, seed=subset_seed,
+        )
+
+    # 4) config so kpms can find videos (+ latent_dim)
+    kpms.update_config(project_dir, video_dir=vid_dir, video_extension=ext, latent_dim=latent_dim)
+
+    # 5) format data
+    data, metadata = kpms.format_data(filtered_coords, filtered_confs, **kpms.load_config(project_dir))
+
+    # 6) PCA
+    if (subset_fraction is not None) and (subset_fraction < 1.0):
+        # temporary PCA for subset (don't save)
+        pca = kpms.fit_pca(**data, **kpms.load_config(project_dir))
+    elif pca_mode == "load":
+        pca = kpms.load_pca(project_dir)  # raises if missing
+    elif pca_mode == "load_or_fit":
+        try:
+            pca = kpms.load_pca(project_dir)
+        except Exception:
+            pca = kpms.fit_pca(**data, **kpms.load_config(project_dir))
+            kpms.save_pca(pca, project_dir)
+    else:
+        raise ValueError(f"Unknown pca_mode={pca_mode!r}; use 'load' or 'load_or_fit'")
+    
+# === batching ===
+    from jax_moseq.utils import set_mixed_map_iters
+    import math
+    eff_mixed_map_iters = mixed_map_iters
+    if (subset_fraction is not None) and (subset_fraction < 1.0):
+        eff_mixed_map_iters = max(1, math.ceil(mixed_map_iters * subset_fraction))
+    set_mixed_map_iters(eff_mixed_map_iters)
+
+    # === 7-8) Initialization & AR Fit ===
+    requested_name = model_name
+    ckpt_path = Path(project_dir) / (requested_name or "") / "checkpoint.h5"
+
+    if requested_name and ckpt_path.exists():
+        # [RESUME]
+        model, data, metadata, current_iter = kpms.load_checkpoint(project_dir, requested_name)
+        model_name_used = requested_name
+        print(f"[resume] Loaded '{model_name_used}' at iteration {current_iter}")
+    else:
+        # [FRESH RUN]
+        print(f"[init] Initializing fresh model with seed={seed}")
+        
+        # --- CRITICAL FIX: Pass the JAX PRNGKey ---
+        if seed is not None:
+            rng_key = jax.random.PRNGKey(int(seed))
+        else:
+            rng_key = None # Let kpms decide (usually defaults or config)
+
+        # Initialize with explicit seed
+        model = kpms.init_model(data, pca=pca, seed=rng_key, **kpms.load_config(project_dir))
+
+        if init_kappa is not None:
+            model = kpms.update_hypparams(model, kappa=float(init_kappa))
+
+        # AR-only prefit
+        model, model_name_used = kpms.fit_model(
+            model, data, metadata, project_dir,
+            model_name=requested_name,
+            ar_only=True,
+            num_iters=num_ar_iters,
+            parallel_message_passing=False,
+        )
+
+        model, data, metadata, current_iter = kpms.load_checkpoint(
+            project_dir, model_name_used, iteration=num_ar_iters
+        )
+
+        if (init_kappa is not None) and (decrease_kappa_factor is not None):
+            slds_kappa = float(init_kappa) / float(decrease_kappa_factor)
+            model = kpms.update_hypparams(model, kappa=slds_kappa)
+
+    # === 9) SLDS main fit ===
+    target_iter = current_iter + total_iters
+    model = kpms.fit_model(
+        model, data, metadata, project_dir, model_name_used,
+        ar_only=False,
+        start_iter=current_iter,
+        num_iters=target_iter,
+        parallel_message_passing=False,
+    )[0]
+
+    # --- summary metrics ---
+    z = np.array(model["states"]["z"])
+    mask = np.array(data["mask"])
+    median_duration = float(np.median(get_durations(z, mask))) if mask.size else float("nan")
+    frames_used = int(mask.sum())
+
+    model_dir = os.path.join(project_dir, model_name)
+    np.savez_compressed(
+        os.path.join(model_dir, "video_frame_indexes.npz"),
+        **{k: np.asarray(v, dtype=np.int64) for k, v in video_frame_indexes.items()}
+    )
+
+    return {
+        "project_dir": project_dir,
+        "video_dir": vid_dir,
+        "video_extension": ext,
+        "detector": detector,
+        "cam": cam,
+        "latent_dim": latent_dim,
+        "n_recordings": len(filtered_coords),
+        "frames_used": frames_used,
+        "median_duration_frames": median_duration,
+        "model_name": model_name_used,
+        "seed": seed,
+        "iters_done": current_iter + total_iters,
+        "pca_mode": pca_mode,
+        "subroutine": subroutine,
+        # kappa bookkeeping
+        "kappa_init": init_kappa,
+        "kappa_slds": (slds_kappa if slds_kappa is not None else init_kappa),
+        # subset bookkeeping (only if you added these args)
+        "subset_fraction": subset_fraction,
+        "subset_blocks": subset_blocks,
+        "subset_block_len": subset_block_len,
+        # training iters (explicit)
+        "num_ar_iters": num_ar_iters,
+        "num_slds_iters": total_iters,
+    }
+
+
+
+
+=========================================
+FILE: ./utils/paths.py
+=========================================
+import pandas as pd
+
+# --- core helpers ---
+
+def _collect_cam_paths_from_dfs(dfs):
+    """Return {'center_cam': [...], 'side_cam': [...]} from a list of refs DFs."""
+    df = pd.concat(dfs, ignore_index=True)
+
+    if "cam_slot" in df.columns:
+        center_mask = df["cam_slot"].eq("center_cam")
+        side_mask   = df["cam_slot"].isin(["left_cam", "right_cam"])
+    else:
+        key = df["camera_key"].astype(str)
+        center_mask = key.str.startswith("center_cam:")
+        side_mask   = key.str.startswith(("left_cam:", "right_cam:"))
+
+    return {
+        "center_cam": df.loc[center_mask, "path"].tolist(),
+        "side_cam":   df.loc[side_mask,   "path"].tolist(),
+    }
+
+# --- subroutines ---
+
+def _subroutine_jonathan(sessions, *, cam="center_cam"):
+    """
+    sessions: iterable with .tracking_refs_df and .video_refs_df
+    returns: (keypoint_paths, video_paths) for requested cam
+    """
+    trk_dfs = [s.tracking_refs_df for s in sessions]
+    vid_dfs = [s.video_refs_df    for s in sessions]
+
+    trk = _collect_cam_paths_from_dfs(trk_dfs)[cam]
+    vid = _collect_cam_paths_from_dfs(vid_dfs)[cam]
+
+    if len(trk) != len(vid):
+        raise ValueError(f"Tracking vs video count mismatch: {len(trk)} != {len(vid)} for cam={cam}")
+    return trk, vid
+
+def _subroutine_soeren(sessions, *, cam="center_cam"):
+    # Placeholder for your alternative path-building strategy
+    raise NotImplementedError("subroutine 'soeren' not implemented yet")
+
+# --- public wrapper ---
+
+def ref_pairs_from_sessions(sessions, subroutine="jonathan", cam="center_cam"):
+    """
+    Dispatch to a path-extraction subroutine and return (keypoint_paths, video_paths).
+
+    subroutine: one of {'jonathan', 'soeren', ...}
+    cam: 'center_cam' or 'side_cam'
+    """
+    registry = {
+        "jonathan": _subroutine_jonathan,
+        "soeren":   _subroutine_soeren,
+    }
+    if subroutine not in registry:
+        raise ValueError(f"Unknown subroutine {subroutine!r}. Available: {sorted(registry)}")
+    return registry[subroutine](sessions, cam=cam)
+
+
+
+=========================================
+FILE: ./utils/trimming.py
+=========================================
+import numpy as np
+
+def presence_mask_from_conf(conf,
+                            p_thresh=0.9,          # bodypart counted as "seen" if >= this
+                            frac_min_parts=0.4,    # min fraction of parts to seed presence
+                            smooth_win=7,          # moving avg window (frames)
+                            enter_thresh=0.65,     # hysteresis enter threshold (on smoothed fraction)
+                            exit_thresh=0.45,      # hysteresis exit threshold
+                            off_grace_frames=6,    # require this many bad frames in a row to exit
+                            min_on_frames=10,      # remove ON runs shorter than this
+                            min_off_frames=6):     # fill OFF gaps shorter than this
+    T, N = conf.shape
+
+    # 1) Per-frame fraction of confidently-seen bodyparts
+    valid = (conf >= p_thresh)
+    count = valid.sum(axis=1)
+    frac = count / float(N)
+
+    # 2) Light smoothing
+    if smooth_win > 1:
+        k = np.ones(smooth_win, float) / smooth_win
+        sm = np.convolve(frac, k, mode="same")
+    else:
+        sm = frac
+
+    # 3) Seed frames that clearly have enough parts (helps resist brief dips)
+    k_min = max(1, int(np.ceil(frac_min_parts * N)))
+    seed = (count >= k_min)
+
+    # 4) Hysteresis with "grace" to avoid flipping OFF on brief occlusions
+    on = np.zeros(T, dtype=bool)
+    inside = False
+    below = 0
+    for t in range(T):
+        if not inside:
+            if (sm[t] >= enter_thresh) or seed[t]:
+                inside = True
+                below = 0
+        else:
+            if (sm[t] <= exit_thresh) and (not seed[t]):
+                below += 1
+                if below >= off_grace_frames:
+                    inside = False
+                    below = 0
+            else:
+                below = 0
+        on[t] = inside
+
+    # 5) Remove very short ON runs, then fill very short OFF gaps
+    if min_on_frames > 1 or min_off_frames > 1:
+        on = _clean_short_runs(on, min_true=min_on_frames, min_false=min_off_frames)
+
+    return on
+
+
+def _clean_short_runs(mask, min_true=1, min_false=1):
+    """Remove ON runs shorter than min_true, and OFF runs shorter than min_false."""
+    m = mask.copy()
+    if m.size == 0:
+        return m
+
+    x = m.astype(np.int8)
+    # Run boundaries
+    boundaries = np.flatnonzero(np.r_[True, x[1:] != x[:-1], True])
+    starts = boundaries[:-1]
+    ends = boundaries[1:]
+    vals = m[starts]
+
+    # First pass: kill short True runs
+    if min_true > 1:
+        for s, e, v in zip(starts, ends, vals):
+            if v and (e - s) < min_true:
+                m[s:e] = False
+
+    # Recompute runs after first pass
+    x = m.astype(np.int8)
+    boundaries = np.flatnonzero(np.r_[True, x[1:] != x[:-1], True])
+    starts = boundaries[:-1]
+    ends = boundaries[1:]
+    vals = m[starts]
+
+    # Second pass: fill short False gaps
+    if min_false > 1:
+        for s, e, v in zip(starts, ends, vals):
+            if (not v) and (e - s) < min_false:
+                m[s:e] = True
+
+    return m
+
+def filter_with_masks(coordinates, confidences, masks, project_dir,
+                      return_video_frame_indexes=False, **kwargs):
+    """
+    Compress by masks (keep only mask==1 frames), run kpms.outlier_removal on compressed dicts.
+    Returns compressed coords/confs (length = #ones in mask).
+    If return_video_frame_indexes=True, also returns dict[name] -> kept original frame indices.
+    """
+    import numpy as np
+    import keypoint_moseq as kpms
+
+    names = set(coordinates) & set(confidences) & set(masks)
+    if not names:
+        raise ValueError("No overlapping keys among coordinates/confidences/masks.")
+
+    for name in names:
+        T = coordinates[name].shape[0]
+        if confidences[name].shape[0] != T:
+            raise ValueError(f"{name}: T mismatch conf vs coord")
+        m = np.asarray(masks[name], bool)
+        if m.shape != (T,):
+            raise ValueError(f"{name}: mask must be shape ({T},), got {m.shape}")
+
+    keep = {k: np.flatnonzero(np.asarray(masks[k], bool)) for k in names}
+
+    coords_cmp = {k: coordinates[k][keep[k]] if keep[k].size else coordinates[k][:0] for k in names}
+    confs_cmp  = {k: confidences[k][keep[k]] if keep[k].size else confidences[k][:0] for k in names}
+
+    nonempty = [k for k in names if keep[k].size]
+    coords_out, confs_out = {}, {}
+    if nonempty:
+        coords_out, confs_out = kpms.outlier_removal(
+            {k: coords_cmp[k] for k in nonempty},
+            {k: confs_cmp[k]  for k in nonempty},
+            project_dir,
+            **kwargs
+        )
+
+    filtered_coordinates = {
+        k: (coords_out[k] if k in coords_out else coordinates[k][:0].astype(float, copy=False))
+        for k in names
+    }
+    filtered_confidences = {
+        k: (confs_out[k] if k in confs_out else confidences[k][:0].astype(float, copy=False))
+        for k in names
+    }
+
+    if return_video_frame_indexes:
+        video_frame_indexes = {k: keep[k].astype(int) for k in names}
+        return filtered_coordinates, filtered_confidences, video_frame_indexes
+
+    return filtered_coordinates, filtered_confidences
+
+def clamp_conf_nonneg(conf_dict):
+    """In-place clamp of confidences to [0, ∞)."""
+    import numpy as np
+    for k, v in conf_dict.items():
+        np.maximum(v, 0.0, out=v)
+
+
+def subset_spread_blocks(length, frac=0.1, n_blocks=5, block_len=None, seed=None):
+    """
+    Build a 1D index into a kept/filtered sequence (length=T) selecting ~frac*T
+    frames as several contiguous 'slivers' spread over time (no center bias).
+
+    Returns: np.ndarray of sorted, unique indices (int) into [0..T-1].
+    """
+    import numpy as np
+
+    T = int(length)
+    if T <= 0 or frac <= 0:
+        return np.zeros((0,), dtype=int)
+
+    target = max(1, int(round(frac * T)))
+    if n_blocks <= 0:
+        n_blocks = 1
+
+    # If block_len not given, pick it so that n_blocks * block_len ~= target
+    if block_len is None:
+        block_len = max(1, target // n_blocks)
+
+    # If the blocks would exceed T, shrink block_len
+    block_len = min(block_len, T)
+
+    # Spread starts uniformly, then (optionally) jitter to avoid determinism
+    starts = np.linspace(0, max(0, T - block_len), num=n_blocks, dtype=int)
+    if seed is not None and T > block_len:
+        rng = np.random.default_rng(seed)
+        max_jit = max(1, (T - block_len) // (n_blocks + 1))
+        jitter = rng.integers(0, max_jit, size=n_blocks)
+        starts = np.minimum(starts + jitter, T - block_len)
+
+    idxs = []
+    for s in starts:
+        if len(idxs) >= target:
+            break
+        e = int(min(T, s + block_len))
+        idxs.extend(range(s, e))
+
+    # De-dup, sort, and cap to the target count
+    idx = np.array(sorted(set(idxs)), dtype=int)
+    if idx.size > target:
+        idx = idx[:target]
+    return idx
+
+
+def subset_after_filter(filtered_coordinates, filtered_confidences, video_frame_indexes,
+                        frac=0.1, n_blocks=5, block_len=None, seed=None):
+    """
+    Apply `subset_spread_blocks` per recording AFTER trimming/outlier removal.
+    Returns new (coords, confs, vfi) dictionaries with only the subset frames.
+    """
+    import numpy as np
+
+    sub_coords, sub_confs, sub_vfi = {}, {}, {}
+    for k in filtered_coordinates.keys():
+        T = len(filtered_coordinates[k])
+        if T == 0:
+            sub_coords[k] = filtered_coordinates[k][:0]
+            sub_confs[k]  = filtered_confidences[k][:0]
+            sub_vfi[k]    = video_frame_indexes[k][:0]
+            continue
+
+        idx = subset_spread_blocks(T, frac=frac, n_blocks=n_blocks,
+                                   block_len=block_len, seed=seed)
+        sub_coords[k] = filtered_coordinates[k][idx]
+        sub_confs[k]  = filtered_confidences[k][idx]
+        sub_vfi[k]    = video_frame_indexes[k][idx]
+
+    return sub_coords, sub_confs, sub_vfi
+
+
+
+=========================================
+FILE: ./utils/__init__.py
+=========================================
+
+
+
+=========================================
+FILE: ./.ipynb_checkpoints/run_kpms_nb-checkpoint.ipynb
+=========================================
+
+
+
+=========================================
+FILE: ./compare_runs.ipynb
+=========================================
+
+
+
+=========================================
+FILE: ./__init__.py
+=========================================
+
+
+
+=========================================
+FILE: ./run_kpms_nb.ipynb
+=========================================
+
+
+
+=========================================
+FILE: ./find_kappa.py
+=========================================
+#this is a module for binary kappa search
+
+import math
+import json
+import os
+from pathlib import Path
+import numpy as np
+import pandas as pd
+from kpms_pipeline import run_pipeline
+
+import sys
+from pathlib import Path
+from datetime import datetime
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))  # repo root
+
+# ========= constants (edit these) =========
+PROJECT_DIR = "demo_project"
+DETECTOR = "deeplabcut"
+CAM = "center_cam"
+SUBROUTINE = "jonathan"
+
+TARGET_FRAMES = 24
+TOL_FRAMES = 0
+MAX_STEPS = 10
+STEP_FRACTION = 0.25
+START_KAPPA = 1e7
+KAPPA_BOUNDS = (1e2, 1e10)
+
+NUM_AR_ITERS = 10
+NUM_SLDS_ITERS = 40
+DECREASE_KAPPA_FACTOR = 10
+
+SUBSET_FRACTION = 1
+SUBSET_BLOCKS = 3
+SUBSET_BLOCK_LEN = None
+SUBSET_SEED = 0
+
+PCA_MODE = "load"  # full runs still load; subset runs compute temp PCA in-memory
+MODEL_NAME_PREFIX = "kappa-scout"
+RUN_TAG = "full_data_sweep1"
+
+BASE_MIXED_MAP_ITERS = 24
+
+VIDEO_EXTENSION_OVERRIDE = None
+
+SESSIONS_PKL = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/loaders/jonathan_ifdn_sessions.pkl"
+
+def get_sessions():
+    sessions = pd.read_pickle(SESSIONS_PKL)
+    if not sessions:
+        raise ValueError(f"No sessions in {SESSIONS_PKL}")
+    return sessions
+
+
+def _next_kappa(log_lo, log_hi, step_fraction, toward_hi=True):
+    if toward_hi:
+        return log_lo + step_fraction * (log_hi - log_lo)
+    else:
+        return log_hi - step_fraction * (log_hi - log_lo)
+
+
+def _write_json(path, obj):
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(obj, f, indent=2)
+
+
+def main():
+    assert 0 < STEP_FRACTION <= 0.5, "STEP_FRACTION should be in (0, 0.5]."
+    sessions = get_sessions()
+
+    log_lo = math.log(max(KAPPA_BOUNDS[0], 1e-12))
+    log_hi = math.log(min(KAPPA_BOUNDS[1], 1e12))
+    log_k = math.log(START_KAPPA)
+
+    history = []  # list of dicts: {kappa, median_frames, model_name, frames_used, model_dir}
+
+    for step in range(1, MAX_STEPS + 1):
+        kappa_val = float(math.exp(log_k))
+        model_name = f"{MODEL_NAME_PREFIX}-{(RUN_TAG+'-') if RUN_TAG else ''}{step:02d}-k{kappa_val:.3e}"
+
+        start_dt = datetime.now().astimezone()
+        summary = run_pipeline(
+            sessions,
+            project_dir=PROJECT_DIR,
+            detector=DETECTOR,
+            cam=CAM,
+            subroutine=SUBROUTINE,
+            latent_dim=8,
+            num_ar_iters=NUM_AR_ITERS,
+            total_iters=NUM_SLDS_ITERS,
+            override_video_extension=VIDEO_EXTENSION_OVERRIDE,
+            pca_mode=PCA_MODE,
+            subset_fraction=SUBSET_FRACTION,
+            subset_blocks=SUBSET_BLOCKS,
+            subset_block_len=SUBSET_BLOCK_LEN,
+            subset_seed=SUBSET_SEED,
+            model_name=model_name,
+            init_kappa=kappa_val,
+            decrease_kappa_factor=DECREASE_KAPPA_FACTOR,
+            mixed_map_iters=BASE_MIXED_MAP_ITERS,
+        )
+
+        median = float(summary["median_duration_frames"])
+        frames_used = int(summary["frames_used"])
+        model_name_used = summary["model_name"]  # in case KPMS normalized the name
+        model_dir = os.path.join(PROJECT_DIR, model_name_used)
+
+        finish_dt = datetime.now().astimezone()
+        finished_at = finish_dt.isoformat(timespec="seconds")
+        started_at  = start_dt.isoformat(timespec="seconds")
+        duration_s  = (finish_dt - start_dt).total_seconds()
+
+        # Per-model probe JSON (saved where the model is saved)
+        probe_json = {
+            "project_dir": PROJECT_DIR,
+            "model_name": model_name_used,
+            "model_dir": model_dir,
+            
+            "kappa_init": summary.get("kappa_init"),
+            "kappa_slds": summary.get("kappa_slds"),
+            
+            "median_duration_frames": median,
+            "frames_used": frames_used,
+            "target_frames": TARGET_FRAMES,
+            "tol_frames": TOL_FRAMES,
+            
+            "num_ar_iters": NUM_AR_ITERS,
+            "num_slds_iters": NUM_SLDS_ITERS,
+            "decrease_kappa_factor": DECREASE_KAPPA_FACTOR,
+            
+            "subset_fraction": SUBSET_FRACTION,
+            "subset_blocks": SUBSET_BLOCKS,
+            "subset_block_len": SUBSET_BLOCK_LEN,
+            "subset_seed": SUBSET_SEED,
+            
+            "detector": summary.get("detector"),
+            "cam": summary.get("cam"),
+            "latent_dim": summary.get("latent_dim"),
+            "video_dir": summary.get("video_dir"),
+            "video_extension": summary.get("video_extension"),
+            "pca_mode": summary.get("pca_mode"),
+            "subroutine": summary.get("subroutine"),
+
+            "started_at": started_at,      
+            "finished_at": finished_at,    
+            "duration_seconds": duration_s,
+        }
+        _write_json(os.path.join(model_dir, "kappa_probe.json"), probe_json)
+
+        history.append({
+            "kappa": kappa_val,
+            "median_frames": median,
+            "model_name": model_name_used,
+            "frames_used": frames_used,
+            "model_dir": model_dir,
+            "started_at": started_at,      
+            "finished_at": finished_at,    
+            "duration_seconds": duration_s,
+        })
+
+
+        print(f"[step {step}/{MAX_STEPS}] "
+              f"kappa={kappa_val:.3e} → median={median:.2f} frames "
+              f"(target={TARGET_FRAMES}, tol={TOL_FRAMES}, frames_used={frames_used})")
+
+        # Convergence check
+        if np.isfinite(median) and abs(median - TARGET_FRAMES) <= TOL_FRAMES:
+            print("\nConverged within tolerance.")
+            break
+
+        # Direction
+        if not np.isfinite(median):
+            log_k = min(log_k + 0.5, log_hi)  # nudge up if degenerate
+            continue
+
+        if median < TARGET_FRAMES:
+            log_lo = max(log_lo, log_k)  # too short → increase kappa
+            log_k = _next_kappa(log_lo, log_hi, STEP_FRACTION, toward_hi=True)
+        else:
+            log_hi = min(log_hi, log_k)  # too long → decrease kappa
+            log_k = _next_kappa(log_lo, log_hi, STEP_FRACTION, toward_hi=False)
+
+        log_k = max(min(log_k, log_hi), log_lo)
+
+    # Pick best-so-far
+    def _score(h):  # lower is better
+        m = h["median_frames"]
+        return abs(m - TARGET_FRAMES) if np.isfinite(m) else float("inf")
+
+    best = min(history, key=_score) if history else None
+
+    if best:
+        # Save whole scan history into the BEST model’s folder
+        scan_json = {
+            "project_dir": PROJECT_DIR,
+            "target_frames": TARGET_FRAMES,
+            "tol_frames": TOL_FRAMES,
+            "max_steps": MAX_STEPS,
+            "step_fraction": STEP_FRACTION,
+            "start_kappa": START_KAPPA,
+            "bounds": list(KAPPA_BOUNDS),
+            "num_ar_iters": NUM_AR_ITERS,
+            "num_slds_iters": NUM_SLDS_ITERS,
+            "decrease_kappa_factor": DECREASE_KAPPA_FACTOR,
+            "subset_fraction": SUBSET_FRACTION,
+            "subset_blocks": SUBSET_BLOCKS,
+            "subset_block_len": SUBSET_BLOCK_LEN,
+            "subset_seed": SUBSET_SEED,
+            "history": history,
+            "best": best,
+        }
+        _write_json(os.path.join(best["model_dir"], "kappa_scan_history.json"), scan_json)
+
+        print(f"\nChosen kappa ≈ {best['kappa']:.3e} "
+              f"(median={best['median_frames']:.2f} frames) "
+              f"from model '{best['model_name']}'")
+        print(f"History saved to {os.path.join(best['model_dir'], 'kappa_scan_history.json')}")
+    else:
+        print("\nNo runs executed? Check your sessions loader.")
+
+
+if __name__ == "__main__":
+    main()
+
+

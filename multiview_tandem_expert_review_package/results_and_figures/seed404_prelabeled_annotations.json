@@ -1,0 +1,611 @@
+{
+  "model_name": "tandem_calibrated_50ar_200slds_seed404_20261002_012237_940073",
+  "eml_rank": 1,
+  "eml_score": 225001430.22,
+  "iterations": 250,
+  "export_time": "2026-10-05T14:08:10Z",
+  "total_syllables": 100,
+  "prelabel_engine": "k240k_empirical_cooccurrence_v1",
+  "annotations": [
+    {
+      "syllable_id": 0,
+      "taxonomy_name": "[PRE-LABEL] walk?",
+      "kinematic_notes": "TopCam match: k240k Syll 38 (17.0% overlap). Original notes: 'can be many directions, mostly straight'. Secondary: k240k Syll 43 (stationary, 11.2%). Kinematics: moderate (62.6 px/s), straight/neutral (-0.02 rad/s), median dur: 53 frames.",
+      "updated_at": "2026-10-05T14:08:09Z"
+    },
+    {
+      "syllable_id": 1,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_59?",
+      "kinematic_notes": "TopCam match: k240k Syll 59 (9.9% overlap). Secondary: k240k Syll 81 (unlabeled_81, 7.2%). Kinematics: moderate (67.3 px/s), left turn (-0.37 rad/s), median dur: 54 frames.",
+      "updated_at": "2026-10-05T14:08:09Z"
+    },
+    {
+      "syllable_id": 2,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_81?",
+      "kinematic_notes": "TopCam match: k240k Syll 81 (6.2% overlap). Secondary: k240k Syll 92 (unlabeled_92, 5.7%). Kinematics: moderate (77.4 px/s), straight/neutral (-0.12 rad/s), median dur: 71 frames.",
+      "updated_at": "2026-10-05T14:08:09Z"
+    },
+    {
+      "syllable_id": 3,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_82?",
+      "kinematic_notes": "TopCam match: k240k Syll 82 (7.7% overlap). Secondary: k240k Syll 75 (unlabeled_75, 7.0%). Kinematics: moderate (116.9 px/s), straight/neutral (-0.16 rad/s), median dur: 66 frames.",
+      "updated_at": "2026-10-05T14:08:09Z"
+    },
+    {
+      "syllable_id": 4,
+      "taxonomy_name": "[PRE-LABEL] groom?",
+      "kinematic_notes": "TopCam match: k240k Syll 58 (15.8% overlap). Secondary: k240k Syll 38 (walk, 10.9%). Kinematics: moderate (64.1 px/s), straight/neutral (0.13 rad/s), median dur: 56 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 5,
+      "taxonomy_name": "[PRE-LABEL] run right?",
+      "kinematic_notes": "TopCam match: k240k Syll 00 (9.8% overlap). Original notes: 'typically from a lean/rear'. Secondary: k240k Syll 29 (walk left, 6.8%). Kinematics: moderate (73.5 px/s), right turn (0.50 rad/s), median dur: 43 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 6,
+      "taxonomy_name": "[PRE-LABEL] groom?",
+      "kinematic_notes": "TopCam match: k240k Syll 58 (11.4% overlap). Secondary: k240k Syll 00 (run right, 10.6%). Kinematics: moderate (69.4 px/s), right turn (0.78 rad/s), median dur: 57 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 7,
+      "taxonomy_name": "[PRE-LABEL] scrunched sniffig?",
+      "kinematic_notes": "TopCam match: k240k Syll 24 (6.2% overlap). Original notes: 'very low energy syll, sometimes stationary'. Secondary: k240k Syll 81 (unlabeled_81, 5.6%). Kinematics: moderate (72.3 px/s), straight/neutral (-0.05 rad/s), median dur: 48 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 8,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_81?",
+      "kinematic_notes": "TopCam match: k240k Syll 81 (5.9% overlap). Kinematics: moderate (90.1 px/s), straight/neutral (-0.10 rad/s), median dur: 61 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 9,
+      "taxonomy_name": "[PRE-LABEL] stationary (split)",
+      "kinematic_notes": "TopCam match: k240k Syll 43 (28.4% overlap). Secondary: k240k Syll 38 (walk, 17.3%). Kinematics: moderate (62.1 px/s), straight/neutral (-0.01 rad/s), median dur: 68 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 10,
+      "taxonomy_name": "[PRE-LABEL] scrunched sniffig?",
+      "kinematic_notes": "TopCam match: k240k Syll 24 (14.8% overlap). Original notes: 'very low energy syll, sometimes stationary'. Secondary: k240k Syll 65 (groom, 7.9%). Kinematics: moderate (71.8 px/s), straight/neutral (0.05 rad/s), median dur: 38 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 11,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_56?",
+      "kinematic_notes": "TopCam match: k240k Syll 56 (13.4% overlap). Secondary: k240k Syll 44 (groom, 12.7%). Kinematics: moderate (63.8 px/s), straight/neutral (-0.17 rad/s), median dur: 54 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 12,
+      "taxonomy_name": "[PRE-LABEL] walk (split)",
+      "kinematic_notes": "TopCam match: k240k Syll 38 (29.4% overlap). Original notes: 'can be many directions, mostly straight'. Secondary: k240k Syll 43 (stationary, 27.4%). Kinematics: moderate (62.4 px/s), straight/neutral (-0.00 rad/s), median dur: 60 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 13,
+      "taxonomy_name": "[PRE-LABEL] scrunched sniffig?",
+      "kinematic_notes": "TopCam match: k240k Syll 24 (9.5% overlap). Original notes: 'very low energy syll, sometimes stationary'. Secondary: k240k Syll 47 (unlabeled_47, 6.5%). Kinematics: moderate (70.5 px/s), straight/neutral (0.06 rad/s), median dur: 33 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 14,
+      "taxonomy_name": "[PRE-LABEL] walk right?",
+      "kinematic_notes": "TopCam match: k240k Syll 01 (8.5% overlap). Original notes: 'more in place, less 'runny''. Secondary: k240k Syll 07 (back down + turn right, 8.1%). Kinematics: moderate (88.9 px/s), right turn (0.66 rad/s), median dur: 58 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 15,
+      "taxonomy_name": "[PRE-LABEL] groom?",
+      "kinematic_notes": "TopCam match: k240k Syll 58 (12.0% overlap). Secondary: k240k Syll 47 (unlabeled_47, 7.0%). Kinematics: moderate (65.9 px/s), straight/neutral (0.09 rad/s), median dur: 50 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 16,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_75?",
+      "kinematic_notes": "TopCam match: k240k Syll 75 (8.7% overlap). Secondary: k240k Syll 82 (unlabeled_82, 8.2%). Kinematics: fast/dash (149.0 px/s), straight/neutral (0.10 rad/s), median dur: 15 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 17,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_91?",
+      "kinematic_notes": "TopCam match: k240k Syll 91 (11.2% overlap). Secondary: k240k Syll 82 (unlabeled_82, 9.4%). Kinematics: fast/dash (167.2 px/s), straight/neutral (0.22 rad/s), median dur: 23 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 18,
+      "taxonomy_name": "[PRE-LABEL] run right?",
+      "kinematic_notes": "TopCam match: k240k Syll 00 (6.3% overlap). Original notes: 'typically from a lean/rear'. Kinematics: moderate (88.2 px/s), straight/neutral (0.16 rad/s), median dur: 26 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 19,
+      "taxonomy_name": "[PRE-LABEL] look right?",
+      "kinematic_notes": "TopCam match: k240k Syll 22 (13.0% overlap). Original notes: 'often very right-looking; often followed by groom sine it ends in looking at its hind'. Secondary: k240k Syll 24 (scrunched sniffig, 8.7%). Kinematics: moderate (72.9 px/s), straight/neutral (0.22 rad/s), median dur: 42 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 20,
+      "taxonomy_name": "[PRE-LABEL] groom (split)",
+      "kinematic_notes": "TopCam match: k240k Syll 44 (35.9% overlap). Secondary: k240k Syll 43 (stationary, 12.5%). Kinematics: moderate (62.5 px/s), straight/neutral (-0.03 rad/s), median dur: 59 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 21,
+      "taxonomy_name": "[PRE-LABEL] walk?",
+      "kinematic_notes": "TopCam match: k240k Syll 38 (13.7% overlap). Original notes: 'can be many directions, mostly straight'. Secondary: k240k Syll 11 (walk right, 7.0%). Kinematics: moderate (65.3 px/s), straight/neutral (0.00 rad/s), median dur: 40 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 22,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_91?",
+      "kinematic_notes": "TopCam match: k240k Syll 91 (12.6% overlap). Secondary: k240k Syll 01 (walk right, 10.5%). Kinematics: fast/dash (146.6 px/s), right turn (0.52 rad/s), median dur: 56 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 23,
+      "taxonomy_name": "[PRE-LABEL] sniff (split)",
+      "kinematic_notes": "TopCam match: k240k Syll 36 (24.5% overlap). Original notes: 'mostly left-looking, but stationary'. Secondary: k240k Syll 93 (unlabeled_93, 8.9%). Kinematics: moderate (88.7 px/s), left turn (-0.53 rad/s), median dur: 16 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 24,
+      "taxonomy_name": "[PRE-LABEL] walk (split)",
+      "kinematic_notes": "TopCam match: k240k Syll 38 (27.4% overlap). Original notes: 'can be many directions, mostly straight'. Secondary: k240k Syll 69 (unlabeled_69, 10.0%). Kinematics: moderate (63.5 px/s), straight/neutral (0.05 rad/s), median dur: 49 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 25,
+      "taxonomy_name": "[PRE-LABEL] novel state",
+      "kinematic_notes": "Kinematics: moderate (101.6 px/s), straight/neutral (0.10 rad/s), median dur: 6 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 26,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_82?",
+      "kinematic_notes": "TopCam match: k240k Syll 82 (12.2% overlap). Secondary: k240k Syll 75 (unlabeled_75, 9.0%). Kinematics: fast/dash (145.2 px/s), left turn (-0.40 rad/s), median dur: 57 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 27,
+      "taxonomy_name": "[PRE-LABEL] stand down?",
+      "kinematic_notes": "TopCam match: k240k Syll 37 (7.3% overlap). Secondary: k240k Syll 24 (scrunched sniffig, 6.0%). Kinematics: moderate (71.2 px/s), straight/neutral (0.11 rad/s), median dur: 33 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 28,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_45?",
+      "kinematic_notes": "TopCam match: k240k Syll 45 (18.8% overlap). Secondary: k240k Syll 93 (unlabeled_93, 15.8%). Kinematics: moderate (78.6 px/s), left turn (-1.72 rad/s), median dur: 34 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 29,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_82?",
+      "kinematic_notes": "TopCam match: k240k Syll 82 (8.5% overlap). Secondary: k240k Syll 75 (unlabeled_75, 7.8%). Kinematics: fast/dash (157.2 px/s), straight/neutral (0.12 rad/s), median dur: 5 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 30,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_74?",
+      "kinematic_notes": "TopCam match: k240k Syll 74 (15.4% overlap). Secondary: k240k Syll 87 (unlabeled_87, 13.6%). Kinematics: moderate (63.6 px/s), straight/neutral (-0.00 rad/s), median dur: 50 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 31,
+      "taxonomy_name": "[PRE-LABEL] scrunched sniffig?",
+      "kinematic_notes": "TopCam match: k240k Syll 24 (13.9% overlap). Original notes: 'very low energy syll, sometimes stationary'. Secondary: k240k Syll 37 (stand down, 10.0%). Kinematics: moderate (72.0 px/s), straight/neutral (0.09 rad/s), median dur: 30 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 32,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_82?",
+      "kinematic_notes": "TopCam match: k240k Syll 82 (7.0% overlap). Secondary: k240k Syll 75 (unlabeled_75, 6.6%). Kinematics: fast/dash (148.0 px/s), straight/neutral (0.26 rad/s), median dur: 5 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 33,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_93?",
+      "kinematic_notes": "TopCam match: k240k Syll 93 (8.4% overlap). Secondary: k240k Syll 81 (unlabeled_81, 8.1%). Kinematics: moderate (78.0 px/s), left turn (-0.55 rad/s), median dur: 47 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 34,
+      "taxonomy_name": "[PRE-LABEL] scrunched sniffig?",
+      "kinematic_notes": "TopCam match: k240k Syll 24 (8.8% overlap). Original notes: 'very low energy syll, sometimes stationary'. Secondary: k240k Syll 37 (stand down, 5.7%). Kinematics: moderate (84.8 px/s), straight/neutral (0.13 rad/s), median dur: 9 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 35,
+      "taxonomy_name": "[PRE-LABEL] walk right?",
+      "kinematic_notes": "TopCam match: k240k Syll 01 (7.2% overlap). Original notes: 'more in place, less 'runny''. Secondary: k240k Syll 88 (unlabeled_88, 6.5%). Kinematics: fast/dash (143.7 px/s), straight/neutral (0.28 rad/s), median dur: 6 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 36,
+      "taxonomy_name": "[PRE-LABEL] groom?",
+      "kinematic_notes": "TopCam match: k240k Syll 58 (11.1% overlap). Secondary: k240k Syll 38 (walk, 9.0%). Kinematics: moderate (65.7 px/s), right turn (0.31 rad/s), median dur: 50 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 37,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_99?",
+      "kinematic_notes": "TopCam match: k240k Syll 99 (12.4% overlap). Secondary: k240k Syll 53 (unlabeled_53, 11.6%). Kinematics: moderate (67.8 px/s), straight/neutral (-0.20 rad/s), median dur: 30 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 38,
+      "taxonomy_name": "[PRE-LABEL] groom?",
+      "kinematic_notes": "TopCam match: k240k Syll 63 (10.2% overlap). Secondary: k240k Syll 39 (sniff, 8.2%). Kinematics: fast/dash (142.6 px/s), left turn (-0.33 rad/s), median dur: 44 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 39,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_71?",
+      "kinematic_notes": "TopCam match: k240k Syll 71 (18.3% overlap). Secondary: k240k Syll 37 (stand down, 11.8%). Kinematics: moderate (72.7 px/s), straight/neutral (0.17 rad/s), median dur: 26 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 40,
+      "taxonomy_name": "[PRE-LABEL] walk right?",
+      "kinematic_notes": "TopCam match: k240k Syll 01 (8.8% overlap). Original notes: 'more in place, less 'runny''. Secondary: k240k Syll 75 (unlabeled_75, 8.6%). Kinematics: fast/dash (160.6 px/s), straight/neutral (0.28 rad/s), median dur: 6 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 41,
+      "taxonomy_name": "[PRE-LABEL] sniff?",
+      "kinematic_notes": "TopCam match: k240k Syll 36 (8.1% overlap). Original notes: 'mostly left-looking, but stationary'. Secondary: k240k Syll 00 (run right, 6.0%). Kinematics: moderate (82.2 px/s), straight/neutral (-0.08 rad/s), median dur: 16 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 42,
+      "taxonomy_name": "[PRE-LABEL] walk left?",
+      "kinematic_notes": "TopCam match: k240k Syll 29 (7.1% overlap). Original notes: 'sharp left'. Secondary: k240k Syll 01 (walk right, 5.8%). Kinematics: moderate (76.4 px/s), right turn (0.51 rad/s), median dur: 30 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 43,
+      "taxonomy_name": "[PRE-LABEL] walk?",
+      "kinematic_notes": "TopCam match: k240k Syll 38 (6.1% overlap). Original notes: 'can be many directions, mostly straight'. Secondary: k240k Syll 58 (groom, 5.2%). Kinematics: moderate (67.9 px/s), straight/neutral (-0.01 rad/s), median dur: 37 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 44,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_82?",
+      "kinematic_notes": "TopCam match: k240k Syll 82 (8.0% overlap). Secondary: k240k Syll 75 (unlabeled_75, 6.6%). Kinematics: fast/dash (145.9 px/s), straight/neutral (0.28 rad/s), median dur: 7 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 45,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_46?",
+      "kinematic_notes": "TopCam match: k240k Syll 46 (8.1% overlap). Secondary: k240k Syll 75 (unlabeled_75, 7.6%). Kinematics: fast/dash (150.6 px/s), straight/neutral (-0.20 rad/s), median dur: 59 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 46,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_91?",
+      "kinematic_notes": "TopCam match: k240k Syll 91 (5.1% overlap). Kinematics: moderate (95.5 px/s), straight/neutral (0.22 rad/s), median dur: 18 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 47,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_92?",
+      "kinematic_notes": "TopCam match: k240k Syll 92 (7.7% overlap). Secondary: k240k Syll 49 (stationary, 6.9%). Kinematics: moderate (66.4 px/s), left turn (-0.33 rad/s), median dur: 50 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 48,
+      "taxonomy_name": "[PRE-LABEL] run + turn right?",
+      "kinematic_notes": "TopCam match: k240k Syll 41 (12.4% overlap). Secondary: k240k Syll 69 (unlabeled_69, 10.4%). Kinematics: moderate (68.3 px/s), straight/neutral (0.30 rad/s), median dur: 47 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 49,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_75?",
+      "kinematic_notes": "TopCam match: k240k Syll 75 (9.7% overlap). Secondary: k240k Syll 45 (unlabeled_45, 8.8%). Kinematics: moderate (124.4 px/s), left turn (-0.60 rad/s), median dur: 49 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 50,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_74?",
+      "kinematic_notes": "TopCam match: k240k Syll 74 (5.2% overlap). Kinematics: moderate (66.3 px/s), straight/neutral (0.02 rad/s), median dur: 26 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 51,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_99?",
+      "kinematic_notes": "TopCam match: k240k Syll 99 (16.1% overlap). Secondary: k240k Syll 44 (groom, 13.5%). Kinematics: moderate (65.5 px/s), straight/neutral (-0.11 rad/s), median dur: 46 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 52,
+      "taxonomy_name": "[PRE-LABEL] walk left?",
+      "kinematic_notes": "TopCam match: k240k Syll 23 (5.5% overlap). Secondary: k240k Syll 26 (dash left, 5.3%). Kinematics: moderate (68.5 px/s), straight/neutral (-0.05 rad/s), median dur: 23 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 53,
+      "taxonomy_name": "[PRE-LABEL] run right?",
+      "kinematic_notes": "TopCam match: k240k Syll 00 (10.9% overlap). Original notes: 'typically from a lean/rear'. Secondary: k240k Syll 01 (walk right, 9.5%). Kinematics: moderate (84.9 px/s), right turn (0.98 rad/s), median dur: 33 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 54,
+      "taxonomy_name": "[PRE-LABEL] stand down?",
+      "kinematic_notes": "TopCam match: k240k Syll 37 (14.0% overlap). Secondary: k240k Syll 90 (unlabeled_90, 10.2%). Kinematics: moderate (69.9 px/s), straight/neutral (0.11 rad/s), median dur: 43 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 55,
+      "taxonomy_name": "[PRE-LABEL] walk right?",
+      "kinematic_notes": "TopCam match: k240k Syll 30 (19.1% overlap). Original notes: 'sharp right'. Secondary: k240k Syll 19 (walk, 9.3%). Kinematics: moderate (70.8 px/s), straight/neutral (-0.04 rad/s), median dur: 18 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 56,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_88?",
+      "kinematic_notes": "TopCam match: k240k Syll 88 (8.6% overlap). Secondary: k240k Syll 85 (unlabeled_85, 7.5%). Kinematics: fast/dash (131.5 px/s), straight/neutral (0.13 rad/s), median dur: 61 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 57,
+      "taxonomy_name": "[PRE-LABEL] sniff?",
+      "kinematic_notes": "TopCam match: k240k Syll 36 (13.8% overlap). Original notes: 'mostly left-looking, but stationary'. Secondary: k240k Syll 00 (run right, 7.5%). Kinematics: moderate (89.3 px/s), straight/neutral (0.09 rad/s), median dur: 12 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 58,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_87?",
+      "kinematic_notes": "TopCam match: k240k Syll 87 (16.1% overlap). Secondary: k240k Syll 19 (walk, 8.5%). Kinematics: moderate (65.2 px/s), straight/neutral (-0.07 rad/s), median dur: 49 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 59,
+      "taxonomy_name": "[PRE-LABEL] groom?",
+      "kinematic_notes": "TopCam match: k240k Syll 61 (15.0% overlap). Secondary: k240k Syll 63 (groom, 8.8%). Kinematics: fast/dash (152.9 px/s), left turn (-0.71 rad/s), median dur: 48 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 60,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_74?",
+      "kinematic_notes": "TopCam match: k240k Syll 74 (5.5% overlap). Kinematics: moderate (81.9 px/s), straight/neutral (0.05 rad/s), median dur: 5 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 61,
+      "taxonomy_name": "[PRE-LABEL] walk?",
+      "kinematic_notes": "TopCam match: k240k Syll 38 (8.9% overlap). Original notes: 'can be many directions, mostly straight'. Secondary: k240k Syll 74 (unlabeled_74, 6.5%). Kinematics: moderate (67.2 px/s), straight/neutral (-0.03 rad/s), median dur: 17 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 62,
+      "taxonomy_name": "[PRE-LABEL] walk?",
+      "kinematic_notes": "TopCam match: k240k Syll 38 (5.7% overlap). Original notes: 'can be many directions, mostly straight'. Kinematics: moderate (67.5 px/s), straight/neutral (-0.19 rad/s), median dur: 35 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 63,
+      "taxonomy_name": "[PRE-LABEL] scrunched sniffig?",
+      "kinematic_notes": "TopCam match: k240k Syll 24 (6.5% overlap). Original notes: 'very low energy syll, sometimes stationary'. Secondary: k240k Syll 37 (stand down, 5.6%). Kinematics: moderate (68.3 px/s), straight/neutral (0.05 rad/s), median dur: 10 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 64,
+      "taxonomy_name": "[PRE-LABEL] dash left?",
+      "kinematic_notes": "TopCam match: k240k Syll 26 (6.7% overlap). Original notes: 'only slight left'. Kinematics: moderate (68.1 px/s), straight/neutral (-0.01 rad/s), median dur: 34 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 65,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_80 (split)",
+      "kinematic_notes": "TopCam match: k240k Syll 80 (20.0% overlap). Secondary: k240k Syll 61 (groom, 9.8%). Kinematics: fast/dash (193.3 px/s), straight/neutral (0.27 rad/s), median dur: 38 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 66,
+      "taxonomy_name": "[PRE-LABEL] sniff?",
+      "kinematic_notes": "TopCam match: k240k Syll 36 (10.7% overlap). Original notes: 'mostly left-looking, but stationary'. Secondary: k240k Syll 00 (run right, 5.6%). Kinematics: moderate (86.9 px/s), straight/neutral (0.23 rad/s), median dur: 8 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 67,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_86?",
+      "kinematic_notes": "TopCam match: k240k Syll 86 (19.8% overlap). Secondary: k240k Syll 30 (walk right, 11.0%). Kinematics: moderate (76.1 px/s), right turn (0.36 rad/s), median dur: 8 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 68,
+      "taxonomy_name": "[PRE-LABEL] run right?",
+      "kinematic_notes": "TopCam match: k240k Syll 00 (14.7% overlap). Original notes: 'typically from a lean/rear'. Secondary: k240k Syll 29 (walk left, 12.6%). Kinematics: moderate (77.1 px/s), right turn (1.48 rad/s), median dur: 30 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 69,
+      "taxonomy_name": "[PRE-LABEL] scrunched sniffig?",
+      "kinematic_notes": "TopCam match: k240k Syll 24 (7.4% overlap). Original notes: 'very low energy syll, sometimes stationary'. Secondary: k240k Syll 01 (walk right, 5.2%). Kinematics: moderate (101.3 px/s), straight/neutral (0.23 rad/s), median dur: 24 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 70,
+      "taxonomy_name": "[PRE-LABEL] walk right?",
+      "kinematic_notes": "TopCam match: k240k Syll 01 (8.0% overlap). Original notes: 'more in place, less 'runny''. Secondary: k240k Syll 20 (sniff, 6.6%). Kinematics: moderate (100.4 px/s), right turn (0.43 rad/s), median dur: 21 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 71,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_75?",
+      "kinematic_notes": "TopCam match: k240k Syll 75 (11.9% overlap). Secondary: k240k Syll 81 (unlabeled_81, 6.2%). Kinematics: moderate (110.3 px/s), straight/neutral (0.18 rad/s), median dur: 6 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 72,
+      "taxonomy_name": "[PRE-LABEL] sniff?",
+      "kinematic_notes": "TopCam match: k240k Syll 36 (7.0% overlap). Original notes: 'mostly left-looking, but stationary'. Secondary: k240k Syll 71 (unlabeled_71, 5.0%). Kinematics: moderate (94.7 px/s), straight/neutral (-0.06 rad/s), median dur: 12 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 73,
+      "taxonomy_name": "[PRE-LABEL] stand down?",
+      "kinematic_notes": "TopCam match: k240k Syll 37 (6.5% overlap). Secondary: k240k Syll 99 (unlabeled_99, 5.1%). Kinematics: moderate (73.5 px/s), straight/neutral (0.14 rad/s), median dur: 12 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 74,
+      "taxonomy_name": "[PRE-LABEL] walk right?",
+      "kinematic_notes": "TopCam match: k240k Syll 01 (6.1% overlap). Original notes: 'more in place, less 'runny''. Kinematics: moderate (116.6 px/s), straight/neutral (0.29 rad/s), median dur: 7 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 75,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_72 (split)",
+      "kinematic_notes": "TopCam match: k240k Syll 72 (22.3% overlap). Secondary: k240k Syll 19 (walk, 18.8%). Kinematics: moderate (66.9 px/s), straight/neutral (-0.23 rad/s), median dur: 32 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 76,
+      "taxonomy_name": "[PRE-LABEL] walk (split)",
+      "kinematic_notes": "TopCam match: k240k Syll 19 (21.5% overlap). Secondary: k240k Syll 57 (unlabeled_57, 10.0%). Kinematics: moderate (67.0 px/s), straight/neutral (0.13 rad/s), median dur: 41 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 77,
+      "taxonomy_name": "[PRE-LABEL] stand down?",
+      "kinematic_notes": "TopCam match: k240k Syll 37 (7.5% overlap). Secondary: k240k Syll 41 (run + turn right, 6.0%). Kinematics: moderate (75.9 px/s), straight/neutral (0.07 rad/s), median dur: 13 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 78,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_75?",
+      "kinematic_notes": "TopCam match: k240k Syll 75 (12.2% overlap). Secondary: k240k Syll 82 (unlabeled_82, 10.1%). Kinematics: fast/dash (158.7 px/s), straight/neutral (0.24 rad/s), median dur: 6 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 79,
+      "taxonomy_name": "[PRE-LABEL] sniff?",
+      "kinematic_notes": "TopCam match: k240k Syll 36 (11.8% overlap). Original notes: 'mostly left-looking, but stationary'. Secondary: k240k Syll 00 (run right, 7.0%). Kinematics: moderate (81.0 px/s), straight/neutral (0.17 rad/s), median dur: 19 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 80,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_81?",
+      "kinematic_notes": "TopCam match: k240k Syll 81 (6.7% overlap). Secondary: k240k Syll 92 (unlabeled_92, 6.1%). Kinematics: moderate (69.0 px/s), straight/neutral (-0.03 rad/s), median dur: 35 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 81,
+      "taxonomy_name": "[PRE-LABEL] scrunched sniffig?",
+      "kinematic_notes": "TopCam match: k240k Syll 24 (13.6% overlap). Original notes: 'very low energy syll, sometimes stationary'. Secondary: k240k Syll 22 (look right, 5.7%). Kinematics: moderate (74.5 px/s), straight/neutral (0.09 rad/s), median dur: 28 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 82,
+      "taxonomy_name": "[PRE-LABEL] sniff?",
+      "kinematic_notes": "TopCam match: k240k Syll 20 (9.4% overlap). Original notes: 'slight right head-turn'. Secondary: k240k Syll 01 (walk right, 8.1%). Kinematics: moderate (111.5 px/s), right turn (0.82 rad/s), median dur: 14 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 83,
+      "taxonomy_name": "[PRE-LABEL] groom (split)",
+      "kinematic_notes": "TopCam match: k240k Syll 66 (24.1% overlap). Metanotes: 'some hands, ok-ish compared to the other grooms'. Secondary: k240k Syll 86 (unlabeled_86, 10.4%). Kinematics: moderate (115.1 px/s), left turn (-0.92 rad/s), median dur: 3 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 84,
+      "taxonomy_name": "[PRE-LABEL] sniff?",
+      "kinematic_notes": "TopCam match: k240k Syll 36 (9.2% overlap). Original notes: 'mostly left-looking, but stationary'. Secondary: k240k Syll 24 (scrunched sniffig, 5.3%). Kinematics: moderate (95.1 px/s), left turn (-0.39 rad/s), median dur: 8 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 85,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_75?",
+      "kinematic_notes": "TopCam match: k240k Syll 75 (16.8% overlap). Secondary: k240k Syll 51 (unlabeled_51, 6.6%). Kinematics: moderate (124.0 px/s), straight/neutral (0.26 rad/s), median dur: 4 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 86,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_91?",
+      "kinematic_notes": "TopCam match: k240k Syll 91 (6.3% overlap). Secondary: k240k Syll 88 (unlabeled_88, 5.9%). Kinematics: moderate (110.5 px/s), straight/neutral (0.23 rad/s), median dur: 9 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 87,
+      "taxonomy_name": "[PRE-LABEL] run right?",
+      "kinematic_notes": "TopCam match: k240k Syll 00 (8.1% overlap). Original notes: 'typically from a lean/rear'. Kinematics: moderate (76.2 px/s), right turn (0.35 rad/s), median dur: 29 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 88,
+      "taxonomy_name": "[PRE-LABEL] look right?",
+      "kinematic_notes": "TopCam match: k240k Syll 22 (18.9% overlap). Original notes: 'often very right-looking; often followed by groom sine it ends in looking at its hind'. Secondary: k240k Syll 37 (stand down, 9.1%). Kinematics: moderate (74.4 px/s), straight/neutral (0.11 rad/s), median dur: 31 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 89,
+      "taxonomy_name": "[PRE-LABEL] groom?",
+      "kinematic_notes": "TopCam match: k240k Syll 61 (8.2% overlap). Secondary: k240k Syll 30 (walk right, 5.3%). Kinematics: moderate (99.6 px/s), right turn (0.87 rad/s), median dur: 7 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 90,
+      "taxonomy_name": "[PRE-LABEL] groom?",
+      "kinematic_notes": "TopCam match: k240k Syll 44 (5.7% overlap). Secondary: k240k Syll 00 (run right, 5.5%). Kinematics: moderate (84.5 px/s), straight/neutral (0.15 rad/s), median dur: 20 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 91,
+      "taxonomy_name": "[PRE-LABEL] groom (split)",
+      "kinematic_notes": "TopCam match: k240k Syll 44 (25.8% overlap). Secondary: k240k Syll 43 (stationary, 21.7%). Kinematics: moderate (62.2 px/s), straight/neutral (0.00 rad/s), median dur: 24 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 92,
+      "taxonomy_name": "[PRE-LABEL] sniff?",
+      "kinematic_notes": "TopCam match: k240k Syll 10 (10.6% overlap). Original notes: 'more of an elongated middle sniff, almost like its looking ahead'. Secondary: k240k Syll 64 (unlabeled_64, 9.8%). Kinematics: moderate (89.5 px/s), left turn (-3.02 rad/s), median dur: 14 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 93,
+      "taxonomy_name": "[PRE-LABEL] sniff (split)",
+      "kinematic_notes": "TopCam match: k240k Syll 25 (25.4% overlap). Secondary: k240k Syll 44 (groom, 15.4%). Kinematics: moderate (66.5 px/s), straight/neutral (0.06 rad/s), median dur: 18 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 94,
+      "taxonomy_name": "[PRE-LABEL] groom?",
+      "kinematic_notes": "TopCam match: k240k Syll 58 (11.7% overlap). Secondary: k240k Syll 75 (unlabeled_75, 8.3%). Kinematics: moderate (87.0 px/s), straight/neutral (-0.20 rad/s), median dur: 14 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 95,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_87",
+      "kinematic_notes": "TopCam match: k240k Syll 87 (44.1% overlap). Secondary: k240k Syll 40 (look right, 22.0%). Kinematics: moderate (68.2 px/s), straight/neutral (0.30 rad/s), median dur: 9 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 96,
+      "taxonomy_name": "[PRE-LABEL] sniff",
+      "kinematic_notes": "TopCam match: k240k Syll 25 (45.0% overlap). Secondary: k240k Syll 55 (walk left, 17.7%). Kinematics: moderate (65.5 px/s), straight/neutral (-0.15 rad/s), median dur: 12 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 97,
+      "taxonomy_name": "[PRE-LABEL] unlabeled_57?",
+      "kinematic_notes": "TopCam match: k240k Syll 57 (15.8% overlap). Secondary: k240k Syll 53 (unlabeled_53, 14.1%). Kinematics: moderate (72.7 px/s), straight/neutral (0.07 rad/s), median dur: 150 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 98,
+      "taxonomy_name": "[PRE-LABEL] walk right (split)",
+      "kinematic_notes": "TopCam match: k240k Syll 30 (38.5% overlap). Original notes: 'sharp right'. Secondary: k240k Syll 66 (groom, 23.1%). Kinematics: moderate (91.9 px/s), right turn (3.55 rad/s), median dur: 2 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    },
+    {
+      "syllable_id": 99,
+      "taxonomy_name": "[PRE-LABEL] sniff",
+      "kinematic_notes": "TopCam match: k240k Syll 36 (75.0% overlap). Original notes: 'mostly left-looking, but stationary'. Secondary: k240k Syll 38 (walk, 25.0%). Kinematics: moderate (66.3 px/s), straight/neutral (0.13 rad/s), median dur: 12 frames.",
+      "updated_at": "2026-10-05T14:08:10Z"
+    }
+  ]
+}

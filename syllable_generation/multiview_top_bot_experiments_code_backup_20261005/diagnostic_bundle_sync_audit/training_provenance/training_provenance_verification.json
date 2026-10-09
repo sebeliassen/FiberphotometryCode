@@ -1,0 +1,12 @@
+{
+  "ttl_cohort_offsets_mtime": "2026-09-30T15:40:46.100971",
+  "fused_h5_sample_mtime": "2026-09-30T16:08:30.028780",
+  "video_frame_indexes_mtime": "2026-09-30T16:56:39.115621",
+  "preprocessed_data_mtime": "2026-09-30T16:57:18.681345",
+  "seed101_results_mtime": "2026-10-01T08:48:51.275094",
+  "seed101_trained_after_fused_regeneration": true,
+  "session_2026-05-16T10_41_38_top_left_nan_count_pre": 67,
+  "session_2026-05-16T10_41_38_top_left_frame66_isnan": true,
+  "session_2026-05-16T10_41_38_top_left_frame67_isnan": false,
+  "conclusion": "CONFIRMED: Seed 101 was trained on TTL-aligned tracking data with exact 67-frame pre-startup padding."
+}

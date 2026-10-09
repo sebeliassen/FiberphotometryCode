@@ -1,0 +1,17 @@
+{
+  "category": "bad_example_startup_latency",
+  "sid": "2026-05-16T10_41_38_top_left",
+  "arena": "Arena1",
+  "chamber": "top_left",
+  "syllable_id": 1,
+  "grid_position": "Row 3, Col 3 (Instance 10)",
+  "top_onset_vid_frame": 85395,
+  "duration_frames": 43,
+  "ttl_offset": 67,
+  "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T1_6.4.2_16.05.2026_Arena1234_CenterTopCamVid_2026-05-16T10_41_38_top_left.avi",
+  "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/L_dopa_T1_6.4.2_16.05.2026_active_Arena1_BotCamVid_2026-05-16T10_41_38.avi",
+  "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T1_6.4.2_16.05.2026_Arena1234_CenterTopCamVid_2026-05-16T10_41_38_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+  "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/L_dopa_T1_6_4_2_16_05_2026_active_Arena1_BotCamVid_2026-05-16T10_41_38/L_dopa_T1_6_4_2_16_05_2026_active_Arena1_BotCamVid_2026-05-16T10_41_38DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5",
+  "top_csv": "/mnt/hdd/karen_project/L_dopa/T1_6.4.2_16.05.2026/CenterTopCam_AllTimestampsCombined2026-05-16T10_41_38.csv",
+  "bot_csv": "/mnt/hdd/karen_project/L_dopa/T1_6.4.2_16.05.2026/BotCam1_AllTimestampsCombined2026-05-16T10_41_38.csv"
+}

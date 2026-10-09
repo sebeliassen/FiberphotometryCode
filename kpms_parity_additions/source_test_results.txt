@@ -1,0 +1,137 @@
+Backend: source; target: /workspace/scratch/bad02ef47a4d/kpms_acceleration_research_bundle/resample_batching.py
+SHA256: 634185e1a797f06a26ab99a3a787b08a155d6e0301f44dac93d9a8bc17ddbb72
+test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) ... 
+  test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) (field='x', producer_update=False) ... FAIL
+  test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) (field='x', producer_update=True) ... FAIL
+  test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) (field='z', producer_update=False) ... FAIL
+  test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) (field='z', producer_update=True) ... FAIL
+  test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) (field='mask', producer_update=False) ... FAIL
+  test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) (field='Y', producer_update=False) ... FAIL
+test_02_numpy_mutation_is_visible (__main__.PrecomputeTests.test_02_numpy_mutation_is_visible) ... ok
+test_03_continuous_sample_matches_independent_dense_oracle (__main__.PrecomputeTests.test_03_continuous_sample_matches_independent_dense_oracle) ... ok
+test_04_full_continuous_chunk_reuse_and_partial_chunks (__main__.PrecomputeTests.test_04_full_continuous_chunk_reuse_and_partial_chunks) ... ok
+test_05_dependency_changes_match_forced_fresh_evaluation (__main__.PrecomputeTests.test_05_dependency_changes_match_forced_fresh_evaluation) ... ok
+test_06_banded_noise_map_has_correct_full_covariance (__main__.PrecomputeTests.test_06_banded_noise_map_has_correct_full_covariance) ... ok
+test_07_ffbs_matches_enumerated_joint_not_just_state_counts (__main__.PrecomputeTests.test_07_ffbs_matches_enumerated_joint_not_just_state_counts) ... ok
+test_08_ar_statistics_use_new_x_z_mask_and_correct_lags (__main__.PrecomputeTests.test_08_ar_statistics_use_new_x_z_mask_and_correct_lags) ... ok
+test_09_batch_sizer_changes_only_config_and_preserves_sample (__main__.PrecomputeTests.test_09_batch_sizer_changes_only_config_and_preserves_sample) ... ok
+test_10_continuous_inputs_are_not_mutated (__main__.PrecomputeTests.test_10_continuous_inputs_are_not_mutated) ... ok
+
+======================================================================
+FAIL: test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) (field='x', producer_update=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bad02ef47a4d/kpms_parity_additions/test_precompute_regressions.py", line 248, in test_01_cache_expired_source_identity_reuse
+    np.testing.assert_array_equal(get(new),np.asarray(new),
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1054, in assert_array_equal
+    assert_array_compare(operator.__eq__, actual, desired, err_msg=err_msg,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 919, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Arrays are not equal
+Stale x returned after expired object ID reuse
+Mismatched elements: 2 / 2 (100%)
+Max absolute difference among violations: 1.
+Max relative difference among violations: 1.
+ ACTUAL: array([0., 0.])
+ DESIRED: array([1, 1])
+
+======================================================================
+FAIL: test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) (field='x', producer_update=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bad02ef47a4d/kpms_parity_additions/test_precompute_regressions.py", line 248, in test_01_cache_expired_source_identity_reuse
+    np.testing.assert_array_equal(get(new),np.asarray(new),
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1054, in assert_array_equal
+    assert_array_compare(operator.__eq__, actual, desired, err_msg=err_msg,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 919, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Arrays are not equal
+Stale x returned after expired object ID reuse
+Mismatched elements: 2 / 2 (100%)
+Max absolute difference among violations: 1
+Max relative difference among violations: 1.
+ ACTUAL: array([0, 0])
+ DESIRED: array([1, 1])
+
+======================================================================
+FAIL: test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) (field='z', producer_update=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bad02ef47a4d/kpms_parity_additions/test_precompute_regressions.py", line 248, in test_01_cache_expired_source_identity_reuse
+    np.testing.assert_array_equal(get(new),np.asarray(new),
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1054, in assert_array_equal
+    assert_array_compare(operator.__eq__, actual, desired, err_msg=err_msg,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 919, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Arrays are not equal
+Stale z returned after expired object ID reuse
+Mismatched elements: 2 / 2 (100%)
+Max absolute difference among violations: 1
+Max relative difference among violations: 1.
+ ACTUAL: array([0, 0], dtype=int32)
+ DESIRED: array([1, 1])
+
+======================================================================
+FAIL: test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) (field='z', producer_update=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bad02ef47a4d/kpms_parity_additions/test_precompute_regressions.py", line 248, in test_01_cache_expired_source_identity_reuse
+    np.testing.assert_array_equal(get(new),np.asarray(new),
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1054, in assert_array_equal
+    assert_array_compare(operator.__eq__, actual, desired, err_msg=err_msg,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 919, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Arrays are not equal
+Stale z returned after expired object ID reuse
+Mismatched elements: 2 / 2 (100%)
+Max absolute difference among violations: 1
+Max relative difference among violations: 1.
+ ACTUAL: array([0, 0])
+ DESIRED: array([1, 1])
+
+======================================================================
+FAIL: test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) (field='mask', producer_update=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bad02ef47a4d/kpms_parity_additions/test_precompute_regressions.py", line 248, in test_01_cache_expired_source_identity_reuse
+    np.testing.assert_array_equal(get(new),np.asarray(new),
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1054, in assert_array_equal
+    assert_array_compare(operator.__eq__, actual, desired, err_msg=err_msg,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 919, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Arrays are not equal
+Stale mask returned after expired object ID reuse
+Mismatched elements: 2 / 2 (100%)
+Max absolute difference among violations: 1
+Max relative difference among violations: 1.
+ ACTUAL: array([False, False])
+ DESIRED: array([1, 1])
+
+======================================================================
+FAIL: test_01_cache_expired_source_identity_reuse (__main__.PrecomputeTests.test_01_cache_expired_source_identity_reuse) (field='Y', producer_update=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/bad02ef47a4d/kpms_parity_additions/test_precompute_regressions.py", line 248, in test_01_cache_expired_source_identity_reuse
+    np.testing.assert_array_equal(get(new),np.asarray(new),
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1054, in assert_array_equal
+    assert_array_compare(operator.__eq__, actual, desired, err_msg=err_msg,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 919, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Arrays are not equal
+Stale Y returned after expired object ID reuse
+Mismatched elements: 2 / 2 (100%)
+Max absolute difference among violations: 1.
+Max relative difference among violations: 1.
+ ACTUAL: array([0., 0.])
+ DESIRED: array([1, 1])
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.165s
+
+FAILED (failures=6)

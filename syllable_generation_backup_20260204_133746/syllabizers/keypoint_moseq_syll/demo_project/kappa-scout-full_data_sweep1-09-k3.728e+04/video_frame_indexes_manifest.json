@@ -1,0 +1,39 @@
+{
+  "generated_for_model": "kappa-scout-full_data_sweep1-09-k3.728e+04",
+  "project_dir": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll/demo_project",
+  "n_recordings": 19,
+  "keys": [
+    "Arena1234_CenterTopCamVid_2024-12-13T12_20_06_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-13T12_20_06_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-13T12_20_06_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-13T13_37_45_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-13T13_37_45_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-13T14_50_39_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-13T14_50_39_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-13T14_50_39_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-16T11_27_19_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-16T11_27_19_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-16T11_27_19_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-16T12_42_27_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-16T12_42_27_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-16T12_42_27_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-16T14_05_53_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-16T14_05_53_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-16T15_14_26_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-16T15_14_26_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+    "Arena1234_CenterTopCamVid_2024-12-17T12_37_40_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020"
+  ],
+  "params": {
+    "p_thresh": 0.9,
+    "frac_min_parts": 0.4,
+    "smooth_win": 7,
+    "enter_thresh": 0.65,
+    "exit_thresh": 0.45,
+    "off_grace_frames": 6,
+    "min_on_frames": 10,
+    "min_off_frames": 6,
+    "detector": "deeplabcut",
+    "subroutine": "jonathan",
+    "cam": "center_cam"
+  }
+}
