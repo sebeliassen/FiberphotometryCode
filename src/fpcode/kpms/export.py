@@ -71,7 +71,7 @@ def export_tandem_cohort_results(
         raise FileNotFoundError(f"dirty sessions pkl not found at {dirty_pkl}")
 
     from syllable_generation.analysis.replications.datta_utils import combined_photometry_and_syllables
-    from syllable_generation.multiview_top_bot_experiments.audit_cohort_correlations import find_matched_pairs
+    from fpcode.tracking.pair_matching import find_matched_pairs
 
     pairs = find_matched_pairs()
     pair_map = {p["sid"]: p for p in pairs}
