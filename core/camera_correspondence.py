@@ -1,11 +1,18 @@
 """
-camera_correspondence.py [Compatibility Shim]
+[DEPRECATED SHIM] core/camera_correspondence.py
 ==========================================
-Transparently proxies fpcode.tracking.camera_correspondence.
+Relocated to: fpcode.tracking.clock_sync
 """
 
 import importlib
 import sys
+import warnings
 
-_real = importlib.import_module("fpcode.tracking.camera_correspondence")
+warnings.warn(
+    "core.camera_correspondence is deprecated; import from fpcode.tracking.clock_sync instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+_real = importlib.import_module("fpcode.tracking.clock_sync")
 sys.modules[__name__] = _real

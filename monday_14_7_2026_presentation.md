@@ -1,1 +1,0 @@
-docs/reports/monday_14_7_2026_presentation.md

@@ -1,1 +1,0 @@
-registry/restore_tier_a_permissions.sh

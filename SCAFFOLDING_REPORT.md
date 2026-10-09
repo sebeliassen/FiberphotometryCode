@@ -1,1 +1,0 @@
-docs/reports/SCAFFOLDING_REPORT.md

@@ -1,1 +1,0 @@
-docs/reports/SWE_ORGANIZATION_BOT_PROMPT.md

@@ -1,11 +1,18 @@
 """
-pair_matching.py [Compatibility Shim]
+[DEPRECATED SHIM] core/pair_matching.py
 ==========================================
-Transparently proxies fpcode.tracking.pair_matching.
+Relocated to: fpcode.tracking.pair_matching
 """
 
 import importlib
 import sys
+import warnings
+
+warnings.warn(
+    "core.pair_matching is deprecated; import from fpcode.tracking.pair_matching instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 _real = importlib.import_module("fpcode.tracking.pair_matching")
 sys.modules[__name__] = _real

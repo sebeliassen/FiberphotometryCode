@@ -1,11 +1,18 @@
 """
-fusion_engine.py [Compatibility Shim]
+[DEPRECATED SHIM] core/fusion_engine.py
 ==========================================
-Transparently proxies fpcode.tracking.fusion.
+Relocated to: fpcode.tracking.fusion_engine
 """
 
 import importlib
 import sys
+import warnings
 
-_real = importlib.import_module("fpcode.tracking.fusion")
+warnings.warn(
+    "core.fusion_engine is deprecated; import from fpcode.tracking.fusion_engine instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+_real = importlib.import_module("fpcode.tracking.fusion_engine")
 sys.modules[__name__] = _real

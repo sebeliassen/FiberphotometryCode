@@ -89,6 +89,7 @@ CHAMBER_MAP: Dict[str, str] = {
     "Arena1": "top_left",
     "Arena2": "bottom_left",
     "Arena3": "bottom_right",
+    "Arena4": "top_right",
 }
 
 DEFAULT_ARENA_WIDTH: float = 972.0

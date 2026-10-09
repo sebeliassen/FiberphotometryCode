@@ -1,1 +1,0 @@
-registry/undo_moves.sh

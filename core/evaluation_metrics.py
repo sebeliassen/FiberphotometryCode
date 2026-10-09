@@ -1,11 +1,18 @@
 """
-evaluation_metrics.py [Compatibility Shim]
+[DEPRECATED SHIM] core/evaluation_metrics.py
 ==========================================
-Transparently proxies fpcode.kpms.metrics.
+Relocated to: fpcode.kpms.metrics
 """
 
 import importlib
 import sys
+import warnings
+
+warnings.warn(
+    "core.evaluation_metrics is deprecated; import from fpcode.kpms.metrics instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 _real = importlib.import_module("fpcode.kpms.metrics")
 sys.modules[__name__] = _real

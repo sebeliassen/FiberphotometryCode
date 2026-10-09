@@ -1,11 +1,18 @@
 """
-ttl_sync.py [Compatibility Shim]
+[DEPRECATED SHIM] core/ttl_sync.py
 ==========================================
-Transparently proxies fpcode.tracking.clock_sync.
+Relocated to: fpcode.tracking.clock_sync
 """
 
 import importlib
 import sys
+import warnings
+
+warnings.warn(
+    "core.ttl_sync is deprecated; import from fpcode.tracking.clock_sync instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 _real = importlib.import_module("fpcode.tracking.clock_sync")
 sys.modules[__name__] = _real

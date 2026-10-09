@@ -136,6 +136,8 @@ fused_h5*/
 !DUPLICATES.tsv
 !registry.tsv
 !MOVES.tsv
+!registry/*.tsv
+!registry/*.sh
 
 # ------------------------------------------------------------------------------
 # 8. Large Generated / Concatenated Text Bundles
