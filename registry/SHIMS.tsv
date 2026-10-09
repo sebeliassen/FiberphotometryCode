@@ -1,6 +1,6 @@
 shim_path	target_module	type	status	notes
 core/cache_manifest.py	fpcode.common.cache_manifest	module_proxy	ACTIVE	Emits DeprecationWarning
-core/camera_correspondence.py	fpcode.tracking.clock_sync	module_proxy	ACTIVE	Emits DeprecationWarning
+core/camera_correspondence.py	fpcode.tracking.camera_correspondence	module_proxy	ACTIVE	Emits DeprecationWarning
 core/eval_artifacts.py	fpcode.kpms.evaluation	module_proxy	ACTIVE	Emits DeprecationWarning
 core/evaluation_metrics.py	fpcode.kpms.metrics	module_proxy	ACTIVE	Emits DeprecationWarning
 core/fusion_engine.py	fpcode.tracking.fusion_engine	module_proxy	ACTIVE	Emits DeprecationWarning
@@ -408,3 +408,4 @@ syllable_generation/loaders/jonathan/steps/events.py	studies.behavior.loaders.ev
 syllable_generation/projects/jonathan_openfield_amph/enrich.py	studies.behavior.projects.enrich	DeprecationWarning	ACTIVE
 syllable_generation/projects/jonathan_openfield_example/enrich.py	studies.behavior.projects.enrich	DeprecationWarning	ACTIVE
 syllable_generation/videogen/generators/plots.py	studies.behavior.videogen.plots	DeprecationWarning	ACTIVE
+syllable_generation/analysis/replications/datta_utils.py	fpcode.photometry.alignment	module_proxy	ACTIVE	Emits DeprecationWarning

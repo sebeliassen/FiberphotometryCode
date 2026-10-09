@@ -24,10 +24,7 @@ FORBIDDEN_UPWARD_IMPORTS = {
     "scratch",
 }
 
-KNOWN_STEP8_LEGACY_IMPORTS = {
-    # Pending Step 8 migration of datta_utils into fpcode.photometry / fpcode.behavior
-    ("src/fpcode/kpms/export.py", "syllable_generation.analysis.replications.datta_utils"),
-}
+KNOWN_STEP8_LEGACY_IMPORTS = set()
 
 def get_all_fpcode_py_files():
     return sorted(list(FPCODE_DIR.rglob("*.py")))
@@ -132,6 +129,8 @@ def test_fpcode_clean_importability():
         "fpcode.kpms.export",
         "fpcode.kpms.metrics",
         "fpcode.kpms.evaluation",
+        "fpcode.photometry",
+        "fpcode.photometry.alignment",
     ]
 
     for mod_name in submodules:

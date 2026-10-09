@@ -70,7 +70,7 @@ def export_tandem_cohort_results(
     if not dirty_pkl.exists():
         raise FileNotFoundError(f"dirty sessions pkl not found at {dirty_pkl}")
 
-    from syllable_generation.analysis.replications.datta_utils import combined_photometry_and_syllables
+    from fpcode.photometry.alignment import combined_photometry_and_syllables
     from fpcode.tracking.pair_matching import find_matched_pairs
 
     pairs = find_matched_pairs()

@@ -13,6 +13,10 @@ from .processing import (
     group_signals,
     merge_phot_bonsai_cam,
 )
+from .alignment import (
+    build_fixed_moseq_dfs,
+    combined_photometry_and_syllables,
+)
 
 __all__ = [
     "calculate_signal_response_metrics",
@@ -20,4 +24,6 @@ __all__ = [
     "group_signals",
     "compute_mean_ci",
     "merge_phot_bonsai_cam",
+    "combined_photometry_and_syllables",
+    "build_fixed_moseq_dfs",
 ]
