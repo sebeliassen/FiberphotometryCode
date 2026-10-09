@@ -27,3 +27,5 @@ syllable_generation/syllabizers/keypoint_moseq_syll/utils/compact_checkpoint.py	
 syllable_generation/syllabizers/keypoint_moseq_syll/utils/patch_checkpoint.py	fpcode.kpms.checkpoints	module_proxy	ACTIVE	Emits DeprecationWarning
 syllable_generation/syllabizers/keypoint_moseq_syll/utils/resample_batching.py	fpcode.kpms.runtime	module_proxy	ACTIVE	Emits DeprecationWarning
 syllable_generation/syllabizers/keypoint_moseq_syll/utils/trimming.py	fpcode.kpms.data	module_proxy	ACTIVE	Emits DeprecationWarning
+syllable_generation/syllabizers/keypoint_moseq_syll/__init__.py	vendor.keypoint_moseq_syll	DeprecationWarning	ACTIVE
+syllable_generation/syllabizers/keypoint_moseq_syll/kpms_pipeline.py	vendor.keypoint_moseq_syll.kpms_pipeline	DeprecationWarning	ACTIVE

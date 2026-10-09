@@ -42,25 +42,24 @@ from syllable_generation.syllabizers.keypoint_moseq_syll.utils.patch_checkpoint 
 )
 
 # Reference sample checkpoints in the workspace
-MINIMAL_MODEL_CKPT = (
-    REPO_ROOT
-    / "syllable_generation/multiview_top_bot_experiments/kpms_minimal_real_gpu/real_gpu_minimal_mv_model/checkpoint.h5"
-)
-KAREN_LEGACY_CKPT = (
-    REPO_ROOT
-    / "syllable_generation/syllabizers/keypoint_moseq_syll/karen_project/test_pipeline_run/checkpoint.h5"
-)
+CANDIDATE_SAMPLE_CKPTS = [
+    REPO_ROOT / "vendor/keypoint_moseq_syll/karen_project/test_pipeline_run/checkpoint.h5",
+    REPO_ROOT / "syllable_generation/syllabizers/keypoint_moseq_syll/karen_project/test_pipeline_run/checkpoint.h5",
+    REPO_ROOT / "archive/legacy/syllable_generation/multiview_top_bot_experiments/archive_prototypes/kpms_minimal_real_gpu/real_gpu_minimal_mv_model/checkpoint.h5",
+]
 
 
 class TestKPMSCheckpointCompaction(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Determine which test file to use as the North Star
-        if MINIMAL_MODEL_CKPT.exists():
-            cls.ref_ckpt = MINIMAL_MODEL_CKPT
-        elif KAREN_LEGACY_CKPT.exists():
-            cls.ref_ckpt = KAREN_LEGACY_CKPT
-        else:
+        cls.ref_ckpt = None
+        for cand in CANDIDATE_SAMPLE_CKPTS:
+            if cand.exists() and cand.stat().st_size > 1_000_000:
+                cls.ref_ckpt = cand
+                break
+
+        if cls.ref_ckpt is None:
             raise FileNotFoundError("Could not find any reference sample checkpoint for testing.")
 
         print(f"\n[Test Setup] Using reference checkpoint: {cls.ref_ckpt}")

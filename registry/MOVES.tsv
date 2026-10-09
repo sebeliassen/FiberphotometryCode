@@ -101,3 +101,4 @@ syllable_generation/analysis/ulrik_kinematics/lib/legacy_viz.py	archive/legacy/s
 syllable_generation/analysis/utils/legacy_support.py	archive/legacy/syllable_generation/analysis/utils/legacy_support.py	QUARANTINE_LEGACY_FILE	Class C duplicate / legacy (duplicate of )	NO
 syllable_generation/diagnostics/alignment/verify_legacy_migration.py	archive/legacy/syllable_generation/diagnostics/alignment/verify_legacy_migration.py	QUARANTINE_LEGACY_FILE	Class C duplicate / legacy (duplicate of )	NO
 syllable_generation/multiview_top_bot_experiments/audit_cohort_correlations.py	archive/legacy/syllable_generation/multiview_top_bot_experiments/audit_cohort_correlations.py	QUARANTINE_LEGACY_FILE	Class C duplicate / legacy (duplicate of syllable_generation/multiview_top_bot_experiments/01_data_and_fusion/audit_cohort_correlations.py)	NO
+syllable_generation/syllabizers/keypoint_moseq_syll	vendor/keypoint_moseq_syll	VENDOR_FORK	Vendored patched Keypoint-MoSeq fork	NO
