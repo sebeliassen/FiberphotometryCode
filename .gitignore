@@ -132,6 +132,7 @@ fused_h5*/
 !**/*mapping*.tsv
 !ARTIFACT_INVENTORY.tsv
 !PERMISSIONS_MODIFIED_TIER_A.tsv
+!DUPLICATES.tsv
 
 # ------------------------------------------------------------------------------
 # 8. Large Generated / Concatenated Text Bundles
