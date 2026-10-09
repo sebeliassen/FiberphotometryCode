@@ -1,19 +1,22 @@
+"""
+[DEPRECATED SHIM] syllable_generation/analysis/deep_research_experiments/utils/check_project_attr.py
+==================================================
+Relocated to: studies/behavior/deep_research_experiments/utils/check_project_attr.py
+"""
+
+import importlib
 import sys
+import warnings
 
-REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
-if REPO_ROOT not in sys.path:
-    sys.path.append(REPO_ROOT)
+warnings.warn(
+    "syllable_generation.analysis.deep_research_experiments.utils.check_project_attr is deprecated; import from studies.behavior.deep_research_experiments.utils.check_project_attr instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
-from syllable_generation.analysis.deep_research_experiments.utils.loaders import load_sessions
+_real = importlib.import_module("studies.behavior.deep_research_experiments.utils.check_project_attr")
+sys.modules[__name__] = _real
 
-for proj_name in ['ifdn', 'amph']:
-    print(f"\n--- {proj_name.upper()} Dataset Check ---")
-    try:
-        sessions = load_sessions(proj_name, apply_filter=False)
-        if sessions:
-            s = sessions[0]
-            print(f"session_id: {s.session_id}")
-            print(f"project attr: '{s.project}'")
-            print(f"drug metadata: '{s.metadata.get('drug')}'")
-    except Exception as e:
-        print(f"Error: {e}")
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()
