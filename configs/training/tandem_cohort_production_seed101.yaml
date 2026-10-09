@@ -1,0 +1,21 @@
+# configs/training/tandem_cohort_production_seed101.yaml
+model_name: "tandem_cohort_118sess_50ar_200slds_seed101"
+project_dir: "syllable_generation/multiview_top_bot_experiments/kpms_tandem_cohort_production"
+data_dir: "syllable_generation/multiview_top_bot_experiments/fused_h5_full_cohort"
+seed: 101
+
+hyperparameters:
+  num_ar_iters: 50
+  num_slds_iters: 200
+  total_iters: 250
+  save_every_n_iters: 25
+  init_kappa: 7.5e13
+  decrease_kappa_factor: 10.0
+  slds_kappa: 7.5e12
+  target_fps: 60
+  conf_threshold: 0.5
+  min_frames: 100
+
+keypoints:
+  num_keypoints: 23
+  layout: "tandem_23kp"

@@ -30,13 +30,7 @@ from lib.models.benchmark_models import (
 )
 from lib.models.continuous import StrategyConditionedPoseModel
 
-NTFY_URL = "https://ntfy.sh/woody_videos_seb"
-
-def send_ntfy(message: str, title: str = "Multi-Clustering Benchmark"):
-    try:
-        requests.post(NTFY_URL, data=message.encode('utf-8'), headers={"Title": title}, timeout=5)
-    except Exception as e:
-        print(f"[NTFY ERROR] {e}")
+from fpcode.common.notify import send_ntfy
 
 def eval_rf_classifier(X: np.ndarray, y: np.ndarray, n_splits: int = 5) -> float:
     if len(set(y)) < 2:

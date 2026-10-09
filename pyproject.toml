@@ -83,6 +83,8 @@ exclude = [
     "_backups",
     "archive",
     "tests/runs",
+    "tests/test_v4_repairs.py",
+    "tests/test_oft_session_full_data.py",
     "*.ipynb",
 ]
 

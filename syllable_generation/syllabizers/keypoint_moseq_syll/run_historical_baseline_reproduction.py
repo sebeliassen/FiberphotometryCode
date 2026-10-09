@@ -66,21 +66,7 @@ HISTORICAL_AR_TIME_SEC = 2919.0      # 48m 39s for 50 AR iters (57.25s/iter)
 HISTORICAL_SLDS_TIME_SEC = 62326.0   # 17h 18m 46s for 201 SLDS iters (310.08s/iter)
 HISTORICAL_TOTAL_SEC = 65245.0       # ~18 hours 7 minutes
 
-def send_ntfy(message: str, title: str = "KPMS Benchmark Reproduction", tags: str = "rocket,mouse"):
-    try:
-        req = urllib.request.Request(
-            NTFY_URL,
-            data=message.encode("utf-8"),
-            headers={
-                "Title": title.encode("utf-8"),
-                "Priority": "high",
-                "Tags": tags.encode("utf-8")
-            },
-            method="POST"
-        )
-        urllib.request.urlopen(req, timeout=10)
-    except Exception as e:
-        print(f"[NTFY Note] {e}", flush=True)
+from fpcode.common.notify import send_ntfy
 
 def get_sessions():
     sessions = pd.read_pickle(SESSIONS_PKL)

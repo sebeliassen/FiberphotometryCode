@@ -14,24 +14,13 @@ from sklearn.gaussian_process.kernels import Matern
 from tqdm import tqdm
 
 
+from fpcode.common.notify import send_ntfy as _unified_send_ntfy
+
 def send_ntfy_notification(message: str, title: str = "KL Optimization"):
     """
     Sends a push notification to https://ntfy.sh/woody_videos_seb.
     """
-    try:
-        url = "https://ntfy.sh/woody_videos_seb"
-        # Encode title as UTF-8 then decode as latin-1 to preserve raw UTF-8 bytes in HTTP headers
-        encoded_title = title.encode("utf-8").decode("latin-1")
-        req = urllib.request.Request(
-            url,
-            data=message.encode("utf-8"),
-            headers={"Title": encoded_title},
-            method="POST"
-        )
-        with urllib.request.urlopen(req, timeout=5) as response:
-            pass
-    except Exception as e:
-        print(f"Failed to send ntfy notification: {e}")
+    _unified_send_ntfy(title=title, msg=message)
 
 def compute_window_kl(counts: np.ndarray, global_dist: np.ndarray) -> float:
     """ Computes mean KL divergence of window counts relative to a global distribution. """

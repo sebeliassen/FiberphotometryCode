@@ -115,7 +115,6 @@ def run_training(args: argparse.Namespace) -> int:
 
     t0 = time.time()
     try:
-
         logger.info(f"Initializing KPMS training for {model_name}...")
         # Main model fitting workflow driven by config
         logger.info("Training complete.")

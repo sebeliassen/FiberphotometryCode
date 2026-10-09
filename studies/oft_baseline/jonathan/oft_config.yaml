@@ -1,0 +1,3 @@
+video_path: ./selected_13T_files
+trials_path: ./Jonathan_IFxDN_csvs
+tracking_data_path: ./h5_files

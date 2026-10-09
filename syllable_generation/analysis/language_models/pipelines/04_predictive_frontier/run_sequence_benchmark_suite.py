@@ -53,19 +53,7 @@ for d in [OUT_DIR, FIG_DIR, TAB_DIR]:
     os.makedirs(d, exist_ok=True)
 
 LOG_FILE = os.path.join(OUT_DIR, "sequential_benchmark.log")
-NTFY_URL = "https://ntfy.sh/woody_videos_seb"
-
-def send_ntfy(msg: str):
-    """Sends push notification to the user's phone via ntfy.sh."""
-    try:
-        req = urllib.request.Request(
-            NTFY_URL,
-            data=msg.encode('utf-8'),
-            headers={'Title': 'Antigravity Model Benchmark', 'Priority': 'default'}
-        )
-        urllib.request.urlopen(req, timeout=5)
-    except Exception as e:
-        print(f"[ntfy warning] Failed to send ntfy notification: {e}", flush=True)
+from fpcode.common.notify import send_ntfy
 
 def log(msg: str, notify: bool = False):
     ts = time.strftime('%Y-%m-%d %H:%M:%S')

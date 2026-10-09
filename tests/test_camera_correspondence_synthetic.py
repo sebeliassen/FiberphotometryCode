@@ -17,7 +17,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
+from fpcode.common.paths import REPO_ROOT
 EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))

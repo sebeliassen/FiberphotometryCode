@@ -39,18 +39,7 @@ TEMPLATE_PHOT_COLS = [
 ]
 
 
-def send_ntfy(title: str, message: str, priority: str = "default"):
-    import urllib.request
-    try:
-        req = urllib.request.Request(
-            "https://ntfy.sh/kpms_tandem_run_alerts_384729104",
-            data=message.encode("utf-8"),
-            headers={"Title": title, "Priority": priority},
-            method="POST",
-        )
-        urllib.request.urlopen(req, timeout=10)
-    except Exception as e:
-        print(f"[warning] Failed to send ntfy alert: {e}", flush=True)
+from fpcode.common.notify import send_ntfy
 
 
 def main():

@@ -52,10 +52,7 @@ matplotlib.use("Agg")
 
 import keypoint_moseq as kpms
 
-# Setup repository paths
-REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+from fpcode.common.paths import REPO_ROOT
 EXPERIMENT_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 if str(EXPERIMENT_DIR) not in sys.path:
     sys.path.insert(0, str(EXPERIMENT_DIR))
@@ -88,23 +85,7 @@ TARGET_FPS = 60
 MIN_SEGMENT_FRAMES = 600  # 10.0s @ 60 FPS
 
 
-def send_ntfy(title: str, msg: str, priority: str = "default", tags: str = "robot"):
-    """Sends notification to user's ntfy.sh endpoint."""
-    try:
-        req = urllib.request.Request(
-            NTFY_URL,
-            data=msg.encode("utf-8"),
-            headers={
-                "Title": title.encode("ascii", "replace").decode("ascii"),
-                "Priority": priority,
-                "Tags": tags
-            }
-        )
-        with urllib.request.urlopen(req, timeout=8) as resp:
-            pass
-        print(f"[ntfy] Alert sent: '{title}'", flush=True)
-    except Exception as e:
-        print(f"[ntfy warning] Could not send alert ({e})", flush=True)
+from fpcode.common.notify import send_ntfy
 
 
 def handle_shutdown_signal(signum, frame):

@@ -1,0 +1,10 @@
+# configs/fusion/cohort_static_21kp.yaml
+mode: "static_21kp"
+top_dir: "karen_project/h5_files"
+bot_dir: "karen_project/botcam_h5_files"
+output_dir: "syllable_generation/multiview_top_bot_experiments/data/cohort_fused_static_21kp_v2"
+arena_width: 972.0
+strict_calibration: true
+truncate_aborted_tail: true
+confidence_gating: true
+unmanifested_policy: "trust"

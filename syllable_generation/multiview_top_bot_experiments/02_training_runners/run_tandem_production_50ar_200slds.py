@@ -63,10 +63,7 @@ import pandas as pd
 from jax_moseq.utils.debugging import convert_data_precision
 from scipy.ndimage import median_filter
 
-# Setup repository paths
-REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+from fpcode.common.paths import REPO_ROOT
 KPMS_UTILS_DIR = REPO_ROOT / "syllable_generation/syllabizers/keypoint_moseq_syll"
 if str(KPMS_UTILS_DIR) not in sys.path:
     sys.path.insert(0, str(KPMS_UTILS_DIR))
@@ -141,23 +138,7 @@ session_configs = {
 }
 
 
-def send_ntfy(title: str, msg: str, priority: str = "default", tags: str = "robot"):
-    """Sends notification to ntfy endpoint."""
-    try:
-        req = urllib.request.Request(
-            NTFY_URL,
-            data=msg.encode("utf-8"),
-            headers={
-                "Title": title.encode("ascii", "replace").decode("ascii"),
-                "Priority": priority,
-                "Tags": tags
-            }
-        )
-        with urllib.request.urlopen(req, timeout=8) as resp:
-            pass
-        print(f"[ntfy] Alert sent: '{title}'", flush=True)
-    except Exception as e:
-        print(f"[ntfy warning] Could not send alert ({e})", flush=True)
+from fpcode.common.notify import send_ntfy
 
 
 def handle_shutdown_signal(signum, frame):

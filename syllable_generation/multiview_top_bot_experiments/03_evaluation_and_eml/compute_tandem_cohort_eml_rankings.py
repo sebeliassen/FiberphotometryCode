@@ -83,21 +83,11 @@ def _load_heavy_deps():
     marginal_log_likelihood, get_frequencies = _mll, _gf
     load_hdf5, save_hdf5, unbatch = _lh, _sh, _ub
 
-NTFY_URL = "https://ntfy.sh/woody_videos_seb"
+from fpcode.common.notify import send_ntfy
+from fpcode.common.paths import REPO_ROOT
 
-def send_ntfy(title: str, msg: str, priority: str = "default", tags: str = "trophy"):
-    try:
-        req = urllib.request.Request(
-            NTFY_URL,
-            data=msg.encode("utf-8"),
-            headers={"Title": title.encode("ascii", "replace").decode("ascii"), "Priority": priority, "Tags": tags}
-        )
-        urllib.request.urlopen(req, timeout=5)
-    except Exception as e:
-        print(f"[ntfy notice]: {e}")
-
-DEFAULT_PROJECT_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/kpms_tandem_cohort_continuous_calibrated")
-DEFAULT_OUTPUT_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/04_reports_and_figures")
+DEFAULT_PROJECT_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments/kpms_tandem_cohort_continuous_calibrated"
+DEFAULT_OUTPUT_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments/04_reports_and_figures"
 
 DERIVED_RESULTS_NAME = "results_reindexed.h5"
 LABEL_POLICY = "stable_frequency_order_v1"

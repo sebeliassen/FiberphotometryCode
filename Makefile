@@ -3,9 +3,9 @@
 # Reads environment paths dynamically with graceful defaults.
 # ==============================================================================
 
-PYTHON ?= $(shell which python3 2>/dev/null || echo /home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python)
-PYTEST ?= $(shell which pytest 2>/dev/null || echo /home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/pytest)
-RUFF ?= $(shell which ruff 2>/dev/null || echo /home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/ruff)
+PYTHON ?= /home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python
+PYTEST ?= /home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/pytest
+RUFF ?= /home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/ruff
 
 .PHONY: help test lint inventory backup verify-backup dry-run
 
@@ -24,7 +24,7 @@ test:
 
 lint:
 	@echo "Running ruff linter across core codebase..."
-	$(RUFF) check core
+	$(RUFF) check core src/fpcode pipelines
 
 inventory:
 	@echo "Recomputing repository artifact inventory..."

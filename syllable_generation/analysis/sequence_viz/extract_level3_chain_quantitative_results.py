@@ -94,18 +94,10 @@ COHORT_COLORS = {
 }
 
 
+from fpcode.common.notify import send_ntfy as _unified_send_ntfy
+
 def send_ntfy_alert(msg, title="Level 3 seqNMF Analytics Ready"):
-    """Dispatches real-time completion alert via ntfy.sh."""
-    try:
-        req = urllib.request.Request(
-            NTFY_TOPIC,
-            data=msg.encode("utf-8"),
-            headers={"Title": title, "Priority": "high"}
-        )
-        urllib.request.urlopen(req, timeout=8)
-        print(f"ntfy notification successfully sent to {NTFY_TOPIC}!")
-    except Exception as e:
-        print(f"ntfy notification dispatch failed: {e}")
+    _unified_send_ntfy(title=title, msg=msg, priority="high")
 
 
 def get_level3_definitions():

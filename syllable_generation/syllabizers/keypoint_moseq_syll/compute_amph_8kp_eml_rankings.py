@@ -44,20 +44,10 @@ from keypoint_moseq.fitting import marginal_log_likelihood
 from keypoint_moseq.io import load_hdf5, save_hdf5
 from keypoint_moseq.util import get_frequencies
 
-NTFY_URL = "https://ntfy.sh/woody_videos_seb"
+from fpcode.common.notify import send_ntfy
+from fpcode.common.paths import REPO_ROOT
 
-def send_ntfy(title: str, msg: str, priority: str = "default", tags: str = "robot"):
-    try:
-        req = urllib.request.Request(
-            NTFY_URL,
-            data=msg.encode("utf-8"),
-            headers={"Title": title, "Priority": priority, "Tags": tags}
-        )
-        urllib.request.urlopen(req, timeout=5)
-    except Exception as e:
-        print(f"[ntfy notice] (Quota/Network): {e}")
-
-PROJECT_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/syllabizers/keypoint_moseq_syll/amph_project_8kp")
+PROJECT_DIR = REPO_ROOT / "syllable_generation/syllabizers/keypoint_moseq_syll/amph_project_8kp"
 OUTPUT_DIR = PROJECT_DIR
 PROGRESS_FILE = OUTPUT_DIR / "eml_pairwise_progress_8kp.json"
 

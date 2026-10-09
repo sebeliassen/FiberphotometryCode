@@ -56,18 +56,7 @@ for d in [OUT_DIR, FIG_DIR, TAB_DIR]:
     os.makedirs(d, exist_ok=True)
 
 LOG_FILE = os.path.join(OUT_DIR, "discrete_bottleneck_benchmark.log")
-NTFY_URL = "https://ntfy.sh/woody_videos_seb"
-
-def send_ntfy(msg: str):
-    try:
-        req = urllib.request.Request(
-            NTFY_URL,
-            data=msg.encode('utf-8'),
-            headers={'Title': 'Antigravity K=16 Strategy Upgrade', 'Priority': 'default'}
-        )
-        urllib.request.urlopen(req, timeout=5)
-    except Exception:
-        pass
+from fpcode.common.notify import send_ntfy
 
 def log(msg: str, notify: bool = False):
     ts = time.strftime('%Y-%m-%d %H:%M:%S')

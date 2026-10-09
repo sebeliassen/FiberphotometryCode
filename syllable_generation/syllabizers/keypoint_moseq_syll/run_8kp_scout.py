@@ -55,18 +55,7 @@ DOWNSAMPLE = 2
 NEW_FPS = 40
 SEED = 53
 
-def send_ntfy(message, title="KPMS 8KP Scout Progress"):
-    try:
-        import urllib.request
-        req = urllib.request.Request(
-            "https://ntfy.sh/woody_videos_seb",
-            data=message.encode("utf-8"),
-            headers={"Title": title}
-        )
-        with urllib.request.urlopen(req) as resp:
-            pass
-    except Exception as e:
-        print(f"[ntfy notice] (ntfy quota notice: {e})")
+from fpcode.common.notify import send_ntfy
 
 def main():
     print("=" * 80)

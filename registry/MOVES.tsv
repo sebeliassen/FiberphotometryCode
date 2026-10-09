@@ -1,0 +1,84 @@
+source_path	target_path	category	description	leave_symlink
+archive_checkpoints.log	archive/logs/archive_checkpoints.log	SAFE_CLEANLINESS	Execution log file from checkpoint maintenance	NO
+model_fitting.log	archive/logs/model_fitting.log	SAFE_CLEANLINESS	Execution log file from model fitting	NO
+nohup.out	archive/logs/nohup.out	SAFE_CLEANLINESS	Background terminal stdout/stderr dump	NO
+run_dlc_analysis.log	archive/logs/run_dlc_analysis.log	SAFE_CLEANLINESS	DeepLabCut batch inference execution log	NO
+sweep_debug.log	archive/logs/sweep_debug.log	SAFE_CLEANLINESS	Hyperparameter sweep debug execution log	NO
+sweep.log	archive/logs/sweep.log	SAFE_CLEANLINESS	Hyperparameter sweep main execution log	NO
+tandem_multiview_kpms_expert_review_package_concat.txt	archive/text_dumps/tandem_multiview_kpms_expert_review_package_concat.txt	SAFE_CLEANLINESS	Concatenated review bundle text dump	NO
+debug_bot_raw_52299.png	archive/debug_images/debug_bot_raw_52299.png	SAFE_CLEANLINESS	Ad-hoc ventral camera frame render	NO
+debug_syll30_r1_c2.png	archive/debug_images/debug_syll30_r1_c2.png	SAFE_CLEANLINESS	Ad-hoc syllable debug render	NO
+tests/runs	outputs/test_runs	SAFE_CLEANLINESS	Heavy historical test execution artifacts directory	NO
+chain_grid_generation_code.zip	archive/packages/chain_grid_generation_code.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+chatgpt_ethological_seqnmf_package.zip	archive/packages/chatgpt_ethological_seqnmf_package.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+code_backup_2026-04-10.zip	archive/packages/code_backup_2026-04-10.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+density_sampling_v2_audit.zip	archive/packages/density_sampling_v2_audit.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+fiberphotometry_code_review.zip	archive/packages/fiberphotometry_code_review.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+multiview_kpms_expert_review_package.zip	archive/packages/multiview_kpms_expert_review_package.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+multiview_static_21kp_v2_engineering_dossier.zip	archive/packages/multiview_static_21kp_v2_engineering_dossier.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+multiview_tandem_expert_review_package.zip	archive/packages/multiview_tandem_expert_review_package.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+syllable_chains_research_package.zip	archive/packages/syllable_chains_research_package.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+syllable_generation_source_backup_20260216_161040.zip	archive/packages/syllable_generation_source_backup_20260216_161040.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+tandem_multiview_kpms_expert_review_package_7days.zip	archive/packages/tandem_multiview_kpms_expert_review_package_7days.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+v2_grid_movies_and_trajectories_engineering_rfc.zip	archive/packages/v2_grid_movies_and_trajectories_engineering_rfc.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+v2_visualization_fixes_and_gemini_plan (1).zip	archive/packages/v2_visualization_fixes_and_gemini_plan (1).zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+v2_visualization_fixes_and_gemini_plan.zip	archive/packages/v2_visualization_fixes_and_gemini_plan.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+v4_kpms_integrity_and_labeling_deliverable.zip	archive/packages/v4_kpms_integrity_and_labeling_deliverable.zip	SAFE_CLEANLINESS	Root zip distribution / export package snapshot	NO
+syllable_generation_backup_20260204_133746	archive/backups/syllable_generation_backup_20260204_133746	DATED_BACKUP	Dated code snapshot from Feb 2026	NO
+syllable_generation/multiview_top_bot_experiments_code_backup_20260930	archive/backups/multiview_top_bot_experiments_code_backup_20260930	DATED_BACKUP	Dated code snapshot from Sep 30 2026	NO
+syllable_generation/multiview_top_bot_experiments_code_backup_20261005	archive/backups/multiview_top_bot_experiments_code_backup_20261005	DATED_BACKUP	Dated code snapshot from Oct 05 2026	NO
+KPMS_8KP_TRANSITION_AND_PRODUCTION_BRIEFING.md	docs/reports/KPMS_8KP_TRANSITION_AND_PRODUCTION_BRIEFING.md	DOCS	Production briefing report	YES
+KPMS_8KP_VS_17KP_CONTROLLED_COMPARISON_REPORT.md	docs/reports/KPMS_8KP_VS_17KP_CONTROLLED_COMPARISON_REPORT.md	DOCS	Keypoint comparison report	YES
+KPMS_CHECKPOINT_COMPACTION_AND_ROLLING_STORAGE_SPEC.md	docs/reports/KPMS_CHECKPOINT_COMPACTION_AND_ROLLING_STORAGE_SPEC.md	DOCS	Storage spec report	YES
+KPMS_MONKEYPATCHING_AND_MEMORY_SCALING_GUIDE.md	docs/reports/KPMS_MONKEYPATCHING_AND_MEMORY_SCALING_GUIDE.md	DOCS	Memory scaling guide	YES
+KPMS_OOM_REAPER_AND_COMPACTION_RESOLUTION_REPORT.md	docs/reports/KPMS_OOM_REAPER_AND_COMPACTION_RESOLUTION_REPORT.md	DOCS	OOM reaper report	YES
+KPMS_SCALING_ADDENDUM_LIVE_CRASH_ANALYSIS.md	docs/reports/KPMS_SCALING_ADDENDUM_LIVE_CRASH_ANALYSIS.md	DOCS	Crash analysis report	YES
+KPMS_SCALING_BOTTLENECKS_AND_OPTIMIZATIONS_DOSSIER.md	docs/reports/KPMS_SCALING_BOTTLENECKS_AND_OPTIMIZATIONS_DOSSIER.md	DOCS	Optimization dossier	YES
+KPMS_SEED_404_EML_SELECTION_AND_SWE_HARDENING_REPORT.md	docs/reports/KPMS_SEED_404_EML_SELECTION_AND_SWE_HARDENING_REPORT.md	DOCS	Seed selection report	YES
+monday_14_7_2026_presentation.md	docs/reports/monday_14_7_2026_presentation.md	DOCS	Weekly presentation notes	YES
+TANDEM_MULTIVIEW_KPMS_ENGINEERING_DOSSIER_AND_EXPERT_REVIEW_REQUEST.md	docs/reports/TANDEM_MULTIVIEW_KPMS_ENGINEERING_DOSSIER_AND_EXPERT_REVIEW_REQUEST.md	DOCS	Engineering dossier	YES
+unique_information_postural_ceiling.md	docs/reports/unique_information_postural_ceiling.md	DOCS	Information ceiling report	YES
+SUMMARY_FOR_TOMORROW.md	docs/reports/SUMMARY_FOR_TOMORROW.md	DOCS	Daily summary	YES
+VALIDATION_REPORT.md	docs/reports/VALIDATION_REPORT.md	DOCS	Scaffolding validation report	YES
+BACKUP_REPORT.md	docs/reports/BACKUP_REPORT.md	DOCS	Tier-A backup report	YES
+SCAFFOLDING_REPORT.md	docs/reports/SCAFFOLDING_REPORT.md	DOCS	Scaffolding report	YES
+REFACTORING_CHANGE_REPORT.md	docs/reports/REFACTORING_CHANGE_REPORT.md	DOCS	Refactoring change report	YES
+SWE_ORGANIZATION_BOT_PROMPT.md	docs/reports/SWE_ORGANIZATION_BOT_PROMPT.md	DOCS	SWE bot prompt	YES
+registry.tsv	registry/registry.tsv	REGISTRY	Module and artifact registry	YES
+ARTIFACT_INVENTORY.tsv	registry/ARTIFACT_INVENTORY.tsv	REGISTRY	Full artifact inventory	YES
+DUPLICATES.tsv	registry/DUPLICATES.tsv	REGISTRY	Deduplication inventory	YES
+PERMISSIONS_MODIFIED_TIER_A.tsv	registry/PERMISSIONS_MODIFIED_TIER_A.tsv	REGISTRY	Read-only permissions inventory	YES
+restore_tier_a_permissions.sh	registry/restore_tier_a_permissions.sh	REGISTRY	Permissions restore script	YES
+cohort_static_21kp_v2_expert_review_package	archive/bundles/cohort_static_21kp_v2_expert_review_package	ARCHIVE_BUNDLE	Cohort static review package	YES
+karen_project_research_bundle	archive/bundles/karen_project_research_bundle	ARCHIVE_BUNDLE	Karen project bundle	YES
+kpms_acceleration_research_bundle	archive/bundles/kpms_acceleration_research_bundle	ARCHIVE_BUNDLE	Acceleration bundle	YES
+kpms_engineering_handoff_v2	archive/bundles/kpms_engineering_handoff_v2	ARCHIVE_BUNDLE	Engineering handoff v2 bundle	YES
+kpms_parity_additions	archive/bundles/kpms_parity_additions	ARCHIVE_BUNDLE	Parity additions bundle	YES
+kpms_scaling_bundle	archive/bundles/kpms_scaling_bundle	ARCHIVE_BUNDLE	Scaling research bundle	YES
+multiview_tandem_expert_review_package	archive/bundles/multiview_tandem_expert_review_package	ARCHIVE_BUNDLE	Tandem expert review package	YES
+syllable_chains_research_package	archive/bundles/syllable_chains_research_package	ARCHIVE_BUNDLE	Syllable chains package	YES
+diagnostics	archive/bundles/diagnostics	ARCHIVE_BUNDLE	Historical diagnostics bundle	YES
+QA	archive/bundles/QA	ARCHIVE_BUNDLE	Historical QA bundle	YES
+wandb	archive/bundles/wandb	ARCHIVE_BUNDLE	Historical wandb logs bundle	YES
+karen_project	studies/karen_pff_vs_monomer	STUDY	Karen PFF vs Monomer study	YES
+src_oft	studies/oft_baseline	STUDY	Open Field Test baseline study	YES
+src_mono_inter	studies/mono_inter_juvenile_intruder	STUDY	Monoamine juvenile intruder study	YES
+monoamine_interactions	studies/monoamine_interactions	STUDY	Monoamine interactions study	YES
+scripts/backup_code.sh	ops/backup/backup_code.sh	OPS	Code backup script	YES
+scripts/verify_tier_a_backup.py	ops/backup/verify_tier_a_backup.py	OPS	Tier-A backup verification	YES
+scripts/batch_compact_all_checkpoints.py	ops/compaction/batch_compact_all_checkpoints.py	OPS	Batch compaction engine	YES
+scripts/launch_batch_compaction.sh	ops/compaction/launch_batch_compaction.sh	OPS	Batch compaction launcher	YES
+scripts/ram_watchdog.py	ops/monitoring/ram_watchdog.py	OPS	System RAM emergency watchdog	YES
+scripts/ntfy_monitor.py	ops/monitoring/ntfy_monitor.py	OPS	Log file notification monitor	YES
+scripts/notify_kpms_iterations.py	ops/monitoring/notify_kpms_iterations.py	OPS	Iteration notification monitor	YES
+scripts/launch_extended_when_limited_done.py	ops/monitoring/launch_extended_when_limited_done.py	OPS	Pipeline sequence auto-launcher	YES
+run_dlc_analysis.py	ops/dlc/run_dlc_analysis.py	OPS	DeepLabCut batch inference runner	YES
+scripts/karen_rsync_all.sh	ops/dlc/karen_rsync_all.sh	OPS	Video sync utility	YES
+scripts/karen_split_all.sh	ops/dlc/karen_split_all.sh	OPS	Video splitting utility	YES
+scripts/split_videos.sh	ops/dlc/split_videos.sh	OPS	Ventral video splitter	YES
+scripts/link_karen_botcam.py	ops/dlc/link_karen_botcam.py	OPS	Botcam symlinker	YES
+scripts/relink_split_videos.py	ops/dlc/relink_split_videos.py	OPS	Video relinker	YES
+scripts/rsync_karen_botcam.py	ops/dlc/rsync_karen_botcam.py	OPS	Botcam sync	YES
+scripts/verify_botcam_orientation.py	ops/dlc/verify_botcam_orientation.py	OPS	Camera orientation check	YES
+scripts/build_swe_archive.py	ops/repo/build_swe_archive.py	OPS	Archive packaging utility	YES
+scripts/execute_phase3_moves.py	ops/repo/execute_phase3_moves.py	OPS	Relocation executor	YES
