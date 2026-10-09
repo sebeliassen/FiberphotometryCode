@@ -1,19 +1,22 @@
 """
-Digest Results Wrapper (AMPH Panel 1e).
-
-This script configures the global `config.OUTPUT_DIR` to point to the AMPH-specific directory 
-(`output/panel_1e_amph`) before invoking the core digestion logic (`digest_results.main`).
-
-It enables the reuse of the common digestion code (statistics, chance bands) for the AMPH dataset 
-without code duplication.
+[DEPRECATED SHIM] syllable_generation/analysis/replications/datta/panel_1e/digest_panel_1e_amph.py
+==================================================
+Relocated to: studies/behavior/replications_datta/datta/panel_1e/digest_panel_1e_amph.py
 """
-from lib import config
 
-# Override Output Dir
-config.OUTPUT_DIR = config.PANEL_DIRS["1e_amph"]
+import importlib
+import sys
+import warnings
 
-import digest_results
+warnings.warn(
+    "syllable_generation.analysis.replications.datta.panel_1e.digest_panel_1e_amph is deprecated; import from studies.behavior.replications_datta.datta.panel_1e.digest_panel_1e_amph instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+_real = importlib.import_module("studies.behavior.replications_datta.datta.panel_1e.digest_panel_1e_amph")
+sys.modules[__name__] = _real
 
 if __name__ == "__main__":
-    print(f"Digesting AMPH results in {config.OUTPUT_DIR}...")
-    digest_results.main()
+    if hasattr(_real, "main"):
+        _real.main()
