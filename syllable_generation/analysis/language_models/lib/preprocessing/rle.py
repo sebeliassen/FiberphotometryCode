@@ -1,33 +1,22 @@
-import numpy as np
+"""
+[DEPRECATED SHIM] syllable_generation/analysis/language_models/lib/preprocessing/rle.py
+==================================================
+Relocated to: studies/behavior/language_models/lib/preprocessing/rle.py
+"""
 
+import importlib
+import sys
+import warnings
 
-def collapse_transitions(session, mapping: dict = None) -> np.ndarray:
-    """
-    Applies Run-Length Encoding (RLE) to the syllable stream.
-    Collapses consecutive duplicate frames (e.g., [walk, walk, walk, rear] -> [walk, rear]).
-    
-    Args:
-        session: Session object with s.all_data_df.
-        mapping: Optional dictionary to map syllable IDs to semantic strings first.
-        
-    Returns:
-        np.ndarray: Collapsed syllable/label sequence.
-    """
-    df = session.all_data_df
-    if "syllable" not in df.columns:
-        return np.array([])
+warnings.warn(
+    "syllable_generation.analysis.language_models.lib.preprocessing.rle is deprecated; import from studies.behavior.language_models.lib.preprocessing.rle instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
-    raw_seq = df["syllable"].fillna(-1).to_numpy()
-    if len(raw_seq) == 0:
-        return np.array([])
+_real = importlib.import_module("studies.behavior.language_models.lib.preprocessing.rle")
+sys.modules[__name__] = _real
 
-    # Translate to semantic labels if mapping is provided
-    if mapping is not None:
-        semantic_seq = np.array([mapping.get(int(x), "Other") for x in raw_seq])
-    else:
-        semantic_seq = raw_seq.astype(int)
-
-    # Run-length encode
-    mask = np.concatenate(([True], semantic_seq[1:] != semantic_seq[:-1]))
-    collapsed = semantic_seq[mask]
-    return collapsed
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()

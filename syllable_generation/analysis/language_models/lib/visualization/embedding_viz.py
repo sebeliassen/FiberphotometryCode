@@ -1,20 +1,22 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import seaborn as sns
+"""
+[DEPRECATED SHIM] syllable_generation/analysis/language_models/lib/visualization/embedding_viz.py
+==================================================
+Relocated to: studies/behavior/language_models/lib/visualization/embedding_viz.py
+"""
 
+import importlib
+import sys
+import warnings
 
-def plot_embeddings_umap(embeddings: np.ndarray, labels: list, title: str, save_path: str):
-    """ Plots UMAP/t-SNE layout of syllable embeddings. """
-    # Placeholder plotting code
-    plt.figure(figsize=(8, 6))
-    plt.scatter(embeddings[:, 0], embeddings[:, 1], c='purple', alpha=0.7)
-    for i, txt in enumerate(labels):
-        plt.annotate(txt, (embeddings[i, 0], embeddings[i, 1]), fontsize=9)
-    plt.title(title)
-    plt.xlabel("UMAP 1")
-    plt.ylabel("UMAP 2")
-    sns.despine()
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=300)
-    plt.close()
-    print(f"Saved embedding UMAP plot to {save_path}")
+warnings.warn(
+    "syllable_generation.analysis.language_models.lib.visualization.embedding_viz is deprecated; import from studies.behavior.language_models.lib.visualization.embedding_viz instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+_real = importlib.import_module("studies.behavior.language_models.lib.visualization.embedding_viz")
+sys.modules[__name__] = _real
+
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()

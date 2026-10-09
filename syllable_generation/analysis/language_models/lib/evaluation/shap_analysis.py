@@ -1,36 +1,22 @@
 """
-SHAP Feature Importance Analysis Module (Placeholder Stub)
-
-Provides interface for computing SHapley Additive exPlanations (SHAP) to quantify
-which specific behavioral strategy vibes drive cohort separation in evaluation classifiers.
+[DEPRECATED SHIM] syllable_generation/analysis/language_models/lib/evaluation/shap_analysis.py
+==================================================
+Relocated to: studies/behavior/language_models/lib/evaluation/shap_analysis.py
 """
 
-from typing import Any, Dict, Optional
+import importlib
+import sys
+import warnings
 
-import numpy as np
+warnings.warn(
+    "syllable_generation.analysis.language_models.lib.evaluation.shap_analysis is deprecated; import from studies.behavior.language_models.lib.evaluation.shap_analysis instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
+_real = importlib.import_module("studies.behavior.language_models.lib.evaluation.shap_analysis")
+sys.modules[__name__] = _real
 
-def compute_vibe_shap_importance(
-    classifier_model: Any,
-    X_strategy_proportions: np.ndarray,
-    y_cohort_labels: np.ndarray,
-    vibe_names: Optional[Dict[int, str]] = None
-) -> Dict[str, Any]:
-    """
-    STUB: Computes SHAP values for Random Forest / Gradient Boosting classifier.
-
-    Args:
-        classifier_model: Fitted scikit-learn classifier model.
-        X_strategy_proportions: Array of shape (n_sessions, n_vibes) containing session vibe proportions.
-        y_cohort_labels: Array of cohort string labels for each session.
-        vibe_names: Optional dictionary mapping vibe integer ID to descriptive string name.
-
-    Returns:
-        Dict containing placeholder structure for mean absolute SHAP values per cohort.
-    """
-    print("[STUB] SHAP analysis module called. Feature importance computation skipped for now.")
-    return {
-        "status": "stub_placeholder",
-        "message": "SHAP feature importance module initialized as stub.",
-        "shap_values": None
-    }
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()
