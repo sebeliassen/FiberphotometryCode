@@ -1,26 +1,22 @@
-# phot_df has [FrameCounter, Timestamp, cam_frame_num, BonsaiTrackingTimestamp]
-import pandas as pd
+"""
+[DEPRECATED SHIM] fiberphotometry/processing/add_injection_times_temp.py
+==================================================
+Relocated to: studies/photometry/exploratory/processing/add_injection_times_temp.py
+"""
 
+import importlib
+import sys
+import warnings
 
-def adjust_names(s):
-    first_second, mouse_ids, hand_dir, _ = s.split('_')
-    id_one, id_two = mouse_ids.split('&')
+warnings.warn(
+    "fiberphotometry.processing.add_injection_times_temp is deprecated; import from studies.photometry.exploratory.processing.add_injection_times_temp instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
-    if hand_dir == 'LeftHand':
-        return f'{first_second}_{id_one}'
-    elif hand_dir == 'RightHand':
-        return f'{first_second}_{id_two}'
+_real = importlib.import_module("studies.photometry.exploratory.processing.add_injection_times_temp")
+sys.modules[__name__] = _real
 
-
-def add_inj_times(sessions):
-    timepoints = pd.read_csv('/Users/fsp585/Desktop/GetherLabCode/FiberphotometryCode/timepointListTable_withColNames.txt')
-    timepoints['File_Name_adjusted'] = timepoints['File_Name'].apply(adjust_names)
-    first_second = sessions[0].trial_dir.split('/')[-2].split()[0]
-    mask = timepoints['File_Name_adjusted'].apply(lambda s: s.startswith(first_second))
-
-    timepoints = timepoints[mask]
-    timepoints.loc[:, 'mouse_id'] = timepoints['File_Name_adjusted'].apply(lambda s: s.split('_')[-1])
-    timepoints = timepoints.set_index('mouse_id', drop=True)
-    for idx, session in enumerate(sessions):
-        session.inj_start_time = int(timepoints.loc[session.mouse_id, 'tOutForInject'])
-        session.inj_end_time = int(timepoints.loc[session.mouse_id, 'tBackAfterInject'])
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()

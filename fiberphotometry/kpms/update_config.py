@@ -1,36 +1,22 @@
-import keypoint_moseq as kpms
-import numpy as np
+"""
+[DEPRECATED SHIM] fiberphotometry/kpms/update_config.py
+==================================================
+Relocated to: studies/photometry/exploratory/kpms/update_config.py
+"""
 
+import importlib
+import sys
+import warnings
 
-def update_config(project_dir, bodyparts):
-    # Suppose cfg is your original configuration loaded from disk.
-    cfg = kpms.load_config(project_dir)
+warnings.warn(
+    "fiberphotometry.kpms.update_config is deprecated; import from studies.photometry.exploratory.kpms.update_config instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
-    # Create a new list excluding tail parts.
-    import re
-    bodyparts_no_tail = [bp for bp in cfg['bodyparts'] if not re.match(r'tail\d$', bp)]
+_real = importlib.import_module("studies.photometry.exploratory.kpms.update_config")
+sys.modules[__name__] = _real
 
-    # Create an updated skeleton by filtering out edges that reference removed bodyparts.
-    new_skeleton = [edge for edge in cfg['skeleton'] if all(bp in bodyparts_no_tail for bp in edge)]
-
-    # Recalculate indices (assuming anterior and posterior bodyparts remain the same).
-    new_anterior_idxs = np.array([bodyparts_no_tail.index(bp)
-                                for bp in cfg.get('anterior_bodyparts', [])
-                                if bp in bodyparts_no_tail])
-    new_posterior_idxs = np.array([bodyparts_no_tail.index(bp)
-                                for bp in cfg.get('posterior_bodyparts', [])
-                                if bp in bodyparts_no_tail])
-
-    new_mask = np.array([bp in bodyparts_no_tail for bp in bodyparts])
-
-    # Now update the configuration.
-    kpms.update_config(
-        project_dir,
-        bodyparts=bodyparts_no_tail,
-        use_bodyparts=bodyparts_no_tail,
-        skeleton=new_skeleton,
-        anterior_idxs=new_anterior_idxs,
-        posterior_idxs=new_posterior_idxs
-    )
-
-    return new_mask
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()
