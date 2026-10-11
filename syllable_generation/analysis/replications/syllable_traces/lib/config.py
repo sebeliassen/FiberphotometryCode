@@ -1,25 +1,28 @@
-from pathlib import Path
+"""
+[DEPRECATED SHIM] syllable_generation/analysis/replications/syllable_traces/lib/config.py
+==================================================
+Relocated to: studies/behavior/replications_datta/syllable_traces/lib/config.py
+"""
 
-# Paths
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent
-DATA_DIR = REPO_ROOT / "data"
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "output"
+import importlib
+import sys
+import warnings
 
-# Analysis Config
-WINDOW_SECONDS = 5.0
-FPS = 80
-WINDOW_FRAMES = int(WINDOW_SECONDS * FPS)  # 400 frames per side
-TOTAL_WINDOW_LEN = WINDOW_FRAMES * 2 + 1   # center + left + right
+warnings.warn(
+    "syllable_generation.analysis.replications.syllable_traces.lib.config is deprecated; import from studies.behavior.replications_datta.syllable_traces.lib.config instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
-# Plotting Config
-BRAIN_REG_TO_COLOR = {
-    'VS': 'purple',
-    'DMS': 'forestgreen',
-    'DLS': 'C0'
-}
+_real = importlib.import_module("studies.behavior.replications_datta.syllable_traces.lib.config")
+sys.modules[__name__] = _real
 
-# Column Regex (Broad enough for zscore, zscore_datta, dff)
-SIGNAL_COL_REGEX = r"^signal_\d+_([a-z_]+)$"
+def __getattr__(name):
+    return getattr(_real, name)
 
-# Syllable Config
-# Assuming syllables are integers in a column named 'syllable'
+def __dir__():
+    return dir(_real)
+
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()

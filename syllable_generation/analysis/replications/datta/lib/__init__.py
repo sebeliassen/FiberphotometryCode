@@ -1,20 +1,28 @@
 """
-datta2 Library: Core logic for the Datta-style fiber photometry correlation analysis.
-This library provides modularized functions for signal preprocessing, kinematics calculation, 
-temporal binning, Pearson correlation analysis, and statistical shuffling.
+[DEPRECATED SHIM] syllable_generation/analysis/replications/datta/lib/__init__.py
+==================================================
+Relocated to: studies/behavior/replications_datta/datta/lib/__init__.py
 """
-from importlib import import_module
 
-__all__ = ["config", "features", "shuffling", "stats", "snippets"]
+import importlib
+import sys
+import warnings
 
+warnings.warn(
+    "syllable_generation.analysis.replications.datta.lib is deprecated; import from studies.behavior.replications_datta.datta.lib instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+_real = importlib.import_module("studies.behavior.replications_datta.datta.lib")
+sys.modules[__name__] = _real
 
 def __getattr__(name):
-    if name not in __all__:
-        raise AttributeError(name)
-    value = import_module(__name__ + "." + name)
-    globals()[name] = value
-    return value
-
+    return getattr(_real, name)
 
 def __dir__():
-    return sorted(set(globals()) | set(__all__))
+    return dir(_real)
+
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()

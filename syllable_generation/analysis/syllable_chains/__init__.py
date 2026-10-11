@@ -1,25 +1,28 @@
-#!/usr/bin/env python3
 """
-syllable_chains package
-=============================================================================
-Unified, cohort-agnostic framework for analyzing syllable chain dynamics:
-Inter-chain organization (repeats, continuations, transitions, initiations)
-and Intra-chain execution (consistency, completion, variations, pacing, context).
-=============================================================================
+[DEPRECATED SHIM] syllable_generation/analysis/syllable_chains/__init__.py
+==================================================
+Relocated to: studies/behavior/misc/syllable_generation/analysis/syllable_chains/__init__.py
 """
 
-from .core import ChainBout, ChainDefinition, ChainFinder, ChainOccurrence, CohortDataAdapter
-from .inter_chain import InterChainAnalyzer
-from .intra_chain import IntraChainAnalyzer
-from .visualizer import ChainVisualizer
+import importlib
+import sys
+import warnings
 
-__all__ = [
-    "ChainDefinition",
-    "ChainOccurrence",
-    "ChainBout",
-    "CohortDataAdapter",
-    "ChainFinder",
-    "InterChainAnalyzer",
-    "IntraChainAnalyzer",
-    "ChainVisualizer"
-]
+warnings.warn(
+    "syllable_generation.analysis.syllable_chains is deprecated; import from studies.behavior.misc.syllable_generation.analysis.syllable_chains instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+_real = importlib.import_module("studies.behavior.misc.syllable_generation.analysis.syllable_chains")
+sys.modules[__name__] = _real
+
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)
+
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()

@@ -1,51 +1,28 @@
-import logging
-import os
+"""
+[DEPRECATED SHIM] syllable_generation/analysis/deep_research_experiments/utils/loaders.py
+==================================================
+Relocated to: studies/behavior/deep_research_experiments/utils/loaders.py
+"""
+
+import importlib
 import sys
+import warnings
 
-# Setup Logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("DeepResearch_Loader")
+warnings.warn(
+    "syllable_generation.analysis.deep_research_experiments.utils.loaders is deprecated; import from studies.behavior.deep_research_experiments.utils.loaders instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
-# Add Panel 1z path to sys.path
-REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation"
-PANEL_1Z_LIB = os.path.join(REPO_ROOT, "analysis", "replications", "panel_1z", "lib")
+_real = importlib.import_module("studies.behavior.deep_research_experiments.utils.loaders")
+sys.modules[__name__] = _real
 
-if PANEL_1Z_LIB not in sys.path:
-    sys.path.append(PANEL_1Z_LIB)
+def __getattr__(name):
+    return getattr(_real, name)
 
-try:
-    import loader as base_loader
-    import processing as base_processing
-except ImportError as e:
-    logger.error(f"Failed to import base loaders from {PANEL_1Z_LIB}: {e}")
-    raise
+def __dir__():
+    return dir(_real)
 
-def load_sessions(project_name: str, apply_filter: bool = True):
-    """
-    Load sessions for 'ifdn' or 'amph' using robust panel_1z logic.
-    - Standardizes regions
-    - Enriches with kinematics & metadata
-    - Filters AMPH post-injection (5 min default)
-    """
-    project_name = project_name.lower()
-
-    # 1. Base Load
-    # base_loader automatically finds the latest pickle
-    logger.info(f"Loading latest pickle for project: {project_name}...")
-    sessions = base_loader.load_sessions(project=project_name)
-
-    # 2. Enrich (Metadata, Kinematics)
-    logger.info("Enriching sessions...")
-    sessions = base_processing.enrich_sessions(sessions)
-
-    # 3. Apply Signal Filtering (optional but recommended for slope analysis)
-    if apply_filter:
-        logger.info("Applying 1Hz Bessel filter to signals...")
-        sessions = base_processing.apply_filter_to_sessions(sessions)
-
-    # 4. Project-Specific Filtering
-    if project_name == 'amph':
-        logger.info("Applying AMPH Post-Injection Filter (5 min delay)...")
-        sessions = base_processing.filter_post_injection(sessions, delay_mins=5.0)
-
-    return sessions
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()
