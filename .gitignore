@@ -24,6 +24,7 @@ Thumbs.db
 # ------------------------------------------------------------------------------
 # 2. Large Binary Data, Checkpoints & Serialization Formats (NEVER GIT ADD DATA)
 # ------------------------------------------------------------------------------
+data/
 *.h5
 *.hdf5
 *.pkl
@@ -93,7 +94,12 @@ output/
 _backups/
 archive/*
 !archive/ARCHIVE_INDEX.md
+**/visualizations_*
 **/visualizations_*/
+**/output
+**/output/
+**/cache
+**/cache/
 **/grid_movies*/
 **/trajectories/
 
