@@ -8,8 +8,7 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
-from scipy.ndimage import uniform_filter1d
-from scipy.signal import find_peaks
+from fpcode.behavior.kinematics import detect_movement_initiations as _movement_initiations
 
 
 def detect_syllable_onsets(df: pd.DataFrame, syllable_col: str = "labels") -> np.ndarray:
@@ -44,30 +43,8 @@ def detect_movement_initiations(df: pd.DataFrame, fs: float, vel_col: str = "vel
     if vel_col not in df.columns:
         return np.array([], dtype=int)
 
-    v = df[vel_col].to_numpy(dtype=float)
-    if np.all(np.isnan(v)):
-        return np.array([], dtype=int)
-
-    # 1. Z-Score (Robust or Standard?)
-    # Legacy uses standard: (x - mean) / std
-    v_z = (v - np.nanmean(v)) / np.nanstd(v)
-
-    # 2. Smooth (1.67s)
-    # 1.67s * fs
-    win_samples = int(round(1.67 * fs))
-    win_samples = max(win_samples, 1)
-    v_smooth = uniform_filter1d(v_z, size=win_samples, mode="nearest")
-
-    # 3. Derivative
-    # np.diff loses length, use gradient or prepend
-    dv = np.diff(v_smooth, prepend=v_smooth[0])
-
-    # 4. Changepoint Score (Cube)
-    cp_score = dv ** 3
-
-    # 5. Peaks
-    peaks, props = find_peaks(cp_score, height=1, width=1, prominence=1)
-    return peaks.astype(int)
+    return _movement_initiations(df[vel_col].to_numpy(dtype=float), fs,
+                                derivative_scale="per_sample", missing="propagate")
 
 def extract_windows(df: pd.DataFrame,
                    onsets: np.ndarray,

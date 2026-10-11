@@ -29,19 +29,14 @@ import imageio
 import numpy as np
 import pandas as pd
 
+from fpcode.common.paths import get_repo_root
+from fpcode.tracking.camera_correspondence import top_to_bot_frame_continuous
+from fpcode.tracking.pair_matching import find_matched_pairs
+from fpcode.viz import v2 as vc
+
 SCRIPT_DIR = Path(__file__).resolve().parent
-EXP_DIR = SCRIPT_DIR.parent
-REPO_ROOT = EXP_DIR.parent.parent
-
-if str(EXP_DIR) not in sys.path:
-    sys.path.insert(0, str(EXP_DIR))
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
-
-import viz_v2_common as vc
-
-from core.camera_correspondence import top_to_bot_frame_continuous
-from core.pair_matching import find_matched_pairs
+REPO_ROOT = get_repo_root()
+EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 
 COHORT_DIR = EXP_DIR / "cohort_static_21kp_v2"
 MODEL_NAME = "model_21kp_static_50ar_300slds_seed101"
@@ -207,7 +202,7 @@ def main():
     # Provenance hashing cache
     hash_cache = vc.HashCache(out_dir / ".hash_cache.json")
     vc.verify_manifest_inputs(manifest, hash_cache)
-    code_files = [Path(__file__).resolve(), SCRIPT_DIR / "viz_v2_common.py"]
+    code_files = [Path(__file__).resolve(), Path(vc.__file__)]
 
     print("=" * 80)
     print("🎬 RENDERING REPAIRED V2 COHORT STATIC 21KP DUAL-VIEW GRID MOVIES")

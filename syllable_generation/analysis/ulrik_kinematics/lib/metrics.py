@@ -334,4 +334,32 @@ def get_fingerprint_data(sessions, top_n=5, min_instances: int = 0):
 
 
 # Re-export from split modules for backward compatibility
+_SPLIT_EXPORTS = {
+    "get_group_transition_matrix": "studies.behavior.kinematics_ulrik.lib.aggregation",
+    "get_group_usage": "studies.behavior.kinematics_ulrik.lib.aggregation",
+    "load_quantitative_map": "studies.behavior.kinematics_ulrik.lib.label_mapping",
+    "get_quantitative_group_usage": "studies.behavior.kinematics_ulrik.lib.label_mapping",
+    "load_manual_labels": "studies.behavior.kinematics_ulrik.lib.label_mapping",
+    "get_manual_group_usage": "studies.behavior.kinematics_ulrik.lib.label_mapping",
+    "get_manual_group_transition_matrix": "studies.behavior.kinematics_ulrik.lib.label_mapping",
+}
+__all__ = [
+    "calculate_kinematics", "get_syllable_instances", "get_syllable_usage",
+    "calculate_entropy_metrics", "calculate_duration_entropy", "analyze_session",
+    "calculate_advanced_stats", "get_fingerprint_data", *_SPLIT_EXPORTS,
+]
+
+
+def __getattr__(name):
+    from importlib import import_module
+
+    if name not in _SPLIT_EXPORTS:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    value = getattr(import_module(_SPLIT_EXPORTS[name]), name)
+    globals()[name] = value
+    return value
+
+
+def __dir__():
+    return sorted(set(globals()) | set(__all__))
 

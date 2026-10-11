@@ -72,7 +72,7 @@ def load_render_inputs(results_path, manifest_path=None):
 def plan_rendering(inputs, render_type, grid_size, syllables=None):
     """Validate artifact requirements and eligible bouts without loading a model."""
     from fpcode.behavior.bouts import extract_bouts
-    from fpcode.viz.grid_movies import exact_grid_layout
+    from fpcode.viz.grid_movies import DENSITY_SAMPLING_OPTIONS, exact_grid_layout
 
     if render_type not in {"grid_movies", "trajectories", "all"}:
         raise ValueError(f"Unsupported rendering type: {render_type}")
@@ -106,11 +106,13 @@ def plan_rendering(inputs, render_type, grid_size, syllables=None):
         minimum_duration = options.get("min_duration", 3)
         if pre < 0 or post < 0 or not isinstance(minimum_duration, int) or minimum_duration < 1:
             raise ValueError("Render context must be nonnegative and min_duration a positive integer")
-        frequencies = {key: 0 for key in requested}
-        counts = {key: 0 for key in requested}
+        # Density sampling fits its background across all eligible syllables,
+        # including those that will not be encoded for a subset request.
+        frequencies = {key: 0 for key in available}
+        counts = {key: 0 for key in available}
         total = sum(len(record["syllable"]) for record in results.values())
         for key, record in results.items():
-            for syllable in requested:
+            for syllable in available:
                 frequencies[syllable] += np.count_nonzero(record["syllable"] == syllable)
             for bout in extract_bouts(record["syllable"], min_length=minimum_duration):
                 if bout.syllable in counts and bout.onset >= pre and bout.onset < len(record["syllable"]) - post:
@@ -118,10 +120,31 @@ def plan_rendering(inputs, render_type, grid_size, syllables=None):
         minimum_frequency = float(options.get("min_frequency", .005))
         if not np.isfinite(minimum_frequency) or not 0 <= minimum_frequency <= 1:
             raise ValueError("min_frequency must be between zero and one")
-        missing = [key for key in requested if counts[key] < rows * cols or frequencies[key] / total < minimum_frequency]
+        eligible = {key: count for key, count in counts.items()
+                    if count >= rows * cols and frequencies[key] / total >= minimum_frequency}
+        missing = [key for key in requested if key not in eligible]
         if missing and syllables is not None:
             raise ValueError(f"Requested syllables lack enough eligible bouts for the grid: {missing}")
         requested = [key for key in requested if key not in missing]
+        if requested and inputs["sampling_mode"] == "density":
+            neighbors = DENSITY_SAMPLING_OPTIONS["n_neighbors"]
+            components = DENSITY_SAMPLING_OPTIONS["pca_dim"]
+            if rows * cols > neighbors:
+                raise ValueError(f"Density sampling supports at most {neighbors} grid tiles with the configured neighbor policy")
+            too_small = {key: count for key, count in eligible.items() if count < neighbors}
+            if too_small:
+                raise ValueError(f"Density sampling requires at least {neighbors} eligible bouts for every syllable "
+                                 f"in its reference population; insufficient counts: {too_small}")
+            feature_shapes = {np.shape(value)[1:] for value in inputs["coordinates"].values()}
+            if options.get("bodyparts") is not None and options.get("use_bodyparts") is not None:
+                feature_shapes = {(len(options["use_bodyparts"]), shape[-1]) for shape in feature_shapes}
+            # The installed density sampler uses a 5-before/15-after trajectory,
+            # independently of the movie's displayed context.
+            features = min(20 * int(np.prod(shape)) for shape in feature_shapes)
+            samples = min(sum(eligible.values()), DENSITY_SAMPLING_OPTIONS["pca_samples"])
+            if len(feature_shapes) != 1 or min(features, samples) < components:
+                raise ValueError(f"Density PCA requires consistent trajectory shapes with at least {components} "
+                                 "samples and features")
     if not requested:
         raise ValueError("No syllables have eligible bouts for the requested rendering")
     return rows, cols, requested

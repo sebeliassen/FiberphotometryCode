@@ -28,7 +28,6 @@ with all repairs applied from the Codex audit:
 import argparse
 import os
 import pickle
-import sys
 import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -40,26 +39,33 @@ from sklearn.decomposition import PCA
 from sklearn.metrics import pairwise_distances
 from sklearn.neighbors import NearestNeighbors
 
+from fpcode.common.paths import get_repo_root
+from fpcode.viz.context import LandmarkGroups, SelectionInputs
+from fpcode.viz.media import load_fused_tracks
+from fpcode.viz.provenance import source_input_hashes
+from fpcode.viz.selection.eligibility import summarize_window_qc
+from fpcode.tracking.pair_matching import find_matched_pairs
+from fpcode.viz import v2 as vc
+
 SCRIPT_DIR = Path(__file__).resolve().parent
-EXP_DIR = SCRIPT_DIR.parent
-REPO_ROOT = EXP_DIR.parent.parent
-
-if str(EXP_DIR) not in sys.path:
-    sys.path.insert(0, str(EXP_DIR))
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
-
-import viz_v2_common as vc
-from jax_moseq.utils import unbatch
-
-from core.pair_matching import find_matched_pairs
+REPO_ROOT = get_repo_root()
+EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 
 COHORT_DIR = EXP_DIR / "cohort_static_21kp_v2"
 MODEL_DIR = COHORT_DIR / "model_21kp_static_50ar_300slds_seed101"
 RESULTS_PATH = MODEL_DIR / "results.h5"
+CONFIG_PATH = COHORT_DIR / "config.yml"
 VFI_PATH = COHORT_DIR / "video_frame_indexes.npz"
 PREPROCESSED_PATH = COHORT_DIR / "preprocessed_data.pkl"
 FUSED_DIR = EXP_DIR / "data/cohort_fused_static_21kp_v2"
+QC_GROUPS = LandmarkGroups(
+    dorsal=vc.DORSAL_IDXS, paws=vc.PAW_IDXS, paw_names=vc.PAW_BODYPARTS,
+    front_paws=vc.FRONT_PAW_IDXS, hind_paws=vc.HIND_PAW_IDXS,
+)
+SELECTION_INPUTS = SelectionInputs(
+    results=RESULTS_PATH, config=CONFIG_PATH,
+    video_frame_indexes=VFI_PATH, preprocessed=PREPROCESSED_PATH,
+)
 
 
 def main():
@@ -88,7 +94,7 @@ def main():
                         help="Bypass fused HDF5 QC checks (for rapid synthetic debugging only)")
     args = parser.parse_args()
 
-    with open(vc.CONFIG_PATH) as f:
+    with open(CONFIG_PATH) as f:
         cohort_config = yaml.safe_load(f)
     configured_fps = float(cohort_config["fps"])
     if args.fps is not None and not np.isclose(args.fps, configured_fps):
@@ -126,6 +132,8 @@ def main():
     pairs_by_sid = {p["sid"]: p for p in pairs}
 
     # 2. Load unbatched coordinates Y
+    from jax_moseq.utils import unbatch
+
     print("[2/6] Loading and unbatching preprocessed 21kp coordinates...", flush=True)
     t0 = time.time()
     with open(PREPROCESSED_PATH, "rb") as pf:
@@ -146,7 +154,7 @@ def main():
         try:
             # Only one base session is needed while indexing its consecutive segments.
             fused_cache.clear()
-            xy, conf = vc.load_fused_tracks(base_sid, FUSED_DIR)
+            xy, conf = load_fused_tracks(FUSED_DIR / f"{base_sid}_tandem_21kp.h5", cohort_config["use_bodyparts"])
             fused_cache[base_sid] = (xy, conf)
             return xy, conf
         except Exception as exc:
@@ -237,9 +245,9 @@ def main():
                             valid_score = vc.valid_track_mask(
                                 xy_fused[score_top_frames], conf_fused[score_top_frames], qc_cfg.conf_threshold
                             )
-                            summary_score = vc.summarize_window_qc(valid_score)
+                            summary_score = summarize_window_qc(valid_score, groups=QC_GROUPS)
                             valid_active = vc.valid_track_mask(xy_fused[active_top_frames], conf_fused[active_top_frames], qc_cfg.conf_threshold)
-                            summary_active = vc.summarize_window_qc(valid_active)
+                            summary_active = summarize_window_qc(valid_active, groups=QC_GROUPS)
                             ok_score, reasons_score = vc.qc_decision(summary_score, qc_cfg, fps)
                             ok_active, reasons_active = vc.qc_decision(summary_active, qc_cfg, fps)
                             is_qc_ok = ok_score and ok_active
@@ -248,8 +256,8 @@ def main():
                             summaries = {}
                             for threshold in (0.3, 0.5, 0.7):
                                 summaries[threshold] = (
-                                    vc.summarize_window_qc(vc.valid_track_mask(xy_fused[score_top_frames], conf_fused[score_top_frames], threshold)),
-                                    vc.summarize_window_qc(vc.valid_track_mask(xy_fused[active_top_frames], conf_fused[active_top_frames], threshold)))
+                                    summarize_window_qc(vc.valid_track_mask(xy_fused[score_top_frames], conf_fused[score_top_frames], threshold), groups=QC_GROUPS),
+                                    summarize_window_qc(vc.valid_track_mask(xy_fused[active_top_frames], conf_fused[active_top_frames], threshold), groups=QC_GROUPS))
                             counts = sensitivity_counts.setdefault(s_id, {f"conf={th:.2f},fraction={fr:.2f}":0 for th,fr,_ in sensitivity_cfgs})
                             for th, fr, cfg in sensitivity_cfgs:
                                 if context_ok and all(vc.qc_decision(sm, cfg, fps)[0] for sm in summaries[th]):
@@ -543,8 +551,8 @@ def main():
 
     # Bind the selection to the actual arrays and save the PCA used for diagnostics.
     hash_cache = vc.HashCache(out_dir / ".hash_cache.json")
-    manifest["input_hashes"] = vc.source_input_hashes(hash_cache)
-    manifest["selection_code_sha256"] = vc.hash_files([Path(__file__).resolve(),SCRIPT_DIR/"viz_v2_common.py"])
+    manifest["input_hashes"] = source_input_hashes(hash_cache, inputs=SELECTION_INPUTS)
+    manifest["selection_code_sha256"] = vc.hash_files([Path(__file__).resolve(),Path(vc.__file__)])
     pca_path = out_dir / "density_pca.npz"
     with pca_path.with_name(pca_path.name+".tmp").open("wb") as pca_file:
         np.savez_compressed(pca_file, components=pca.components_, mean=pca.mean_,

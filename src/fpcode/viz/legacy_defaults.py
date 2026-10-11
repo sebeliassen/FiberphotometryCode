@@ -146,7 +146,7 @@ _TRACKING_DIR = Path(__file__).resolve().parents[1] / "tracking"
 CALIBRATION_FILES = [
     _TRACKING_DIR / name for name in (
         "camera_correspondence.py", "pair_matching.py", "clock_sync.py",
-        "static_fusion.py", "epoch_arena_transforms.json",
+        "static_fusion.py", "geometry.py", "quality.py", "epoch_arena_transforms.json",
         "static_arena_transforms.json", "ttl_cohort_offsets.json",
     )
 ]

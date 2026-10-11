@@ -7,18 +7,16 @@
 # %%
 import pickle
 import sys
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
+from fpcode.common.paths import get_repo_root
+
 # Add project root to path
-try:
-    project_root = Path(__file__).resolve().parents[2]
-except NameError:
-    project_root = Path("../../").resolve()
+project_root = get_repo_root()
 
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))

@@ -1,23 +1,21 @@
 import pickle
 import sys
-from pathlib import Path
 
 import joblib
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
+from fpcode.common.paths import get_repo_root
+
 # Add project root to path
-try:
-    project_root = Path(__file__).resolve().parents[2]
-except NameError:
-    project_root = Path("../../").resolve()
+project_root = get_repo_root()
 
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
 from monoamine_interactions.analysis.phase_1_causality import varlingam
-from monoamine_interactions.notebooks.utils.photometry import motion_correct_biexponential
+from fpcode.photometry.session_signals import prepare_region_traces, legacy_nearest_window
 
 # %%
 # CONFIGURATION
@@ -110,13 +108,13 @@ for event in events_to_process:
         if '470' not in s.photometry: continue
 
         df_470 = s.photometry['470']
-        df_415 = s.photometry['415']
         ts_array = df_470['SystemTimestamp'].values
         t_start_sys = ts_array[0]
         target_ts_event = t_start_sys + (t_event_min * 60)
 
-        start_idx = np.abs(ts_array - (target_ts_event - PRE_SEC)).argmin()
-        end_idx = np.abs(ts_array - (target_ts_event + POST_SEC)).argmin()
+        start_idx, end_idx = legacy_nearest_window(
+            ts_array, target_ts_event - PRE_SEC, target_ts_event + POST_SEC
+        )
         if end_idx <= start_idx: continue
 
         curr_len = end_idx - start_idx
@@ -126,16 +124,10 @@ for event in events_to_process:
             if end_idx > len(ts_array): continue
 
         genotype = s.metadata.get('genotype', 'Unknown')
-        sm = s.metadata.get("signal_meta", {})
-        region_map = {k: v.get("region") for k, v in sm.items() if v.get("region")}
-
-        dff_dict = {}
-        for r in region_map.values():
-            try:
-                col = next((k for k, v in region_map.items() if v == r))
-                full_dff = motion_correct_biexponential(df_470[col].values, df_415[col].values)
-                dff_dict[r] = full_dff
-            except: pass
+        prepared = prepare_region_traces(s, normalization="none", errors="skip")
+        dff_dict = prepared.traces
+        if prepared.failures:
+            print(f"Signal preparation skipped regions: {prepared.failures}")
 
         valid_regs = list(dff_dict.keys())
         if len(valid_regs) < 2: continue

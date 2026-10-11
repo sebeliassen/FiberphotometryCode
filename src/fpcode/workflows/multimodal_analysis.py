@@ -26,6 +26,12 @@ class MultimodalSession:
         valid = frozen_array(self.label_valid, dtype=bool)
         if labels.shape != (len(self.time),) or valid.shape != labels.shape:
             raise ValueError("labels and validity must match the target timeline")
+        if not np.issubdtype(labels.dtype, np.integer) or np.any(valid & (labels < 0)):
+            raise ValueError("valid labels must be nonnegative integers")
+        for name, series in (("signals", self.signals), ("pose", self.pose)):
+            if series is not None and (series.time.unit != self.time.unit or series.time.clock != self.time.clock
+                                       or not np.array_equal(series.time.values, self.time.values)):
+                raise ValueError(f"{name} must use the session clock and timeline")
         object.__setattr__(self, "labels", labels)
         object.__setattr__(self, "label_valid", valid)
 

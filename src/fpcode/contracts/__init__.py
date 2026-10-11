@@ -7,4 +7,5 @@ from .pose import PoseSeries
 from .sessions import SessionKey
 from .artifacts import ArtifactReference, ArtifactSet
 
-__all__ = ["TimeAxis", "SignalMetadata", "SignalSeries", "PoseSeries", "EventInterval", "Bout"]
+__all__ = ["TimeAxis", "SignalMetadata", "SignalSeries", "PoseSeries", "EventInterval", "Bout",
+           "SessionKey", "ArtifactReference", "ArtifactSet"]

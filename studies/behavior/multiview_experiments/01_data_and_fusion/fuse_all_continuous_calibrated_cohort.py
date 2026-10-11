@@ -21,8 +21,9 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 import numpy as np
+from fpcode.common.paths import get_repo_root
 
-REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
+REPO_ROOT = get_repo_root()
 EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -32,6 +33,7 @@ if str(EXP_DIR) not in sys.path:
 from audit_cohort_correlations import find_matched_pairs
 
 from core.fusion_engine import fuse_single_pair
+from fpcode.adapters.multiview_compatibility import TTL_CACHE_PATH
 
 OUT_DIR = EXP_DIR / "fused_h5_continuous_calibrated"
 
@@ -43,6 +45,7 @@ def fuse_worker(pair_info: dict, overwrite: bool = False) -> dict:
         confidence_gating=True,
         truncate_aborted_tail=True,
         overwrite=overwrite,
+        ttl_cache_path=TTL_CACHE_PATH,
     )
 
 def main():

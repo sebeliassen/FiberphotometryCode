@@ -11,6 +11,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from fpcode.tracking.geometry import rot2d as _rotation_matrices
 
 # Cohort specification: 4 Monomer + 4 PFF across 16w and 24w
 TARGET_SESSIONS = [
@@ -50,15 +51,7 @@ BOT_RENAME_MAP = {
 }
 
 def rot2d(angle: np.ndarray) -> np.ndarray:
-    c = np.cos(angle)
-    s = np.sin(angle)
-    # Shape: (N, 2, 2)
-    R = np.empty((len(angle), 2, 2), dtype=np.float32)
-    R[:, 0, 0] = c
-    R[:, 0, 1] = -s
-    R[:, 1, 0] = s
-    R[:, 1, 1] = c
-    return R
+    return _rotation_matrices(angle, dtype=np.float32)
 
 def fuse_session(ts: str, arena: str, chamber: str, condition: str, genotype: str, animal_id: str):
     print(f"\nProcessing {ts}_{chamber} ({condition}, {genotype}, Animal {animal_id})...")

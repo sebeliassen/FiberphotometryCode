@@ -34,9 +34,15 @@ def run_fusion(args):
         cfg = dict(source)
         if getattr(args, "strict", None) is not None:
             cfg["strict_calibration"] = args.strict
+        for name in ("top_dir", "bot_dir"):
+            if not isinstance(cfg.get(name), str) or not cfg[name].strip():
+                raise ValueError(f"Fusion configuration requires an explicit {name}")
+        for name in ("ttl_cache_path", "transform_path"):
+            if name in cfg:
+                cfg[name] = str(resolve_data_path(cfg[name]))
         _, options = fusion_options(cfg)
-        top = resolve_data_path(cfg.get("top_dir", "karen_project/h5_files"))
-        bottom = resolve_data_path(cfg.get("bot_dir", "karen_project/botcam_h5_files"))
+        top = resolve_data_path(cfg["top_dir"])
+        bottom = resolve_data_path(cfg["bot_dir"])
         output_dir = resolve_path(cfg.get("output_dir", "data/fused"))
         if not args.dry_run:
             record = RunRecord(pipeline="fuse", output_dir=output_dir,

@@ -1,16 +1,13 @@
 import copy
 import os
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
-from analysis.ulrik_kinematics import config
-from analysis.ulrik_kinematics.lib import metrics
-from scipy.stats import mannwhitneyu
+from fpcode.behavior.bouts import run_boundaries
+from fpcode.common.paths import get_repo_root
 
 
-def get_label_mapping(sessions, project="AMPH", style="standard") -> dict:
+def get_label_mapping(sessions, project="AMPH", style="standard", *, manual_labels_path=None) -> dict:
     """
     Returns a dict mapping syllable ID (int) to a string label.
     Styles: 'raw', 'standard', 'alphabet'
@@ -31,8 +28,11 @@ def get_label_mapping(sessions, project="AMPH", style="standard") -> dict:
                 mapping[syll] = letters[i]
         return mapping
 
-    csv_path = os.path.join(os.path.dirname(__file__), "../manual_labels.csv")
-    raw_mappings = metrics.load_manual_labels(csv_path)
+    from .label_mapping import load_manual_labels
+
+    csv_path = (manual_labels_path if manual_labels_path is not None else
+                get_repo_root() / "syllable_generation/analysis/ulrik_kinematics/manual_labels.csv")
+    raw_mappings = load_manual_labels(csv_path)
     if project not in raw_mappings:
         print(f"Warning: Project {project} not found in manual labels.")
         return {}
@@ -78,8 +78,8 @@ def extract_ngrams(session, n: int = 3, mapping: dict = None) -> pd.Series:
     semantic_seq = np.array(semantic_seq)
 
     # Run-length encode (collapse identical adjacent labels)
-    mask = np.concatenate(([True], semantic_seq[1:] != semantic_seq[:-1]))
-    transitions = semantic_seq[mask]
+    starts, _ = run_boundaries(semantic_seq)
+    transitions = semantic_seq[starts]
 
     if len(transitions) < n: return pd.Series()
 
@@ -120,6 +120,7 @@ def get_top_motifs(sessions, n: int = 3, top_k: int = 10, mapping: dict = None) 
 
 def calculate_sequence_entropy(sessions) -> float:
     """Wrapper to calculate stationary entropy via existing metrics"""
+    from syllable_generation.analysis.ulrik_kinematics.lib import metrics
     # Assuming run_analysis path logic allows this
 
     h_sum = 0
@@ -134,6 +135,10 @@ def calculate_sequence_entropy(sessions) -> float:
 
 
 def run_discovery(sessions, project_name="AMPH", style="standard", plot_mode="all"):
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from scipy.stats import mannwhitneyu
+
     print(f"\n--- Running Motif Discovery ({style} style, mode={plot_mode}) ---")
     base_project = project_name.split("_")[0]  # Strip phase suffix (e.g. AMPH_pre -> AMPH)
     mapping = get_label_mapping(sessions, project=base_project, style=style)
@@ -408,6 +413,7 @@ def verify_motifs_module(sessions):
     Paired Verification Check: True Data vs Sequence Shuffle Perturbation.
     Prints diagnostic tables to standard output.
     """
+    from syllable_generation.analysis.ulrik_kinematics import config
     print("\n" + "="*50)
     print(" MODULE VERIFICATION: MOTIFS & SHUFFLE PERTURBATION")
     print("="*50)

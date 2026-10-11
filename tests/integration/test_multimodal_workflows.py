@@ -7,10 +7,10 @@ from fpcode.adapters.acquisition import read_photometry_csv
 from fpcode.adapters.dlc import pose_from_dlc_table
 from fpcode.adapters.kpms_results import read_kpms_results
 from fpcode.alignment.clocks import ClockTransform
-from fpcode.contracts import TimeAxis
+from fpcode.contracts import SignalMetadata, SignalSeries, TimeAxis
 from fpcode.contracts.sessions import SessionKey
 from fpcode.tracking.registration import fit_affine
-from fpcode.workflows.multimodal_analysis import assemble_multimodal_session
+from fpcode.workflows.multimodal_analysis import MultimodalSession, assemble_multimodal_session
 
 
 def test_actual_small_csv_hdf_and_dlc_modalities_keep_gaps_and_values(tmp_path):
@@ -55,3 +55,20 @@ def test_affine_registration_has_independent_expected_coordinates():
     assert registration.residual_rms < 1e-12
     with pytest.raises(ValueError, match="collinear"):
         fit_affine([[0, 0], [1, 0], [2, 0]], [[0, 0], [1, 0], [2, 0]])
+
+
+@pytest.mark.parametrize("axis", [TimeAxis([0, 1], "s", "other"), TimeAxis([0, 1], "ms", "video"),
+                                 TimeAxis([1, 2], "s", "video"), TimeAxis([0], "s", "video")])
+def test_direct_multimodal_contract_rejects_incoherent_signal_timelines(axis):
+    signal = SignalSeries(axis, np.arange(len(axis)), (SignalMetadata("a"),))
+    with pytest.raises(ValueError, match="signals must use the session clock and timeline"):
+        MultimodalSession(SessionKey("recording"), TimeAxis([0, 1], "s", "video"), signal,
+                          np.array([0, 1]), np.array([True, True]))
+
+
+@pytest.mark.parametrize("labels,valid", [([0., 1.], [True, True]), ([0, -1], [True, True])])
+def test_direct_multimodal_contract_rejects_invalid_label_claims(labels, valid):
+    axis = TimeAxis([0, 1], "s", "video")
+    signal = SignalSeries(axis, [3, 7], (SignalMetadata("a"),))
+    with pytest.raises(ValueError, match="nonnegative integers"):
+        MultimodalSession(SessionKey("recording"), axis, signal, np.array(labels), np.array(valid))

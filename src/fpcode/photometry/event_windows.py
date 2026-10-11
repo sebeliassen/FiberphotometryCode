@@ -7,7 +7,7 @@ import numpy as np
 
 from fpcode.alignment.resampling import align_signal
 from fpcode.contracts import EventInterval, SignalMetadata, SignalSeries, TimeAxis
-from fpcode.contracts.timelines import frozen_array
+from fpcode.contracts.timelines import frozen_array, _shift_coordinates
 
 
 @dataclass(frozen=True)
@@ -47,7 +47,7 @@ def extract_event_windows(signal, events, offsets, *, method="exact", tolerance=
     for index, event in enumerate(events):
         if event.unit != signal.time.unit or event.clock != signal.time.clock:
             raise ValueError("event and signal time units and clock must match")
-        axis = TimeAxis(event.start + offsets, signal.time.unit, signal.time.clock)
+        axis = TimeAxis(_shift_coordinates(offsets, event.start), signal.time.unit, signal.time.clock)
         sampled = align_signal(signal, axis, method=method, tolerance=tolerance, max_gap=max_gap)
         values[index] = sampled.values[:, None] if sampled.values.ndim == 1 else sampled.values
         validity[index] = sampled.valid[:, None] if sampled.valid.ndim == 1 else sampled.valid

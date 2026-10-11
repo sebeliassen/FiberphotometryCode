@@ -12,7 +12,6 @@ Renders publication-grade 3x4 dual-view Random Grid Movies for Cohort Static 21k
 import argparse
 import json
 import os
-import sys
 from pathlib import Path
 
 import cv2
@@ -21,17 +20,14 @@ import imageio.v2 as imageio
 import numpy as np
 import pandas as pd
 
+from fpcode.common.paths import get_repo_root
+from fpcode.tracking.camera_correspondence import top_to_bot_frame_continuous
+from fpcode.tracking.pair_matching import find_matched_pairs
+from fpcode.viz import v2 as vc
+
 SCRIPT_DIR = Path(__file__).resolve().parent
-EXP_DIR = SCRIPT_DIR.parent
-if str(EXP_DIR) not in sys.path:
-    sys.path.insert(0, str(EXP_DIR))
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
-
-import viz_v2_common as vc
-
-from core.camera_correspondence import top_to_bot_frame_continuous
-from core.pair_matching import find_matched_pairs
+REPO_ROOT = get_repo_root()
+EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 
 COHORT_DIR = EXP_DIR / "cohort_static_21kp_v2"
 MODEL_NAME = "model_21kp_static_50ar_300slds_seed101"

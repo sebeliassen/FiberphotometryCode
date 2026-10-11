@@ -4,6 +4,39 @@ from typing import Dict, List, Sequence
 import numpy as np
 from fpcode.contracts import Bout
 
+
+def run_boundaries(values, *, frame_indices=None):
+    """Return half-open row bounds for equal adjacent values.
+
+    Missing values remain in the stream: callers may replace them with a gap
+    sentinel, but must not remove them before finding transitions. By default,
+    adjacency means neighboring rows. Supplying increasing integer original
+    frame indices also splits runs at dropped frames; bounds still index rows.
+    """
+    values = np.asarray(values)
+    if values.ndim != 1:
+        raise ValueError("run values must be one-dimensional")
+    contiguous = _contiguous_rows(len(values), frame_indices)
+    if not len(values):
+        return np.array([], dtype=int), np.array([], dtype=int)
+    changes = (values[1:] != values[:-1]) | ~contiguous
+    boundaries = np.flatnonzero(np.r_[True, changes, True])
+    return boundaries[:-1], boundaries[1:]
+
+
+def _contiguous_rows(length, frame_indices):
+    if frame_indices is None:
+        return np.ones(max(0, length - 1), dtype=bool)
+    frames = np.asarray(frame_indices)
+    if frames.ndim != 1 or len(frames) != length or frames.dtype.kind not in "iu":
+        raise ValueError("original frame indices must be matching one-dimensional integers")
+    if np.any(frames[1:] <= frames[:-1]):
+        raise ValueError("original frame indices must increase strictly")
+    # A preceding frame cannot be the dtype maximum if a larger next frame
+    # exists, so this addition cannot wrap at the integer range boundary.
+    return frames[1:] == frames[:-1] + 1
+
+
 def extract_bouts(syllable_seq: Sequence[int], min_length: int = 1) -> List[Bout]:
     """
     Computes run-length encoding of syllable bouts with onset, offset, duration, and syllable ID.
@@ -13,9 +46,7 @@ def extract_bouts(syllable_seq: Sequence[int], min_length: int = 1) -> List[Bout
     if len(seq) == 0:
         return []
 
-    boundaries = np.flatnonzero(np.r_[True, seq[1:] != seq[:-1], True])
-    starts = boundaries[:-1]
-    ends = boundaries[1:]
+    starts, ends = run_boundaries(seq)
     sylls = seq[starts]
 
     bouts = []
@@ -33,4 +64,4 @@ def extract_syllable_runs(syllable_seq: Sequence[int], min_length: int = 1) -> L
 
 
 
-__all__ = ["extract_bouts", "extract_syllable_runs"]
+__all__ = ["run_boundaries", "extract_bouts", "extract_syllable_runs"]

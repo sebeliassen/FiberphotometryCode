@@ -18,52 +18,54 @@ import json
 import re
 from pathlib import Path
 from typing import Dict, Optional, Tuple
+from collections.abc import Mapping
 
 import numpy as np
 import pandas as pd
 
-try:
-    from ..common.paths import resolve_data_path
-except ImportError:
-
-    def resolve_data_path(p: str) -> Path:
-        return Path(p)
-
-
-HDD_DIR = (
-    Path("/mnt/hdd/karen_project") if Path("/mnt/hdd/karen_project").exists() else resolve_data_path("karen_project")
+from fpcode.adapters.multiview_compatibility import (
+    ARENA_TO_BOTCAM, ARENA_TO_CHAMBER, TTL_CACHE_PATH,
+    legacy_generated_ttl_path, legacy_timestamp_root,
 )
-CACHE_FILE = Path(__file__).resolve().parent / "ttl_cohort_offsets.json"
+from fpcode.common.cache_manifest import atomic_path
+
+CACHE_FILE = TTL_CACHE_PATH  # historical public name, read-only compatibility resource
 
 _OFFSET_CACHE: Optional[Dict[str, dict]] = None
 
-ARENA_TO_BOTCAM = {
-    "Arena1": "BotCam1",
-    "Arena2": "BotCam2",
-    "Arena3": "BotCam3",
-    "Arena4": "BotCam4",
-}
+def load_ttl_cache(cache_path=None, *, cache=None) -> Dict[str, dict]:
+    """Read supplied offsets or a JSON file; never discover or rebuild a cache.
 
-
-def load_ttl_cache() -> Dict[str, dict]:
-    """Loads the cached TTL offsets dictionary."""
+    Omitting both arguments selects the packaged historical cohort resource.
+    A missing explicit file is an error; callers can deliberately run the builder.
+    """
+    if cache is not None:
+        if cache_path is not None:
+            raise ValueError("Supply cache or cache_path, not both")
+        if not isinstance(cache, Mapping):
+            raise TypeError("TTL cache must be a session-to-offset mapping")
+        return cache
     global _OFFSET_CACHE
-    if _OFFSET_CACHE is not None:
+    if cache_path is None and _OFFSET_CACHE is not None:
         return _OFFSET_CACHE
-    if CACHE_FILE.exists():
-        with open(CACHE_FILE, "r") as f:
-            _OFFSET_CACHE = json.load(f)
-            return _OFFSET_CACHE
-    # If not built yet, build it
-    _OFFSET_CACHE = build_and_save_ttl_cache()
-    return _OFFSET_CACHE
+    path = Path(cache_path) if cache_path is not None else CACHE_FILE
+    with path.open() as handle:
+        data = json.load(handle)
+    if not isinstance(data, dict) or any(not isinstance(value, dict) for value in data.values()):
+        raise ValueError(f"TTL cache must contain session-to-offset objects: {path}")
+    if cache_path is None:
+        _OFFSET_CACHE = data
+    return data
 
 
-def find_camera_timestamp_files(ts: str, arena: str) -> Tuple[Optional[Path], Optional[Path]]:
-    """Locates the TopCam and BotCam timestamp CSV files for a given timestamp and arena."""
-    botcam_name = ARENA_TO_BOTCAM.get(arena)
-    top_candidates = list(HDD_DIR.glob(f"**/*CenterTopCam_AllTimestampsCombined*{ts}*.csv"))
-    bot_candidates = list(HDD_DIR.glob(f"**/*{botcam_name}_AllTimestampsCombined*{ts}*.csv")) if botcam_name else []
+def find_camera_timestamp_files(ts: str, arena: str, *, source_root=None,
+                                arena_to_botcam=None) -> Tuple[Optional[Path], Optional[Path]]:
+    """Explicit discovery operation; no normal mapping/cache read calls this."""
+    root = Path(source_root) if source_root is not None else legacy_timestamp_root()
+    names = ARENA_TO_BOTCAM if arena_to_botcam is None else arena_to_botcam
+    botcam_name = names.get(arena)
+    top_candidates = sorted(root.glob(f"**/*CenterTopCam_AllTimestampsCombined*{ts}*.csv"))
+    bot_candidates = sorted(root.glob(f"**/*{botcam_name}_AllTimestampsCombined*{ts}*.csv")) if botcam_name else []
 
     top_p = top_candidates[0] if top_candidates else None
     bot_p = bot_candidates[0] if bot_candidates else None
@@ -101,10 +103,32 @@ def compute_pair_ttl_offset(top_csv: Path, bot_csv: Path) -> dict:
     }
 
 
-def build_and_save_ttl_cache(out_path: Optional[Path] = None) -> Dict[str, dict]:
-    """Scans all cohort timestamps and builds the master TTL offset cache."""
-    target_path = out_path or CACHE_FILE
-    all_ts_files = list(HDD_DIR.glob("**/*AllTimestampsCombined*.csv"))
+def build_and_save_ttl_cache(out_path: Optional[Path] = None, *, timestamp_pairs=None,
+                             source_root=None, arena_to_botcam=None,
+                             arena_to_chamber=None) -> Dict[str, dict]:
+    """Deliberately build offsets from supplied pairs, or an explicit discovery root.
+
+    ``timestamp_pairs`` maps session IDs to ``top_csv``/``bot_csv`` metadata.
+    The historical no-argument discovery operation remains available, but its
+    output is under ``outputs/multiview_compatibility`` rather than package code.
+    Reading that generated file requires an explicit ``cache_path``.
+    """
+    target_path = Path(out_path) if out_path is not None else legacy_generated_ttl_path()
+    if timestamp_pairs is not None:
+        if source_root is not None:
+            raise ValueError("Supply timestamp_pairs or source_root, not both")
+        cache_data = {}
+        for sid, info in timestamp_pairs.items():
+            res = compute_pair_ttl_offset(Path(info["top_csv"]), Path(info["bot_csv"]))
+            cache_data[sid] = {**info, **res, "top_csv": str(info["top_csv"]), "bot_csv": str(info["bot_csv"])}
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        with atomic_path(target_path) as temporary:
+            temporary.write_text(json.dumps(cache_data, indent=2))
+        return cache_data
+    root = Path(source_root) if source_root is not None else legacy_timestamp_root()
+    cameras = ARENA_TO_BOTCAM if arena_to_botcam is None else arena_to_botcam
+    chambers = ARENA_TO_CHAMBER if arena_to_chamber is None else arena_to_chamber
+    all_ts_files = sorted(root.glob("**/*AllTimestampsCombined*.csv"))
 
     ts_map: Dict[str, dict] = {}
     for p in all_ts_files:
@@ -115,16 +139,16 @@ def build_and_save_ttl_cache(out_path: Optional[Path] = None) -> Dict[str, dict]
         d = ts_map.setdefault(ts, {})
         if "CenterTopCam" in p.name:
             d["top"] = p
-        for a_i in range(1, 5):
-            if f"BotCam{a_i}" in p.name:
-                d[f"Arena{a_i}"] = p
+        for arena, camera in cameras.items():
+            if camera in p.name:
+                d[arena] = p
 
     cache_data: Dict[str, dict] = {}
     for ts, d in ts_map.items():
         if "top" not in d:
             continue
         top_csv = d["top"]
-        for arena_name, chamber_name in [("Arena1", "top_left"), ("Arena2", "bottom_left"), ("Arena3", "bottom_right")]:
+        for arena_name, chamber_name in chambers.items():
             if arena_name in d:
                 bot_csv = d[arena_name]
                 try:
@@ -140,24 +164,46 @@ def build_and_save_ttl_cache(out_path: Optional[Path] = None) -> Dict[str, dict]
                 except Exception as e:
                     print(f"[WARN] Error computing TTL offset for {ts} {arena_name}: {e}")
 
-    with open(target_path, "w") as f:
-        json.dump(cache_data, f, indent=2)
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    with atomic_path(target_path) as temporary:
+        temporary.write_text(json.dumps(cache_data, indent=2))
     print(f"✅ Saved TTL offset cache to {target_path} ({len(cache_data)} keys)")
     return cache_data
 
 
-def get_session_ttl_offset(sid: str) -> dict:
-    """Retrieves the TTL offset metadata for a session ID."""
-    cache = load_ttl_cache()
-    clean_sid = sid.replace("_tandem_23kp", "")
+def _validate_offset_info(info, sid):
+    if not isinstance(info, Mapping) or not info or not any(
+        key in info for key in ("top_csv", "bot_csv", "bot0_in_top", "top0_in_bot")
+    ):
+        raise ValueError(f"Malformed TTL offset record for session {sid}")
+    return info
+
+
+def get_session_ttl_offset(sid: str, *, cache=None, cache_path=None, offset_info=None, lookup=None) -> dict:
+    """Resolve one supplied source; absent explicit sessions raise ``KeyError``.
+
+    The historical call without source arguments retains its missing-session
+    zero-offset policy. Generic inputs never silently inherit that policy.
+    """
+    source_count = sum(value is not None for value in (cache, cache_path, offset_info, lookup))
+    if source_count > 1:
+        raise ValueError("Provide one TTL cache, cache path, offset record, or lookup")
+    if offset_info is not None:
+        return _validate_offset_info(offset_info, sid)
+    if lookup is not None:
+        return _validate_offset_info(lookup(sid), sid)
+    cache = load_ttl_cache(cache_path, cache=cache)
+    clean_sid = re.sub(r"_seg\d+", "", sid).replace("_tandem_23kp", "")
     if sid in cache:
-        return cache[sid]
+        return _validate_offset_info(cache[sid], sid) if source_count else cache[sid]
     if clean_sid in cache:
-        return cache[clean_sid]
+        return _validate_offset_info(cache[clean_sid], sid) if source_count else cache[clean_sid]
+    if source_count:
+        raise KeyError(f"Session {sid} is absent from the supplied TTL cache")
     return {"bot0_in_top": 0, "top0_in_bot": 0, "dt_start_sec": 0.0, "mean_res_ms": 0.0}
 
 
-def top_to_bot_frame(sid: str, top_frame: int) -> int:
+def top_to_bot_frame(sid: str, top_frame: int, **offset_options) -> int:
     """
     Maps a TopCam raw video frame index to the synchronous BotCam raw video frame index.
 
@@ -165,15 +211,15 @@ def top_to_bot_frame(sid: str, top_frame: int) -> int:
         offset = bot0_in_top - top0_in_bot
         BotCam Frame = TopCam Frame - offset.
     """
-    offset_info = get_session_ttl_offset(sid)
+    offset_info = get_session_ttl_offset(sid, **offset_options)
     offset = offset_info.get("bot0_in_top", 0) - offset_info.get("top0_in_bot", 0)
     bot_frame = top_frame - offset
     return max(0, bot_frame)
 
 
-def bot_to_top_frame(sid: str, bot_frame: int) -> int:
+def bot_to_top_frame(sid: str, bot_frame: int, **offset_options) -> int:
     """Maps a BotCam raw video frame index to the synchronous TopCam raw video frame index."""
-    offset_info = get_session_ttl_offset(sid)
+    offset_info = get_session_ttl_offset(sid, **offset_options)
     offset = offset_info.get("bot0_in_top", 0) - offset_info.get("top0_in_bot", 0)
     return bot_frame + offset
 

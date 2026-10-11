@@ -52,6 +52,43 @@ def _checkpoint_endpoint(path, expected):
         raise ValueError(f"Checkpoint does not contain the requested final iteration {expected}")
 
 
+def _fit_phase(backend, model, data, metadata, project_dir, checkpoint, *, current, target, **options):
+    """Adapt KPMS's inclusive loop to cumulative completed-update labels.
+
+    Upstream samples at ``start_iter`` but never saves that iteration. Treating
+    the entry iteration as the already-completed model both avoids an extra
+    update and lets a one-update phase publish its final checkpoint normally.
+    Counting completed calls also detects upstream's swallowed StopResampling;
+    a stopped AR phase must not continue into SLDS or produce a success summary.
+    """
+    fitting = getattr(backend.kpms, "fitting", None)
+    original = getattr(fitting, "_wrapped_resample", None)
+    if not callable(original):
+        raise RuntimeError("KPMS fitting backend must expose callable _wrapped_resample "
+                           "to verify completed training updates")
+    entered, completed = False, 0
+
+    def resample_from_entry(resample_func, observations, state, *args, **kwargs):
+        nonlocal entered, completed
+        if not entered:
+            entered = True
+            return state
+        result = original(resample_func, observations, state, *args, **kwargs)
+        completed += 1
+        return result
+
+    with temporary_patches([(fitting, "_wrapped_resample", resample_from_entry)]):
+        model, _ = backend.kpms.fit_model(
+            model, data, metadata, str(project_dir), start_iter=current,
+            num_iters=target, **options,
+        )
+    expected = target - current
+    if completed != expected:
+        raise RuntimeError(f"Training phase stopped after {completed} of {expected} requested updates")
+    _checkpoint_endpoint(checkpoint, target)
+    return model
+
+
 def _fit_phases(cfg, model_dir, seed, backend, data, metadata):
     kpms, runtime = backend.kpms, backend.runtime
     project_dir = model_dir.parent
@@ -72,26 +109,29 @@ def _fit_phases(cfg, model_dir, seed, backend, data, metadata):
     else:
         model, current = None, 0
 
-    kpms_config = kpms.load_config(str(project_dir)) if (project_dir / "config.yml").exists() else {}
-    kpms_config.update(cfg.get("kpms_options", {}))
-    # Resolve PCA after checking the resume contract, to avoid unused artifacts.
-    pca_path = resolve_path(cfg["pca_path"]) if cfg.get("pca_path") else project_dir / "pca.p"
-    if pca_path.exists():
-        with pca_path.open("rb") as handle:
-            pca = pickle.load(handle)
-    else:
-        pca = backend.safe_fit_pca(data, project_dir)
-        pca_path.parent.mkdir(parents=True, exist_ok=True)
-        with pca_path.open("wb") as handle:
-            pickle.dump(pca, handle)
     if model is None:
+        kpms_config = kpms.load_config(str(project_dir)) if (project_dir / "config.yml").exists() else {}
+        kpms_config.update(cfg.get("kpms_options", {}))
+        # An initialized checkpoint already contains the parameters and states;
+        # PCA belongs to fresh initialization and is unnecessary on resume.
+        pca_path = resolve_path(cfg["pca_path"]) if cfg.get("pca_path") else project_dir / "pca.p"
+        if pca_path.exists():
+            with pca_path.open("rb") as handle:
+                pca = pickle.load(handle)
+        else:
+            pca = backend.safe_fit_pca(data, project_dir)
+            pca_path.parent.mkdir(parents=True, exist_ok=True)
+            with pca_path.open("wb") as handle:
+                pickle.dump(pca, handle)
         rng = backend.jax.random.PRNGKey(seed)
         if cfg["use_batched_init"]:
             model = backend.init_batched(data, pca, kpms_config, params_subset_size=5,
-                                         batch_size=min(runtime.CONFIG.discrete_bs, 20), seed=rng)
+                                         batch_size=min(runtime.CONFIG.discrete_bs, 20), seed=rng,
+                                         location_aware=cfg["location_aware"])
         else:
+            initialization_config = dict(kpms_config, location_aware=cfg["location_aware"])
             model = kpms.init_model(data, pca=pca, seed=rng,
-                                    location_aware=cfg["location_aware"], **kpms_config)
+                                    **initialization_config)
         if cfg["init_kappa"] is not None:
             model = kpms.update_hypparams(model, kappa=cfg["init_kappa"])
     if cfg["use_memory_patch"]:
@@ -99,15 +139,14 @@ def _fit_phases(cfg, model_dir, seed, backend, data, metadata):
     common = {"model_name": model_dir.name, "save_every_n_iters": cfg["save_every_n_iters"],
               "location_aware": cfg["location_aware"]}
     if current < ar_iters:
-        model, _ = kpms.fit_model(model, data, metadata, str(project_dir), ar_only=True,
-                                  start_iter=0 if current == 0 else current + 1,
-                                  num_iters=ar_iters, **common)
+        model = _fit_phase(backend, model, data, metadata, project_dir, checkpoint,
+                           current=current, target=ar_iters, ar_only=True, **common)
         current = ar_iters
     if current < total:
         if cfg["slds_kappa"] is not None:
             model = kpms.update_hypparams(model, kappa=cfg["slds_kappa"])
-        model, _ = kpms.fit_model(model, data, metadata, str(project_dir), ar_only=False,
-                                  start_iter=current + 1, num_iters=total, **common)
+        model = _fit_phase(backend, model, data, metadata, project_dir, checkpoint,
+                           current=current, target=total, ar_only=False, **common)
     _checkpoint_endpoint(checkpoint, total)
     summary = {"model_name": model_dir.name, "seed": seed, "total_iters": total,
                "num_ar_iters": ar_iters, "num_slds_iters": cfg["num_slds_iters"],

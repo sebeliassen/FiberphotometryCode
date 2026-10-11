@@ -3,6 +3,7 @@
 import numpy as np
 
 from fpcode.contracts import SignalSeries, TimeAxis
+from fpcode.contracts.timelines import _exact_integer_coordinates, _relative_integer_coordinates
 
 
 def align_signal(source: SignalSeries, target: TimeAxis, *, method="exact", tolerance=None, max_gap=None):
@@ -23,6 +24,9 @@ def align_signal(source: SignalSeries, target: TimeAxis, *, method="exact", tole
         raise ValueError("linear interpolation requires a finite positive max_gap")
 
     x, q = source.time.values, target.values
+    integer_x, integer_q = _exact_integer_coordinates(x), _exact_integer_coordinates(q)
+    if integer_x is not None and integer_q is not None:
+        (x, q), _ = _relative_integer_coordinates(integer_x, integer_q)
     scalar = source.values.ndim == 1
     values = source.values[:, None] if scalar else source.values
     valid = source.valid[:, None] if scalar else source.valid
@@ -38,8 +42,12 @@ def align_signal(source: SignalSeries, target: TimeAxis, *, method="exact", tole
         chosen = right.copy()
         matched = exact.copy()
         if method == "nearest":
-            chosen = np.where(np.abs(q - x[left]) <= np.abs(x[right] - q), left, right)
-            matched = inside & (np.abs(q - x[chosen]) <= tolerance)
+            # Nonnegative ordered differences work for unsigned coordinates,
+            # including targets outside the source extent that stay invalid.
+            left_distance = np.maximum(q, x[left]) - np.minimum(q, x[left])
+            right_distance = np.maximum(q, x[right]) - np.minimum(q, x[right])
+            chosen = np.where(left_distance <= right_distance, left, right)
+            matched = inside & (np.minimum(left_distance, right_distance) <= tolerance)
         out[matched] = values[chosen[matched]]
         mask[matched] = valid[chosen[matched]]
 
@@ -50,7 +58,7 @@ def align_signal(source: SignalSeries, target: TimeAxis, *, method="exact", tole
             rows = rows[gaps <= max_gap]
             if len(rows):
                 lo, hi = left[rows], right[rows]
-                weights = ((q[rows] - x[lo]) / (x[hi] - x[lo]))[:, None]
+                weights = np.asarray((q[rows] - x[lo]) / (x[hi] - x[lo]), dtype=float)[:, None]
                 out[rows] = values[lo] + weights * (values[hi] - values[lo])
                 mask[rows] = valid[lo] & valid[hi]
 

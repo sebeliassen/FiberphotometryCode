@@ -10,7 +10,6 @@ from typing import Optional
 import hashlib
 import json
 import numpy as np
-import os
 
 from fpcode.common.cache_manifest import atomic_write_text
 

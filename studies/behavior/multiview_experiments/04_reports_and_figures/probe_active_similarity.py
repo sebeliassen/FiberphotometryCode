@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Read-only production probe. Writes a new JSON report; never alters model/data.
 
-Install beside viz_v2_common.py and use the same KPMS environment as rendering.
+Use the installed fpcode package and the same KPMS environment as rendering.
 Pairwise comparisons use the same filtered ONSET pose and native onset time.
 Raw observations are masked by their original likelihood, never zero-filled.
 """
@@ -11,7 +11,6 @@ import argparse
 import hashlib
 import json
 import os
-import sys
 from functools import lru_cache
 from pathlib import Path
 
@@ -58,7 +57,8 @@ def video_seek_check(path,frame):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source_dir",default=str(Path(__file__).resolve().parent))
+    parser.add_argument("--source_dir",default=str(Path(__file__).resolve().parent),
+                        help="Legacy source-directory argument; installed package imports are used")
     parser.add_argument("--viz_dir",default=None)
     parser.add_argument("--syllables",nargs="+",type=int,default=[1,67])
     parser.add_argument("--neighbors",type=int,default=50)
@@ -67,18 +67,16 @@ def main():
     args=parser.parse_args()
     os.environ.setdefault("JAX_PLATFORMS","cpu")
     os.environ.setdefault("CUDA_VISIBLE_DEVICES","")
-    source=Path(args.source_dir).resolve()
-    sys.path.insert(0,str(source));sys.path.insert(0,str(source.parent))
     import pickle
 
     import h5py
     import pandas as pd
-    import viz_v2_common as vc
+    from fpcode.viz import v2 as vc
     import yaml
     from jax_moseq.utils import unbatch
 
-    from core.camera_correspondence import get_session_mapping
-    from core.pair_matching import find_matched_pairs
+    from fpcode.tracking.camera_correspondence import get_session_mapping
+    from fpcode.tracking.pair_matching import find_matched_pairs
 
     viz=Path(args.viz_dir) if args.viz_dir else vc.DEFAULT_VIZ_DIR
     manifest=json.loads((viz/"unified_syllable_selection_manifest.json").read_text())

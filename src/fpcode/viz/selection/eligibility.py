@@ -1,13 +1,9 @@
-"""Visualization selection / eligibility; historical V2 behavior preserved."""
+"""Visualization quality rules for explicitly described landmark groups."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from fpcode.viz.legacy_defaults import DORSAL_IDXS
-from fpcode.viz.legacy_defaults import FRONT_PAW_IDXS
-from fpcode.viz.legacy_defaults import HIND_PAW_IDXS
-from fpcode.viz.legacy_defaults import PAW_BODYPARTS
-from fpcode.viz.legacy_defaults import PAW_IDXS
+from fpcode.viz.context import LandmarkGroups
 from fpcode.viz.selection.bouts import frames_from_seconds
 from typing import Any
 from typing import Dict
@@ -15,6 +11,7 @@ from typing import Iterable
 from typing import List
 from typing import Tuple
 import numpy as np
+from fpcode.tracking.quality import supported_track_mask
 
 
 def movie_context_ok(start: int, n_frames: int, pre: int, post: int) -> bool:
@@ -57,12 +54,7 @@ class QCConfig:
 
 def valid_track_mask(xy: np.ndarray, conf: np.ndarray, conf_threshold: float) -> np.ndarray:
     """A point is supported iff x AND y are finite and its likelihood is >= threshold."""
-    xy = np.asarray(xy)
-    conf = np.asarray(conf)
-    finite_xy = np.isfinite(xy[..., 0]) & np.isfinite(xy[..., 1])
-    with np.errstate(invalid="ignore"):
-        confident = np.isfinite(conf) & (conf >= conf_threshold)
-    return finite_xy & confident
+    return supported_track_mask(xy, conf, threshold=conf_threshold)
 
 
 def longest_true_run(mask: np.ndarray) -> np.ndarray:
@@ -88,24 +80,26 @@ def window_frac_gap(valid_window: np.ndarray) -> Tuple[np.ndarray, np.ndarray, i
     return valid_window.mean(axis=0), longest_true_run(~valid_window), W
 
 
-def summarize_window_qc(valid_window: np.ndarray) -> Dict[str, Any]:
+def summarize_window_qc(valid_window: np.ndarray, *, groups: LandmarkGroups) -> Dict[str, Any]:
     """
     Per-group QC summary of a ``(W, 21)`` supported-point mask.  Reports
     per-paw valid fractions / maximum unsupported gaps so any rejection can be
     traced to a specific landmark.
     """
     frac, gap, W = window_frac_gap(valid_window)
-    return summarize_frac_gap(frac, gap, W)
+    return summarize_frac_gap(frac, gap, W, groups=groups)
 
 
-def summarize_frac_gap(frac: np.ndarray, gap: np.ndarray, W: int) -> Dict[str, Any]:
+def summarize_frac_gap(frac: np.ndarray, gap: np.ndarray, W: int, *, groups: LandmarkGroups) -> Dict[str, Any]:
     """Same summary as ``summarize_window_qc`` from precomputed (fraction, gap) vectors."""
     frac = np.asarray(frac, dtype=np.float64)
     gap = np.asarray(gap)
-    dorsal_frac, dorsal_gap = frac[DORSAL_IDXS], gap[DORSAL_IDXS]
-    paw_frac, paw_gap = frac[PAW_IDXS], gap[PAW_IDXS]
-    front_frac, front_gap = frac[FRONT_PAW_IDXS], gap[FRONT_PAW_IDXS]
-    hind_frac, hind_gap = frac[HIND_PAW_IDXS], gap[HIND_PAW_IDXS]
+    if frac.ndim != 1 or gap.shape != frac.shape:
+        raise ValueError("QC fraction and gap vectors must have matching one-dimensional shapes")
+    dorsal_frac, dorsal_gap = frac[list(groups.dorsal)], gap[list(groups.dorsal)]
+    paw_frac, paw_gap = frac[list(groups.paws)], gap[list(groups.paws)]
+    front_frac, front_gap = frac[list(groups.front_paws)], gap[list(groups.front_paws)]
+    hind_frac, hind_gap = frac[list(groups.hind_paws)], gap[list(groups.hind_paws)]
     return {
         "window_frames": int(W),
         "min_dorsal_valid_fraction": float(dorsal_frac.min()),
@@ -116,8 +110,8 @@ def summarize_frac_gap(frac: np.ndarray, gap: np.ndarray, W: int) -> Dict[str, A
         "max_front_paw_gap_frames": int(front_gap.max()) if len(front_gap) else 0,
         "min_hind_paw_valid_fraction": float(hind_frac.min()) if len(hind_frac) else 0.0,
         "max_hind_paw_gap_frames": int(hind_gap.max()) if len(hind_gap) else 0,
-        "per_paw_valid_fraction": {n: float(f) for n, f in zip(PAW_BODYPARTS, paw_frac)},
-        "per_paw_max_gap_frames": {n: int(g) for n, g in zip(PAW_BODYPARTS, paw_gap)},
+        "per_paw_valid_fraction": {n: float(f) for n, f in zip(groups.paw_names, paw_frac)},
+        "per_paw_max_gap_frames": {n: int(g) for n, g in zip(groups.paw_names, paw_gap)},
     }
 
 

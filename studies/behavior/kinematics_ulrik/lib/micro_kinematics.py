@@ -1,12 +1,9 @@
 import copy
 import os
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
-from analysis.ulrik_kinematics.lib import metrics, motifs
-from scipy import stats
+from fpcode.behavior.bouts import run_boundaries
 
 
 def extract_bouts(session, mapping=None):
@@ -21,7 +18,11 @@ def extract_bouts(session, mapping=None):
     s = df["syllable"].fillna(-1).astype(float).to_numpy()
 
     # 1. Generate run-length boundaries to assign unique IDs to each contiguous bout
-    mask = np.concatenate(([True], s[1:] != s[:-1]))
+    # Preserve this study's row-adjacency policy, even when frame_index has gaps;
+    # duration below is the observed endpoint span at its historical 30 FPS.
+    starts, stops = run_boundaries(s)
+    mask = np.zeros(len(s), dtype=bool)
+    mask[starts] = True
     df["bout_id"] = mask.cumsum()
 
     # Calculate timeframe
@@ -64,16 +65,7 @@ def extract_bouts(session, mapping=None):
     t_arr = df["time"].values
     bout_idx = df["bout_id"].values
 
-    # Efficient numpy grouping
-    unique_bouts = np.unique(bout_idx)
-
-    # Pre-group index slices for speed
-    # np.searchsorted can quickly find boundaries if ordered
-    split_indices = np.where(mask)[0]
-    ranges = list(zip(split_indices[:-1], split_indices[1:]))
-    ranges.append((split_indices[-1], len(df)))
-
-    for start, end in ranges:
+    for start, end in zip(starts, stops):
         syll = s_arr[start]
         if pd.isna(syll) or syll == -1: continue # Skip UNK/boundary frames
 
@@ -108,6 +100,7 @@ def verify_micro_module(sessions):
     Mathematical defense test for Micro-Kinematics.
     Ensures that the aggregation of syllables exactly matches the global physics engine.
     """
+    from syllable_generation.analysis.ulrik_kinematics.lib import metrics
     print("\n" + "="*50)
     print(" VERIFICATION: MICRO-PHYSICS EXTRACTION & INVARIANCE")
     print("="*50)
@@ -171,6 +164,11 @@ def verify_micro_module(sessions):
     print("="*50 + "\n")
 
 def run_discovery(sessions, project_name="AMPH", style="alphabet"):
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from scipy import stats
+    from studies.behavior.kinematics_ulrik.lib import motifs
+
     print(f"\n--- Running Micro-Kinematics Discovery ({style.capitalize()} Mode) ---")
 
     # Strip phase suffix (e.g., AMPH_pre -> AMPH) so the manual_labels.csv lookup still works

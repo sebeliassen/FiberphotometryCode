@@ -22,4 +22,3 @@ def extract_and_export_results(
 
     project_dir = str(project_dir)
     return kpms.extract_results(model, metadata, project_dir, model_name, save_results=save_results)
-

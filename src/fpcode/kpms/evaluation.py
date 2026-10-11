@@ -192,7 +192,11 @@ def evaluate_checkpoints(
     checkpoints: Sequence[PathLike],
     output_dir: Optional[PathLike] = None,
 ) -> Dict[str, Any]:
-    """Evaluates one or more model checkpoints, calculating identity, frequencies, and compatibility."""
+    """Evaluate frame occupancy on valid state positions, excluding segment padding.
+
+    State ``z[:, i]`` belongs to latent frame ``x[:, i + nlags]``. Frequencies
+    retain this API's frame-count convention; they are not bout frequencies.
+    """
     import h5py
 
     ckpt_paths = [Path(p) for p in checkpoints]
@@ -206,7 +210,25 @@ def evaluate_checkpoints(
         with h5py.File(ck, "r") as f:
             snap = f[f"model_snapshots/{ident['iteration']}"]
             z = snap["states/z"][()]
-            counts = np.bincount(z.ravel(), minlength=ident["num_states"])
+            bounds = np.asarray(f["metadata/arr1"][()])
+            if (bounds.shape != (ident["n_seq"], 2)
+                    or not np.issubdtype(bounds.dtype, np.integer)
+                    or (bounds[:, 0] < 0).any()
+                    or (bounds[:, 1] < bounds[:, 0]).any()
+                    or (bounds[:, 1] - bounds[:, 0] > ident["seg_len"]).any()):
+                raise ValueError(f"Invalid checkpoint segment bounds: {ck}")
+            nlags = ident["nlags"]
+            if nlags < 0 or z.ndim != 2:
+                raise ValueError(f"Invalid checkpoint state lag alignment: {ck}")
+            mask = reconstruct_mask(bounds, ident["seg_len"])[:, nlags:]
+            if mask.shape != z.shape or not np.issubdtype(z.dtype, np.integer):
+                raise ValueError(f"Invalid checkpoint syllable array: {ck}")
+            valid_z = z[mask]
+            if not valid_z.size:
+                raise ValueError(f"Checkpoint has no valid syllable frames after AR lags: {ck}")
+            if (valid_z < 0).any() or (valid_z >= ident["num_states"]).any():
+                raise ValueError(f"Checkpoint syllable labels exceed the state vocabulary: {ck}")
+            counts = np.bincount(valid_z, minlength=ident["num_states"])
             total = counts.sum()
             freqs = counts / total if total > 0 else counts
             reindex = stable_frequency_order(freqs)
@@ -216,6 +238,8 @@ def evaluate_checkpoints(
             "reindex_order": reindex.tolist(),
             "active_states": int(np.count_nonzero(counts)),
             "max_frequency": float(freqs.max()) if len(freqs) > 0 else 0.0,
+            "frequency_method": "masked_frame_occupancy",
+            "evaluated_frames": int(total),
         }
     return results
 

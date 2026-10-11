@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 import pandas as pd
-from analysis.ulrik_kinematics.lib.metrics import get_syllable_usage
+from fpcode.behavior.transitions import adjacent_pairs
 
 
 def get_group_transition_matrix(sessions, top_n: int = 15, ordered_syllables: List[int] = None, normalize: str = 'row') -> pd.DataFrame:
@@ -34,26 +34,19 @@ def get_group_transition_matrix(sessions, top_n: int = 15, ordered_syllables: Li
         if "syllable" not in s.all_data_df.columns: continue
         seq = s.all_data_df["syllable"].fillna(-1).to_numpy()
 
-        # Collapse self-transitions
-        mask = np.concatenate(([True], seq[1:] != seq[:-1]))
-        trans = seq[mask]
-
-        if len(trans) < 2: continue
+        # Keep gap sentinels while collapsing bouts; filter adjacent pairs only.
+        pairs = adjacent_pairs(seq, collapse_runs=True)
+        if not len(pairs): continue
 
         # Count bigrams for this session
         local_counts = pd.DataFrame(0.0, index=top_sylls, columns=top_sylls)
 
-        # Filter for top syllables
-        valid_indices = [i for i, x in enumerate(trans) if x in top_sylls]
-
-        # Iterating numpy array is slow, but robust for this logic.
-        # Faster: Map to integer indices
         syll_to_idx = {syll: i for i, syll in enumerate(top_sylls)}
-        mapped = np.array([syll_to_idx.get(x, -1) for x in trans])
+        mapped = np.array([[syll_to_idx.get(x, -1) for x in pair] for pair in pairs])
 
         # Bigrams (vectorized)
-        srcs = mapped[:-1]
-        dsts = mapped[1:]
+        srcs = mapped[:, 0]
+        dsts = mapped[:, 1]
 
         # Filter valid pairs
         valid_mask = (srcs != -1) & (dsts != -1)
@@ -90,6 +83,8 @@ def get_group_usage(sessions, top_n: int = 20, min_instances: int = 0) -> pd.Dat
     Calculate average syllable usage across animal groups.
     Returns a long-form DF suitable for seaborn.
     """
+    from syllable_generation.analysis.ulrik_kinematics.lib.metrics import get_syllable_usage
+
     import pandas as pd
     rows = []
     for s in sessions:

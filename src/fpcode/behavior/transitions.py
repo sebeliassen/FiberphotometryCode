@@ -9,6 +9,29 @@ from typing import List, Optional, Union
 
 import numpy as np
 
+from .bouts import _contiguous_rows, run_boundaries
+
+
+def adjacent_pairs(sequence, *, collapse_runs=False, frame_indices=None):
+    """Return neighboring frame or bout labels without deleting missing labels.
+
+    A missing label or unselected state must be filtered as a *pair* by the
+    caller, so removing it cannot invent a transition across missing data.
+    Original frame indices, when provided, prevent pairs across dropped frames.
+    """
+    sequence = np.asarray(sequence)
+    if sequence.ndim != 1:
+        raise ValueError("transition sequence must be one-dimensional")
+    contiguous = _contiguous_rows(len(sequence), frame_indices)
+    if collapse_runs:
+        starts, stops = run_boundaries(sequence, frame_indices=frame_indices)
+        if len(starts) < 2:
+            return np.empty((0, 2), dtype=sequence.dtype)
+        pairs = np.column_stack((sequence[starts[:-1]], sequence[starts[1:]]))
+        return pairs[contiguous[stops[:-1] - 1]]
+    pairs = np.column_stack((sequence[:-1], sequence[1:]))
+    return pairs[contiguous]
+
 
 def compute_transition_matrix(
     syllables: Union[np.ndarray, List[int], List[np.ndarray]],
@@ -34,9 +57,11 @@ def compute_transition_matrix(
     for seq in sequences:
         if len(seq) < 2:
             continue
-        valid = (seq[:-1] >= 0) & (seq[:-1] < num_states) & (seq[1:] >= 0) & (seq[1:] < num_states)
-        u = seq[:-1][valid]
-        v = seq[1:][valid]
+        pairs = adjacent_pairs(seq)
+        valid = ((pairs[:, 0] >= 0) & (pairs[:, 0] < num_states)
+                 & (pairs[:, 1] >= 0) & (pairs[:, 1] < num_states))
+        u = pairs[valid, 0]
+        v = pairs[valid, 1]
         np.add.at(counts, (u, v), 1.0)
 
     if not normalize:

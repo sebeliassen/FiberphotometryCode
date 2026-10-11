@@ -10,7 +10,6 @@ Renders a 3x4 dual-view random grid movie for Syllable 12:
 
 import json
 import os
-import sys
 from pathlib import Path
 
 import cv2
@@ -19,24 +18,20 @@ import imageio.v2 as imageio
 import numpy as np
 import pandas as pd
 
+from fpcode.common.paths import get_repo_root
+from fpcode.tracking.camera_correspondence import top_to_bot_frame_continuous
+from fpcode.tracking.pair_matching import find_matched_pairs
+from fpcode.viz import v2 as vc
+
 SCRIPT_DIR = Path(__file__).resolve().parent
-EXP_DIR = SCRIPT_DIR.parent
-if str(EXP_DIR) not in sys.path:
-    sys.path.insert(0, str(EXP_DIR))
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
+REPO_ROOT = get_repo_root()
+EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 
-import viz_v2_common as vc
-
-from core.camera_correspondence import top_to_bot_frame_continuous
-from core.pair_matching import find_matched_pairs
-
-VIZ_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/04_reports_and_figures/visualizations_cohort_static_21kp_v2_seed101_v4")
+VIZ_DIR = vc.DEFAULT_VIZ_DIR
 OUT_DIR = VIZ_DIR / "grid_movies_random"
-OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-VFI_PATH = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/cohort_static_21kp_v2/video_frame_indexes.npz")
-RESULTS_PATH = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/cohort_static_21kp_v2/model_21kp_static_50ar_300slds_seed101/results.h5")
+VFI_PATH = EXP_DIR / "cohort_static_21kp_v2/video_frame_indexes.npz"
+RESULTS_PATH = EXP_DIR / "cohort_static_21kp_v2/model_21kp_static_50ar_300slds_seed101/results.h5"
 MANIFEST_PATH = VIZ_DIR / "unified_syllable_selection_manifest.json"
 DIAG_PATH = VIZ_DIR / "neighbor_diagnostics.json"
 
@@ -65,6 +60,7 @@ class OpenCVReader:
             self.cap.release()
 
 def main():
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
     with open(MANIFEST_PATH) as f:
         manifest = json.load(f)
     with open(DIAG_PATH) as f:

@@ -7,6 +7,7 @@ import pandas as pd
 import pytest
 
 from fpcode.alignment import align_signal, remap_model_frames
+from fpcode.alignment.clocks import ClockTransform
 from fpcode.contracts import SignalMetadata, SignalSeries, TimeAxis
 from fpcode.photometry.alignment import combined_photometry_and_syllables, build_fixed_moseq_dfs
 
@@ -36,6 +37,109 @@ def test_exact_nearest_ties_and_nanosecond_precision():
     ns = series([10**18, 10**18 + 2], [0, 2], unit="ns")
     target_ns = TimeAxis([10**18 + 1], "ns", "camera")
     np.testing.assert_array_equal(align_signal(ns, target_ns, method="linear", max_gap=2).values, [1])
+
+
+@pytest.mark.parametrize("source_dtype,target_dtype", [(np.uint64, np.int64), (np.int64, np.uint64)])
+def test_large_nanosecond_alignment_preserves_mixed_integer_coordinates(source_dtype, target_dtype):
+    origin = 10**18
+    source = series(np.array([origin, origin + 2, origin + 4], dtype=source_dtype), [3, 7, 11], unit="ns")
+    target = TimeAxis(np.array([origin - 1, origin, origin + 1, origin + 2, origin + 4, origin + 5],
+                              dtype=target_dtype), "ns", "camera")
+    expected_exact = [np.nan, 3, np.nan, 7, 11, np.nan]
+    expected_nearest = [np.nan, 3, 3, 7, 11, np.nan]
+    expected_linear = [np.nan, 3, 5, 7, 11, np.nan]
+    for method, policy, expected in [
+        ("exact", {}, expected_exact),
+        ("nearest", {"tolerance": 1}, expected_nearest),
+        ("linear", {"max_gap": 2}, expected_linear),
+    ]:
+        aligned = align_signal(source, target, method=method, **policy)
+        np.testing.assert_allclose(aligned.values, expected, equal_nan=True)
+        np.testing.assert_array_equal(aligned.valid, np.isfinite(expected))
+        np.testing.assert_array_equal(aligned.time.values, target.values)
+
+
+def test_integer_alignment_avoids_signed_subtraction_overflow():
+    origin = np.iinfo(np.int64).min
+    source = series(np.array([origin, 0], dtype=np.int64), [0, 2], unit="ns")
+    target = TimeAxis(np.array([origin // 2], dtype=np.int64), "ns", "camera")
+    np.testing.assert_array_equal(align_signal(source, target, method="linear", max_gap=2**63).values, [1])
+    np.testing.assert_array_equal(align_signal(source, target, method="nearest", tolerance=2**62).values, [0])
+
+
+def test_integer_alignment_supports_a_span_larger_than_uint64():
+    source = series(np.array([-1, 0], dtype=np.int64), [1, 2], unit="ns")
+    target = TimeAxis(np.array([0, np.iinfo(np.uint64).max], dtype=np.uint64), "ns", "camera")
+    aligned = align_signal(source, target, method="nearest", tolerance=0)
+    np.testing.assert_allclose(aligned.values, [2, np.nan], equal_nan=True)
+
+
+@pytest.mark.parametrize("method,policy", [("exact", {}), ("nearest", {"tolerance": 2}),
+                                          ("linear", {"max_gap": 2})])
+def test_integral_float_target_before_large_integer_source_is_not_an_exact_match(method, policy):
+    origin = 10**18
+    source = series(np.array([origin + 1, origin + 2], dtype=np.int64), [3, 7], unit="ns")
+    target = TimeAxis(np.array([float(origin)]), "ns", "camera")
+    aligned = align_signal(source, target, method=method, **policy)
+    assert np.isnan(aligned.values[0]) and not aligned.valid[0]
+
+
+@pytest.mark.parametrize("dtype", [np.int64, np.uint64])
+@pytest.mark.parametrize("float_origin", [False, True])
+def test_clock_transform_subtracts_integer_timestamps_before_float_conversion(dtype, float_origin):
+    origin = 10**18
+    source = TimeAxis(np.array([origin - 2, origin, origin + 1], dtype=dtype), "ns", "hardware")
+    calibration_origin = float(origin) if float_origin else origin
+    transform = ClockTransform("hardware", "video", "ns", "s", calibration_origin, 0, 1e-9)
+    np.testing.assert_allclose(transform.apply(source).values, [-2e-9, 0, 1e-9], rtol=0, atol=1e-24)
+
+
+def test_clock_transform_preserves_fractional_origin_and_unsigned_negative_offsets():
+    source = TimeAxis(np.array([0, 2, 4], dtype=np.uint64), "ns", "hardware")
+    transform = ClockTransform("hardware", "video", "ns", "ns", 2.5, 0, 1)
+    np.testing.assert_array_equal(transform.apply(source).values, [-2.5, -.5, 1.5])
+
+
+def test_clock_transform_does_not_round_an_integer_origin_to_the_float_axis():
+    origin = 10**18
+    source = TimeAxis(np.array([float(origin), float(origin + 128)]), "ns", "hardware")
+    transform = ClockTransform("hardware", "video", "ns", "ns", origin + 1, 0, 1)
+    np.testing.assert_array_equal(transform.apply(source).values, [-1, 127])
+
+
+def test_clock_transform_does_not_overflow_a_signed_origin_subtraction():
+    source = TimeAxis(np.array([np.iinfo(np.int64).min, np.iinfo(np.int64).min + 4096], dtype=np.int64),
+                      "ns", "hardware")
+    transform = ClockTransform("hardware", "video", "ns", "ns", 4096, 0, 1.5)
+    # The first rebased value is below int64 minimum, so signed arithmetic
+    # would wrap. These endpoints remain distinct in the floating output.
+    np.testing.assert_array_equal(transform.apply(source).values,
+                                  [float(-2**63 - 4096) * 1.5, float(-2**63) * 1.5])
+
+
+@pytest.mark.parametrize("scale", [1, 2])
+@pytest.mark.parametrize("dtype", [np.int64, np.uint64])
+def test_clock_transform_preserves_integer_target_epochs(scale, dtype):
+    origin = 10**18
+    source = TimeAxis(np.array([origin, origin + 1, origin + 2], dtype=dtype), "ns", "hardware")
+    transform = ClockTransform("hardware", "video", "ns", "ns", origin, origin, scale)
+    result = transform.apply(source)
+    np.testing.assert_array_equal(result.values, [origin, origin + scale, origin + 2 * scale])
+    assert np.issubdtype(result.values.dtype, np.integer)
+
+
+def test_fractional_clock_origin_can_map_to_integral_target_coordinates():
+    origin = 10**18
+    source = TimeAxis([0, 1, 2], "ns", "hardware")
+    transform = ClockTransform("hardware", "video", "ns", "ns", .5, origin, 2)
+    np.testing.assert_array_equal(transform.apply(source).values, [origin - 1, origin + 1, origin + 3])
+
+
+def test_fractional_target_offsets_at_large_epochs_require_rebasing():
+    source = TimeAxis([0, 1, 2], "ns", "hardware")
+    transform = ClockTransform("hardware", "video", "ns", "ns", 0, 10**18, .5)
+    with pytest.raises(ValueError, match="rebasing the target clock"):
+        transform.apply(source)
 
 
 @pytest.mark.parametrize("kwargs", [{"method": "nearest"}, {"method": "linear"}, {"method": "linear", "max_gap": 0}, {"method": "other"}])

@@ -14,6 +14,8 @@ Key features:
 """
 
 import re
+import hashlib
+import json
 from pathlib import Path
 from typing import Dict, Optional, Tuple, Union
 
@@ -24,6 +26,82 @@ from .clock_sync import get_session_ttl_offset, load_ttl_cache
 
 _MAPPING_CACHE: Dict[str, np.ndarray] = {}
 _CALIBRATION_DETAILS_CACHE: Dict[str, dict] = {}
+
+
+def mapping_fingerprint(mapping):
+    """Identify integer correspondence values together with their array layout."""
+    mapping = np.asarray(mapping)
+    metadata = json.dumps({"dtype": mapping.dtype.str, "shape": list(mapping.shape)},
+                          sort_keys=True, separators=(",", ":")).encode()
+    digest = hashlib.sha256(metadata + b"\0")
+    digest.update(mapping.tobytes())
+    return digest.hexdigest()
+
+
+class CameraMappingContext:
+    """Session lookup and in-memory mapping cache scoped to explicit inputs.
+
+    Two contexts may reuse a session ID without sharing a calibration. Timestamp
+    path/size/mtime changes invalidate computed mappings within a context.
+    There are no persistent writes or filesystem discovery operations.
+    """
+
+    def __init__(self, *, ttl_cache=None, ttl_cache_path=None, offset_lookup=None,
+                 max_jitter_ms=8.35):
+        if sum(value is not None for value in (ttl_cache, ttl_cache_path, offset_lookup)) != 1:
+            raise ValueError("Provide exactly one TTL cache, cache path, or offset lookup")
+        self.ttl_cache = ttl_cache
+        self.ttl_cache_path = ttl_cache_path
+        self.offset_lookup = offset_lookup
+        self.max_jitter_ms = float(max_jitter_ms)
+        if not np.isfinite(self.max_jitter_ms) or self.max_jitter_ms < 0:
+            raise ValueError("max_jitter_ms must be finite and non-negative")
+        self._computed = {}
+
+    def offset_info(self, sid):
+        return get_session_ttl_offset(sid, cache=self.ttl_cache, cache_path=self.ttl_cache_path,
+                                      lookup=self.offset_lookup)
+
+    def resolve(self, sid, *, strict=False):
+        info = self.offset_info(sid)
+        paths = _timestamp_paths(info)
+        if paths is None:
+            return None, None
+        records = [(path, path.stat()) for path in paths]
+        key = tuple((str(path.resolve()), stat.st_size, stat.st_mtime_ns) for path, stat in records)
+        key = (key, self.max_jitter_ms)
+        if key not in self._computed:
+            mapping, _, calibration = compute_session_camera_mapping(*paths, max_jitter_ms=self.max_jitter_ms,
+                                                                      strict=strict)
+            mapping.setflags(write=False)
+            self._computed[key] = mapping, calibration
+        mapping, calibration = self._computed[key]
+        if strict and not calibration.get("is_valid_crystal", False):
+            raise RuntimeError(f"Session {sid} cached mapping is not valid crystal calibration: {calibration.get('status')}")
+        return mapping, dict(calibration)
+
+
+def _timestamp_paths(info):
+    top, bottom = (info or {}).get("top_csv"), (info or {}).get("bot_csv")
+    if not top or not bottom:
+        return None
+    paths = Path(top), Path(bottom)
+    return paths if all(path.is_file() for path in paths) else None
+
+
+def _explicit_context(context, ttl_cache, ttl_cache_path, offset_info, max_jitter_ms):
+    if sum(value is not None for value in (ttl_cache, ttl_cache_path, offset_info)) > 1:
+        raise ValueError("Provide one TTL cache, cache path, or offset record")
+    if context is not None:
+        if any(value is not None for value in (ttl_cache, ttl_cache_path, offset_info)):
+            raise ValueError("Provide a mapping context or offset inputs, not both")
+        return context
+    if offset_info is not None:
+        return CameraMappingContext(offset_lookup=lambda sid: offset_info, max_jitter_ms=max_jitter_ms)
+    if ttl_cache is not None or ttl_cache_path is not None:
+        return CameraMappingContext(ttl_cache=ttl_cache, ttl_cache_path=ttl_cache_path,
+                                    max_jitter_ms=max_jitter_ms)
+    return None
 
 
 def compute_session_camera_mapping(
@@ -223,8 +301,12 @@ def compute_session_camera_mapping(
         return mapping, dt_ms, calib_details
 
 
-def get_session_mapping(sid: str, strict: bool = False) -> Optional[np.ndarray]:
-    """Retrieves or computes the continuous TopCam -> BotCam mapping array for a session ID."""
+def get_session_mapping(sid: str, strict: bool = False, *, context=None, ttl_cache=None,
+                        ttl_cache_path=None, offset_info=None, max_jitter_ms=8.35) -> Optional[np.ndarray]:
+    """Map supplied inputs; omitted inputs use the historical read-only facade."""
+    explicit = _explicit_context(context, ttl_cache, ttl_cache_path, offset_info, max_jitter_ms)
+    if explicit is not None:
+        return explicit.resolve(sid, strict=strict)[0]
     global _MAPPING_CACHE, _CALIBRATION_DETAILS_CACHE
     clean_sid = re.sub(r"_seg\d+", "", sid).replace("_tandem_23kp", "")
 
@@ -239,12 +321,11 @@ def get_session_mapping(sid: str, strict: bool = False) -> Optional[np.ndarray]:
     if not info:
         return None
 
-    top_csv = Path(info.get("top_csv", ""))
-    bot_csv = Path(info.get("bot_csv", ""))
-    if not top_csv.exists() or not bot_csv.exists():
+    paths = _timestamp_paths(info)
+    if paths is None:
         return None
 
-    mapping, _, calib = compute_session_camera_mapping(top_csv, bot_csv, strict=strict)
+    mapping, _, calib = compute_session_camera_mapping(*paths, max_jitter_ms=max_jitter_ms, strict=strict)
     _MAPPING_CACHE[clean_sid] = mapping
     _MAPPING_CACHE[sid] = mapping
     _CALIBRATION_DETAILS_CACHE[clean_sid] = calib
@@ -252,8 +333,12 @@ def get_session_mapping(sid: str, strict: bool = False) -> Optional[np.ndarray]:
     return mapping
 
 
-def get_session_calibration_details(sid: str) -> Optional[dict]:
+def get_session_calibration_details(sid: str, *, context=None, ttl_cache=None, ttl_cache_path=None,
+                                    offset_info=None, max_jitter_ms=8.35) -> Optional[dict]:
     """Retrieves calibration details (slope, intercept, ppm drift, residuals) for a session ID."""
+    explicit = _explicit_context(context, ttl_cache, ttl_cache_path, offset_info, max_jitter_ms)
+    if explicit is not None:
+        return explicit.resolve(sid)[1]
     global _CALIBRATION_DETAILS_CACHE
     clean_sid = re.sub(r"_seg\d+", "", sid).replace("_tandem_23kp", "")
     if clean_sid not in _CALIBRATION_DETAILS_CACHE:
@@ -261,7 +346,9 @@ def get_session_calibration_details(sid: str) -> Optional[dict]:
     return _CALIBRATION_DETAILS_CACHE.get(clean_sid) or _CALIBRATION_DETAILS_CACHE.get(sid)
 
 
-def top_to_bot_frame_continuous(sid: str, top_frame: int, allow_static_fallback: bool = False) -> int:
+def top_to_bot_frame_continuous(sid: str, top_frame: int, allow_static_fallback: bool = False,
+                               *, context=None, ttl_cache=None, ttl_cache_path=None,
+                               offset_info=None) -> int:
     """
     Maps a TopCam raw frame index to its true synchronous BotCam frame index.
 
@@ -270,7 +357,8 @@ def top_to_bot_frame_continuous(sid: str, top_frame: int, allow_static_fallback:
       - -1 if the frame is dropped, outside camera acquisition range, or rejected
       - -2 if session mapping / timestamp files could not be loaded
     """
-    mapping = get_session_mapping(sid)
+    mapping = get_session_mapping(sid, context=context, ttl_cache=ttl_cache,
+                                   ttl_cache_path=ttl_cache_path, offset_info=offset_info)
     if mapping is not None:
         if 0 <= top_frame < len(mapping):
             return int(mapping[top_frame])  # Explicitly preserves -1 for dropped frames!
@@ -278,7 +366,8 @@ def top_to_bot_frame_continuous(sid: str, top_frame: int, allow_static_fallback:
             return -1  # Out of recording bounds
 
     if allow_static_fallback:
-        info = get_session_ttl_offset(sid)
+        info = (context.offset_info(sid) if context is not None else
+                get_session_ttl_offset(sid, cache=ttl_cache, cache_path=ttl_cache_path, offset_info=offset_info))
         if info:
             offset = int(info.get("bot0_in_top", 0) - info.get("top0_in_bot", 0))
             return max(0, top_frame - offset)

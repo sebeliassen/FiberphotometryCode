@@ -253,7 +253,7 @@ def read_manifest(artifact: PathLike) -> Optional[Dict[str, Any]]:
     try:
         value = json.loads(mp.read_text())
         return value if isinstance(value, dict) else {"_corrupt": True}
-    except (OSError, json.JSONDecodeError):
+    except (OSError, UnicodeError, json.JSONDecodeError):
         return {"_corrupt": True}
 
 
@@ -266,6 +266,8 @@ def _manifest_shape_valid(manifest: Dict[str, Any]) -> bool:
         and isinstance(artifact.get("size"), int)
         and isinstance(artifact.get("mtime_ns"), int)
         and isinstance(manifest.get("config_hash"), str)
+        and isinstance(manifest.get("config"), dict)
+        and manifest["config_hash"] == config_hash(manifest["config"])
         and isinstance(inputs, list)
         and all(isinstance(item, dict) and isinstance(item.get("path"), str)
                 and isinstance(item.get("exists"), bool) for item in inputs)
@@ -336,6 +338,8 @@ def verify_artifact_set(
     and (if given) the same ``set_id``.
     """
     per: Dict[str, Tuple[str, List[str]]] = {}
+    if not artifacts:
+        return MISSING_ARTIFACT, per
     hashes = set()
     for name, path in artifacts.items():
         status, reasons = verify_manifest(path, set_id=set_id, config=config, check_inputs=False)

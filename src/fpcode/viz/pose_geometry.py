@@ -1,12 +1,9 @@
-"""Visualization geometry; historical V2 behavior preserved."""
+"""Visualization geometry with explicitly supplied artifacts and landmarks."""
 
 from __future__ import annotations
 
 from fpcode.viz.hashing import sha256_file
-from fpcode.viz.legacy_defaults import BOT_NOSE
-from fpcode.viz.legacy_defaults import BOT_TAIL
-from fpcode.viz.legacy_defaults import FUSED_DIR
-from fpcode.viz.legacy_defaults import KPMS_FILTER_SIZE
+from fpcode.viz.context import BottomPoseLandmarks
 from pathlib import Path
 from typing import Any
 from typing import Dict
@@ -16,6 +13,8 @@ from typing import Tuple
 import json
 import math
 import numpy as np
+
+KPMS_FILTER_SIZE = 9  # keypoint_moseq.util.get_instance_trajectories default
 
 
 def filter_segment_pose(
@@ -92,14 +91,14 @@ def shared_active_rms(
     return rms_point_difference(a[int(pre) : int(pre) + n], b[int(pre) : int(pre) + n], idxs), n
 
 
-def fusion_geometry(base_sid: str, fused_dir: Path = FUSED_DIR) -> Dict[str, Any]:
+def fusion_geometry(artifact: Path) -> Dict[str, Any]:
     """Read the EXACT affine/reflection used to build the fused training artifact.
 
     Do not guess an epoch or reload a newly edited calibration. The existing
     fused artifact's recorded config is authoritative. Missing/stale metadata
     must be resolved on the workstation before canonical rendering is certified.
     """
-    artifact = Path(fused_dir) / f"{base_sid}_tandem_21kp.h5"
+    artifact = Path(artifact)
     path = artifact.with_name(artifact.name + ".manifest.json")
     rec = json.loads(path.read_text())
     if rec.get("kind") != "fused_static_21kp":
@@ -179,6 +178,8 @@ def compute_robust_bot_pose(
     target_idx,
     search_window=10,
     top_heading_fallback: Optional[float] = None,
+    *,
+    landmarks: BottomPoseLandmarks,
 ):
     """
     Return ``(centroid, heading, is_valid)`` for the BotCam frame ``target_idx``.
@@ -205,12 +206,12 @@ def compute_robust_bot_pose(
 
     for idx in candidates:
         try:
-            nx = df_bot[bot_scorer, BOT_NOSE, "x"].iloc[idx]
-            ny = df_bot[bot_scorer, BOT_NOSE, "y"].iloc[idx]
-            np_ = df_bot[bot_scorer, BOT_NOSE, "likelihood"].iloc[idx]
-            tx = df_bot[bot_scorer, BOT_TAIL, "x"].iloc[idx]
-            ty = df_bot[bot_scorer, BOT_TAIL, "y"].iloc[idx]
-            tp_ = df_bot[bot_scorer, BOT_TAIL, "likelihood"].iloc[idx]
+            nx = df_bot[bot_scorer, landmarks.nose, "x"].iloc[idx]
+            ny = df_bot[bot_scorer, landmarks.nose, "y"].iloc[idx]
+            np_ = df_bot[bot_scorer, landmarks.nose, "likelihood"].iloc[idx]
+            tx = df_bot[bot_scorer, landmarks.tail, "x"].iloc[idx]
+            ty = df_bot[bot_scorer, landmarks.tail, "y"].iloc[idx]
+            tp_ = df_bot[bot_scorer, landmarks.tail, "likelihood"].iloc[idx]
             if np_ >= 0.8 and tp_ >= 0.8:
                 dist = np.hypot(nx - tx, ny - ty)
                 if 20.0 <= dist <= 400.0:
@@ -218,8 +219,8 @@ def compute_robust_bot_pose(
         except Exception:
             pass
 
-    front_paws = ["left_front_paw", "right_front_paw"]
-    hind_paws = ["left_hind_paw", "right_hind_paw"]
+    front_paws = landmarks.front_paws
+    hind_paws = landmarks.hind_paws
     try:
         fxs, fys = [], []
         for p in front_paws:
@@ -258,9 +259,9 @@ def compute_robust_bot_pose(
     # Fallback if insufficient paws: check if top heading fallback is available
     if top_heading_fallback is not None and np.isfinite(top_heading_fallback):
         h_ref = float(np.arctan2(np.sin(top_heading_fallback), -np.cos(top_heading_fallback)))
-        return (486.0, 486.0), h_ref, False
+        return landmarks.fallback_centroid, h_ref, False
 
-    return (486.0, 486.0), float("nan"), False
+    return landmarks.fallback_centroid, float("nan"), False
 
 
 def rms_point_difference(a: np.ndarray, b: np.ndarray, idxs: Sequence[int]) -> float:

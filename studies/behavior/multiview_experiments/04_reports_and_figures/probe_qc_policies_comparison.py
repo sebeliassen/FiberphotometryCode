@@ -21,7 +21,7 @@ from typing import List
 
 import h5py
 import numpy as np
-import viz_v2_common as vc
+from fpcode.viz import v2 as vc
 import yaml
 
 AUDITED_SYLLABLES = [1, 67, 30, 70, 92, 36, 42]

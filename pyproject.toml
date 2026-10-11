@@ -90,6 +90,7 @@ testpaths = [
     "tests/test_eval_artifacts_synthetic.py",
     "tests/test_photometry_alignment_equivalence.py",
     "tests/test_v2_visualization_repairs.py",
+    "tests/test_v4_repairs.py",
     "tests/test_unit_contracts.py",
     "tests/test_pipeline_verbs.py",
     "tests/test_velocity_subsetting.py",

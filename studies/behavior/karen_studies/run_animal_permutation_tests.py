@@ -34,6 +34,7 @@ from collections import defaultdict
 
 import matplotlib.pyplot as plt
 import numpy as np
+from fpcode.behavior.sequences.counting import label_counts
 import pandas as pd
 import seaborn as sns
 from scipy import stats
@@ -108,21 +109,11 @@ for i, aid in enumerate(animals):
         sylls = pd.to_numeric(raw_s, errors="coerce")
         sylls = np.nan_to_num(sylls, nan=-5).astype(np.int32)
 
-        valid_mask = (sylls >= 0) & (sylls < K)
-        total_valid_frames += np.sum(valid_mask)
+        counts = label_counts(sylls, K, mode="frames")
+        total_valid_frames += counts.sum()
         total_duration_min += len(sylls) / 80.0 / 60.0
-
-        valid_sylls = sylls[valid_mask]
-        if len(valid_sylls) > 0:
-            counts = np.bincount(valid_sylls, minlength=K)[:K]
-            syll_counts += counts
-
-        diffs = np.diff(sylls, prepend=-999)
-        bout_mask = (diffs != 0) & valid_mask
-        bout_sylls = sylls[bout_mask]
-        if len(bout_sylls) > 0:
-            bcounts = np.bincount(bout_sylls, minlength=K)[:K]
-            bout_counts += bcounts
+        syll_counts += counts
+        bout_counts += label_counts(sylls, K, mode="bouts")
 
     if total_valid_frames > 0:
         animal_occupancy[i, :] = syll_counts / total_valid_frames

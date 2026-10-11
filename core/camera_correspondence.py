@@ -1,7 +1,7 @@
 """
 [DEPRECATED SHIM] core/camera_correspondence.py
 ==========================================
-Relocated to: fpcode.tracking.clock_sync
+Relocated to: fpcode.tracking.camera_correspondence
 """
 
 import importlib
@@ -9,7 +9,7 @@ import sys
 import warnings
 
 warnings.warn(
-    "core.camera_correspondence is deprecated; import from fpcode.tracking.clock_sync instead",
+    "core.camera_correspondence is deprecated; import from fpcode.tracking.camera_correspondence instead",
     DeprecationWarning,
     stacklevel=2,
 )

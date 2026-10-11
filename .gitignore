@@ -157,3 +157,12 @@ SWE_ORGANIZATION_BOT_PROMPT.md
 !LICENSE
 !README.md
 !pyproject.toml
+# Small regression data and the explicit, manual runtime check are repository inputs.
+!tests/golden/historical_session_slice.npz
+!/ops/diagnostics/
+/ops/diagnostics/*
+!/ops/diagnostics/smoke_runtime.py
+!/ops/diagnostics/validate_two_sessions.py
+# Accepted, small rollback/validation manifests are source-controlled.
+!registry/checkpoints/
+!registry/checkpoints/**

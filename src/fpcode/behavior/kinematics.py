@@ -11,6 +11,81 @@ import numpy as np
 from scipy.ndimage import median_filter
 
 
+def movement_changepoint_score(
+    velocity, fs, *, derivative_scale="per_sample", missing="propagate", smoothing_seconds=1.67,
+):
+    """Cube the forward difference of a globally z-scored, boxcar-smoothed velocity.
+
+    The Datta snippets historically differentiate per sample and propagate NaNs;
+    the unified panel differentiates per second and fills z-score NaNs with zero.
+    These policies affect peak thresholds and are intentionally explicit. Rows
+    are assumed to have fixed spacing 1/fs; this function never joins recordings
+    or resamples gaps. Split/resample irregular timelines before calling it.
+    """
+    from scipy.ndimage import uniform_filter1d
+
+    velocity = np.asarray(velocity, dtype=float)
+    if velocity.ndim != 1:
+        raise ValueError("velocity must be one-dimensional")
+    if not np.isfinite(fs) or fs <= 0:
+        raise ValueError("fs must be finite and positive")
+    if not np.isfinite(smoothing_seconds) or smoothing_seconds < 0:
+        raise ValueError("smoothing_seconds must be finite and nonnegative")
+    if derivative_scale not in {"per_sample", "per_second"} or missing not in {"propagate", "zero"}:
+        raise ValueError("unknown movement initiation policy")
+    if not len(velocity) or np.all(np.isnan(velocity)):
+        return np.zeros_like(velocity)
+    std = np.nanstd(velocity)
+    if std == 0 or np.isnan(std):
+        return np.zeros_like(velocity)
+    standardized = (velocity - np.nanmean(velocity)) / std
+    if missing == "zero":
+        standardized = np.nan_to_num(standardized, nan=0.0)
+    window = max(1, int(round(smoothing_seconds * fs)))
+    smoothed = uniform_filter1d(standardized, size=window, mode="nearest")
+    delta = np.diff(smoothed, prepend=smoothed[0])
+    if derivative_scale == "per_second":
+        delta *= fs
+    return delta ** 3
+
+
+def detect_movement_initiations(velocity, fs, *, derivative_scale="per_sample", missing="propagate"):
+    """Return row positions with changepoint height, width and prominence >= 1."""
+    from scipy.signal import find_peaks
+
+    score = movement_changepoint_score(velocity, fs, derivative_scale=derivative_scale, missing=missing)
+    peaks, _ = find_peaks(score, height=1, width=1, prominence=1)
+    return peaks.astype(int)
+
+
+def legacy_nose_tail_kinematics(nose, tail, *, fps=60.0, velocity_ceiling=300.0, smooth_window=7):
+    """Preserve tandem export's forward-difference and repeated-final-step policy.
+
+    Coordinates are raw camera pixels. The midpoint is the nose/tail centroid;
+    angles use nose minus tail, with unwrap before angular differentiation.
+    Velocity is clipped before a nearest-padded median filter. Confidence gating,
+    camera correspondence and original-frame selection belong to the caller.
+    """
+    nose, tail = np.asarray(nose, dtype=float), np.asarray(tail, dtype=float)
+    if nose.ndim != 2 or nose.shape[1] != 2 or tail.shape != nose.shape:
+        raise ValueError("nose and tail must have matching (frames, 2) coordinates")
+    if len(nose) < 2:
+        raise ValueError("forward-difference kinematics require at least two frames")
+    if not np.isfinite(fps) or fps <= 0 or not np.isfinite(velocity_ceiling) or velocity_ceiling < 0:
+        raise ValueError("fps must be positive and velocity_ceiling must be nonnegative")
+    if isinstance(smooth_window, bool) or int(smooth_window) != smooth_window or smooth_window < 1:
+        raise ValueError("smooth_window must be a positive integer")
+    centroid = 0.5 * (nose + tail)
+    heading = np.arctan2(nose[:, 1] - tail[:, 1], nose[:, 0] - tail[:, 0])
+    dx, dy = np.diff(centroid[:, 0]), np.diff(centroid[:, 1])
+    velocity = np.pad(np.sqrt(dx**2 + dy**2) * fps, (0, 1), mode="edge")
+    angular = np.pad(np.diff(np.unwrap(heading)) * fps, (0, 1), mode="edge")
+    return {"centroid": centroid, "heading": heading, "angular_velocity": angular,
+            "velocity_raw": velocity,
+            "velocity": median_filter(np.clip(velocity, 0, velocity_ceiling),
+                                      size=int(smooth_window), mode="nearest")}
+
+
 def smooth_heading_circular(theta: np.ndarray, window: int = 11, *, policy: str = "behavior") -> np.ndarray:
     """
     Applies median filtering to heading angles by smoothing complex phasors

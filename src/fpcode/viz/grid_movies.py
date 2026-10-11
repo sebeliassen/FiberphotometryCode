@@ -17,6 +17,8 @@ from fpcode.common.logging import get_logger
 
 logger = get_logger("fpcode.viz.grid_movies")
 
+DENSITY_SAMPLING_OPTIONS = {"mode": "density", "pca_samples": 50000, "pca_dim": 4, "n_neighbors": 50}
+
 
 def exact_grid_layout(tiles: int) -> tuple[int, int]:
     """Factor a tile count into a landscape grid without adding extra tiles."""
@@ -36,8 +38,8 @@ def _generate_selected_grid_movies(
     """Use backend primitives to select IDs before rendering, without relabeling.
 
     The installed KPMS high-level renderer accepts arbitrary kwargs but ignores
-    ``syllables``. Selection therefore happens between its existing instance
-    extraction and sampling operations; source labels and timelines stay intact.
+    ``syllables``. Density sampling needs the complete eligible population as its
+    reference; filter the sampled outputs before encoding, preserving that fit.
     """
     supported = {"pre", "post", "filter_size", "window_size", "max_video_size", "quality",
                  "dot_radius", "dot_color", "bodyparts", "use_bodyparts", "skeleton",
@@ -49,6 +51,9 @@ def _generate_selected_grid_movies(
     post = round(options.get("post", 2.0) * fps)
     if coordinates is None:
         raise ValueError("Subset grid movies require coordinates")
+    # Density sampling replaces entries with interpolated arrays. Keep those
+    # working entries local so later trajectory plots see the original data.
+    coordinates = dict(coordinates)
     if options.get("bodyparts") is not None and options.get("use_bodyparts") is not None:
         coordinates = viz.reindex_by_bodyparts(coordinates, options["bodyparts"], options["use_bodyparts"])
     centroids = centroids if centroids is not None else {key: record["centroid"] for key, record in results.items()}
@@ -63,12 +68,16 @@ def _generate_selected_grid_movies(
     instances = viz.get_syllable_instances(labels, pre=pre, post=post, min_duration=min_duration,
                                          min_frequency=min_frequency, min_instances=rows * cols)
     requested = set(syllables)
-    instances = {key: value for key, value in instances.items() if key in requested}
     missing = requested - set(instances)
     if missing:
         raise ValueError(f"Requested syllables lack enough eligible bouts for the grid: {sorted(missing)}")
-    sampled = viz.sample_instances(instances, rows * cols, coordinates=coordinates,
+    # Random sampling has no reference population. Density sampling fits PCA and
+    # background neighbors across all eligible syllables, even for one movie.
+    sampling_instances = (instances if sampling_options.get("mode") == "density"
+                          else {key: value for key, value in instances.items() if key in requested})
+    sampled = viz.sample_instances(sampling_instances, rows * cols, coordinates=coordinates,
                                    centroids=centroids, headings=headings, **sampling_options)
+    sampled = {key: value for key, value in sampled.items() if key in requested}
     window = options.get("window_size")
     if window is None:
         window = viz.get_grid_movie_window_size(sampled, centroids, headings, coordinates, pre, post)
@@ -153,7 +162,7 @@ def generate_grid_movies(
     try:
         import keypoint_moseq as kpms
         sampling_options = (
-            {"mode": "density", "pca_samples": 50000, "pca_dim": 4, "n_neighbors": 50}
+            dict(DENSITY_SAMPLING_OPTIONS)
             if sampling_mode == "density"
             else {"mode": "random"}
         )

@@ -15,22 +15,18 @@ Renders movies, trajectories, and builds a side-by-side comparative HTML gallery
 import copy
 import json
 import subprocess
-import sys
 from pathlib import Path
 from typing import Any, Dict
 
 import numpy as np
 
+from fpcode.common.paths import get_repo_root
+from fpcode.tracking.pair_matching import find_matched_pairs
+from fpcode.viz import v2 as vc
+
 SCRIPT_DIR = Path(__file__).resolve().parent
-EXP_DIR = SCRIPT_DIR.parent
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
-if str(EXP_DIR) not in sys.path:
-    sys.path.insert(0, str(EXP_DIR))
-
-import viz_v2_common as vc
-
-from core.pair_matching import find_matched_pairs
+REPO_ROOT = get_repo_root()
+EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 
 TARGET_SYLLABLES = [1, 67, 42]
 COMPARISON_DIR = vc.DEFAULT_VIZ_DIR / "experimental_comparisons"

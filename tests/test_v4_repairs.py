@@ -6,31 +6,31 @@ import copy
 import json
 import sys
 import tempfile
-import types
 import unittest
 from pathlib import Path
 
 import pytest
 
-pytestmark = pytest.mark.needs_data
+pytestmark = pytest.mark.cpu
 
 import matplotlib
 import numpy as np
-import PIL
+from PIL import Image
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 ROOT=Path(__file__).resolve().parents[1]
-_repo_source = ROOT / "syllable_generation/multiview_top_bot_experiments/04_reports_and_figures"
+_repo_source = ROOT / "studies/behavior/multiview_experiments/04_reports_and_figures"
 SOURCE = _repo_source if _repo_source.exists() else (ROOT / "patched_source")
 sys.path.insert(0,str(SOURCE))
-import viz_v2_common as vc
+from fpcode.viz import v2 as vc
 
 
 def load_functions(filename,names,namespace):
     tree=ast.parse((SOURCE/filename).read_text())
     nodes=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in names]
+    assert {node.name for node in nodes} == names, (filename, names)
     module=ast.Module(body=nodes,type_ignores=[])
     import __future__
     exec(compile(ast.fix_missing_locations(module),str(SOURCE/filename),"exec",
@@ -78,11 +78,12 @@ class V4Repairs(unittest.TestCase):
         tree=ast.parse((SOURCE/'select_cohort_static_21kp_v2_syllable_manifest.py').read_text())
         node=next(n for n in ast.walk(tree) if isinstance(n,ast.FunctionDef) and n.name=='get_fused')
         def missing(*args):raise FileNotFoundError('missing original tracks')
-        fake=types.SimpleNamespace(load_fused_tracks=missing)
-        ns={'vc':fake,'fused_cache':{},'FUSED_DIR':Path('/unused')}
+        ns={'load_fused_tracks':missing,'fused_cache':{},'FUSED_DIR':Path('/unused'),
+            'cohort_config':{'use_bodyparts':['unused']}}
         import __future__
         exec(compile(ast.fix_missing_locations(ast.Module(body=[node],type_ignores=[])),'get_fused','exec',flags=__future__.annotations.compiler_flag),ns)
-        with self.assertRaises(RuntimeError):ns['get_fused']('session')
+        with self.assertRaises(RuntimeError) as error:ns['get_fused']('session')
+        self.assertIsInstance(error.exception.__cause__,FileNotFoundError)
 
     def test_active_qc_catches_loss_after_scoring_window(self):
         mask=np.ones((100,21),bool);mask[40:,17:]=False
@@ -122,22 +123,26 @@ class V4Repairs(unittest.TestCase):
             rec['rendered_tiles']=[{'bout_id':'a:10','is_blank':False}];p.write_text(json.dumps(rec))
             self.assertTrue(vc.selection_provenance_matches(p,m,1))
 
-    def test_trajectory_failure_cannot_promote_neighbor_to_exemplar(self):
+    def test_nonfinite_onset_pose_is_excluded_from_median_inputs(self):
         p=SOURCE/'render_all_cohort_static_21kp_v2_seed101_trajectories.py';tree=ast.parse(p.read_text())
-        loop=next(n for n in ast.walk(tree) if isinstance(n,ast.For) and ast.unparse(n.target)=='b' and ast.unparse(n.iter)=='manifest_bouts')
-        ns={'np':np,'vc':vc,'manifest_bouts':[{'bout_id':'a:5','segment_name':'a','onset_segment_frame':5,'duration_frames':5}],
-            'res_file':{'a':{'centroid':np.full((30,2),np.nan),'heading':np.zeros(30)}},
-            'coords_dict':{'a':np.zeros((30,21,2))},'display_post':120,'extracted_trajs':[],'extracted_bouts':[]}
-        with self.assertRaises(ValueError):
-            exec(compile(ast.fix_missing_locations(ast.Module(body=[loop],type_ignores=[])),str(p),'exec'),ns)
-        self.assertEqual(ns['extracted_bouts'],[])
+        loop=next(n for n in ast.walk(tree) if isinstance(n,ast.For) and ast.unparse(n.iter)=='qual_bouts')
+        poses={'bad':(np.full((10,2),np.nan),np.zeros(10)),
+               'good':(np.zeros((10,2)),np.zeros(10))}
+        ns={'np':np,'vc':vc,'qual_bouts':[('bad',4),('good',4)],
+            'get_filtered_pose':lambda sid:poses[sid],
+            'coords_dict':{'bad':np.full((10,21,2),99.),'good':np.ones((10,21,2))},
+            'pre':1,'post':3,'ego_bouts':[]}
+        exec(compile(ast.fix_missing_locations(ast.Module(body=[loop],type_ignores=[])),str(p),'exec'),ns)
+        self.assertEqual(len(ns['ego_bouts']),1)
+        np.testing.assert_array_equal(ns['ego_bouts'][0],np.ones((4,21,2)))
 
     def test_native_render_uses_true_frame_count_and_image_y_direction(self):
         ns={'np':np,'plt':plt,'vc':vc}
         load_functions('render_all_cohort_static_21kp_v2_seed101_trajectories.py',
-            {'rasterize_figure','plot_trajectory_frame','remove_frame_artists','render_superimposed'},ns)
+            {'rasterize_figure','get_view_limits','interp_traj','render_superimposed_bundle'},ns)
         traj=np.zeros((11,21,2));traj[:,:,0]=np.arange(21)[None]*2;traj[:,:,1]=np.arange(11)[:,None]
-        fig,rasters=ns['render_superimposed'](traj,[traj[:2]],[(0,1)],np.tile([.2,.5,.8],(21,1)),'test','native frames',fps=60)
+        fig,rasters=ns['render_superimposed_bundle'](traj,[(0,1)],np.tile([.2,.5,.8],(21,1)),
+                                                  s=1,n_bouts=2,fps=60,pre=0,num_steps=3)
         self.assertEqual(len(rasters),11)
         self.assertGreater(fig.axes[0].get_ylim()[0],fig.axes[0].get_ylim()[1])
         plt.close(fig)

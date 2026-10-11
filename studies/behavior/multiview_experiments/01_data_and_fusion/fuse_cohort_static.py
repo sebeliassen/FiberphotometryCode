@@ -14,8 +14,9 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 import pandas as pd
+from fpcode.common.paths import get_repo_root
 
-REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
+REPO_ROOT = get_repo_root()
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
@@ -25,15 +26,24 @@ if str(EXP_DIR) not in sys.path:
 
 from core.pair_matching import find_matched_pairs
 from core.static_fusion_engine import fuse_single_pair_static
+from fpcode.adapters.multiview_compatibility import (
+    TTL_CACHE_PATH, legacy_static_calibration, legacy_tracking_paths,
+)
 
 
 def _fuse_worker(args):
     pair, out_dir, mode, overwrite = args
+    transform, source, epoch = legacy_static_calibration(pair.get("arena", "Arena1"),
+                                                        pair.get("ts", pair["sid"][:19]))
     return fuse_single_pair_static(
         pair_info=pair,
         out_dir=out_dir,
         keypoint_mode=mode,
-        overwrite=overwrite
+        overwrite=overwrite,
+        ttl_cache_path=TTL_CACHE_PATH,
+        transform_info=transform,
+        transform_source_path=source,
+        epoch=epoch,
     )
 
 
@@ -59,7 +69,8 @@ def main():
     print(f"Parallel Workers: {args.workers}")
     print("=" * 80)
 
-    pairs = find_matched_pairs()
+    paths = legacy_tracking_paths()
+    pairs = find_matched_pairs(top_h5_dir=paths.top_h5_dir, bot_prod_dir=paths.bot_prod_dir)
     print(f"Found {len(pairs)} matched camera pairs across Arenas 1, 2, and 3.\n")
 
     t_start = time.time()
@@ -75,7 +86,7 @@ def main():
             sid = futures[fut]
             try:
                 res = fut.result()
-                if res["status"] in ("ok", "cached"):
+                if res["status"] in ("FUSED", "CACHED", "CACHED_VALID", "ok", "cached"):
                     success_cnt += 1
                     total_frames += res.get("frames", 0)
                     print(f"  [{i:3d}/{len(pairs)}] {res['status']:6s} | {sid:35s} | "

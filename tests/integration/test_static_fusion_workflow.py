@@ -37,3 +37,34 @@ def test_static_unmanifested_cache_trust_or_rebuild(tmp_path, monkeypatch):
     assert rebuilt["status"] == "FUSED", rebuilt
     assert len(pd.read_hdf(output)) == 3
     assert manifest_path_for(output).is_file()
+
+
+def test_static_fusion_uses_shared_projection_without_changing_float32_or_likelihood(tmp_path, monkeypatch):
+    top, bottom = tmp_path / "top.h5", tmp_path / "bottom.h5"
+    write_pose(top, TOP_USE_BODYPARTS)
+    write_pose(bottom, BOT_RAW_BODYPARTS)
+    detections = pd.read_hdf(bottom)
+    detections[("scorer", "right_front_paw", "x")] = 743.6666
+    detections[("scorer", "right_front_paw", "y")] = 91.11223
+    detections[("scorer", "right_front_paw", "likelihood")] = .2
+    detections.to_hdf(bottom, key="df_with_missing", mode="w")
+    source_bytes = (top.read_bytes(), bottom.read_bytes())
+    monkeypatch.setitem(static_fusion.STATIC_ARENA_TRANSFORMS, "Arena1", {
+        "matrix_2x2": [[1.234567, -.098765], [.23456, .999991]],
+        "translation_2d": [21.555, -4.333],
+    })
+    monkeypatch.setattr(static_fusion, "get_session_mapping", lambda *args, **kwargs: np.arange(3))
+    monkeypatch.setattr(static_fusion, "get_session_calibration_details", lambda *args: {"status": "VALID_CRYSTAL"})
+    pair = {"sid": "tiny", "arena": "Arena1", "top_h5": str(top), "bot_h5": str(bottom)}
+    result = static_fusion.fuse_single_pair_static(pair, tmp_path, keypoint_mode="23kp")
+    assert result["status"] == "FUSED", result
+    fused = pd.read_hdf(result["path"])
+    x = fused[("fused_multiview", "left_front_paw", "x")].to_numpy()
+    y = fused[("fused_multiview", "left_front_paw", "y")].to_numpy()
+    confidence = fused[("fused_multiview", "left_front_paw", "likelihood")].to_numpy()
+    assert x.dtype == y.dtype == confidence.dtype == np.float32
+    np.testing.assert_array_equal(x, np.full(3, 294.44915771484375, dtype=np.float32))
+    np.testing.assert_array_equal(y, np.full(3, 140.33627319335938, dtype=np.float32))
+    np.testing.assert_array_equal(confidence, np.full(3, .2, dtype=np.float32))
+    np.testing.assert_array_equal(fused[("fused_multiview", "nose", "x")], np.full(3, 100., dtype=np.float32))
+    assert (top.read_bytes(), bottom.read_bytes()) == source_bytes

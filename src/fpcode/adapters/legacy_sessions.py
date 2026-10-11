@@ -5,6 +5,31 @@ import numpy as np
 from fpcode.contracts import SignalMetadata, SignalSeries, TimeAxis
 
 
+LEGACY_TANDEM_PHOTOMETRY_COLUMNS = [
+    "SystemTimestamp", "signal_0", "signal_1", "signal_2", "signal_3",
+    *[f"signal_{channel}_{kind}" for channel in range(4)
+      for kind in ("zscore_ransac", "zscore_wallace", "dff", "zscore", "prominence")],
+]
+
+
+def project_legacy_photometry_table(table, index):
+    """Preserve the tandem export schema, index reindexing and missing-column NaNs."""
+    projected = table.reindex(index).reset_index(drop=True).copy()
+    for column in LEGACY_TANDEM_PHOTOMETRY_COLUMNS:
+        if column not in projected:
+            projected[column] = np.nan
+    return projected.loc[:, LEGACY_TANDEM_PHOTOMETRY_COLUMNS]
+
+
+def attach_export_tables(session, *, recording_key, syllables, all_data=None):
+    """Update existing empirical objects without replacing their class or metadata."""
+    session.results_dict_key = recording_key
+    session.syllables = syllables
+    if all_data is not None:
+        session.all_data_df = all_data
+    return session
+
+
 def photometry_table(session, frequency):
     """Resolve the existing SessionRecord or DataContainer storage convention."""
     if hasattr(session, "photometry") and frequency in session.photometry:
@@ -57,4 +82,5 @@ def iter_signal_matrices(session, *, missing="skip"):
             yield key, matrix
 
 
-__all__ = ["photometry_table", "signal_metadata", "region_columns", "as_signal_series", "iter_signal_matrices"]
+__all__ = ["photometry_table", "signal_metadata", "region_columns", "as_signal_series", "iter_signal_matrices",
+           "LEGACY_TANDEM_PHOTOMETRY_COLUMNS", "project_legacy_photometry_table", "attach_export_tables"]

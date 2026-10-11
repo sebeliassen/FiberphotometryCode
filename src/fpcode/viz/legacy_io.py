@@ -7,7 +7,8 @@ from fpcode.viz.legacy_defaults import BOT_VID_DIR
 from fpcode.viz.legacy_defaults import CHAMBER_TO_ARENA
 from fpcode.viz.legacy_defaults import FUSED_DIR
 from fpcode.viz.legacy_defaults import TOP_VID_DIR
-from fpcode.viz.selection.bouts import base_session_id
+from fpcode.viz.media import load_fused_tracks as read_fused_tracks
+from fpcode.viz.media import media_file_identity as identify_media
 from pathlib import Path
 from typing import Any
 from typing import Dict
@@ -60,19 +61,15 @@ def get_session_files(sid: str, pairs_by_sid: Dict[str, Dict[str, Any]]) -> Opti
 
 def media_file_identity(manifest: Dict[str, Any], syllable: int) -> Dict[str, Any]:
     """Cache invalidation for selected source media/tracks (path/size/mtime)."""
-    paths = set()
+    from fpcode.viz.selection.bouts import base_session_id
+
+    artifacts = {}
     for b in manifest["syllables"][str(syllable)]["bouts"]:
         if b.get("is_blank"):
             continue
-        paths.update(str(b[k]) for k in ("top_vid", "bot_vid", "top_h5", "bot_h5"))
-        fused = FUSED_DIR / f"{base_session_id(b['segment_name'])}_tandem_21kp.h5"
-        paths.update((str(fused), str(fused.with_name(fused.name + ".manifest.json"))))
-    result = {}
-    for name in sorted(paths):
-        p = Path(name)
-        st = p.stat()
-        result[name] = {"size": st.st_size, "mtime_ns": st.st_mtime_ns}
-    return result
+        base = base_session_id(b["segment_name"])
+        artifacts[base] = FUSED_DIR / f"{base}_tandem_21kp.h5"
+    return identify_media(manifest, syllable, fused_artifacts=artifacts)
 
 
 def load_fused_tracks(base_sid: str, fused_dir: Path = FUSED_DIR) -> Tuple[np.ndarray, np.ndarray]:
@@ -81,12 +78,5 @@ def load_fused_tracks(base_sid: str, fused_dir: Path = FUSED_DIR) -> Tuple[np.nd
     raw likelihoods ``conf (T, 21)``, in ``BODYPARTS_21KP`` order.  Missing
     BotCam-mapped frames are NaN / likelihood 0 (see static_fusion_engine).
     """
-    import pandas as pd
-
     path = Path(fused_dir) / f"{base_sid}_tandem_21kp.h5"
-    df = pd.read_hdf(path)
-    scorer = df.columns.levels[0][0]
-    x = np.column_stack([df[(scorer, bp, "x")].to_numpy(dtype=np.float32) for bp in BODYPARTS_21KP])
-    y = np.column_stack([df[(scorer, bp, "y")].to_numpy(dtype=np.float32) for bp in BODYPARTS_21KP])
-    conf = np.column_stack([df[(scorer, bp, "likelihood")].to_numpy(dtype=np.float32) for bp in BODYPARTS_21KP])
-    return np.stack([x, y], axis=-1), conf
+    return read_fused_tracks(path, BODYPARTS_21KP)

@@ -5,44 +5,40 @@ Synchronized multi-camera posture tracking, clock synchronization,
 camera registration, and keypoint fusion engines.
 """
 
-from .camera_correspondence import (
-    compute_session_camera_mapping,
-    get_session_calibration_details,
-    get_session_mapping,
-    top_to_bot_frame_continuous,
-)
-from .clock_sync import (
-    bot_to_top_frame,
-    build_and_save_ttl_cache,
-    compute_pair_ttl_offset,
-    find_camera_timestamp_files,
-    get_session_ttl_offset,
-    load_ttl_cache,
-    top_to_bot_frame,
-)
-from .fusion import fuse_multiview_session
-from .pair_matching import (
-    extract_timestamp_from_filename,
-    find_matched_pairs,
-    normalize_arena_name,
-)
-from .static_fusion import fuse_multiview_static_21kp
+from importlib import import_module
 
-__all__ = [
-    "find_matched_pairs",
-    "extract_timestamp_from_filename",
-    "normalize_arena_name",
-    "load_ttl_cache",
-    "find_camera_timestamp_files",
-    "compute_pair_ttl_offset",
-    "build_and_save_ttl_cache",
-    "get_session_ttl_offset",
-    "top_to_bot_frame",
-    "bot_to_top_frame",
-    "compute_session_camera_mapping",
-    "get_session_mapping",
-    "get_session_calibration_details",
-    "top_to_bot_frame_continuous",
-    "fuse_multiview_session",
-    "fuse_multiview_static_21kp",
-]
+# Geometry and confidence primitives are usable without loading cohort
+# discovery, calibration JSON or pandas/HDF fusion implementations.
+_EXPORTS = {
+    "find_matched_pairs": "pair_matching",
+    "extract_timestamp_from_filename": "pair_matching",
+    "normalize_arena_name": "pair_matching",
+    "load_ttl_cache": "clock_sync",
+    "find_camera_timestamp_files": "clock_sync",
+    "compute_pair_ttl_offset": "clock_sync",
+    "build_and_save_ttl_cache": "clock_sync",
+    "get_session_ttl_offset": "clock_sync",
+    "top_to_bot_frame": "clock_sync",
+    "bot_to_top_frame": "clock_sync",
+    "compute_session_camera_mapping": "camera_correspondence",
+    "CameraMappingContext": "camera_correspondence",
+    "get_session_mapping": "camera_correspondence",
+    "get_session_calibration_details": "camera_correspondence",
+    "top_to_bot_frame_continuous": "camera_correspondence",
+    "fuse_multiview_session": "fusion",
+    "fuse_multiview_static_21kp": "static_fusion",
+}
+
+__all__ = list(_EXPORTS)
+
+
+def __getattr__(name):
+    if name in _EXPORTS:
+        value = getattr(import_module(f".{_EXPORTS[name]}", __name__), name)
+        globals()[name] = value
+        return value
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __dir__():
+    return sorted(set(globals()) | set(_EXPORTS))

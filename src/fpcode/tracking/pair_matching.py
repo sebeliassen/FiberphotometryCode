@@ -11,7 +11,8 @@ from typing import Dict, List, Optional, Union
 
 import numpy as np
 
-from ..common.schemas import CHAMBER_MAP, PathConfig
+from ..common.schemas import CHAMBER_MAP
+from fpcode.adapters.multiview_compatibility import legacy_tracking_paths
 
 TS_REGEX = re.compile(r"(\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2})")
 
@@ -35,9 +36,9 @@ def find_matched_pairs(top_h5_dir: Optional[Path] = None, bot_prod_dir: Optional
     Scans TopCam and BotCam directories, matching pairs by timestamp and chamber quadrant.
     Returns a list of matched session dictionaries.
     """
-    paths = PathConfig()
-    top_dir = Path(top_h5_dir) if top_h5_dir else paths.top_h5_dir
-    bot_dir = Path(bot_prod_dir) if bot_prod_dir else paths.bot_prod_dir
+    paths = legacy_tracking_paths() if top_h5_dir is None or bot_prod_dir is None else None
+    top_dir = Path(top_h5_dir) if top_h5_dir is not None else paths.top_h5_dir
+    bot_dir = Path(bot_prod_dir) if bot_prod_dir is not None else paths.bot_prod_dir
 
     if not top_dir.exists():
         raise FileNotFoundError(f"TopCam directory does not exist: {top_dir}")

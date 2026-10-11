@@ -54,7 +54,7 @@ def flatten_results_sparse_legacy(
     actual_lengths: Optional[Dict[str, int]] = None,
 ) -> Dict[str, pd.DataFrame]:
     """
-    Maps results to the timeline using VFI. 
+    Maps results to the timeline using VFI.
     Assumes VFI contains Absolute Ground Truth Indices.
     """
     def _flatten_one(vdict: dict, idx: np.ndarray, req_keys, full_len: Optional[int] = None) -> pd.DataFrame:

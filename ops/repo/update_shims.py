@@ -13,10 +13,10 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 SHIMS_MAP = {
     "core/cache_manifest.py": "fpcode.common.cache_manifest",
-    "core/camera_correspondence.py": "fpcode.tracking.clock_sync",
+    "core/camera_correspondence.py": "fpcode.tracking.camera_correspondence",
     "core/eval_artifacts.py": "fpcode.kpms.evaluation",
     "core/evaluation_metrics.py": "fpcode.kpms.metrics",
-    "core/fusion_engine.py": "fpcode.tracking.fusion_engine",
+    "core/fusion_engine.py": "fpcode.tracking.fusion",
     "core/h5_guard.py": "fpcode.common.h5_guard",
     "core/io_utils.py": "fpcode.common.io",
     "core/logging_utils.py": "fpcode.common.logging",
@@ -24,7 +24,7 @@ SHIMS_MAP = {
     "core/paths.py": "fpcode.common.paths",
     "core/run_record.py": "fpcode.common.run_record",
     "core/schemas.py": "fpcode.common.schemas",
-    "core/static_fusion_engine.py": "fpcode.tracking.fusion_engine",
+    "core/static_fusion_engine.py": "fpcode.tracking.static_fusion",
     "core/ttl_sync.py": "fpcode.tracking.clock_sync",
     "syllable_generation/syllabizers/keypoint_moseq_syll/utils/batch_init.py": "fpcode.kpms.init_model",
     "syllable_generation/syllabizers/keypoint_moseq_syll/utils/compact_checkpoint.py": "fpcode.kpms.checkpoints",
@@ -81,15 +81,22 @@ def __dir__():
 def write_shims_tsv():
     tsv_path = REPO_ROOT / "registry/SHIMS.tsv"
     tsv_path.parent.mkdir(parents=True, exist_ok=True)
-    lines = ["shim_path\ttarget_module\ttype\tstatus\tnotes"]
+    # This tool owns a subset of the registry; retain separately registered
+    # study paths and newer compatibility aliases when updating that subset.
+    records = {}
+    if tsv_path.is_file():
+        for line in tsv_path.read_text().splitlines()[1:]:
+            if line:
+                records[line.split("\t", 1)[0]] = line
     for rel_path, target in sorted(SHIMS_MAP.items()):
         p = REPO_ROOT / rel_path
         shim_type = "module_proxy" if rel_path.startswith("core/") or "utils" in rel_path else "forwarder"
         status = "ACTIVE" if p.exists() else "MISSING"
         notes = "Emits DeprecationWarning"
-        lines.append(f"{rel_path}\t{target}\t{shim_type}\t{status}\t{notes}")
+        records[rel_path] = f"{rel_path}\t{target}\t{shim_type}\t{status}\t{notes}"
+    lines = ["shim_path\ttarget_module\ttype\tstatus\tnotes", *[records[key] for key in sorted(records)]]
     tsv_path.write_text("\n".join(lines) + "\n")
-    print(f"Wrote registry: {tsv_path} ({len(SHIMS_MAP)} shims cataloged)")
+    print(f"Wrote registry: {tsv_path} ({len(records)} shims cataloged)")
 
 
 if __name__ == "__main__":

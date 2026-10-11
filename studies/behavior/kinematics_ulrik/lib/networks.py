@@ -1,10 +1,8 @@
 import os
 
-import matplotlib.pyplot as plt
-import networkx as nx
 import numpy as np
 import pandas as pd
-from analysis.ulrik_kinematics.lib import motifs
+from fpcode.behavior.transitions import adjacent_pairs
 
 # Tunable threshold: only draw arrows that account for > EDGE_CUTOFF (3%) of outgoing transitions
 EDGE_CUTOFF = 0.03
@@ -27,12 +25,7 @@ def build_transition_matrix(sessions, mapping=None, top_n=10):
         if "syllable" not in df.columns: continue
 
         raw_seq = df["syllable"].fillna(-1).astype(float).to_numpy()
-        mask = np.concatenate(([True], raw_seq[1:] != raw_seq[:-1]))
-        seq = raw_seq[mask]
-
-        for i in range(len(seq) - 1):
-            src = seq[i]
-            dst = seq[i+1]
+        for src, dst in adjacent_pairs(raw_seq, collapse_runs=True):
             if src == -1 or dst == -1: continue
 
             src_lbl = mapping.get(src, "UNK") if mapping else src
@@ -66,6 +59,7 @@ def plot_directed_network(trans_df, freq_series, title, ax):
     """
     Draws the NetworkX visualization onto the provided matplotlib axis.
     """
+    import networkx as nx
     if trans_df.empty:
         ax.set_title("Insufficient data")
         return
@@ -166,6 +160,7 @@ def plot_delta_network(delta_df, freq_series, title, ax):
     Draws a specific differential network where edges can be negative or positive.
     Red = Positive Delta, Blue = Negative Delta.
     """
+    import networkx as nx
     if delta_df.empty:
         ax.set_title("Insufficient data")
         return
@@ -233,6 +228,9 @@ def plot_delta_network(delta_df, freq_series, title, ax):
             ha='right', va='bottom', fontsize=10, color='gray')
 
 def run_discovery(sessions, project_name="AMPH", style="alphabet"):
+    import matplotlib.pyplot as plt
+    from studies.behavior.kinematics_ulrik.lib import motifs
+
     print(f"\n--- Running Networks Discovery ({style.capitalize()} Mode) ---")
     base_project = project_name.split("_")[0]
     mapping = motifs.get_label_mapping(sessions, project=base_project, style=style)
@@ -359,6 +357,7 @@ def verify_networks_module(sessions):
     Mathematical defense test for Transition Probability Matrices.
     Asserts row conservation (sum of outgoing probabilities must equal 1.0).
     """
+    from studies.behavior.kinematics_ulrik.lib import motifs
     print("\n" + "="*50)
     print(" VERIFICATION: MARKOV MATRIX INVARIANCE")
     print("="*50)

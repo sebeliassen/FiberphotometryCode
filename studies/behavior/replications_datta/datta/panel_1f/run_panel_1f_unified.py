@@ -15,20 +15,14 @@ import numpy as np
 import pandas as pd
 import psutil
 from joblib import Parallel, delayed
-from scipy.ndimage import uniform_filter1d
-from scipy.signal import find_peaks
+from fpcode.behavior.kinematics import detect_movement_initiations as _movement_initiations
+from fpcode.common.paths import get_repo_root
 
 # --- Pathing ---
-this_file = Path(__file__).resolve()
-repo_root = this_file.parents[5] # FiberphotometryCode
-datta_dir = this_file.parents[1] # datta
+repo_root = get_repo_root()
 
 if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
-if str(datta_dir) not in sys.path:
-    sys.path.insert(0, str(datta_dir))
-
-from lib import config, features
 
 # --- Constants ---
 safe_limit_pct = 0.80
@@ -66,24 +60,11 @@ def detect_syllable_onsets(df, syllable_col="syllable"):
 def detect_movement_initiations(df, fs, vel_col="velocity_px_s"):
     if vel_col not in df.columns:
         return np.array([], dtype=int)
-    v = df[vel_col].to_numpy().astype(float)
-    if np.all(np.isnan(v)) or len(v) == 0:
-        return np.array([], dtype=int)
-    v_mean = np.nanmean(v)
-    v_std = np.nanstd(v)
-    if v_std == 0 or np.isnan(v_std):
-        return np.array([], dtype=int)
-    v_z = (v - v_mean) / v_std
-    v_z_filled = np.nan_to_num(v_z, 0)
-    win_samples = int(round(1.67 * fs))
-    win_samples = max(win_samples, 1)
-    v_smooth = uniform_filter1d(v_z_filled, size=win_samples, mode="nearest")
-    dv = np.diff(v_smooth, prepend=v_smooth[0]) * fs
-    cp_score = dv ** 3
-    peaks, _ = find_peaks(cp_score, height=1, width=1, prominence=1)
-    return peaks.astype(int)
+    return _movement_initiations(df[vel_col].to_numpy().astype(float), fs,
+                                derivative_scale="per_second", missing="zero")
 
 def process_session(s, fs, output_dir, use_signals, memory_limit_bytes=None):
+    from studies.behavior.replications_datta.datta.lib import features
     if memory_limit_bytes:
         import resource
         try:
@@ -229,6 +210,10 @@ def main():
     parser.add_argument("--output-dir", type=str, default=None)
     parser.add_argument("--event-limit", type=int, default=None)
     args = parser.parse_args()
+    # Config retains the historical syllable_generation/data and output roots.
+    # Delay it until orchestration: imports and --help must not create outputs.
+    from syllable_generation.analysis.replications.datta.lib import config
+
     p_config = get_project_config(args.project)
     if args.output_dir:
         out_dir = Path(args.output_dir)

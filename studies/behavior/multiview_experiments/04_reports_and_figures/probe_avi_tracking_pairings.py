@@ -17,7 +17,7 @@ import re
 from pathlib import Path
 
 import h5py
-import viz_v2_common as vc
+from fpcode.viz import v2 as vc
 
 
 def file_sha256(p: Path, max_bytes: int = 100 * 1024 * 1024) -> str:
@@ -45,10 +45,7 @@ def main():
     print(f"Total base sessions in model results: {len(base_sids)} ({len(seg_keys)} segments)")
 
     # 2. Load pairs_by_sid from matching
-    import sys
-    if str(vc.EXP_DIR) not in sys.path:
-        sys.path.insert(0, str(vc.EXP_DIR))
-    from core.pair_matching import find_matched_pairs
+    from fpcode.tracking.pair_matching import find_matched_pairs
     pairs = find_matched_pairs()
     pairs_by_sid = {p["sid"]: p for p in pairs}
 

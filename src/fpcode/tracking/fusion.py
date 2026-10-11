@@ -23,6 +23,8 @@ from typing import Any, Dict, Optional
 import numpy as np
 import pandas as pd
 from scipy.ndimage import median_filter
+from fpcode.tracking.geometry import rot2d as _rotation_matrices
+from fpcode.adapters.multiview_compatibility import legacy_tracking_paths
 
 try:
     from ..common.cache_manifest import (
@@ -40,9 +42,8 @@ try:
         BOT_RENAME_MAP,
         DEFAULT_ARENA_WIDTH,
         TOP_USE_BODYPARTS,
-        PathConfig,
     )
-    from .camera_correspondence import get_session_calibration_details, get_session_mapping
+    from .camera_correspondence import CameraMappingContext, get_session_calibration_details, get_session_mapping, mapping_fingerprint
     from .clock_sync import get_session_ttl_offset, load_ttl_cache
 except ImportError:
     from cache_manifest import (
@@ -56,12 +57,11 @@ except ImportError:
         verify_manifest,
         write_manifest,
     )
-    from camera_correspondence import get_session_calibration_details, get_session_mapping
+    from camera_correspondence import CameraMappingContext, get_session_calibration_details, get_session_mapping, mapping_fingerprint
     from schemas import (
         BOT_RENAME_MAP,
         DEFAULT_ARENA_WIDTH,
         TOP_USE_BODYPARTS,
-        PathConfig,
     )
     from ttl_sync import get_session_ttl_offset, load_ttl_cache
 
@@ -69,34 +69,32 @@ _CORE_DIR = Path(__file__).resolve().parent
 # Implementation files whose content changes invalidate fused caches.
 _FUSION_CODE_FILES = [
     _CORE_DIR / "fusion.py",
+    _CORE_DIR / "geometry.py",
     _CORE_DIR / "camera_correspondence.py",
     _CORE_DIR / "clock_sync.py",
+    _CORE_DIR.parent / "adapters" / "multiview_compatibility.py",
     _CORE_DIR.parent / "common" / "schemas.py",
     _CORE_DIR.parent / "contracts" / "pose.py",
     _CORE_DIR.parent / "behavior" / "kinematics.py",
 ]
 
 
-def _session_timestamp_csvs(sid: str):
+def _session_timestamp_csvs(sid: str, *, mapping_context=None, ttl_cache=None,
+                            ttl_cache_path=None, offset_info=None):
     """Timestamp CSVs that determine the camera calibration for a session (may be empty)."""
     try:
-        cache = load_ttl_cache()
-        info = cache.get(sid) or cache.get(sid.replace("_tandem_23kp", "")) or {}
+        info = (mapping_context.offset_info(sid) if mapping_context is not None else
+                get_session_ttl_offset(sid, cache=ttl_cache, cache_path=ttl_cache_path, offset_info=offset_info))
     except Exception:
+        if mapping_context is not None or any(value is not None for value in (ttl_cache, ttl_cache_path, offset_info)):
+            raise
         return []
     return [Path(p) for p in (info.get("top_csv"), info.get("bot_csv")) if p]
 
 
 def rot2d(angle: np.ndarray) -> np.ndarray:
     """Computes vectorized 2D rotation matrices for an array of angles in radians."""
-    c = np.cos(angle)
-    s = np.sin(angle)
-    R = np.empty((len(angle), 2, 2), dtype=np.float32)
-    R[:, 0, 0] = c
-    R[:, 0, 1] = -s
-    R[:, 1, 0] = s
-    R[:, 1, 1] = c
-    return R
+    return _rotation_matrices(angle, dtype=np.float32)
 
 
 from fpcode.behavior.kinematics import (
@@ -115,6 +113,13 @@ def fuse_single_pair(
     overwrite: bool = False,
     strict_calibration: Optional[bool] = None,
     unmanifested_policy: str = "trust",
+    *,
+    mapping_context=None,
+    ttl_cache=None,
+    ttl_cache_path=None,
+    offset_info=None,
+    camera_mapping=None,
+    calibration_details=None,
 ) -> Dict[str, Any]:
     """
     Fuses a matched TopCam and BotCam session into a unified 23-keypoint HDF5 tracking file.
@@ -130,6 +135,11 @@ def fuse_single_pair(
             compatible) returns it as CACHED but flagged ``cache_verification=
             UNVERIFIED_NO_MANIFEST``; ``"rebuild"`` re-fuses it atomically.
             Existing files are never deleted; a rebuild replaces atomically.
+        mapping_context / ttl_cache / ttl_cache_path / offset_info: Explicit
+            timestamp lookup, avoiding the historical cohort resource facade.
+        camera_mapping / calibration_details: Precomputed integer correspondence
+            and its calibration provenance. Strict mode requires valid crystal
+            provenance. The mapping is included in the artifact cache identity.
     """
     if strict_calibration is None:
         strict_calibration = bool(require_continuous_sync)
@@ -139,7 +149,7 @@ def fuse_single_pair(
     top_h5_path = Path(pair_info["top_h5"])
     bot_h5_path = Path(pair_info["bot_h5"])
 
-    dest_dir = Path(out_dir) if out_dir else PathConfig().fused_dir
+    dest_dir = Path(out_dir) if out_dir else legacy_tracking_paths().fused_dir
     dest_dir.mkdir(parents=True, exist_ok=True)
     out_h5_path = dest_dir / f"{sid}_tandem_23kp.h5"
 
@@ -153,7 +163,26 @@ def fuse_single_pair(
         "top_keypoint_order": list(TOP_USE_BODYPARTS),
         "bot_rename_map": dict(BOT_RENAME_MAP),
     }
-    manifest_inputs = [top_h5_path, bot_h5_path] + _session_timestamp_csvs(sid)
+    if mapping_context is not None and any(value is not None for value in (ttl_cache, ttl_cache_path, offset_info)):
+        raise ValueError("Provide a mapping context or TTL inputs, not both")
+    if sum(value is not None for value in (ttl_cache, ttl_cache_path, offset_info)) > 1:
+        raise ValueError("Provide one TTL cache, cache path, or offset record")
+    if mapping_context is None and any(value is not None for value in (ttl_cache, ttl_cache_path, offset_info)):
+        mapping_context = (CameraMappingContext(offset_lookup=lambda session: offset_info) if offset_info is not None
+                           else CameraMappingContext(ttl_cache=ttl_cache, ttl_cache_path=ttl_cache_path))
+    if camera_mapping is not None:
+        camera_mapping = np.asarray(camera_mapping)
+        if camera_mapping.ndim != 1 or not np.issubdtype(camera_mapping.dtype, np.integer):
+            raise ValueError("camera_mapping must be a one-dimensional integer array")
+        manifest_config["camera_mapping_sha256"] = mapping_fingerprint(camera_mapping)
+        manifest_config["calibration_details"] = dict(calibration_details or {})
+    if mapping_context is not None:
+        info = mapping_context.offset_info(sid)
+        manifest_config["static_ttl_offset"] = int(info.get("bot0_in_top", 0) - info.get("top0_in_bot", 0))
+        manifest_config["camera_max_jitter_ms"] = float(mapping_context.max_jitter_ms)
+    timestamp_inputs = [] if camera_mapping is not None and mapping_context is None else _session_timestamp_csvs(
+        sid, mapping_context=mapping_context)
+    manifest_inputs = [top_h5_path, bot_h5_path] + timestamp_inputs
 
     t0 = time.time()
     cache_verification = None
@@ -191,8 +220,15 @@ def fuse_single_pair(
         N_bot = len(df_bot)
 
         # 0. Camera Alignment Mapping: Strict Continuous Synchronization
-        mapping = get_session_mapping(sid, strict=strict_calibration)
-        calibration = get_session_calibration_details(sid) if mapping is not None else None
+        if camera_mapping is not None:
+            mapping, calibration = camera_mapping, calibration_details
+            if strict_calibration and not (calibration or {}).get("is_valid_crystal", False):
+                raise ValueError(f"Session {sid} supplied mapping is not valid crystal calibration")
+        elif mapping_context is not None:
+            mapping, calibration = mapping_context.resolve(sid, strict=strict_calibration)
+        else:
+            mapping = get_session_mapping(sid, strict=strict_calibration)
+            calibration = get_session_calibration_details(sid) if mapping is not None else None
         if mapping is None:
             if require_continuous_sync:
                 raise ValueError(
@@ -200,7 +236,8 @@ def fuse_single_pair(
                 )
             else:
                 # Legacy fallback
-                offset_info = get_session_ttl_offset(sid)
+                offset_info = (mapping_context.offset_info(sid) if mapping_context is not None else
+                               get_session_ttl_offset(sid))
                 offset = int(offset_info.get("bot0_in_top", 0) - offset_info.get("top0_in_bot", 0))
                 t_start = max(0, offset)
                 t_end = min(N_top, N_bot + offset)

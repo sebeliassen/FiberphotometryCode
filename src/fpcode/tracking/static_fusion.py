@@ -35,34 +35,27 @@ from ..common.schemas import (
     DEFAULT_ARENA_WIDTH,
     TOP_USE_BODYPARTS,
 )
-from .camera_correspondence import get_session_calibration_details, get_session_mapping
+from .camera_correspondence import CameraMappingContext, get_session_calibration_details, get_session_mapping, mapping_fingerprint
+from .clock_sync import get_session_ttl_offset
+from .geometry import project_reflected_points
+from fpcode.adapters.multiview_compatibility import (
+    STATIC_TRANSFORMS_PATH, EPOCH_TRANSFORMS_PATH, LazyJsonMapping, legacy_session_epoch,
+)
 
 _CORE_DIR = Path(__file__).resolve().parent
-STATIC_TRANSFORMS_PATH = _CORE_DIR / "static_arena_transforms.json"
-EPOCH_TRANSFORMS_PATH = _CORE_DIR / "epoch_arena_transforms.json"
-
-# Load pre-calibrated static transforms
-with open(STATIC_TRANSFORMS_PATH, "r") as f:
-    STATIC_ARENA_TRANSFORMS = json.load(f)
-
-if EPOCH_TRANSFORMS_PATH.exists():
-    with open(EPOCH_TRANSFORMS_PATH, "r") as f:
-        EPOCH_ARENA_TRANSFORMS = json.load(f)
-else:
-    EPOCH_ARENA_TRANSFORMS = None
+STATIC_ARENA_TRANSFORMS = LazyJsonMapping(STATIC_TRANSFORMS_PATH)
+EPOCH_ARENA_TRANSFORMS = LazyJsonMapping(EPOCH_TRANSFORMS_PATH, missing_ok=True)
 
 
 def get_session_epoch(ts_str: str) -> str:
     """Documented epoch assignment based on experimental recording schedule."""
-    if ts_str < "2026-04-01":
-        return "epoch1_winter_spring_2026"
-    return "epoch2_spring_post_shift_2026"
+    return legacy_session_epoch(ts_str)
 
 
 _FUSION_CODE_FILES = [
     _CORE_DIR / "static_fusion.py",
-    _CORE_DIR / "static_arena_transforms.json",
-    _CORE_DIR / "epoch_arena_transforms.json",
+    _CORE_DIR / "geometry.py",
+    _CORE_DIR.parent / "adapters" / "multiview_compatibility.py",
     _CORE_DIR / "camera_correspondence.py",
     _CORE_DIR / "clock_sync.py",
     _CORE_DIR.parent / "common" / "schemas.py",
@@ -92,6 +85,17 @@ def fuse_single_pair_static(
     use_epochs: bool = False,
     overwrite: bool = False,
     unmanifested_policy: str = "trust",
+    *,
+    transform_info=None,
+    transform_path=None,
+    transform_source_path=None,
+    epoch=None,
+    mapping_context=None,
+    ttl_cache=None,
+    ttl_cache_path=None,
+    offset_info=None,
+    camera_mapping=None,
+    calibration_details=None,
 ) -> Dict[str, Any]:
     """
     Fuses a matched TopCam and BotCam session using static per-arena affine projection.
@@ -112,6 +116,17 @@ def fuse_single_pair_static(
         Whether to route transforms through epoch_arena_transforms.json based on acquisition epoch.
     overwrite : bool, default=False
         Whether to overwrite existing files.
+    transform_info / transform_path : optional
+        Explicit affine calibration, as resolved metadata or a JSON resource.
+        An explicit epoch JSON requires an explicit ``epoch``. The historical
+        no-argument resource/epoch policy remains a compatibility facade.
+    transform_source_path : optional
+        Source dependency for an already resolved ``transform_info``; it is
+        fingerprinted in the manifest without loading calibration again.
+    mapping_context / ttl_cache / ttl_cache_path / offset_info : optional
+        Explicit timestamp lookup, scoped to those inputs.
+    camera_mapping / calibration_details : optional
+        Supplied integer correspondence with validated crystal provenance.
     """
     if keypoint_mode not in ("21kp", "23kp"):
         raise ValueError(f"Invalid keypoint_mode '{keypoint_mode}'. Must be '21kp' or '23kp'.")
@@ -128,7 +143,24 @@ def fuse_single_pair_static(
     out_h5_path = out_dir / f"{sid}_tandem_{keypoint_mode}.h5"
 
     ts = pair_info.get("ts", sid[:19])
-    if use_epochs and EPOCH_ARENA_TRANSFORMS is not None:
+    if transform_info is not None and transform_path is not None:
+        raise ValueError("Provide transform_info or transform_path, not both")
+    if transform_source_path is not None and transform_info is None:
+        raise ValueError("transform_source_path requires supplied transform_info")
+    if transform_path is not None:
+        used_transforms_path = Path(transform_path)
+        with used_transforms_path.open() as handle:
+            transforms = json.load(handle)
+        if use_epochs:
+            if epoch is None:
+                raise ValueError("Explicit epoch transforms require an explicit epoch")
+            transforms = transforms[epoch]
+        transform_info = transforms if "matrix_2x2" in transforms else transforms[arena]
+        resolved_epoch = epoch or "explicit_static"
+    elif transform_info is not None:
+        used_transforms_path = Path(transform_source_path) if transform_source_path is not None else None
+        resolved_epoch = epoch or "explicit_static"
+    elif use_epochs and EPOCH_ARENA_TRANSFORMS:
         epoch = get_session_epoch(ts)
         transform_info = EPOCH_ARENA_TRANSFORMS.get(epoch, {}).get(arena)
         if transform_info is None:
@@ -145,6 +177,8 @@ def fuse_single_pair_static(
 
     A = np.array(transform_info["matrix_2x2"], dtype=np.float32)
     b = np.array(transform_info["translation_2d"], dtype=np.float32)
+    if A.shape != (2, 2) or b.shape != (2,) or not np.all(np.isfinite(A)) or not np.all(np.isfinite(b)):
+        raise ValueError("Affine transform requires a finite 2x2 matrix and two-element translation")
 
     manifest_config = {
         "keypoint_mode": keypoint_mode,
@@ -156,7 +190,31 @@ def fuse_single_pair_static(
         "affine_translation": b.tolist(),
         "truncate_aborted_tail": bool(truncate_aborted_tail),
     }
-    manifest_inputs = [top_h5_path, bot_h5_path, used_transforms_path]
+    if mapping_context is not None and any(value is not None for value in (ttl_cache, ttl_cache_path, offset_info)):
+        raise ValueError("Provide a mapping context or TTL inputs, not both")
+    if sum(value is not None for value in (ttl_cache, ttl_cache_path, offset_info)) > 1:
+        raise ValueError("Provide one TTL cache, cache path, or offset record")
+    if mapping_context is None and any(value is not None for value in (ttl_cache, ttl_cache_path, offset_info)):
+        mapping_context = (CameraMappingContext(offset_lookup=lambda session: offset_info) if offset_info is not None
+                           else CameraMappingContext(ttl_cache=ttl_cache, ttl_cache_path=ttl_cache_path))
+    if mapping_context is not None:
+        manifest_config["camera_max_jitter_ms"] = float(mapping_context.max_jitter_ms)
+    if camera_mapping is not None:
+        camera_mapping = np.asarray(camera_mapping)
+        if camera_mapping.ndim != 1 or not np.issubdtype(camera_mapping.dtype, np.integer):
+            raise ValueError("camera_mapping must be a one-dimensional integer array")
+        manifest_config["camera_mapping_sha256"] = mapping_fingerprint(camera_mapping)
+        manifest_config["calibration_details"] = dict(calibration_details or {})
+    manifest_inputs = [top_h5_path, bot_h5_path]
+    if used_transforms_path is not None:
+        manifest_inputs.append(used_transforms_path)
+    if camera_mapping is None or mapping_context is not None:
+        try:
+            info = (mapping_context.offset_info(sid) if mapping_context is not None else get_session_ttl_offset(sid))
+            manifest_inputs.extend(Path(path) for path in (info.get("top_csv"), info.get("bot_csv")) if path)
+        except Exception:
+            if mapping_context is not None:
+                raise
 
     t0 = time.time()
     if not overwrite and out_h5_path.exists() and out_h5_path.stat().st_size > 500_000:
@@ -187,11 +245,17 @@ def fuse_single_pair_static(
         N_bot = len(df_bot)
 
         # Continuous Basler crystal correspondence mapping
-        mapping = get_session_mapping(sid, strict=True)
+        if camera_mapping is not None:
+            mapping, calibration = camera_mapping, calibration_details
+            if not (calibration or {}).get("is_valid_crystal", False):
+                raise ValueError(f"Session {sid} supplied mapping is not valid crystal calibration")
+        elif mapping_context is not None:
+            mapping, calibration = mapping_context.resolve(sid, strict=True)
+        else:
+            mapping = get_session_mapping(sid, strict=True)
+            calibration = get_session_calibration_details(sid)
         if mapping is None:
             raise ValueError(f"Strict Basler crystal mapping unavailable for {sid}.")
-
-        calibration = get_session_calibration_details(sid)
 
         N_map = min(N_top, len(mapping))
         mapping = mapping[:N_map]
@@ -226,13 +290,8 @@ def fuse_single_pair_static(
             raw_by = df_bot[(bot_scorer, orig_swap_bp, "y")].iloc[bot_idx].to_numpy(dtype=np.float32)
             raw_bp = df_bot[(bot_scorer, orig_swap_bp, "likelihood")].iloc[bot_idx].to_numpy(dtype=np.float32)
 
-            # Mirror reflection
-            refl_bx = arena_width - raw_bx
-
-            # Static affine projection into virtual TopCam arena space
-            # [x_top, y_top] = [refl_bx, raw_by] @ A.T + b
-            pts_bot = np.column_stack([refl_bx, raw_by])
-            pts_top = pts_bot @ A.T + b
+            pts_top = project_reflected_points(np.column_stack([raw_bx, raw_by]), A, b,
+                                               width=arena_width, dtype=np.float32)
 
             arr_x = np.full(N_top, np.nan, dtype=np.float32)
             arr_y = np.full(N_top, np.nan, dtype=np.float32)
@@ -253,9 +312,8 @@ def fuse_single_pair_static(
                 raw_by = df_bot[(bot_scorer, orig_bp, "y")].iloc[bot_idx].to_numpy(dtype=np.float32)
                 raw_bp = df_bot[(bot_scorer, orig_bp, "likelihood")].iloc[bot_idx].to_numpy(dtype=np.float32)
 
-                refl_bx = arena_width - raw_bx
-                pts_bot = np.column_stack([refl_bx, raw_by])
-                pts_top = pts_bot @ A.T + b
+                pts_top = project_reflected_points(np.column_stack([raw_bx, raw_by]), A, b,
+                                                   width=arena_width, dtype=np.float32)
 
                 arr_x = np.full(N_top, np.nan, dtype=np.float32)
                 arr_y = np.full(N_top, np.nan, dtype=np.float32)

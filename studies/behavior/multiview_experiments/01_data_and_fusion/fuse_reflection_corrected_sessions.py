@@ -23,6 +23,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy.ndimage import median_filter
+from fpcode.tracking.geometry import rot2d as _rotation_matrices
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 TOP_H5_DIR = REPO_ROOT / "karen_project/h5_files"
@@ -48,14 +49,7 @@ BOT_RENAME_MAP = {
 }
 
 def rot2d(angle: np.ndarray) -> np.ndarray:
-    c = np.cos(angle)
-    s = np.sin(angle)
-    R = np.empty((len(angle), 2, 2), dtype=np.float32)
-    R[:, 0, 0] = c
-    R[:, 0, 1] = -s
-    R[:, 1, 0] = s
-    R[:, 1, 1] = c
-    return R
+    return _rotation_matrices(angle, dtype=np.float32)
 
 def smooth_heading_circular(theta: np.ndarray, window: int = 9) -> np.ndarray:
     sin_s = median_filter(np.sin(theta), size=window, mode="nearest")

@@ -3,6 +3,8 @@ from typing import Dict
 
 import numpy as np
 import pandas as pd
+from fpcode.behavior.bouts import run_boundaries
+from fpcode.behavior.transitions import adjacent_pairs
 
 
 def load_quantitative_map(csv_path: str) -> Dict[int, str]:
@@ -31,6 +33,8 @@ def get_quantitative_group_usage(sessions, mapping: Dict[int, str], min_instance
     Aggregate usage into the 9 Turn x Vigor categories.
     Returns DF with 'Time_Pct' and 'Onset_Count' for the Categories.
     """
+    from syllable_generation.analysis.ulrik_kinematics.lib.metrics import get_syllable_instances
+
     rows = []
 
     # Pre-define the 9 categories to ensure zero-filling
@@ -67,8 +71,8 @@ def get_quantitative_group_usage(sessions, mapping: Dict[int, str], min_instance
             time_map = dict(zip(unique_labels, counts))
 
             # 2. Onsets
-            changes = np.concatenate(([True], labels[1:] != labels[:-1]))
-            runs = labels[changes]
+            starts, _ = run_boundaries(labels)
+            runs = labels[starts]
             # Exclude "Other" from counting as an onset if it's there?
             # No, keep it standard but user likely cares about the 9.
             unique_runs, run_counts = np.unique(runs, return_counts=True)
@@ -86,7 +90,7 @@ def get_quantitative_group_usage(sessions, mapping: Dict[int, str], min_instance
                 "Category": cat,
                 "Turn": cat.split("_")[0],
                 "Vigor": cat.split("_")[1],
-                "Time_Pct": time_map.get(cat, 0) / total_frames,
+                "Time_Pct": time_map.get(cat, 0) / total_frames if total_frames else 0.0,
                 "Onset_Count": onset_map.get(cat, 0)
             })
 
@@ -160,6 +164,8 @@ def get_fingerprint_data(sessions, top_n=5, min_instances: int = 0):
     Get normalized metrics for top N syllables across all sessions.
     Returns DataFrame ready for Radar Plot.
     """
+    from syllable_generation.analysis.ulrik_kinematics.lib.metrics import get_syllable_instances
+
     all_stats = []
 
     for s in sessions:
@@ -257,8 +263,8 @@ def get_manual_group_usage(sessions, mapping: Dict[int, str]) -> pd.DataFrame:
         # -----------------------
         # Reduce to runs: e.g. [A, A, B, A] -> [A, B, A]
         if len(labels) > 0:
-            changes = np.concatenate(([True], labels[1:] != labels[:-1]))
-            runs = labels[changes]
+            starts, _ = run_boundaries(labels)
+            runs = labels[starts]
             unique_runs, run_counts = np.unique(runs, return_counts=True)
             onset_map = dict(zip(unique_runs, run_counts))
         else:
@@ -315,20 +321,18 @@ def get_manual_group_transition_matrix(sessions, mapping: Dict[int, str], return
         mapped_seq = np.array(mapped_seq)
 
         # Collapse self-transitions on LABELS
-        mask = np.concatenate(([True], mapped_seq[1:] != mapped_seq[:-1]))
-        trans = mapped_seq[mask]
-
-        if len(trans) < 2: continue
+        pairs = adjacent_pairs(mapped_seq, collapse_runs=True)
+        if not len(pairs): continue
 
         # Count bigrams for this session
         local_counts = matrix_template.copy()
 
         # Map to integer indices for speed
         lbl_to_idx = {lbl: i for i, lbl in enumerate(unique_labels)}
-        mapped = np.array([lbl_to_idx.get(x, -1) for x in trans])
+        mapped = np.array([[lbl_to_idx.get(x, -1) for x in pair] for pair in pairs])
 
-        srcs = mapped[:-1]
-        dsts = mapped[1:]
+        srcs = mapped[:, 0]
+        dsts = mapped[:, 1]
 
         valid_mask = (srcs != -1) & (dsts != -1)
         valid_srcs = srcs[valid_mask]

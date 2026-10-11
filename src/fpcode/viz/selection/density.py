@@ -2,19 +2,20 @@
 
 from __future__ import annotations
 
-from fpcode.viz.legacy_defaults import DENSITY_N_NEIGHBORS
 from typing import Any
 from typing import Dict
 from typing import List
 from typing import Sequence
 import numpy as np
 
+DENSITY_N_NEIGHBORS = 50  # Installed KPMS sampler's algorithm default.
 
-def choose_tier(n_eligible: int, G: int) -> str:
+
+def choose_tier(n_eligible: int, G: int, *, n_neighbors: int = DENSITY_N_NEIGHBORS) -> str:
     """Tier from the ELIGIBLE count (determined after QC, never before)."""
     if n_eligible <= 0:
         return "no_eligible_bouts"
-    if n_eligible > DENSITY_N_NEIGHBORS:
+    if n_eligible > n_neighbors:
         return "tier_1_density"
     if n_eligible > G:
         return "tier_2_compact_neighborhood"

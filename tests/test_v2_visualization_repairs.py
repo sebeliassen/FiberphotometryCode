@@ -371,6 +371,10 @@ def test_grid_layout():
 
 
 class V2VisualizationRepairs(unittest.TestCase):
+    # pytest collects the functions above. Keep this adapter for direct unittest
+    # execution without counting and running the same twelve cases twice.
+    __test__ = False
+
     def test_01_half_open_bouts_basic(self):
         test_half_open_bouts_basic()
 

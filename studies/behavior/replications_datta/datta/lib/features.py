@@ -6,8 +6,6 @@ import re
 import numpy as np
 import pandas as pd
 
-from . import config
-
 
 def _grad(y: np.ndarray, t: np.ndarray) -> np.ndarray:
     """Calculates gradient (derivative) of y with respect to t."""
@@ -76,6 +74,7 @@ def calculate_kinematics(df: pd.DataFrame) -> pd.DataFrame:
 
 def extract_signal_metadata(df: pd.DataFrame, session_metadata: dict) -> list[dict]:
     """Parses signal columns and metadata to return a list of defined signals."""
+    from . import config
     sig_annot_rows = []
 
     # Identify Signal Columns

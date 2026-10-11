@@ -16,17 +16,17 @@ Environment: Python 3
 
 import argparse
 import json
-import sys
 from pathlib import Path
 
 import h5py
 import numpy as np
 
+from fpcode.common.paths import get_repo_root
+from fpcode.viz import v2 as vc
+
 SCRIPT_DIR = Path(__file__).resolve().parent
-EXP_DIR = SCRIPT_DIR.parent
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
-import viz_v2_common as vc
+REPO_ROOT = get_repo_root()
+EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 
 DEFAULT_VIZ_DIR = vc.DEFAULT_VIZ_DIR
 COHORT_DIR = EXP_DIR / "cohort_static_21kp_v2"
@@ -68,7 +68,7 @@ def main():
     min_bout_frames=max(1,vc.frames_from_seconds(vc.DEFAULT_MIN_BOUT_SECONDS,fps))
 
     # 1b. Load cohort breakdown from longitudinal suite if available
-    cohort_json_path = SCRIPT_DIR.parents[1] / "analysis/ulrik_kinematics/output/cohort_static_21kp_v2_seed101_phenotyping/07_longitudinal_cohorts/syllable_cohort_breakdown.json"
+    cohort_json_path = EXP_DIR.parent / "analysis/ulrik_kinematics/output/cohort_static_21kp_v2_seed101_phenotyping/07_longitudinal_cohorts/syllable_cohort_breakdown.json"
     cohort_breakdown = {}
     if cohort_json_path.exists():
         with open(cohort_json_path, "r") as f:
@@ -160,7 +160,7 @@ def main():
         traj_super_mp4 = traj_super / f"syllable_{s:02d}_trajectory_superimposed.mp4"
 
         has_provenance = vc.selection_provenance_matches(vc.sidecar_path(vid_density),manifest,s,
-            [SCRIPT_DIR/"render_all_cohort_static_21kp_v2_seed101_grid_movies.py",SCRIPT_DIR/"viz_v2_common.py"])
+            [SCRIPT_DIR/"render_all_cohort_static_21kp_v2_seed101_grid_movies.py",Path(vc.__file__)])
         has_vid_density = vid_density.exists() and has_provenance
         plots_current = traj_side_pdf.exists() and traj_super_pdf.exists() and traj_side_png.exists() and traj_super_png.exists()
         has_traj_side = traj_side_mp4.exists() and plots_current

@@ -1,4 +1,4 @@
-"""Visualization provenance; historical V2 behavior preserved."""
+"""Visualization provenance for explicitly supplied model and media inputs."""
 
 from __future__ import annotations
 
@@ -7,13 +7,8 @@ from fpcode.viz.hashing import NumpyEncoder
 from fpcode.viz.hashing import hash_files
 from fpcode.viz.hashing import sha256_file
 from fpcode.viz.hashing import sha256_json
-from fpcode.viz.legacy_defaults import CALIBRATION_FILES
-from fpcode.viz.legacy_defaults import CONFIG_PATH
-from fpcode.viz.legacy_defaults import PREPROCESSED_PATH
-from fpcode.viz.legacy_defaults import RESULTS_PATH
-from fpcode.viz.legacy_defaults import SCHEMA_VERSION
-from fpcode.viz.legacy_defaults import VFI_PATH
-from fpcode.viz.legacy_io import media_file_identity
+from fpcode.viz.context import SelectionInputs
+from fpcode.viz.media import media_file_identity
 from fpcode.viz.selection.exemplars import selection_ids
 from pathlib import Path
 from typing import Any
@@ -27,37 +22,38 @@ import json
 import os
 
 
-def source_input_hashes(cache) -> Dict[str, str]:
+def source_input_hashes(cache, *, inputs: SelectionInputs) -> Dict[str, str]:
     return {
-        "results_sha256": cache.get(RESULTS_PATH),
-        "config_sha256": cache.get(CONFIG_PATH),
-        "vfi_sha256": cache.get(VFI_PATH),
-        "preprocessed_sha256": cache.get(PREPROCESSED_PATH),
+        "results_sha256": cache.get(inputs.results),
+        "config_sha256": cache.get(inputs.config),
+        "vfi_sha256": cache.get(inputs.video_frame_indexes),
+        "preprocessed_sha256": cache.get(inputs.preprocessed),
     }
 
 
-def verify_manifest_inputs(manifest: Dict[str, Any], cache) -> None:
+def verify_manifest_inputs(manifest: Dict[str, Any], cache, *, inputs: SelectionInputs) -> None:
     """Reject selection provenance tied to different model/coordinate arrays."""
     expected = manifest.get("input_hashes")
-    if not expected or manifest.get("schema_version") != SCHEMA_VERSION:
-        raise ValueError("Regenerate a schema-v4 selection manifest before rendering")
+    if not expected or manifest.get("schema_version") != inputs.schema_version:
+        raise ValueError(f"Regenerate a schema-v{inputs.schema_version} selection manifest before rendering")
     if not manifest.get("qc_config", {}).get("applied", False):
         raise ValueError("QC was bypassed; this debug manifest cannot certify a production gallery")
-    current = source_input_hashes(cache)
+    current = source_input_hashes(cache, inputs=inputs)
     changed = [k for k, v in current.items() if expected.get(k) != v]
     if changed:
         raise ValueError("Selection input mismatch: " + ", ".join(changed))
 
 
 def selection_provenance_matches(
-    sidecar: Path, manifest: Dict[str, Any], syllable: int, code_files: Sequence[Path] = ()
+    sidecar: Path, manifest: Dict[str, Any], syllable: int, code_files: Sequence[Path] = (),
+    *, inputs: SelectionInputs,
 ) -> bool:
     """Gallery validation checks actual IDs/status, rather than sidecar existence."""
     try:
         rec = json.loads(Path(sidecar).read_text())
         key = rec["cache_key"]
         if (
-            key.get("schema_version") != SCHEMA_VERSION
+            key.get("schema_version") != inputs.schema_version
             or key.get("manifest_syllable_sha256") != manifest_syllable_hash(manifest, syllable)
             or key.get("manifest_global_sha256") != manifest_global_hash(manifest)
         ):
@@ -65,8 +61,9 @@ def selection_provenance_matches(
         if code_files and key.get("code_sha256") != hash_files(code_files):
             return False
         if code_files and (
-            key.get("selected_source_file_identity") != media_file_identity(manifest, syllable)
-            or key.get("calibration_sha256") != hash_files(CALIBRATION_FILES)
+            key.get("selected_source_file_identity") != media_file_identity(
+                manifest, syllable, fused_artifacts=inputs.fused_artifacts)
+            or key.get("calibration_sha256") != hash_files(inputs.calibration_files)
         ):
             return False
         wanted = selection_ids(manifest, syllable)
@@ -100,6 +97,8 @@ def make_cache_key(
     hash_cache: HashCache,
     code_files: Iterable[Path],
     render_settings: Dict[str, Any],
+    *,
+    inputs: SelectionInputs,
 ) -> Dict[str, Any]:
     """
     Everything that must be identical for an existing output to be reused.  The
@@ -110,18 +109,19 @@ def make_cache_key(
     sidecar for traceability.)
     """
     return {
-        "schema_version": SCHEMA_VERSION,
+        "schema_version": inputs.schema_version,
         "kind": kind,
         "syllable": int(syllable),
         "manifest_syllable_sha256": manifest_syllable_hash(manifest, syllable),
         "manifest_global_sha256": manifest_global_hash(manifest),
-        "results_sha256": hash_cache.get(RESULTS_PATH),
-        "config_sha256": sha256_file(CONFIG_PATH),
-        "vfi_sha256": hash_cache.get(VFI_PATH),
-        "preprocessed_sha256": hash_cache.get(PREPROCESSED_PATH),
-        "selected_source_file_identity": media_file_identity(manifest, syllable),
+        "results_sha256": hash_cache.get(inputs.results),
+        "config_sha256": sha256_file(inputs.config),
+        "vfi_sha256": hash_cache.get(inputs.video_frame_indexes),
+        "preprocessed_sha256": hash_cache.get(inputs.preprocessed),
+        "selected_source_file_identity": media_file_identity(
+            manifest, syllable, fused_artifacts=inputs.fused_artifacts),
         "code_sha256": hash_files(code_files),
-        "calibration_sha256": hash_files(CALIBRATION_FILES),
+        "calibration_sha256": hash_files(inputs.calibration_files),
         "render_settings": render_settings,
     }
 
