@@ -34,8 +34,8 @@ if str(EXP_DIR) not in sys.path:
 
 import h5py
 
-from core import cache_manifest as cm
-from core import eval_artifacts as ea
+from fpcode.common import cache_manifest as cm
+from fpcode.kpms import evaluation as ea
 
 
 # --------------------------------------------------------------------------- #

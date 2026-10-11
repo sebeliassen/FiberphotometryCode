@@ -25,7 +25,7 @@ EXP_DIR = Path(__file__).resolve().parent.parent / "syllable_generation/multivie
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core import cache_manifest as cm
+from fpcode.common import cache_manifest as cm
 
 
 class TestAtomicWrites(unittest.TestCase):

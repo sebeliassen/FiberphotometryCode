@@ -96,7 +96,7 @@ def test_init_model_shim_equivalence():
 
 # 5. Test kpms.evaluation vs core.eval_artifacts
 def test_evaluation_reindex_mathematical_equivalence():
-    import core.eval_artifacts as old_ea
+    import fpcode.kpms.evaluation as old_ea
     import fpcode.kpms.evaluation as new_ea
 
     freqs = np.array([0.05, 0.40, 0.15, 0.40, 0.00])

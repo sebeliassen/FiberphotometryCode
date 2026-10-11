@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from fiberphotometry.data.data_loading import load_all_sessions
+from studies.photometry.exploratory.data.data_loading import load_all_sessions
 
 # adjust to your project layout
 SRC = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/oft_baseline")

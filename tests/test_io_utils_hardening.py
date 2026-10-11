@@ -24,7 +24,7 @@ if str(REPO_ROOT) not in sys.path:
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.io_utils import (
+from fpcode.common.io import (
     compact_kpms_checkpoint,
     copy_dataset_bounded,
     inspect_checkpoint_iterations,

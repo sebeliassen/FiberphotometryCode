@@ -23,7 +23,7 @@ EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.camera_correspondence import compute_session_camera_mapping
+from fpcode.tracking.camera_correspondence import compute_session_camera_mapping
 
 
 class TestCameraCorrespondenceSynthetic(unittest.TestCase):

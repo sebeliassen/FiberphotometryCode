@@ -4,13 +4,13 @@ import pytest
 
 pytestmark = pytest.mark.needs_data
 
-from fiberphotometry.config import PLOTTING_CONFIG
-from fiberphotometry.data.data_loading import DataContainer, load_all_sessions
-from fiberphotometry.data.session_loading import populate_containers
-from fiberphotometry.data.syncer import sync_session
-from fiberphotometry.data.timepoint_processing import add_event_idxs_to_session
-from fiberphotometry.processing.plotting_setup import PlottingSetup
-from fiberphotometry.processing.signal_info_setup import assign_sessions_signal_info
+from studies.photometry.exploratory.config import PLOTTING_CONFIG
+from studies.photometry.exploratory.data.data_loading import DataContainer, load_all_sessions
+from studies.photometry.exploratory.data.session_loading import populate_containers
+from studies.photometry.exploratory.data.syncer import sync_session
+from studies.photometry.exploratory.data.timepoint_processing import add_event_idxs_to_session
+from studies.photometry.exploratory.processing.plotting_setup import PlottingSetup
+from studies.photometry.exploratory.processing.signal_info_setup import assign_sessions_signal_info
 
 # adjust to your project layout
 SRC = Path("/Users/fsp585/Desktop/GetherLabCode/FiberphotometryCode/src")

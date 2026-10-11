@@ -32,11 +32,11 @@ sys.path.insert(0, str(project_root))
 
 # After this, the import should work:
 # In[3]:
-from fiberphotometry.config import PLOTTING_CONFIG
-from fiberphotometry.data.data_loading import load_all_sessions
-from fiberphotometry.data.oft_session_loading import populate_oft_containers
-from fiberphotometry.data.session_loading import populate_containers
-from fiberphotometry.processing.plotting_setup import PlottingSetup
+from studies.photometry.exploratory.config import PLOTTING_CONFIG
+from studies.photometry.exploratory.data.data_loading import load_all_sessions
+from studies.photometry.exploratory.data.oft_session_loading import populate_oft_containers
+from studies.photometry.exploratory.data.session_loading import populate_containers
+from studies.photometry.exploratory.processing.plotting_setup import PlottingSetup
 
 # In[4]:
 
@@ -180,7 +180,7 @@ def test_oft_session_full_pipeline():
     # In your notebook
     import pprint  # Make sure pprint is imported
 
-    from fiberphotometry.data.session_synchronization import synchronize_session_data
+    from studies.photometry.exploratory.data.session_synchronization import synchronize_session_data
 
     print("--- ⏳ Starting synchronization for ALL sessions... ---")
 
@@ -240,8 +240,8 @@ def test_oft_session_full_pipeline():
     # In[12]:
 
 
-    from fiberphotometry.kpms.syllable_appender import extract_and_append_results
-    from fiberphotometry.kpms.syllable_generator import generate_syllable_models
+    from studies.photometry.exploratory.kpms.syllable_appender import extract_and_append_results
+    from studies.photometry.exploratory.kpms.syllable_generator import generate_syllable_models
 
     print("Successfully imported syllable analysis modules!")
 
@@ -513,22 +513,22 @@ def test_oft_session_full_pipeline():
     print("\nImporting custom project modules...")
     try:
         # core Session class and loader
-        from fiberphotometry.data.data_loading import Session, load_all_sessions
+        from studies.photometry.exploratory.data.data_loading import Session, load_all_sessions
 
         # OFT-specific session population
-        from fiberphotometry.data.oft_session_loading import populate_oft_containers
+        from studies.photometry.exploratory.data.oft_session_loading import populate_oft_containers
 
         # container for holding session data
-        from fiberphotometry.data.session_loading import DataContainer
+        from studies.photometry.exploratory.data.session_loading import DataContainer
 
         # synchronizing different data streams in a session
-        from fiberphotometry.data.session_synchronization import synchronize_session_data
-        from fiberphotometry.kpms.batching import create_batches
-        from fiberphotometry.kpms.syllable_appender import extract_and_append_results
+        from studies.photometry.exploratory.data.session_synchronization import synchronize_session_data
+        from studies.photometry.exploratory.kpms.batching import create_batches
+        from studies.photometry.exploratory.kpms.syllable_appender import extract_and_append_results
 
         # KPMS pipeline stages
-        from fiberphotometry.kpms.syllable_generator import generate_syllable_models
-        from fiberphotometry.kpms.trimming import create_trimmed_coords_and_confs
+        from studies.photometry.exploratory.kpms.syllable_generator import generate_syllable_models
+        from studies.photometry.exploratory.kpms.trimming import create_trimmed_coords_and_confs
 
         print("✅ All custom modules imported successfully.")
     except ImportError as e:
@@ -1038,8 +1038,8 @@ def test_oft_session_full_pipeline():
     # In[32]:
 
 
-    from fiberphotometry.config import PLOTTING_CONFIG
-    from fiberphotometry.processing.plotting_setup import PlottingSetup
+    from studies.photometry.exploratory.config import PLOTTING_CONFIG
+    from studies.photometry.exploratory.processing.plotting_setup import PlottingSetup
 
     # In[33]:
 

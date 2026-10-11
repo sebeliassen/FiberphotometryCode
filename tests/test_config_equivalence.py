@@ -9,7 +9,7 @@ from pathlib import Path
 import importlib.util
 import yaml
 
-from core.paths import REPO_ROOT
+from fpcode.common.paths import REPO_ROOT
 
 
 def load_module_from_path(module_name: str, file_path: Path):

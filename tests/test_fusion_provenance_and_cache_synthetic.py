@@ -27,10 +27,10 @@ EXP_DIR = Path(__file__).resolve().parent.parent / "syllable_generation/multivie
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core import cache_manifest as cm
-from core import camera_correspondence as cc
-from core.fusion_engine import fuse_single_pair
-from core.schemas import BOT_RAW_BODYPARTS, BOT_RENAME_MAP, TANDEM_BODYPARTS, TOP_USE_BODYPARTS
+from fpcode.common import cache_manifest as cm
+from fpcode.tracking import camera_correspondence as cc
+from fpcode.tracking.fusion import fuse_single_pair
+from fpcode.common.schemas import BOT_RAW_BODYPARTS, BOT_RENAME_MAP, TANDEM_BODYPARTS, TOP_USE_BODYPARTS
 
 SID = "synthetic_session_0001"
 N = 300
@@ -160,7 +160,7 @@ class TestFusionCacheAndAtomicity(_FusionBase):
             "confidence_gating": True, "truncate_aborted_tail": True,
             "top_keypoint_order": list(TOP_USE_BODYPARTS), "bot_rename_map": dict(BOT_RENAME_MAP),
         }
-        from core import fusion_engine as fe
+        from fpcode.tracking import fusion as fe
         cm.write_manifest(self.out_h5, kind="fused_h5", inputs=[self.top, self.bot], config=cfg,
                           code_files=fe._FUSION_CODE_FILES)
 

@@ -24,8 +24,8 @@ if str(EXP_DIR) not in sys.path:
 
 import importlib.util
 
-from core.camera_correspondence import compute_session_camera_mapping, top_to_bot_frame_continuous
-from core.ttl_sync import find_camera_timestamp_files
+from fpcode.tracking.camera_correspondence import compute_session_camera_mapping, top_to_bot_frame_continuous
+from fpcode.tracking.clock_sync import find_camera_timestamp_files
 
 spec = importlib.util.spec_from_file_location(
     "renderer",
