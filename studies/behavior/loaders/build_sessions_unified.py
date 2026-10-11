@@ -82,8 +82,8 @@ def build_sessions(
         sys.path.remove(str(proj_dir))
 
     # Overwrite the global JCFG in syllable_generation library
-    from syllable_generation.loaders.jonathan import config as lib_config
-    from syllable_generation.loaders.jonathan.config import JonathanConfig
+    from studies.behavior.loaders.jonathan import config as lib_config
+    from studies.behavior.loaders.jonathan.config import JonathanConfig
 
     if project_config is not None and hasattr(project_config, "JCFG"):
         print("[sessions-unified] Overwriting JCFG with project config.")
@@ -92,9 +92,9 @@ def build_sessions(
         print("[sessions-unified] Resetting JCFG to default JonathanConfig.")
         lib_config.JCFG = JonathanConfig()
 
-    from syllable_generation.loaders.jonathan import steps as jonathan_steps
-    from syllable_generation.loaders.jonathan.build import build
-    from syllable_generation.loaders.jonathan.context import BuildContext
+    from studies.behavior.loaders.jonathan import steps as jonathan_steps
+    from studies.behavior.loaders.jonathan.build import build
+    from studies.behavior.loaders.jonathan.context import BuildContext
 
     # 2. Determine Discovery Mode
     # Default to H5-based for syllable_generation example, and hybrid video/H5 for others

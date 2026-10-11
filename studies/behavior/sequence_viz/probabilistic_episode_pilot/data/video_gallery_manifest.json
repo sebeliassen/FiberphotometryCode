@@ -1,0 +1,1398 @@
+[
+  {
+    "movie_index": 1,
+    "theme_id": "theme_A",
+    "theme_title": "Theme A: Wall-Rear & Descent Locomotion",
+    "method_id": "seqnmf",
+    "method_name": "seqNMF (Level 2 Soft)",
+    "operating_point": "exemplar",
+    "operating_title": "Exemplar (Closest to Prototypical Motif)",
+    "target_similarity": 0.864,
+    "movie_filename": "movie_1x3_theme_A_seqnmf_exemplar.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_A_seqnmf_exemplar.mp4",
+    "thumbnail_filename": "thumb_theme_A_seqnmf_exemplar.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_A_seqnmf_exemplar.png",
+    "gif_filename": "preview_theme_A_seqnmf_exemplar.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_A_seqnmf_exemplar.gif",
+    "panel_animals": [
+      "1666",
+      "1658",
+      "1694"
+    ],
+    "panel_similarities": [
+      0.864,
+      0.827,
+      0.825
+    ],
+    "panel_durations_sec": [
+      0.75,
+      1.38,
+      1.45
+    ],
+    "panel_tokens": [
+      [
+        "syll_015",
+        "syll_014",
+        "syll_004",
+        "syll_017"
+      ],
+      [
+        "syll_015",
+        "syll_014",
+        "syll_004",
+        "syll_017"
+      ],
+      [
+        "syll_057",
+        "syll_014",
+        "syll_004",
+        "syll_023"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "sniff upwards",
+        "rear/lean",
+        "back down + turn left",
+        "run left"
+      ],
+      [
+        "sniff upwards",
+        "rear/lean",
+        "back down + turn left",
+        "run left"
+      ],
+      [
+        "walk left",
+        "rear/lean",
+        "back down + turn left",
+        "walk left"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "sniff upwards -> rear/lean -> back down + turn left -> run left",
+      "sniff upwards -> rear/lean -> back down + turn left -> run left",
+      "walk left -> rear/lean -> back down + turn left -> walk left"
+    ]
+  },
+  {
+    "movie_index": 2,
+    "theme_id": "theme_A",
+    "theme_title": "Theme A: Wall-Rear & Descent Locomotion",
+    "method_id": "seqnmf",
+    "method_name": "seqNMF (Level 2 Soft)",
+    "operating_point": "p80",
+    "operating_title": "P80 Representative (80th Percentile Core)",
+    "target_similarity": 0.531,
+    "movie_filename": "movie_1x3_theme_A_seqnmf_p80.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_A_seqnmf_p80.mp4",
+    "thumbnail_filename": "thumb_theme_A_seqnmf_p80.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_A_seqnmf_p80.png",
+    "gif_filename": "preview_theme_A_seqnmf_p80.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_A_seqnmf_p80.gif",
+    "panel_animals": [
+      "1771",
+      "1694",
+      "1658"
+    ],
+    "panel_similarities": [
+      0.531,
+      0.53,
+      0.528
+    ],
+    "panel_durations_sec": [
+      1.9,
+      1.9,
+      0.95
+    ],
+    "panel_tokens": [
+      [
+        "syll_002",
+        "syll_014",
+        "syll_004",
+        "syll_023"
+      ],
+      [
+        "syll_016",
+        "syll_014",
+        "syll_004",
+        "syll_023"
+      ],
+      [
+        "syll_002",
+        "syll_014",
+        "syll_004",
+        "syll_003"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "turn right",
+        "rear/lean",
+        "back down + turn left",
+        "walk left"
+      ],
+      [
+        "lean left",
+        "rear/lean",
+        "back down + turn left",
+        "walk left"
+      ],
+      [
+        "turn right",
+        "rear/lean",
+        "back down + turn left",
+        "walk left"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "turn right -> rear/lean -> back down + turn left -> walk left",
+      "lean left -> rear/lean -> back down + turn left -> walk left",
+      "turn right -> rear/lean -> back down + turn left -> walk left"
+    ]
+  },
+  {
+    "movie_index": 3,
+    "theme_id": "theme_A",
+    "theme_title": "Theme A: Wall-Rear & Descent Locomotion",
+    "method_id": "seqnmf",
+    "method_name": "seqNMF (Level 2 Soft)",
+    "operating_point": "random",
+    "operating_title": "Random Sampling (Unpruned Population)",
+    "target_similarity": 0.25,
+    "movie_filename": "movie_1x3_theme_A_seqnmf_random.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_A_seqnmf_random.mp4",
+    "thumbnail_filename": "thumb_theme_A_seqnmf_random.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_A_seqnmf_random.png",
+    "gif_filename": "preview_theme_A_seqnmf_random.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_A_seqnmf_random.gif",
+    "panel_animals": [
+      "1749",
+      "728",
+      "1694"
+    ],
+    "panel_similarities": [
+      0.335,
+      0.205,
+      0.21
+    ],
+    "panel_durations_sec": [
+      2.38,
+      1.02,
+      4.17
+    ],
+    "panel_tokens": [
+      [
+        "syll_015",
+        "syll_031",
+        "syll_004",
+        "syll_003"
+      ],
+      [
+        "syll_002",
+        "syll_014",
+        "syll_004",
+        "syll_003"
+      ],
+      [
+        "syll_002",
+        "syll_014",
+        "syll_004",
+        "syll_003"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "sniff upwards",
+        "rear/lean",
+        "back down + turn left",
+        "walk left"
+      ],
+      [
+        "turn right",
+        "rear/lean",
+        "back down + turn left",
+        "walk left"
+      ],
+      [
+        "turn right",
+        "rear/lean",
+        "back down + turn left",
+        "walk left"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "sniff upwards -> rear/lean -> back down + turn left -> walk left",
+      "turn right -> rear/lean -> back down + turn left -> walk left",
+      "turn right -> rear/lean -> back down + turn left -> walk left"
+    ]
+  },
+  {
+    "movie_index": 4,
+    "theme_id": "theme_A",
+    "theme_title": "Theme A: Wall-Rear & Descent Locomotion",
+    "method_id": "prob_hsmm",
+    "method_name": "Mixed HSMM (Raw Syllables)",
+    "operating_point": "exemplar",
+    "operating_title": "Exemplar (Closest to Prototypical Motif)",
+    "target_similarity": 0.887,
+    "movie_filename": "movie_1x3_theme_A_prob_hsmm_exemplar.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_A_prob_hsmm_exemplar.mp4",
+    "thumbnail_filename": "thumb_theme_A_prob_hsmm_exemplar.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_A_prob_hsmm_exemplar.png",
+    "gif_filename": "preview_theme_A_prob_hsmm_exemplar.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_A_prob_hsmm_exemplar.gif",
+    "panel_animals": [
+      "1666",
+      "1658",
+      "1664"
+    ],
+    "panel_similarities": [
+      0.887,
+      0.881,
+      0.868
+    ],
+    "panel_durations_sec": [
+      1.2,
+      1.1,
+      2.15
+    ],
+    "panel_tokens": [
+      [
+        "syll_002",
+        "syll_012",
+        "syll_014",
+        "syll_004",
+        "syll_026"
+      ],
+      [
+        "syll_002",
+        "syll_012",
+        "syll_004",
+        "syll_026"
+      ],
+      [
+        "syll_002",
+        "syll_016",
+        "syll_004",
+        "syll_026",
+        "syll_005"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "turn right",
+        "hunched rear",
+        "rear/lean",
+        "back down + turn left",
+        "dash left"
+      ],
+      [
+        "turn right",
+        "hunched rear",
+        "back down + turn left",
+        "dash left"
+      ],
+      [
+        "turn right",
+        "lean left",
+        "back down + turn left",
+        "dash left",
+        "look right"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "turn right -> hunched rear -> rear/lean -> back down + turn left -> dash left",
+      "turn right -> hunched rear -> back down + turn left -> dash left",
+      "turn right -> lean left -> back down + turn left -> dash left -> look right"
+    ]
+  },
+  {
+    "movie_index": 5,
+    "theme_id": "theme_A",
+    "theme_title": "Theme A: Wall-Rear & Descent Locomotion",
+    "method_id": "prob_hsmm",
+    "method_name": "Mixed HSMM (Raw Syllables)",
+    "operating_point": "p80",
+    "operating_title": "P80 Representative (80th Percentile Core)",
+    "target_similarity": 0.721,
+    "movie_filename": "movie_1x3_theme_A_prob_hsmm_p80.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_A_prob_hsmm_p80.mp4",
+    "thumbnail_filename": "thumb_theme_A_prob_hsmm_p80.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_A_prob_hsmm_p80.png",
+    "gif_filename": "preview_theme_A_prob_hsmm_p80.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_A_prob_hsmm_p80.gif",
+    "panel_animals": [
+      "1694",
+      "1658",
+      "1767"
+    ],
+    "panel_similarities": [
+      0.722,
+      0.721,
+      0.722
+    ],
+    "panel_durations_sec": [
+      2.52,
+      1.32,
+      2.73
+    ],
+    "panel_tokens": [
+      [
+        "syll_001",
+        "syll_005",
+        "syll_003",
+        "syll_005",
+        "syll_030"
+      ],
+      [
+        "syll_005",
+        "syll_012",
+        "syll_004",
+        "syll_017"
+      ],
+      [
+        "syll_018",
+        "syll_016",
+        "syll_004",
+        "syll_023",
+        "syll_013"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "walk right",
+        "look right",
+        "walk left",
+        "look right",
+        "walk right"
+      ],
+      [
+        "look right",
+        "hunched rear",
+        "back down + turn left",
+        "run left"
+      ],
+      [
+        "sniff",
+        "lean left",
+        "back down + turn left",
+        "walk left",
+        "dash"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "walk right -> look right -> walk left -> look right -> walk right",
+      "look right -> hunched rear -> back down + turn left -> run left",
+      "sniff -> lean left -> back down + turn left -> walk left -> dash"
+    ]
+  },
+  {
+    "movie_index": 6,
+    "theme_id": "theme_A",
+    "theme_title": "Theme A: Wall-Rear & Descent Locomotion",
+    "method_id": "prob_hsmm",
+    "method_name": "Mixed HSMM (Raw Syllables)",
+    "operating_point": "random",
+    "operating_title": "Random Sampling (Unpruned Population)",
+    "target_similarity": 0.507,
+    "movie_filename": "movie_1x3_theme_A_prob_hsmm_random.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_A_prob_hsmm_random.mp4",
+    "thumbnail_filename": "thumb_theme_A_prob_hsmm_random.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_A_prob_hsmm_random.png",
+    "gif_filename": "preview_theme_A_prob_hsmm_random.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_A_prob_hsmm_random.gif",
+    "panel_animals": [
+      "1694",
+      "740",
+      "1781"
+    ],
+    "panel_similarities": [
+      0.658,
+      0.68,
+      0.183
+    ],
+    "panel_durations_sec": [
+      2.9,
+      2.45,
+      1.12
+    ],
+    "panel_tokens": [
+      [
+        "syll_002",
+        "syll_016",
+        "syll_004",
+        "syll_026"
+      ],
+      [
+        "syll_003",
+        "syll_018",
+        "syll_023",
+        "syll_025"
+      ],
+      [
+        "syll_002",
+        "syll_014",
+        "syll_004",
+        "syll_026"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "turn right",
+        "lean left",
+        "back down + turn left",
+        "dash left"
+      ],
+      [
+        "walk left",
+        "sniff",
+        "walk left",
+        "sniff"
+      ],
+      [
+        "turn right",
+        "rear/lean",
+        "back down + turn left",
+        "dash left"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "turn right -> lean left -> back down + turn left -> dash left",
+      "walk left -> sniff -> walk left -> sniff",
+      "turn right -> rear/lean -> back down + turn left -> dash left"
+    ]
+  },
+  {
+    "movie_index": 7,
+    "theme_id": "theme_B",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "method_id": "seqnmf",
+    "method_name": "seqNMF (Level 2 Soft)",
+    "operating_point": "exemplar",
+    "operating_title": "Exemplar (Closest to Prototypical Motif)",
+    "target_similarity": 0.941,
+    "movie_filename": "movie_1x3_theme_B_seqnmf_exemplar.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_B_seqnmf_exemplar.mp4",
+    "thumbnail_filename": "thumb_theme_B_seqnmf_exemplar.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_B_seqnmf_exemplar.png",
+    "gif_filename": "preview_theme_B_seqnmf_exemplar.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_B_seqnmf_exemplar.gif",
+    "panel_animals": [
+      "1767",
+      "1694",
+      "1658"
+    ],
+    "panel_similarities": [
+      0.941,
+      0.93,
+      0.927
+    ],
+    "panel_durations_sec": [
+      0.93,
+      0.85,
+      1.02
+    ],
+    "panel_tokens": [
+      [
+        "syll_008",
+        "syll_000",
+        "syll_013",
+        "syll_006"
+      ],
+      [
+        "syll_002",
+        "syll_000",
+        "syll_021",
+        "syll_006"
+      ],
+      [
+        "syll_002",
+        "syll_000",
+        "syll_013",
+        "syll_006"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "sniff",
+        "run right",
+        "dash",
+        "turn left"
+      ],
+      [
+        "turn right",
+        "run right",
+        "dash",
+        "turn left"
+      ],
+      [
+        "turn right",
+        "run right",
+        "dash",
+        "turn left"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "sniff -> run right -> dash -> turn left",
+      "turn right -> run right -> dash -> turn left",
+      "turn right -> run right -> dash -> turn left"
+    ]
+  },
+  {
+    "movie_index": 8,
+    "theme_id": "theme_B",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "method_id": "seqnmf",
+    "method_name": "seqNMF (Level 2 Soft)",
+    "operating_point": "p80",
+    "operating_title": "P80 Representative (80th Percentile Core)",
+    "target_similarity": 0.74,
+    "movie_filename": "movie_1x3_theme_B_seqnmf_p80.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_B_seqnmf_p80.mp4",
+    "thumbnail_filename": "thumb_theme_B_seqnmf_p80.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_B_seqnmf_p80.png",
+    "gif_filename": "preview_theme_B_seqnmf_p80.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_B_seqnmf_p80.gif",
+    "panel_animals": [
+      "1765",
+      "1658",
+      "1749"
+    ],
+    "panel_similarities": [
+      0.74,
+      0.74,
+      0.74
+    ],
+    "panel_durations_sec": [
+      1.12,
+      1.95,
+      2.1
+    ],
+    "panel_tokens": [
+      [
+        "syll_007",
+        "syll_000",
+        "syll_013",
+        "syll_006"
+      ],
+      [
+        "syll_002",
+        "syll_000",
+        "syll_013",
+        "syll_002"
+      ],
+      [
+        "syll_002",
+        "syll_000",
+        "syll_013",
+        "syll_012"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "back down + turn right",
+        "run right",
+        "dash",
+        "turn left"
+      ],
+      [
+        "turn right",
+        "run right",
+        "dash",
+        "turn right"
+      ],
+      [
+        "turn right",
+        "run right",
+        "dash",
+        "hunched rear"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "back down + turn right -> run right -> dash -> turn left",
+      "turn right -> run right -> dash -> turn right",
+      "turn right -> run right -> dash -> hunched rear"
+    ]
+  },
+  {
+    "movie_index": 9,
+    "theme_id": "theme_B",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "method_id": "seqnmf",
+    "method_name": "seqNMF (Level 2 Soft)",
+    "operating_point": "random",
+    "operating_title": "Random Sampling (Unpruned Population)",
+    "target_similarity": 0.544,
+    "movie_filename": "movie_1x3_theme_B_seqnmf_random.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_B_seqnmf_random.mp4",
+    "thumbnail_filename": "thumb_theme_B_seqnmf_random.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_B_seqnmf_random.png",
+    "gif_filename": "preview_theme_B_seqnmf_random.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_B_seqnmf_random.gif",
+    "panel_animals": [
+      "728",
+      "1664",
+      "1749"
+    ],
+    "panel_similarities": [
+      0.232,
+      0.715,
+      0.685
+    ],
+    "panel_durations_sec": [
+      0.85,
+      2.77,
+      1.23
+    ],
+    "panel_tokens": [
+      [
+        "syll_002",
+        "syll_000",
+        "syll_013",
+        "syll_001"
+      ],
+      [
+        "syll_020",
+        "syll_000",
+        "syll_013",
+        "syll_006"
+      ],
+      [
+        "syll_020",
+        "syll_000",
+        "syll_013",
+        "syll_006"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "turn right",
+        "run right",
+        "dash",
+        "walk right"
+      ],
+      [
+        "sniff",
+        "run right",
+        "dash",
+        "turn left"
+      ],
+      [
+        "sniff",
+        "run right",
+        "dash",
+        "turn left"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "turn right -> run right -> dash -> walk right",
+      "sniff -> run right -> dash -> turn left",
+      "sniff -> run right -> dash -> turn left"
+    ]
+  },
+  {
+    "movie_index": 10,
+    "theme_id": "theme_B",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "method_id": "prob_hsmm",
+    "method_name": "Mixed HSMM (Raw Syllables)",
+    "operating_point": "exemplar",
+    "operating_title": "Exemplar (Closest to Prototypical Motif)",
+    "target_similarity": 0.945,
+    "movie_filename": "movie_1x3_theme_B_prob_hsmm_exemplar.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_B_prob_hsmm_exemplar.mp4",
+    "thumbnail_filename": "thumb_theme_B_prob_hsmm_exemplar.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_B_prob_hsmm_exemplar.png",
+    "gif_filename": "preview_theme_B_prob_hsmm_exemplar.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_B_prob_hsmm_exemplar.gif",
+    "panel_animals": [
+      "1658",
+      "1767",
+      "1666"
+    ],
+    "panel_similarities": [
+      0.945,
+      0.935,
+      0.93
+    ],
+    "panel_durations_sec": [
+      1.1,
+      1.3,
+      1.27
+    ],
+    "panel_tokens": [
+      [
+        "syll_007",
+        "syll_000",
+        "syll_013",
+        "syll_012"
+      ],
+      [
+        "syll_007",
+        "syll_000",
+        "syll_013",
+        "syll_012"
+      ],
+      [
+        "syll_007",
+        "syll_000",
+        "syll_047",
+        "syll_003"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "back down + turn right",
+        "run right",
+        "dash",
+        "hunched rear"
+      ],
+      [
+        "back down + turn right",
+        "run right",
+        "dash",
+        "hunched rear"
+      ],
+      [
+        "back down + turn right",
+        "run right",
+        "sprint",
+        "walk left"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "back down + turn right -> run right -> dash -> hunched rear",
+      "back down + turn right -> run right -> dash -> hunched rear",
+      "back down + turn right -> run right -> sprint -> walk left"
+    ]
+  },
+  {
+    "movie_index": 11,
+    "theme_id": "theme_B",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "method_id": "prob_hsmm",
+    "method_name": "Mixed HSMM (Raw Syllables)",
+    "operating_point": "p80",
+    "operating_title": "P80 Representative (80th Percentile Core)",
+    "target_similarity": 0.759,
+    "movie_filename": "movie_1x3_theme_B_prob_hsmm_p80.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_B_prob_hsmm_p80.mp4",
+    "thumbnail_filename": "thumb_theme_B_prob_hsmm_p80.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_B_prob_hsmm_p80.png",
+    "gif_filename": "preview_theme_B_prob_hsmm_p80.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_B_prob_hsmm_p80.gif",
+    "panel_animals": [
+      "1658",
+      "1666",
+      "1749"
+    ],
+    "panel_similarities": [
+      0.759,
+      0.759,
+      0.758
+    ],
+    "panel_durations_sec": [
+      3.77,
+      1.8,
+      2.48
+    ],
+    "panel_tokens": [
+      [
+        "syll_001",
+        "syll_011",
+        "syll_001",
+        "syll_030",
+        "syll_001"
+      ],
+      [
+        "syll_002",
+        "syll_009",
+        "syll_000",
+        "syll_013",
+        "syll_019"
+      ],
+      [
+        "syll_001",
+        "syll_000",
+        "syll_013",
+        "syll_006"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "walk right",
+        "walk right",
+        "walk right",
+        "walk right",
+        "walk right"
+      ],
+      [
+        "turn right",
+        "sniff",
+        "run right",
+        "dash",
+        "walk"
+      ],
+      [
+        "walk right",
+        "run right",
+        "dash",
+        "turn left"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "walk right -> walk right -> walk right -> walk right -> walk right",
+      "turn right -> sniff -> run right -> dash -> walk",
+      "walk right -> run right -> dash -> turn left"
+    ]
+  },
+  {
+    "movie_index": 12,
+    "theme_id": "theme_B",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "method_id": "prob_hsmm",
+    "method_name": "Mixed HSMM (Raw Syllables)",
+    "operating_point": "random",
+    "operating_title": "Random Sampling (Unpruned Population)",
+    "target_similarity": 0.504,
+    "movie_filename": "movie_1x3_theme_B_prob_hsmm_random.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_B_prob_hsmm_random.mp4",
+    "thumbnail_filename": "thumb_theme_B_prob_hsmm_random.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_B_prob_hsmm_random.png",
+    "gif_filename": "preview_theme_B_prob_hsmm_random.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_B_prob_hsmm_random.gif",
+    "panel_animals": [
+      "1767",
+      "1666",
+      "1749"
+    ],
+    "panel_similarities": [
+      0.139,
+      0.721,
+      0.652
+    ],
+    "panel_durations_sec": [
+      1.77,
+      2.67,
+      3.55
+    ],
+    "panel_tokens": [
+      [
+        "syll_010",
+        "syll_000",
+        "syll_011",
+        "syll_001"
+      ],
+      [
+        "syll_020",
+        "syll_000",
+        "syll_011",
+        "syll_016"
+      ],
+      [
+        "syll_014",
+        "syll_007",
+        "syll_000",
+        "syll_013",
+        "syll_019"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "sniff",
+        "run right",
+        "walk right",
+        "walk right"
+      ],
+      [
+        "sniff",
+        "run right",
+        "walk right",
+        "lean left"
+      ],
+      [
+        "rear/lean",
+        "back down + turn right",
+        "run right",
+        "dash",
+        "walk"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "sniff -> run right -> walk right -> walk right",
+      "sniff -> run right -> walk right -> lean left",
+      "rear/lean -> back down + turn right -> run right -> dash -> walk"
+    ]
+  },
+  {
+    "movie_index": 13,
+    "theme_id": "theme_C",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "method_id": "seqnmf",
+    "method_name": "seqNMF (Level 2 Soft)",
+    "operating_point": "exemplar",
+    "operating_title": "Exemplar (Closest to Prototypical Motif)",
+    "target_similarity": 0.815,
+    "movie_filename": "movie_1x3_theme_C_seqnmf_exemplar.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_C_seqnmf_exemplar.mp4",
+    "thumbnail_filename": "thumb_theme_C_seqnmf_exemplar.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_C_seqnmf_exemplar.png",
+    "gif_filename": "preview_theme_C_seqnmf_exemplar.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_C_seqnmf_exemplar.gif",
+    "panel_animals": [
+      "1680",
+      "1765",
+      "1773"
+    ],
+    "panel_similarities": [
+      0.815,
+      0.798,
+      0.779
+    ],
+    "panel_durations_sec": [
+      2.45,
+      0.72,
+      2.98
+    ],
+    "panel_tokens": [
+      [
+        "syll_008",
+        "syll_032",
+        "syll_008",
+        "syll_003"
+      ],
+      [
+        "syll_008",
+        "syll_032",
+        "syll_008",
+        "syll_028"
+      ],
+      [
+        "syll_008",
+        "syll_028",
+        "syll_008",
+        "syll_032"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "sniff",
+        "stationary",
+        "sniff",
+        "walk left"
+      ],
+      [
+        "sniff",
+        "stationary",
+        "sniff",
+        "look left"
+      ],
+      [
+        "sniff",
+        "look left",
+        "sniff",
+        "stationary"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "sniff -> stationary -> sniff -> walk left",
+      "sniff -> stationary -> sniff -> look left",
+      "sniff -> look left -> sniff -> stationary"
+    ]
+  },
+  {
+    "movie_index": 14,
+    "theme_id": "theme_C",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "method_id": "seqnmf",
+    "method_name": "seqNMF (Level 2 Soft)",
+    "operating_point": "p80",
+    "operating_title": "P80 Representative (80th Percentile Core)",
+    "target_similarity": 0.466,
+    "movie_filename": "movie_1x3_theme_C_seqnmf_p80.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_C_seqnmf_p80.mp4",
+    "thumbnail_filename": "thumb_theme_C_seqnmf_p80.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_C_seqnmf_p80.png",
+    "gif_filename": "preview_theme_C_seqnmf_p80.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_C_seqnmf_p80.gif",
+    "panel_animals": [
+      "1658",
+      "740",
+      "1773"
+    ],
+    "panel_similarities": [
+      0.466,
+      0.467,
+      0.467
+    ],
+    "panel_durations_sec": [
+      5.78,
+      5.97,
+      2.0
+    ],
+    "panel_tokens": [
+      [
+        "syll_008",
+        "syll_032",
+        "syll_049",
+        "syll_034",
+        "syll_049"
+      ],
+      [
+        "syll_009",
+        "syll_039",
+        "syll_008",
+        "syll_032"
+      ],
+      [
+        "syll_008",
+        "syll_032",
+        "syll_009",
+        "syll_034"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "sniff",
+        "stationary",
+        "stationary",
+        "look left (from right)",
+        "stationary"
+      ],
+      [
+        "sniff",
+        "sniff",
+        "sniff",
+        "stationary"
+      ],
+      [
+        "sniff",
+        "stationary",
+        "sniff",
+        "look left (from right)"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "sniff -> stationary -> stationary -> look left (from right) -> stationary",
+      "sniff -> sniff -> sniff -> stationary",
+      "sniff -> stationary -> sniff -> look left (from right)"
+    ]
+  },
+  {
+    "movie_index": 15,
+    "theme_id": "theme_C",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "method_id": "seqnmf",
+    "method_name": "seqNMF (Level 2 Soft)",
+    "operating_point": "random",
+    "operating_title": "Random Sampling (Unpruned Population)",
+    "target_similarity": 0.167,
+    "movie_filename": "movie_1x3_theme_C_seqnmf_random.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_C_seqnmf_random.mp4",
+    "thumbnail_filename": "thumb_theme_C_seqnmf_random.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_C_seqnmf_random.png",
+    "gif_filename": "preview_theme_C_seqnmf_random.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_C_seqnmf_random.gif",
+    "panel_animals": [
+      "1773",
+      "740",
+      "1664"
+    ],
+    "panel_similarities": [
+      0.309,
+      0.174,
+      0.019
+    ],
+    "panel_durations_sec": [
+      5.05,
+      4.2,
+      3.25
+    ],
+    "panel_tokens": [
+      [
+        "syll_024",
+        "syll_032",
+        "syll_008",
+        "syll_032"
+      ],
+      [
+        "syll_008",
+        "syll_032",
+        "syll_008",
+        "syll_036"
+      ],
+      [
+        "syll_039",
+        "syll_032",
+        "syll_008",
+        "syll_032"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "scrunched sniffing",
+        "stationary",
+        "sniff",
+        "stationary"
+      ],
+      [
+        "sniff",
+        "stationary",
+        "sniff",
+        "sniff"
+      ],
+      [
+        "sniff",
+        "stationary",
+        "sniff",
+        "stationary"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "scrunched sniffing -> stationary -> sniff -> stationary",
+      "sniff -> stationary -> sniff -> sniff",
+      "sniff -> stationary -> sniff -> stationary"
+    ]
+  },
+  {
+    "movie_index": 16,
+    "theme_id": "theme_C",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "method_id": "prob_hsmm",
+    "method_name": "Mixed HSMM (Raw Syllables)",
+    "operating_point": "exemplar",
+    "operating_title": "Exemplar (Closest to Prototypical Motif)",
+    "target_similarity": 0.79,
+    "movie_filename": "movie_1x3_theme_C_prob_hsmm_exemplar.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_C_prob_hsmm_exemplar.mp4",
+    "thumbnail_filename": "thumb_theme_C_prob_hsmm_exemplar.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_C_prob_hsmm_exemplar.png",
+    "gif_filename": "preview_theme_C_prob_hsmm_exemplar.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_C_prob_hsmm_exemplar.gif",
+    "panel_animals": [
+      "1765",
+      "1773",
+      "1775"
+    ],
+    "panel_similarities": [
+      0.79,
+      0.77,
+      0.744
+    ],
+    "panel_durations_sec": [
+      4.78,
+      3.5,
+      4.05
+    ],
+    "panel_tokens": [
+      [
+        "syll_027",
+        "syll_024",
+        "syll_043",
+        "syll_020",
+        "syll_024"
+      ],
+      [
+        "syll_008",
+        "syll_032",
+        "syll_008",
+        "syll_010",
+        "syll_005"
+      ],
+      [
+        "syll_024",
+        "syll_043",
+        "syll_034",
+        "syll_008"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "groom",
+        "scrunched sniffing",
+        "stationary",
+        "sniff",
+        "scrunched sniffing"
+      ],
+      [
+        "sniff",
+        "stationary",
+        "sniff",
+        "sniff",
+        "look right"
+      ],
+      [
+        "scrunched sniffing",
+        "stationary",
+        "look left (from right)",
+        "sniff"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "groom -> scrunched sniffing -> stationary -> sniff -> scrunched sniffing",
+      "sniff -> stationary -> sniff -> sniff -> look right",
+      "scrunched sniffing -> stationary -> look left (from right) -> sniff"
+    ]
+  },
+  {
+    "movie_index": 17,
+    "theme_id": "theme_C",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "method_id": "prob_hsmm",
+    "method_name": "Mixed HSMM (Raw Syllables)",
+    "operating_point": "p80",
+    "operating_title": "P80 Representative (80th Percentile Core)",
+    "target_similarity": 0.456,
+    "movie_filename": "movie_1x3_theme_C_prob_hsmm_p80.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_C_prob_hsmm_p80.mp4",
+    "thumbnail_filename": "thumb_theme_C_prob_hsmm_p80.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_C_prob_hsmm_p80.png",
+    "gif_filename": "preview_theme_C_prob_hsmm_p80.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_C_prob_hsmm_p80.gif",
+    "panel_animals": [
+      "740",
+      "1759",
+      "1765"
+    ],
+    "panel_similarities": [
+      0.457,
+      0.455,
+      0.454
+    ],
+    "panel_durations_sec": [
+      5.9,
+      2.42,
+      7.45
+    ],
+    "panel_tokens": [
+      [
+        "syll_028",
+        "syll_008",
+        "syll_032",
+        "syll_049",
+        "syll_034"
+      ],
+      [
+        "syll_008",
+        "syll_032",
+        "syll_008",
+        "syll_010",
+        "syll_006"
+      ],
+      [
+        "syll_008",
+        "syll_020",
+        "syll_034",
+        "syll_042",
+        "syll_032"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "look left",
+        "sniff",
+        "stationary",
+        "stationary",
+        "look left (from right)"
+      ],
+      [
+        "sniff",
+        "stationary",
+        "sniff",
+        "sniff",
+        "turn left"
+      ],
+      [
+        "sniff",
+        "sniff",
+        "look left (from right)",
+        "look right",
+        "stationary"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "look left -> sniff -> stationary -> stationary -> look left (from right)",
+      "sniff -> stationary -> sniff -> sniff -> turn left",
+      "sniff -> sniff -> look left (from right) -> look right -> stationary"
+    ]
+  },
+  {
+    "movie_index": 18,
+    "theme_id": "theme_C",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "method_id": "prob_hsmm",
+    "method_name": "Mixed HSMM (Raw Syllables)",
+    "operating_point": "random",
+    "operating_title": "Random Sampling (Unpruned Population)",
+    "target_similarity": 0.243,
+    "movie_filename": "movie_1x3_theme_C_prob_hsmm_random.mp4",
+    "movie_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/movies/movie_1x3_theme_C_prob_hsmm_random.mp4",
+    "thumbnail_filename": "thumb_theme_C_prob_hsmm_random.png",
+    "thumbnail_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/thumb_theme_C_prob_hsmm_random.png",
+    "gif_filename": "preview_theme_C_prob_hsmm_random.gif",
+    "gif_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/probabilistic_episode_pilot/thumbnails/preview_theme_C_prob_hsmm_random.gif",
+    "panel_animals": [
+      "740",
+      "1666",
+      "1759"
+    ],
+    "panel_similarities": [
+      0.35,
+      0.067,
+      0.311
+    ],
+    "panel_durations_sec": [
+      2.4,
+      5.33,
+      4.03
+    ],
+    "panel_tokens": [
+      [
+        "syll_008",
+        "syll_032",
+        "syll_008",
+        "syll_032"
+      ],
+      [
+        "syll_020",
+        "syll_034",
+        "syll_039",
+        "syll_008",
+        "syll_032"
+      ],
+      [
+        "syll_008",
+        "syll_032",
+        "syll_008",
+        "syll_032"
+      ]
+    ],
+    "panel_human_tokens": [
+      [
+        "sniff",
+        "stationary",
+        "sniff",
+        "stationary"
+      ],
+      [
+        "sniff",
+        "look left (from right)",
+        "sniff",
+        "sniff",
+        "stationary"
+      ],
+      [
+        "sniff",
+        "stationary",
+        "sniff",
+        "stationary"
+      ]
+    ],
+    "panel_chain_descriptions": [
+      "sniff -> stationary -> sniff -> stationary",
+      "sniff -> look left (from right) -> sniff -> sniff -> stationary",
+      "sniff -> stationary -> sniff -> stationary"
+    ]
+  }
+]

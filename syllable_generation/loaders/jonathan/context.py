@@ -1,15 +1,28 @@
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Optional
+"""
+[DEPRECATED SHIM] syllable_generation/loaders/jonathan/context.py
+==================================================
+Relocated to: studies/behavior/loaders/jonathan/context.py
+"""
 
-from .config import JCFG, JonathanConfig
+import importlib
+import sys
+import warnings
 
+warnings.warn(
+    "syllable_generation.loaders.jonathan.context is deprecated; import from studies.behavior.loaders.jonathan.context instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
-@dataclass
-class BuildContext:
-    root: Path
-    h5_dir: Path
-    video_dir: Optional[Path] = None
-    csv_root: Optional[Path] = None
-    project: str = "jonathan_full"
-    cfg: JonathanConfig = field(default_factory=lambda: JCFG)
+_real = importlib.import_module("studies.behavior.loaders.jonathan.context")
+sys.modules[__name__] = _real
+
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)
+
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()
