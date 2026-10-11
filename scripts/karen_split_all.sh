@@ -1,1 +1,0 @@
-../ops/dlc/karen_split_all.sh

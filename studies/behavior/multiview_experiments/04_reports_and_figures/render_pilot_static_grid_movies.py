@@ -55,8 +55,8 @@ from fpcode.tracking.pair_matching import find_matched_pairs
 DEFAULT_MODEL_DIR = EXP_DIR / "pilot_static_21kp/pilot_static_21kp_k12_seed404"
 DEFAULT_VFI_PATH = EXP_DIR / "pilot_static_21kp/video_frame_indexes.npz"
 
-TOP_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files")
-BOT_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files")
+TOP_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/video_files")
+BOT_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/botcam_video_files")
 
 CHAMBER_TO_ARENA = {
     "top_left": "Arena1",

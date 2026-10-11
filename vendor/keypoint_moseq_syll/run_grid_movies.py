@@ -19,7 +19,7 @@ from jax_moseq.utils import unbatch
 
 # --- Global Constants ---
 # Video directory from config.yml or manual override
-VIDEO_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/src_oft/amph_vids_ssd")
+VIDEO_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/oft_baseline/amph_vids_ssd")
 OUTPUT_FPS = 40 # Config says 40 for new_fps
 SESSIONS_PKL = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/data/jonathan_amph_sessions_dirty.pkl"
 DEBUG_ONLY = False # IF TRUE, PRINTS AND EXITS BEFORE GENERATION

@@ -91,7 +91,7 @@ def test_top_quadrant_dlc_fallback_prevents_black_crops():
     fall back gracefully to verified DLC coordinates instead of rendering black tiles.
     """
     # 2026-03-15T09_51_36_bottom_left
-    top_h5 = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T8_7.pilot390.pilot398_150326_Arena1234_CenterTopCamVid_2026-03-15T09_51_36_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5")
+    top_h5 = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/h5_files/T8_7.pilot390.pilot398_150326_Arena1234_CenterTopCamVid_2026-03-15T09_51_36_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5")
     assert top_h5.exists()
     df_top = pd.read_hdf(top_h5)
     scorer = df_top.columns.levels[0][0]

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Symlink Bottom Camera Videos (BotCamVid) from /mnt/hdd/karen_project
-into /home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/
+into /home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/botcam_video_files/
 
 Matches each BotCam video against the corresponding TopCam in karen_project/video_files
 to automatically determine if an animal was present in that chamber.
@@ -13,8 +13,8 @@ import re
 from pathlib import Path
 
 HDD_BASE = Path("/mnt/hdd/karen_project")
-TARGET_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files")
-TOPCAM_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files")
+TARGET_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/botcam_video_files")
+TOPCAM_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/video_files")
 
 ARENA_TO_QUADRANTS = {
     1: ["top_left", "upper"],

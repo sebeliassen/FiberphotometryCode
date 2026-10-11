@@ -45,8 +45,8 @@ VFI_PATH = PROJECT_DIR / "video_frame_indexes.npz"
 OUT_DIR = SCRIPT_DIR / "visualizations_seed303" / "grid_movies"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-TOP_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files")
-BOT_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files")
+TOP_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/video_files")
+BOT_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/botcam_video_files")
 
 # Target syllables to render
 TARGET_SYLLABLES = [6, 2, 1, 5, 10, 13]

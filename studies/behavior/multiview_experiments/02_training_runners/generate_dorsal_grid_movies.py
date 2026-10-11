@@ -43,7 +43,7 @@ from jax_moseq.utils import unbatch
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 ARM_DIR = EXP_DIR / "pilot_comparison_21kp_static"
-VIDEO_DIR = REPO_ROOT / "karen_project/video_files"
+VIDEO_DIR = REPO_ROOT / "studies/karen_pff_vs_monomer/video_files"
 
 
 def modern_rasterize_figure(fig):

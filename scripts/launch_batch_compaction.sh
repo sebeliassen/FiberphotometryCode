@@ -1,1 +1,0 @@
-../ops/compaction/launch_batch_compaction.sh

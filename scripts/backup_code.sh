@@ -1,1 +1,0 @@
-../ops/backup/backup_code.sh

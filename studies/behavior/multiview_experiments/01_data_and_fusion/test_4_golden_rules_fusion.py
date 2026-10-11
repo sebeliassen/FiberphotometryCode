@@ -18,7 +18,7 @@ import pandas as pd
 from scipy.ndimage import median_filter
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
-TOP_H5_PATH = REPO_ROOT / "karen_project/h5_files/T1_6.2.4_05.03.26_Arena1234_CenterTopCamVid_2026-03-05T11_01_01_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5"
+TOP_H5_PATH = REPO_ROOT / "studies/karen_pff_vs_monomer/h5_files/T1_6.2.4_05.03.26_Arena1234_CenterTopCamVid_2026-03-05T11_01_01_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5"
 BOT_H5_PATH = Path("/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/16w_PI_T1_6_2_4_05_03_26_active_Arena1_BotCamVid_2026-03-05T11_01_01/16w_PI_T1_6_2_4_05_03_26_active_Arena1_BotCamVid_2026-03-05T11_01_01DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5")
 
 def smooth_heading_circular(theta: np.ndarray, window: int = 9) -> np.ndarray:

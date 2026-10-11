@@ -1,1 +1,0 @@
-../ops/compaction/batch_compact_all_checkpoints.py

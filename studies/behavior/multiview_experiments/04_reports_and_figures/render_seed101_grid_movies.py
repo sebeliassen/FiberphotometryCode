@@ -48,8 +48,8 @@ SCREENSHOT_DIR = SCRIPT_DIR / "visualizations_seed101" / "onset_screenshots"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
 
-TOP_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files")
-BOT_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files")
+TOP_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/video_files")
+BOT_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/botcam_video_files")
 
 # All 28 qualifying syllables in champion Seed 101 (frequency >= 0.5%)
 ALL_QUALIFYING_SYLLABLES = [

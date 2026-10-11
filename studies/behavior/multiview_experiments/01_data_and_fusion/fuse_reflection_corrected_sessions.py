@@ -26,7 +26,7 @@ from scipy.ndimage import median_filter
 from fpcode.tracking.geometry import rot2d as _rotation_matrices
 
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
-TOP_H5_DIR = REPO_ROOT / "karen_project/h5_files"
+TOP_H5_DIR = REPO_ROOT / "studies/karen_pff_vs_monomer/h5_files"
 BOT_PROD_DIR = Path("/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions")
 
 OUT_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments/fused_h5_reflection_corrected"

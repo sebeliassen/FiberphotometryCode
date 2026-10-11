@@ -34,8 +34,8 @@ MODEL_DIR = PILOT_DIR / "pilot_static_21kp_k12_seed404"
 RESULTS_PATH = MODEL_DIR / "results.h5"
 VFI_PATH = PILOT_DIR / "video_frame_indexes.npz"
 
-TOP_VID_DIR = REPO / "karen_project/video_files"
-BOT_VID_DIR = REPO / "karen_project/botcam_video_files"
+TOP_VID_DIR = REPO / "studies/karen_pff_vs_monomer/video_files"
+BOT_VID_DIR = REPO / "studies/karen_pff_vs_monomer/botcam_video_files"
 CHAMBER_TO_ARENA = {"top_left": "Arena1", "bottom_left": "Arena2", "bottom_right": "Arena3", "top_right": "Arena4"}
 
 def main():

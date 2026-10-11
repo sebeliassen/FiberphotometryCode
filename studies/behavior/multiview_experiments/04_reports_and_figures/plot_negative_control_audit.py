@@ -46,8 +46,8 @@ VFI_PATH = PROJECT_DIR / "video_frame_indexes.npz"
 OUT_DIR = SCRIPT_DIR / "visualizations_seed101" / "negative_controls"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-TOP_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files")
-BOT_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files")
+TOP_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/video_files")
+BOT_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/botcam_video_files")
 CHAMBER_TO_ARENA = {"top_left": "Arena1", "bottom_left": "Arena2", "bottom_right": "Arena3", "top_right": "Arena4"}
 
 def compute_kpms_warp_matrix(centroid_onset, heading_onset, window_size, shift_xy=(0, 0)):

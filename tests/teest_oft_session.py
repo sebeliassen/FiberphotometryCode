@@ -5,7 +5,7 @@ import pytest
 from fiberphotometry.data.data_loading import load_all_sessions
 
 # adjust to your project layout
-SRC = Path("/Users/fsp585/Desktop/GetherLabCode/FiberphotometryCode/src_oft")
+SRC = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/oft_baseline")
 
 @pytest.fixture(scope="module")
 def raw_sessions():

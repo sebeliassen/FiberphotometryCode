@@ -37,8 +37,8 @@ def build_sessions(
             return pickle.load(f)
 
     # 1. Discover Project Module
-    sg_proj_dir = Path(REPO_ROOT) / "syllable_generation" / "projects" / project
-    mi_proj_dir = Path(REPO_ROOT) / "monoamine_interactions" / "projects" / project
+    sg_proj_dir = Path(REPO_ROOT) / "studies" / "behavior" / "projects" / project
+    mi_proj_dir = Path(REPO_ROOT) / "studies" / "monoamine_interactions" / "projects" / project
 
     proj_dir = None
     if sg_proj_dir.exists():
@@ -48,7 +48,7 @@ def build_sessions(
     else:
         # Check fallback (e.g. if the project is jonathan_full but config is under jonathan_openfield_example)
         if project == "jonathan_full":
-            proj_dir = Path(REPO_ROOT) / "syllable_generation" / "projects" / "jonathan_openfield_example"
+            proj_dir = Path(REPO_ROOT) / "studies" / "behavior" / "projects" / "jonathan_openfield_example"
         else:
             raise ValueError(f"Project directory for '{project}' not found.")
 
@@ -126,9 +126,9 @@ def build_sessions(
                 sys.path.remove(str(proj_dir))
         else:
             # Import hybrid discovery step from monoamine_interactions/steps/tracking.py
-            sys.path.insert(0, os.path.join(REPO_ROOT, "monoamine_interactions"))
+            sys.path.insert(0, os.path.join(REPO_ROOT, "studies", "monoamine_interactions"))
             from steps.tracking import discover_sessions_hybrid
-            sys.path.remove(os.path.join(REPO_ROOT, "monoamine_interactions"))
+            sys.path.remove(os.path.join(REPO_ROOT, "studies", "monoamine_interactions"))
             discovery_step = discover_sessions_hybrid
 
     # 3. Setup Enrichment wrappers

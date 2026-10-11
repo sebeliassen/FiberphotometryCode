@@ -1,1 +1,0 @@
-../ops/dlc/verify_botcam_orientation.py

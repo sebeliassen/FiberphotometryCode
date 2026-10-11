@@ -10,7 +10,7 @@ def relink_videos(project_name, dry_run=True, no_dummies=False):
     else:
         HDD_BASE = f"/mnt/hdd/mono_inter/{project_name}"
 
-    TARGET_BASE = f"/home/fsp585/Desktop/FiberphotometryCode/src_mono_inter/{project_name}"
+    TARGET_BASE = f"/home/fsp585/Desktop/FiberphotometryCode/studies/mono_inter_juvenile_intruder/{project_name}"
 
     SPLIT_DIR = os.path.join(HDD_BASE, "all_videos_split")
     VIDEO_DIR = os.path.join(TARGET_BASE, "video_files")

@@ -52,7 +52,7 @@ print("[INFO] Applied OpenCVReader fast-seek monkeypatch to vidio.read.")
 # parent.parent: .../keypoint_moseq_syll
 ROOT_DIR = Path(__file__).resolve().parent.parent
 SESSIONS_PKL = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/data/jonathan_amph_sessions_dirty.pkl"
-VIDEO_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/src_oft/amph_vids_ssd")
+VIDEO_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/oft_baseline/amph_vids_ssd")
 OUTPUT_FPS = 40
 
 # Add project root to path for unpickling sessions

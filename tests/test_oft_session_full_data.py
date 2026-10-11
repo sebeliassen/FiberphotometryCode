@@ -44,7 +44,7 @@ from fiberphotometry.processing.plotting_setup import PlottingSetup
 
 @pytest.mark.needs_data
 def test_oft_session_full_pipeline():
-    path = Path("/home/fsp585/Desktop/FiberphotometryCode/src_oft/jonathan_full/Jonathan_IFxDN_csvs")
+    path = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/oft_baseline/jonathan_full/Jonathan_IFxDN_csvs")
 
 
     # In[5]:
@@ -66,8 +66,8 @@ def test_oft_session_full_pipeline():
     # In[7]:
 
 
-    populate_oft_containers(sessions, '/home/fsp585/Desktop/FiberphotometryCode/src_oft/jonathan_full/h5_files',
-                            '/home/fsp585/Desktop/FiberphotometryCode/src_oft/jonathan_full/video_files')
+    populate_oft_containers(sessions, '/home/fsp585/Desktop/FiberphotometryCode/studies/oft_baseline/jonathan_full/h5_files',
+                            '/home/fsp585/Desktop/FiberphotometryCode/studies/oft_baseline/jonathan_full/video_files')
 
 
     # In[8]:
@@ -849,7 +849,7 @@ def test_oft_session_full_pipeline():
 
 
     # --- Define the paths to your directories ---
-    VIDEO_DIRECTORY = '/home/fsp585/Desktop/FiberphotometryCode/src_oft/jonathan_full/video_files'
+    VIDEO_DIRECTORY = '/home/fsp585/Desktop/FiberphotometryCode/studies/oft_baseline/jonathan_full/video_files'
 
     # --- Call the NEW function to get the correct mapping ---
     # It uses the keys from video_frame_indexes as the source of truth.

@@ -1,1 +1,0 @@
-../ops/dlc/karen_rsync_all.sh

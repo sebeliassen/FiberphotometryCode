@@ -1,1 +1,0 @@
-../ops/dlc/rsync_karen_botcam.py

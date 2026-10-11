@@ -25,7 +25,7 @@ else:
     print("MATCH FAILED")
 
 # Debug: list actual files in directory to ensure we cover them
-video_dir = Path("/home/fsp585/Desktop/FiberphotometryCode/src_mono_inter/jonathan_oft_baseline/video_files")
+video_dir = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/mono_inter_juvenile_intruder/jonathan_oft_baseline/video_files")
 if video_dir.exists():
     print("\nReal file check:")
     for f in list(video_dir.glob("*.avi"))[:3]:

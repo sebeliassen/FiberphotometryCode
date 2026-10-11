@@ -29,7 +29,7 @@ TARGET_SESSIONS = [
     ("2026-04-28T13_21_05", "Arena2", "bottom_left", "24w_PI", "PFF", "16"),
 ]
 
-TOP_H5_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files")
+TOP_H5_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/h5_files")
 DLC_PROD_DIR = Path("/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions")
 OUT_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/multiview_kappa_search/fused_h5")
 OUT_DIR.mkdir(parents=True, exist_ok=True)

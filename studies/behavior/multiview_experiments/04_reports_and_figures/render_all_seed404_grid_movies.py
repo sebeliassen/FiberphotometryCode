@@ -69,8 +69,8 @@ MODEL_NAME = "tandem_calibrated_50ar_200slds_seed404_20261002_012237_940073"
 RESULTS_PATH = PROJECT_DIR / MODEL_NAME / "results.h5"
 VFI_PATH = PROJECT_DIR / "video_frame_indexes.npz"
 
-TOP_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files")
-BOT_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files")
+TOP_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/video_files")
+BOT_VID_DIR = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/karen_pff_vs_monomer/botcam_video_files")
 
 CHAMBER_TO_ARENA = {
     "top_left": "Arena1",

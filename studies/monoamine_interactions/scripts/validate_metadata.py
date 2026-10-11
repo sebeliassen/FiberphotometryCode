@@ -11,7 +11,7 @@ def validate():
 
     # Paths
     proj_dir = Path(__file__).resolve().parents[1] / "jonathan_oft_baseline"
-    data_dir = Path("/home/fsp585/Desktop/FiberphotometryCode/src_mono_inter/jonathan_oft_baseline/Jonathan_IFxDN_csvs")
+    data_dir = Path("/home/fsp585/Desktop/FiberphotometryCode/studies/mono_inter_juvenile_intruder/jonathan_oft_baseline/Jonathan_IFxDN_csvs")
     animals_csv = proj_dir / "overrides" / "animals.csv"
 
     if not animals_csv.exists():

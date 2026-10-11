@@ -79,8 +79,8 @@ DIRTY_PKL_IN = REPO_ROOT / "syllable_generation/data/sessions_karen_project_dirt
 K240K_PKL_REF = REPO_ROOT / "syllable_generation/data/sessions_karen_project_w_sylls_k240k.pkl"
 OUTPUT_PROD_PKL = EXPERIMENT_DIR / "sessions_karen_project_tandem_production.pkl"
 
-TOP_H5_DIR = REPO_ROOT / "karen_project/h5_files"
-BOT_VID_DIR = REPO_ROOT / "karen_project/botcam_video_files"
+TOP_H5_DIR = REPO_ROOT / "studies/karen_pff_vs_monomer/h5_files"
+BOT_VID_DIR = REPO_ROOT / "studies/karen_pff_vs_monomer/botcam_video_files"
 BOT_PRED_DIR = Path("/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions")
 
 PROD_KPMS_DIR = EXPERIMENT_DIR / "kpms_tandem_production"
