@@ -24,8 +24,8 @@ EXP_DIR = Path(__file__).resolve().parent.parent
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.camera_correspondence import compute_session_camera_mapping
-from core.ttl_sync import load_ttl_cache
+from fpcode.tracking.camera_correspondence import compute_session_camera_mapping
+from fpcode.tracking.clock_sync import load_ttl_cache
 
 DEFAULT_OUT = EXP_DIR / "04_reports_and_figures/audits/calibration_validity_audit.csv"
 

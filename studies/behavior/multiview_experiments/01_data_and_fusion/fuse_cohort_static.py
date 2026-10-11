@@ -24,8 +24,8 @@ EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.pair_matching import find_matched_pairs
-from core.static_fusion_engine import fuse_single_pair_static
+from fpcode.tracking.pair_matching import find_matched_pairs
+from fpcode.tracking.static_fusion import fuse_single_pair_static
 from fpcode.adapters.multiview_compatibility import (
     TTL_CACHE_PATH, legacy_static_calibration, legacy_tracking_paths,
 )

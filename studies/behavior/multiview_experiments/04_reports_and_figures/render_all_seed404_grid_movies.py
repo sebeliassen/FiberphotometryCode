@@ -60,8 +60,8 @@ EXP_DIR = SCRIPT_DIR.parent
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.camera_correspondence import top_to_bot_frame_continuous
-from core.pair_matching import find_matched_pairs
+from fpcode.tracking.camera_correspondence import top_to_bot_frame_continuous
+from fpcode.tracking.pair_matching import find_matched_pairs
 
 # Paths
 PROJECT_DIR = EXP_DIR / "kpms_tandem_cohort_continuous_calibrated"

@@ -23,8 +23,8 @@ EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-from core.pair_matching import find_matched_pairs
-from core.static_fusion_engine import PAW_MAP, STATIC_ARENA_TRANSFORMS, TOP_USE_BODYPARTS
+from fpcode.tracking.pair_matching import find_matched_pairs
+from fpcode.tracking.static_fusion import PAW_MAP, STATIC_ARENA_TRANSFORMS, TOP_USE_BODYPARTS
 
 PILOT_FUSED_DIR = EXP / "data/pilot_fused_static_21kp"
 

@@ -32,7 +32,7 @@ if str(EXP_DIR) not in sys.path:
 
 from audit_cohort_correlations import find_matched_pairs
 
-from core.fusion_engine import fuse_single_pair
+from fpcode.tracking.fusion import fuse_single_pair
 from fpcode.adapters.multiview_compatibility import TTL_CACHE_PATH
 
 OUT_DIR = EXP_DIR / "fused_h5_continuous_calibrated"

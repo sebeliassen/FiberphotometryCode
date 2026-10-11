@@ -31,7 +31,7 @@ AUDIT_DIR = EXP / "04_reports_and_figures/audits/audit_20261007_pipeline_repairs
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-from core.cache_manifest import (
+from fpcode.common.cache_manifest import (
     OK,
     STALE,
     UNVERIFIED_NO_MANIFEST,

@@ -37,8 +37,8 @@ MODEL_DIR = COHORT_DIR / "model_21kp_static_50ar_200slds_seed101"
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-from core.camera_correspondence import get_session_mapping
-from core.pair_matching import find_matched_pairs
+from fpcode.tracking.camera_correspondence import get_session_mapping
+from fpcode.tracking.pair_matching import find_matched_pairs
 
 PAW_LIST = ["left_front_paw", "right_front_paw", "left_hind_paw", "right_hind_paw"]
 BODYPARTS_21KP = [

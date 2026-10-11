@@ -29,7 +29,7 @@ EXP_DIR = REPORTS_DIR.parent
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.camera_correspondence import top_to_bot_frame_continuous
+from fpcode.tracking.camera_correspondence import top_to_bot_frame_continuous
 
 PROJECT_DIR = EXP_DIR / "kpms_tandem_cohort_continuous_calibrated"
 MODEL_NAME = "tandem_calibrated_50ar_200slds_seed404_20261002_012237_940073"

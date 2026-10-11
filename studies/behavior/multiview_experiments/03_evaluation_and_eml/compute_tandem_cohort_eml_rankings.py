@@ -50,11 +50,11 @@ EXP_DIR = Path(__file__).resolve().parent.parent
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core import eval_artifacts as ea
-from core.cache_manifest import (
+from fpcode.kpms import evaluation as ea
+from fpcode.common.cache_manifest import (
     OK as CACHE_OK,
 )
-from core.cache_manifest import (
+from fpcode.common.cache_manifest import (
     atomic_path,
     verify_manifest,
     write_manifest,

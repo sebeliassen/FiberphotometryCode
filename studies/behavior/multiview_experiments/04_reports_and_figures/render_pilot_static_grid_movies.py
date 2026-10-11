@@ -49,8 +49,8 @@ EXP_DIR = SCRIPT_DIR.parent
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.camera_correspondence import top_to_bot_frame_continuous
-from core.pair_matching import find_matched_pairs
+from fpcode.tracking.camera_correspondence import top_to_bot_frame_continuous
+from fpcode.tracking.pair_matching import find_matched_pairs
 
 DEFAULT_MODEL_DIR = EXP_DIR / "pilot_static_21kp/pilot_static_21kp_k12_seed404"
 DEFAULT_VFI_PATH = EXP_DIR / "pilot_static_21kp/video_frame_indexes.npz"

@@ -27,10 +27,10 @@ AUDIT_DIR = EXP / "04_reports_and_figures/audits/audit_20261007_pipeline_repairs
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-from core.camera_correspondence import get_session_mapping
-from core.pair_matching import find_matched_pairs
-from core.static_fusion_engine import PAW_MAP, fuse_single_pair_static
-from core.ttl_sync import find_camera_timestamp_files
+from fpcode.tracking.camera_correspondence import get_session_mapping
+from fpcode.tracking.pair_matching import find_matched_pairs
+from fpcode.tracking.static_fusion import PAW_MAP, fuse_single_pair_static
+from fpcode.tracking.clock_sync import find_camera_timestamp_files
 
 PAW_LIST = ["left_front_paw", "right_front_paw", "left_hind_paw", "right_hind_paw"]
 

@@ -37,9 +37,9 @@ CORE_DIR = EXP / "core"
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-from core.camera_correspondence import compute_session_camera_mapping, get_session_mapping
-from core.pair_matching import find_matched_pairs
-from core.ttl_sync import find_camera_timestamp_files
+from fpcode.tracking.camera_correspondence import compute_session_camera_mapping, get_session_mapping
+from fpcode.tracking.pair_matching import find_matched_pairs
+from fpcode.tracking.clock_sync import find_camera_timestamp_files
 
 
 def get_session_epoch(ts_str: str) -> str:

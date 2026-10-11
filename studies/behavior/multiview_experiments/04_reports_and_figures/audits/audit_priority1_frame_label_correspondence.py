@@ -26,8 +26,8 @@ EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-from core.camera_correspondence import get_session_mapping, top_to_bot_frame_continuous
-from core.pair_matching import find_matched_pairs
+from fpcode.tracking.camera_correspondence import get_session_mapping, top_to_bot_frame_continuous
+from fpcode.tracking.pair_matching import find_matched_pairs
 
 PILOT_DIR = EXP / "pilot_static_21kp"
 MODEL_DIR = PILOT_DIR / "pilot_static_21kp_k12_seed404"

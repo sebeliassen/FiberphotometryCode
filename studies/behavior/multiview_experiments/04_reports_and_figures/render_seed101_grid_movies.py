@@ -34,8 +34,8 @@ import numpy as np
 import pandas as pd
 from vidio.read import OpenCVReader
 
-from core.pair_matching import find_matched_pairs
-from core.ttl_sync import top_to_bot_frame
+from fpcode.tracking.pair_matching import find_matched_pairs
+from fpcode.tracking.clock_sync import top_to_bot_frame
 
 # --- Paths & Directories ---
 PROJECT_DIR = EXP_DIR / "kpms_tandem_cohort_production"

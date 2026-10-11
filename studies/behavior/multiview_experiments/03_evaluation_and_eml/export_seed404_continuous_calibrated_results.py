@@ -26,8 +26,8 @@ if str(REPO_ROOT) not in sys.path:
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))
 
-from core.camera_correspondence import top_to_bot_frame_continuous
-from core.pair_matching import find_matched_pairs
+from fpcode.tracking.camera_correspondence import top_to_bot_frame_continuous
+from fpcode.tracking.pair_matching import find_matched_pairs
 from syllable_generation.analysis.replications.datta_utils import combined_photometry_and_syllables
 
 DIRTY_PKL = REPO_ROOT / "syllable_generation/data/sessions_karen_project_dirty.pkl"

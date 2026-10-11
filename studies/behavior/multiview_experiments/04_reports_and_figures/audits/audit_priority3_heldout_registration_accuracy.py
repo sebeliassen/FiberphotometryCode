@@ -22,9 +22,9 @@ EXP = REPO / "syllable_generation/multiview_top_bot_experiments"
 if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
-from core.camera_correspondence import get_session_mapping
-from core.pair_matching import find_matched_pairs
-from core.static_fusion_engine import STATIC_ARENA_TRANSFORMS
+from fpcode.tracking.camera_correspondence import get_session_mapping
+from fpcode.tracking.pair_matching import find_matched_pairs
+from fpcode.tracking.static_fusion import STATIC_ARENA_TRANSFORMS
 
 
 def evaluate_session_residuals(pair, A, b, arena_width=972.0):

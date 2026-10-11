@@ -35,8 +35,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from vidio.read import OpenCVReader
 
-from core.pair_matching import find_matched_pairs
-from core.ttl_sync import top_to_bot_frame
+from fpcode.tracking.pair_matching import find_matched_pairs
+from fpcode.tracking.clock_sync import top_to_bot_frame
 
 PROJECT_DIR = EXP_DIR / "kpms_tandem_cohort_production"
 MODEL_NAME = "tandem_cohort_118sess_50ar_200slds_seed101"

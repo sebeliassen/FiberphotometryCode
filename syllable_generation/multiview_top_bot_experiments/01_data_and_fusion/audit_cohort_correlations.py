@@ -20,11 +20,11 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 import numpy as np
 import pandas as pd
 
-from syllable_generation.multiview_top_bot_experiments.core.pair_matching import (
+from fpcode.tracking.pair_matching import (
     circular_correlation,
     find_matched_pairs,
 )
-from syllable_generation.multiview_top_bot_experiments.core.schemas import PathConfig
+from fpcode.common.schemas import PathConfig
 
 REPO_ROOT = PathConfig().repo_root
 TOP_H5_DIR = PathConfig().top_h5_dir

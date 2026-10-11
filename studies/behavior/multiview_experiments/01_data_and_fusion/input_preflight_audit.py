@@ -30,8 +30,8 @@ if str(EXP_DIR) not in sys.path:
 
 from audit_cohort_correlations import find_matched_pairs
 
-from core.camera_correspondence import get_session_mapping
-from core.fusion_engine import fuse_single_pair
+from fpcode.tracking.camera_correspondence import get_session_mapping
+from fpcode.tracking.fusion import fuse_single_pair
 
 VENTRAL_BPS = [
     'left_front_paw', 'right_front_paw',
