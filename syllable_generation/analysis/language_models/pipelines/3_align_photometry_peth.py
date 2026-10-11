@@ -1,27 +1,28 @@
-import os
+"""
+[DEPRECATED SHIM] syllable_generation/analysis/language_models/pipelines/3_align_photometry_peth.py
+==================================================
+Relocated to: studies/behavior/language_models/pipelines/3_align_photometry_peth.py
+"""
+
+import importlib
 import sys
+import warnings
 
-# Path setup
-ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
-if ROOT_DIR not in sys.path:
-    sys.path.append(ROOT_DIR)
-    sys.path.append(os.path.join(ROOT_DIR, "syllable_generation"))
+warnings.warn(
+    "syllable_generation.analysis.language_models.pipelines.3_align_photometry_peth is deprecated; import from studies.behavior.language_models.pipelines.3_align_photometry_peth instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
-from analysis.language_models.lib.evaluation.photometry_peth import align_photometry_to_strategy_switches
+_real = importlib.import_module("studies.behavior.language_models.pipelines.3_align_photometry_peth")
+sys.modules[__name__] = _real
 
+def __getattr__(name):
+    return getattr(_real, name)
 
-def main():
-    print("=== Pipeline 3: Fiberphotometry PETH Alignment (Stub Runner) ===")
-
-    # Call stub module interface
-    res = align_photometry_to_strategy_switches(
-        intervals_df=None,
-        photometry_data_dict={},
-        window_before_sec=5.0,
-        window_after_sec=5.0
-    )
-
-    print(f"Photometry PETH alignment runner completed: {res['message']}")
+def __dir__():
+    return dir(_real)
 
 if __name__ == "__main__":
-    main()
+    if hasattr(_real, "main"):
+        _real.main()

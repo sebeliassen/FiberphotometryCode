@@ -1,57 +1,28 @@
-from typing import List
+"""
+[DEPRECATED SHIM] syllable_generation/analysis/language_models/lib/evaluation/metrics.py
+==================================================
+Relocated to: studies/behavior/language_models/lib/evaluation/metrics.py
+"""
 
-import numpy as np
+import importlib
+import sys
+import warnings
 
+warnings.warn(
+    "syllable_generation.analysis.language_models.lib.evaluation.metrics is deprecated; import from studies.behavior.language_models.lib.evaluation.metrics instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
-def calculate_perplexity(model, sentences: List[List[str]]) -> float:
-    """
-    Computes sequence perplexity ( surprise score ) across behavioral sentences.
-    Higher perplexity means behavior transitions are less grammatical/structured.
-    """
-    log_probs = []
-    total_tokens = 0
+_real = importlib.import_module("studies.behavior.language_models.lib.evaluation.metrics")
+sys.modules[__name__] = _real
 
-    n = model.n
-    for sentence in sentences:
-        if len(sentence) < n:
-            continue
-        for i in range(len(sentence) - n + 1):
-            ngram = sentence[i:i+n]
-            context = ngram[:-1]
-            target = ngram[-1]
-            prob = model.get_probability(context, target)
-            log_probs.append(np.log2(prob))
-            total_tokens += 1
+def __getattr__(name):
+    return getattr(_real, name)
 
-    if total_tokens == 0:
-        return np.nan
+def __dir__():
+    return dir(_real)
 
-    avg_log_prob = np.sum(log_probs) / total_tokens
-    perplexity = 2 ** (-avg_log_prob)
-    return perplexity
-
-def calculate_levenshtein_distance(seq_a: List[str], seq_b: List[str]) -> float:
-    """ Computes Edit Distance (Levenshtein) between discrete sentences """
-    size_x = len(seq_a) + 1
-    size_y = len(seq_b) + 1
-    matrix = np.zeros((size_x, size_y))
-    for x in range(size_x):
-        matrix[x, 0] = x
-    for y in range(size_y):
-        matrix[0, y] = y
-
-    for x in range(1, size_x):
-        for y in range(1, size_y):
-            if seq_a[x-1] == seq_b[y-1]:
-                matrix[x, y] = min(
-                    matrix[x-1, y] + 1,
-                    matrix[x-1, y-1],
-                    matrix[x, y-1] + 1
-                )
-            else:
-                matrix[x, y] = min(
-                    matrix[x-1, y] + 1,
-                    matrix[x-1, y-1] + 1,
-                    matrix[x, y-1] + 1
-                )
-    return matrix[size_x - 1, size_y - 1]
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()

@@ -9,7 +9,7 @@ import pickle
 from typing import List, Tuple
 
 import matplotlib.pyplot as plt
-from analysis.language_models.lib.preprocessing.segmentation import assign_frame_strategies, generate_sliding_windows
+from studies.behavior.language_models.lib.preprocessing.segmentation import assign_frame_strategies, generate_sliding_windows
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score

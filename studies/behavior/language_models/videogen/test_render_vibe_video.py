@@ -10,7 +10,7 @@ if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
     sys.path.append(os.path.join(ROOT_DIR, "syllable_generation"))
 
-from analysis.language_models.videogen.generator import render_vibe_hud_video
+from studies.behavior.language_models.videogen.generator import render_vibe_hud_video
 
 
 def main():

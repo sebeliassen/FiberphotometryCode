@@ -16,7 +16,7 @@ import pandas as pd
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 sys.path.insert(0, ROOT_DIR)
 
-from syllable_generation.analysis.language_models.lib.preprocessing.bout_features import Behavior2VecEmbedder
+from studies.behavior.language_models.lib.preprocessing.bout_features import Behavior2VecEmbedder
 
 RAW_PATH = os.path.join(ROOT_DIR, "syllable_generation", "data", "jonathan_amph_sessions_run12_w_sylls.pkl")
 OUT_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models", "output", "strategies_extended")
