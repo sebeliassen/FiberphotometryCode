@@ -1,7 +1,7 @@
 """Explicit clock calibration and time-unit conversion without fitting policy."""
 
-from dataclasses import dataclass
 import math
+from dataclasses import dataclass
 
 import numpy as np
 

@@ -24,6 +24,11 @@ INTENTIONAL_CHANGES = {
 }
 
 
+RELOCATED_MODULES = {
+    "viz.legacy_io": "compat.viz.legacy_io",
+}
+
+
 def test_extracted_numerical_bodies_match_pre_refactor_baseline():
     fixture = json.loads((ROOT / "tests/golden/module_extraction.json").read_text())
     checked = 0
@@ -31,7 +36,8 @@ def test_extracted_numerical_bodies_match_pre_refactor_baseline():
         for name, record in fixture[group].items():
             if name in INTENTIONAL_CHANGES[group]:
                 continue
-            path = ROOT / "src/fpcode" / (record["module"].replace(".", "/") + ".py")
+            module_name = RELOCATED_MODULES.get(record["module"], record["module"])
+            path = ROOT / "src/fpcode" / (module_name.replace(".", "/") + ".py")
             definitions = {node.name: node for node in ast.parse(path.read_text()).body
                            if isinstance(node, (ast.FunctionDef, ast.ClassDef))}
             digest = hashlib.sha256(ast.dump(definitions[name], include_attributes=False).encode()).hexdigest()

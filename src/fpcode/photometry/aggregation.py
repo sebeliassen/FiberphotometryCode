@@ -1,6 +1,7 @@
 """Collect precomputed trial matrices without owning session construction."""
 
 from collections import defaultdict
+
 import numpy as np
 
 from fpcode.adapters.legacy_sessions import iter_signal_matrices

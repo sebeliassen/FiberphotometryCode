@@ -52,7 +52,7 @@ def test_audit_catches_literal_dynamic_boundaries_missing_targets_and_cycles(tmp
     assert report["cycles"] == [["fpcode.behavior.b", "fpcode.common.a", "fpcode.behavior.b"]]
 
 
-def test_compatibility_exception_does_not_allow_other_kpms_workflow_dependencies(tmp_path):
+def test_kpms_cannot_depend_on_workflow_exports(tmp_path):
     package = tmp_path / "fpcode"
     (package / "kpms").mkdir(parents=True)
     (package / "workflows").mkdir()
@@ -60,8 +60,9 @@ def test_compatibility_exception_does_not_allow_other_kpms_workflow_dependencies
     (package / "kpms/training.py").write_text("from fpcode.workflows.session_export import export_sessions\n")
     (package / "workflows/session_export.py").write_text("def export_sessions(): pass\n")
     report = audit(package)
-    assert len(report["violations"]) == 1
-    assert report["violations"][0].startswith("fpcode.kpms.training:")
+    assert len(report["violations"]) == 2
+    assert any(item.startswith("fpcode.kpms.export:") for item in report["violations"])
+    assert any(item.startswith("fpcode.kpms.training:") for item in report["violations"])
 
 
 def test_generic_visualization_cannot_import_cohort_defaults_or_wrappers(tmp_path):

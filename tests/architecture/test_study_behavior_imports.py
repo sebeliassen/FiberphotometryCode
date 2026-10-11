@@ -1,9 +1,10 @@
 """Pure moved study calculations import without discovery or output creation."""
 
-from pathlib import Path
 import subprocess
 import sys
 import textwrap
+from pathlib import Path
+
 import pytest
 
 
@@ -11,10 +12,10 @@ def test_study_behavior_imports_work_in_fresh_interpreter_without_eager_config()
     root = Path(__file__).resolve().parents[2]
     code = textwrap.dedent(f"""
         import sys
-        sys.path[:0] = [{str(root)!r}, {str(root / 'src')!r}, {str(root / 'archive/compat')!r}]
-        from studies.behavior.kinematics_ulrik.lib import aggregation, networks, micro_kinematics, motifs
-        from studies.behavior.replications_datta.datta.lib import snippets, features
-        from studies.behavior.replications_datta.datta.panel_1f import run_panel_1f_unified as unified
+        sys.path[:0] = [{str(root)!r}, {str(root / 'src')!r}, {str(root / 'compat')!r}]
+        from studies.kinematics_ulrik.lib import aggregation, networks, micro_kinematics, motifs
+        from studies.replications_datta.datta.lib import snippets, features
+        from studies.replications_datta.datta.panel_1f import run_panel_1f_unified as unified
         from syllable_generation.analysis.replications.datta.lib import snippets as old_snippets
         from syllable_generation.analysis.replications.datta.lib import features as old_features
         from syllable_generation.analysis.ulrik_kinematics.lib import aggregation as old_aggregation
@@ -47,8 +48,8 @@ def test_historical_metrics_split_exports_keep_identity_without_import_cycles(sp
     code = textwrap.dedent(f"""
         import importlib
         import sys
-        sys.path[:0] = [{str(root)!r}, {str(root / 'src')!r}, {str(root / 'archive/compat')!r}, {str(root / 'archive/compat/syllable_generation')!r}]
-        canonical_prefix = 'studies.behavior.kinematics_ulrik.lib.'
+        sys.path[:0] = [{str(root)!r}, {str(root / 'src')!r}, {str(root / 'compat')!r}, {str(root / 'compat/syllable_generation')!r}]
+        canonical_prefix = 'studies.kinematics_ulrik.lib.'
         historical_name = 'syllable_generation.analysis.ulrik_kinematics.lib.metrics'
         if {split_first!r}:
             aggregation = importlib.import_module(canonical_prefix + 'aggregation')

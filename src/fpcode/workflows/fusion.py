@@ -49,7 +49,7 @@ def fusion_options(config):
     if profile is not None:
         if profile != "legacy_multiview":
             raise ValueError(f"Unsupported compatibility_profile: {profile}")
-        from fpcode.adapters.multiview_compatibility import TTL_CACHE_PATH
+        from fpcode.compat.multiview.profile import TTL_CACHE_PATH
         options["ttl_cache_path"] = str(TTL_CACHE_PATH)
     for name in ("ttl_cache_path", "transform_path", "epoch"):
         if name in config:
@@ -95,7 +95,7 @@ def execute_fusion(pairs, config, output_dir, *, static_backend=None, dynamic_ba
             if static and config.get("compatibility_profile") == "legacy_multiview" and not any(
                 name in pair or name in options for name in ("transform_info", "transform_path")
             ):
-                from fpcode.adapters.multiview_compatibility import legacy_static_calibration
+                from fpcode.compat.multiview.profile import legacy_static_calibration
                 transform, source, epoch = legacy_static_calibration(pair.get("arena", "Arena1"),
                     pair.get("ts", pair["sid"][:19]), use_epochs=options.get("use_epochs", False))
                 supplied.update(transform_info=transform, transform_source_path=source, epoch=epoch)

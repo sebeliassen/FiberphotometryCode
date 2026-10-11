@@ -20,6 +20,17 @@ from typing import Any, Dict
 import numpy as np
 import pandas as pd
 
+from fpcode.adapters.multiview_compatibility import (
+    EPOCH_TRANSFORMS_PATH,
+    STATIC_TRANSFORMS_PATH,
+    LazyJsonMapping,
+    legacy_session_epoch,
+)
+from fpcode.contracts.pose import (
+    DEFAULT_ARENA_WIDTH,
+    TOP_USE_BODYPARTS,
+)
+
 from ..common.cache_manifest import (
     OK as _CACHE_OK,
 )
@@ -31,16 +42,14 @@ from ..common.cache_manifest import (
     verify_manifest,
     write_manifest,
 )
-from ..common.schemas import (
-    DEFAULT_ARENA_WIDTH,
-    TOP_USE_BODYPARTS,
+from .camera_correspondence import (
+    CameraMappingContext,
+    get_session_calibration_details,
+    get_session_mapping,
+    mapping_fingerprint,
 )
-from .camera_correspondence import CameraMappingContext, get_session_calibration_details, get_session_mapping, mapping_fingerprint
 from .clock_sync import get_session_ttl_offset
 from .geometry import project_reflected_points
-from fpcode.adapters.multiview_compatibility import (
-    STATIC_TRANSFORMS_PATH, EPOCH_TRANSFORMS_PATH, LazyJsonMapping, legacy_session_epoch,
-)
 
 _CORE_DIR = Path(__file__).resolve().parent
 STATIC_ARENA_TRANSFORMS = LazyJsonMapping(STATIC_TRANSFORMS_PATH)
@@ -56,9 +65,11 @@ _FUSION_CODE_FILES = [
     _CORE_DIR / "static_fusion.py",
     _CORE_DIR / "geometry.py",
     _CORE_DIR.parent / "adapters" / "multiview_compatibility.py",
+    _CORE_DIR.parent / "compat" / "multiview" / "profile.py",
     _CORE_DIR / "camera_correspondence.py",
     _CORE_DIR / "clock_sync.py",
     _CORE_DIR.parent / "common" / "schemas.py",
+    _CORE_DIR.parent / "compat" / "schemas.py",
     _CORE_DIR.parent / "contracts" / "pose.py",
 ]
 

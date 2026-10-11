@@ -7,10 +7,10 @@ its temporary checkpoint/videos are removed when the check finishes.
 
 import argparse
 import os
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
+from pathlib import Path
 
 
 def check_training(directory):

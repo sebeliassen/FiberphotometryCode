@@ -1,6 +1,7 @@
 """Syllable timeline reconstruction with explicit historical gap policies."""
 
 from typing import Dict, Optional, Sequence
+
 import numpy as np
 import pandas as pd
 
@@ -61,7 +62,8 @@ def flatten_results_sparse_legacy(
         col_blocks, col_names, result_rows = [], [], None
 
         for k in req_keys:
-            if k not in vdict: continue
+            if k not in vdict:
+                continue
             a = np.asarray(vdict[k])
             result_rows = a.shape[0] if result_rows is None else result_rows
 
@@ -107,7 +109,8 @@ def flatten_results_sparse_legacy(
 
     out = {}
     for key, vdict in results.items():
-        if key not in vfi: continue
+        if key not in vfi:
+            continue
         flen = actual_lengths.get(key) if actual_lengths else None
         out[key] = _flatten_one(vdict, vfi[key], required_keys, full_len=flen)
     return out

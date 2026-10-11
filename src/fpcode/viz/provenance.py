@@ -2,24 +2,16 @@
 
 from __future__ import annotations
 
-from fpcode.viz.hashing import HashCache
-from fpcode.viz.hashing import NumpyEncoder
-from fpcode.viz.hashing import hash_files
-from fpcode.viz.hashing import sha256_file
-from fpcode.viz.hashing import sha256_json
-from fpcode.viz.context import SelectionInputs
-from fpcode.viz.media import media_file_identity
-from fpcode.viz.selection.exemplars import selection_ids
-from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import Iterable
-from typing import Optional
-from typing import Sequence
-from typing import Tuple
 import hashlib
 import json
 import os
+from pathlib import Path
+from typing import Any, Dict, Iterable, Optional, Sequence, Tuple
+
+from fpcode.viz.context import SelectionInputs
+from fpcode.viz.hashing import HashCache, NumpyEncoder, hash_files, sha256_file, sha256_json
+from fpcode.viz.media import media_file_identity
+from fpcode.viz.selection.exemplars import selection_ids
 
 
 def source_input_hashes(cache, *, inputs: SelectionInputs) -> Dict[str, str]:

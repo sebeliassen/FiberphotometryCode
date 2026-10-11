@@ -2,21 +2,20 @@
 
 from __future__ import annotations
 
-from fpcode.kpms.backend.configuration import CONFIG
-from fpcode.kpms.backend.state import KPMSStateCache
 from functools import partial
-from jax_moseq.utils import pad_affine
-from jax_moseq.utils import psd_inv
-from jax_moseq.utils.autoregression import get_lags
-from numba import njit
-from numba import prange
+
 import dynamax.hidden_markov_model.inference as hmm_inference
 import jax
 import jax.numpy as jnp
 import jax.random as jr
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
 import numpy as np
+from jax_moseq.utils import pad_affine, psd_inv
+from jax_moseq.utils.autoregression import get_lags
+from numba import njit, prange
 
+from fpcode.kpms.backend.configuration import CONFIG
+from fpcode.kpms.backend.state import KPMSStateCache
 
 hmm_posterior_sample = hmm_inference.hmm_posterior_sample
 

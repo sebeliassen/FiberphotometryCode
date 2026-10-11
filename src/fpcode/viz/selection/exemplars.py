@@ -2,14 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any
-from typing import Callable
-from typing import Dict
-from typing import Iterable
-from typing import List
-from typing import Sequence
-from typing import Tuple
 import math
+from typing import Any, Callable, Dict, Iterable, List, Sequence, Tuple
 
 
 def assert_unique_bout_ids(bouts: Iterable[Dict[str, Any]], context: str = "") -> None:

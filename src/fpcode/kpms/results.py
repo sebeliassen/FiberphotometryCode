@@ -7,6 +7,8 @@ from typing import Any, Dict, Union
 
 from fpcode.adapters.kpms_results import read_kpms_results as read_results
 
+__all__ = ["extract_and_export_results", "read_results"]
+
 
 def extract_and_export_results(
     model: dict,

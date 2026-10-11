@@ -5,8 +5,7 @@ from types import SimpleNamespace
 import numpy as np
 import pandas as pd
 
-from studies.behavior.kinematics_ulrik.lib import metrics
-from studies.behavior.kinematics_ulrik.lib import label_mapping
+from studies.kinematics_ulrik.lib import label_mapping, metrics
 
 
 def session(labels, **columns):

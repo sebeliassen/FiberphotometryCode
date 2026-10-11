@@ -11,8 +11,8 @@ from typing import Dict, List, Optional, Union
 
 import numpy as np
 
-from ..common.schemas import CHAMBER_MAP
 from fpcode.adapters.multiview_compatibility import legacy_tracking_paths
+from fpcode.contracts.pose import CHAMBER_MAP
 
 TS_REGEX = re.compile(r"(\d{4}-\d{2}-\d{2}T\d{2}_\d{2}_\d{2})")
 

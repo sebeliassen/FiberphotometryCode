@@ -1,12 +1,12 @@
 """Canonical V2 study entry points import without data lookup or GPU setup."""
 
 import os
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-STUDY = ROOT / "studies/behavior/multiview_experiments/04_reports_and_figures"
+STUDY = ROOT / "studies/multiview_experiments/04_reports_and_figures"
 CALLERS = (
     "select_cohort_static_21kp_v2_syllable_manifest.py",
     "render_all_cohort_static_21kp_v2_seed101_grid_movies.py",
@@ -42,23 +42,35 @@ def no_discovery_or_output(*args, **kwargs):
     raise AssertionError('study bootstrap discovered data or wrote an output')
 Path.glob = Path.rglob = Path.mkdir = Path.write_text = Path.write_bytes = no_discovery_or_output
 study = Path({str(STUDY)!r})
-data_root = Path({str(tmp_path)!r}) / 'syllable_generation/multiview_top_bot_experiments'
+declared_root = Path({str(tmp_path)!r})
+experiment_root = declared_root / 'studies/multiview_experiments'
+data_root = declared_root / 'external_inputs'
+cohort_root = data_root / 'data/models/cohort_static_21kp_v2'
+fused_root = data_root / 'data/fused/multiview/cohort_fused_static_21kp_v2'
+visualizations = data_root / 'data/analysis_cache/multiview_visualizations/visualizations_cohort_static_21kp_v2_seed101_v4'
 for index, name in enumerate({CALLERS!r}):
     spec = importlib.util.spec_from_file_location('v2_bootstrap_' + str(index), study / name)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     if hasattr(module, 'EXP_DIR'):
-        assert module.EXP_DIR == data_root, (name, module.EXP_DIR)
+        assert module.EXP_DIR == experiment_root, (name, module.EXP_DIR)
         assert module.SCRIPT_DIR == study, (name, module.SCRIPT_DIR)
+    if hasattr(module, 'COHORT_DIR'):
+        assert module.COHORT_DIR == cohort_root, (name, module.COHORT_DIR)
+    if hasattr(module, 'FUSED_DIR'):
+        assert module.FUSED_DIR == fused_root, (name, module.FUSED_DIR)
     if hasattr(module, 'RESULTS_PATH'):
-        assert module.RESULTS_PATH == data_root / 'cohort_static_21kp_v2/model_21kp_static_50ar_300slds_seed101/results.h5'
+        assert module.RESULTS_PATH == cohort_root / 'model_21kp_static_50ar_300slds_seed101/results.h5'
     if hasattr(module, 'VFI_PATH'):
-        assert module.VFI_PATH == data_root / 'cohort_static_21kp_v2/video_frame_indexes.npz'
+        assert module.VFI_PATH == cohort_root / 'video_frame_indexes.npz'
     if hasattr(module, 'DEFAULT_VIZ_DIR'):
-        assert module.DEFAULT_VIZ_DIR == data_root / '04_reports_and_figures/visualizations_cohort_static_21kp_v2_seed101_v4'
+        assert module.DEFAULT_VIZ_DIR == visualizations
     if hasattr(module, 'vc'):
         assert module.vc.__name__ == 'fpcode.viz.v2'
         assert Path(module.vc.__file__).is_file()
+        assert module.vc.COHORT_DIR == cohort_root
+        assert module.vc.FUSED_DIR == fused_root
+        assert module.vc.DEFAULT_VIZ_DIR == visualizations
     if name not in {{'render_syllable_12_random_movie.py', 'probe_avi_tracking_pairings.py',
                     'generate_experimental_selection_variants.py'}}:
         sys.argv = [name, '--help']
@@ -73,6 +85,7 @@ assert not {{'jax', 'jax_moseq', 'keypoint_moseq', 'viz_v2_common'}} & set(sys.m
     completed = subprocess.run(
         [sys.executable, "-I", "-B", "-c", script], cwd=tmp_path,
         env={**os.environ, "FIBERPHOTOMETRY_ROOT": str(tmp_path), "MPLBACKEND": "Agg",
+             "FP_DATA_ROOT": str(tmp_path / "external_inputs"),
              "MPLCONFIGDIR": str(tmp_path / "matplotlib")},
         capture_output=True, text=True, timeout=20,
     )

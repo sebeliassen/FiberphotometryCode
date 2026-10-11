@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 
+
 @dataclass(frozen=True)
 class PipelineHyperparameters:
     num_ar_iters: int = 50

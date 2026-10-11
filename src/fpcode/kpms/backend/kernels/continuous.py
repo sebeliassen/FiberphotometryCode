@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-from fpcode.kpms.backend.configuration import CONFIG
-from fpcode.kpms.backend.state import KPMSStateCache
-from numba import njit
-from numba import prange
 import jax.numpy as jnp
 import jax.random as jr
 import jax_moseq.models.keypoint_slds.alignment as slds_alignment
 import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import numpy as np
+from numba import njit, prange
+
+from fpcode.kpms.backend.configuration import CONFIG
+from fpcode.kpms.backend.state import KPMSStateCache
 
 
 @njit(fastmath=True)

@@ -15,9 +15,9 @@ import hashlib
 import os
 import re
 import sys
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from collections import defaultdict
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -128,47 +128,47 @@ def get_proposed_destination(rel_path: str, classification: str) -> str:
     # Class B: Study destinations in studies/<domain>/<study>/
     if "language_models" in rel_path:
         sub = rel_path.split("language_models", 1)[1].lstrip("/")
-        return f"studies/behavior/language_models/{sub}"
+        return f"studies/language_models/{sub}"
     elif "sequence_viz" in rel_path:
         sub = rel_path.split("sequence_viz", 1)[1].lstrip("/")
-        return f"studies/behavior/sequence_viz/{sub}"
+        return f"studies/sequence_viz/{sub}"
     elif "ulrik_kinematics" in rel_path:
         sub = rel_path.split("ulrik_kinematics", 1)[1].lstrip("/")
-        return f"studies/behavior/kinematics_ulrik/{sub}"
+        return f"studies/kinematics_ulrik/{sub}"
     elif "replications" in rel_path:
         sub = rel_path.split("replications", 1)[1].lstrip("/")
-        return f"studies/behavior/replications_datta/{sub}"
+        return f"studies/replications_datta/{sub}"
     elif "shmoseq" in rel_path:
         sub = rel_path.split("shmoseq", 1)[1].lstrip("/")
-        return f"studies/behavior/shmoseq/{sub}"
+        return f"studies/shmoseq/{sub}"
     elif "deep_research_experiments" in rel_path:
         sub = rel_path.split("deep_research_experiments", 1)[1].lstrip("/")
-        return f"studies/behavior/deep_research_experiments/{sub}"
+        return f"studies/deep_research_experiments/{sub}"
     elif "karen" in rel_path:
-        return f"studies/behavior/karen_studies/{filename}"
+        return f"studies/karen_pff_vs_monomer/analysis/{filename}"
     elif "turnlab" in rel_path:
         sub = rel_path.split("turnlab", 1)[1].lstrip("/")
-        return f"studies/photometry/turnlab/{sub}"
+        return f"studies/turnlab/{sub}"
     elif "monoamine_interactions" in rel_path:
         sub = rel_path.split("monoamine_interactions", 1)[1].lstrip("/")
-        return f"studies/photometry/monoamine_interactions/{sub}"
+        return f"studies/monoamine_interactions/{sub}"
     elif "fiberphotometry" in rel_path:
         sub = rel_path.split("fiberphotometry", 1)[1].lstrip("/")
-        return f"studies/photometry/exploratory/{sub}"
+        return f"studies/photometry_exploration/{sub}"
     elif "multiview_top_bot_experiments" in rel_path:
         sub = rel_path.split("multiview_top_bot_experiments", 1)[1].lstrip("/")
-        return f"studies/behavior/multiview_experiments/{sub}"
+        return f"studies/multiview_experiments/{sub}"
     elif "diagnostics" in rel_path:
         return f"ops/diagnostics/{filename}"
     elif "videogen" in rel_path:
-        return f"studies/behavior/videogen/{filename}"
+        return f"studies/videogen/{filename}"
     elif "loaders" in rel_path:
-        return f"studies/behavior/loaders/{filename}"
+        return f"studies/loaders/{filename}"
     elif "projects" in rel_path:
-        return f"studies/behavior/projects/{filename}"
+        return f"studies/projects/{filename}"
     elif parts[0] == "scripts" or filename == "update_nb_cell.py":
-        return f"ops/scripts/{filename}"
-    return f"studies/behavior/misc/{rel_path}"
+        return f"ops/repo/{filename}"
+    return f"studies/misc/{rel_path}"
 
 def main():
     os.chdir(REPO_ROOT)

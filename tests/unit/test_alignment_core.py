@@ -9,7 +9,7 @@ import pytest
 from fpcode.alignment import align_signal, remap_model_frames
 from fpcode.alignment.clocks import ClockTransform
 from fpcode.contracts import SignalMetadata, SignalSeries, TimeAxis
-from fpcode.photometry.alignment import combined_photometry_and_syllables, build_fixed_moseq_dfs
+from fpcode.photometry.alignment import build_fixed_moseq_dfs, combined_photometry_and_syllables
 
 
 def series(times, values, valid=None, unit="s"):

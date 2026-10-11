@@ -6,8 +6,8 @@ from typing import Tuple
 import numpy as np
 
 from fpcode.alignment.resampling import align_signal
-from fpcode.contracts import EventInterval, SignalMetadata, SignalSeries, TimeAxis
-from fpcode.contracts.timelines import frozen_array, _shift_coordinates
+from fpcode.contracts import EventInterval, SignalMetadata, TimeAxis
+from fpcode.contracts.timelines import _shift_coordinates, frozen_array
 
 
 @dataclass(frozen=True)

@@ -7,9 +7,21 @@ import json
 from pathlib import Path
 
 FORBIDDEN = {"studies", "syllable_generation", "archive", "tests", "scratch", "core", "pipelines"}
-# Historical entry points may delegate upward; actual domain implementations
-# retain their normal boundary. Keep each exception explicit and narrow.
-COMPATIBILITY_IMPORTS = {("fpcode.kpms.export", "fpcode.workflows.session_export")}
+# Historical modules may forward only to their named compatibility owner.
+# Domain implementations never import compat directly. Workflows can select an
+# explicit historical profile; existing adapter facades retain old call defaults.
+COMPATIBILITY_FACADES = {
+    "fpcode.common.io": "fpcode.compat.io",
+    "fpcode.common.schemas": "fpcode.compat.schemas",
+    "fpcode.adapters.multiview_compatibility": "fpcode.compat.multiview.profile",
+    "fpcode.kpms.export": "fpcode.compat.kpms_export",
+    "fpcode.photometry.alignment": "fpcode.compat.photometry.frame_merge",
+    "fpcode.photometry.processing": "fpcode.compat.photometry.acquisition_alignment",
+    "fpcode.viz.v2": "fpcode.compat.viz.v2",
+    "fpcode.viz.legacy_api": "fpcode.compat.viz.legacy_api",
+    "fpcode.viz.legacy_defaults": "fpcode.compat.viz.legacy_defaults",
+    "fpcode.viz.legacy_io": "fpcode.compat.viz.legacy_io",
+}
 # Reusable visualization algorithms receive their landmarks and input files
 # explicitly. Historical defaults may be selected only by compatibility APIs.
 EXPLICIT_VIZ_MODULES = {
@@ -20,6 +32,7 @@ EXPLICIT_VIZ_MODULES = {
 }
 COHORT_VIZ_MODULES = {
     "fpcode.viz.legacy_defaults", "fpcode.viz.legacy_api", "fpcode.viz.legacy_io",
+    "fpcode.compat.viz.legacy_defaults", "fpcode.compat.viz.legacy_api", "fpcode.compat.viz.legacy_io",
 }
 LAYERS = {
     "contracts": {"contracts"},
@@ -28,15 +41,17 @@ LAYERS = {
     "alignment": {"alignment", "contracts", "common"},
     "statistics": {"statistics", "contracts", "common"},
     "behavior": {"behavior", "contracts", "alignment", "statistics", "common"},
-    "tracking": {"tracking", "contracts", "adapters", "alignment", "behavior", "common"},
+    "tracking": {"tracking", "contracts", "adapters", "alignment", "statistics", "common"},
     "photometry": {"photometry", "contracts", "adapters", "alignment", "behavior", "statistics", "common"},
-    "kpms": {"kpms", "contracts", "adapters", "alignment", "behavior", "photometry", "tracking", "statistics", "common"},
-    "viz": {"viz", "contracts", "adapters", "alignment", "behavior", "tracking", "kpms", "statistics", "common"},
+    "kpms": {"kpms", "contracts", "adapters", "alignment", "behavior", "tracking", "statistics", "common"},
+    "viz": {"viz", "contracts", "adapters", "alignment", "behavior", "tracking", "statistics", "common"},
+    "compat": set(),
     "workflows": set(),
     "cli": set(),
 }
 LAYERS["workflows"] = set(LAYERS) - {"cli"}
 LAYERS["cli"] = set(LAYERS)
+LAYERS["compat"] = set(LAYERS) - {"cli"}
 
 
 def module_name(path, package_root):
@@ -146,6 +161,7 @@ def audit(package_root):
             continue
         package = name if path.name == "__init__.py" else name.rpartition(".")[0]
         import_aliases = _importlib_aliases(tree)
+        facade_forwarded = False
         for node in ast.walk(tree):
             dynamic = False
             if isinstance(node, ast.Import):
@@ -171,6 +187,8 @@ def audit(package_root):
             else:
                 continue
             for imported in candidates:
+                if COMPATIBILITY_FACADES.get(name) == imported:
+                    facade_forwarded = True
                 if name in EXPLICIT_VIZ_MODULES and imported in COHORT_VIZ_MODULES:
                     violations.append(f"{name}:{node.lineno}: implicit cohort dependency {imported}")
                 if imported.split(".")[0] in FORBIDDEN:
@@ -179,7 +197,7 @@ def audit(package_root):
                     own_layer = name.split(".")[1] if "." in name else None
                     target_layer = imported.split(".")[1]
                     if (own_layer in LAYERS and target_layer not in LAYERS[own_layer]
-                            and (name, imported) not in COMPATIBILITY_IMPORTS):
+                            and COMPATIBILITY_FACADES.get(name) != imported):
                         violations.append(f"{name}:{node.lineno}: forbidden dependency {imported}")
                     if dynamic and imported not in paths:
                         violations.append(f"{name}:{node.lineno}: missing dynamic import target {imported}")
@@ -187,6 +205,14 @@ def audit(package_root):
                     graph[name].add(imported)
         violations.extend(f"{name}:{line}: argument parsing at import time"
                           for line in _top_level_parse_calls(tree))
+        if facade_forwarded:
+            # An old public path cannot gain permission to implement algorithms
+            # simply by being listed as a compatibility facade.
+            for node in tree.body:
+                if (isinstance(node, ast.ClassDef)
+                        or isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                        and node.name not in {"__getattr__", "__dir__"}):
+                    violations.append(f"{name}:{node.lineno}: compatibility facade must only forward names")
     return {"module_count": len(paths), "edges": {name: sorted(edges) for name, edges in graph.items()},
             "violations": violations, "cycles": _cycles(graph)}
 

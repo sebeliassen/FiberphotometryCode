@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+Historical October 9 migration utility. Its source namespaces refer to the
+pre-migration tree; it is retained as a record, not the current cleanup workflow.
+
 ops/repo/quarantine_class_c.py
 
 Executes Step 8.1 of the Architectural Refactoring:

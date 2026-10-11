@@ -9,6 +9,7 @@ from fpcode.alignment.frame_mapping import place_model_labels
 from fpcode.contracts import PoseSeries, SignalSeries, TimeAxis
 from fpcode.contracts.sessions import SessionKey
 from fpcode.contracts.timelines import frozen_array
+
 from .photometry import align_photometry
 
 

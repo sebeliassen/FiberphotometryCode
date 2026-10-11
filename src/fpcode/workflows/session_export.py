@@ -5,25 +5,27 @@ VFI selection, calibrated camera correspondence and gap-aware resampling remain
 separate scientific choices; this workflow does not infer them from filenames.
 """
 
-from contextlib import ExitStack
 import os
-from pathlib import Path
 import pickle
 import shutil
 import time
+from contextlib import ExitStack
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
 from fpcode.adapters.kpms_results import open_kpms_results, results_to_frame_table
 from fpcode.adapters.legacy_sessions import (
-    LEGACY_TANDEM_PHOTOMETRY_COLUMNS, attach_export_tables, project_legacy_photometry_table,
+    LEGACY_TANDEM_PHOTOMETRY_COLUMNS,
+    attach_export_tables,
+    project_legacy_photometry_table,
 )
 from fpcode.behavior.kinematics import legacy_nose_tail_kinematics
 from fpcode.common.cache_manifest import atomic_path
-from fpcode.common.io import safe_load_pickle
+from fpcode.common.file_io import safe_load_pickle
 from fpcode.common.logging import get_logger
-from fpcode.photometry.alignment import combined_photometry_and_syllables
+from fpcode.compat.photometry.frame_merge import combined_photometry_and_syllables
 
 logger = get_logger("fpcode.workflows.session_export")
 

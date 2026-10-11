@@ -4,7 +4,6 @@ import numpy as np
 
 from fpcode.contracts import SignalMetadata, SignalSeries, TimeAxis
 
-
 LEGACY_TANDEM_PHOTOMETRY_COLUMNS = [
     "SystemTimestamp", "signal_0", "signal_1", "signal_2", "signal_3",
     *[f"signal_{channel}_{kind}" for channel in range(4)

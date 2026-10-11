@@ -11,8 +11,8 @@ import h5py
 import numpy as np
 import pytest
 
-from fpcode.kpms.fit import fit_model
 from fpcode.kpms.backend.patch_registry import temporary_patches
+from fpcode.kpms.fit import fit_model
 
 training = importlib.import_module(fit_model.__module__)
 

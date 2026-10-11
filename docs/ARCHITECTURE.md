@@ -1,5 +1,13 @@
 # System Architecture & Stage Data Flow
 
+> Historical architecture snapshot, preserved for its scientific and operational
+> context. Paths such as `core/` and `syllable_generation/` refer to the layout at
+> the time of writing. For current responsibilities and dependencies, use the
+> [capability contract](architecture/UNIT_CONTRACT.md) and
+> [documentation index](README.md). Current source is `src/fpcode`; projects live
+> directly under `studies/<project>`, historical imports in `compat`, and data in
+> `data`.
+
 ## 1. Architectural Principles
 
 This platform adheres to five foundational engineering standards:

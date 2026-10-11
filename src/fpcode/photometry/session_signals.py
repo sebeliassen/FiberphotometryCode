@@ -6,8 +6,9 @@ from typing import Dict
 import numpy as np
 
 from fpcode.adapters.legacy_sessions import photometry_table, region_columns
-from .preprocessing import motion_correct_biexponential
+
 from .event_windows import legacy_nearest_window
+from .preprocessing import motion_correct_biexponential
 
 
 @dataclass

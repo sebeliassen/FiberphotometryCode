@@ -1,7 +1,9 @@
 """Historical in-place repetition of per-sample model output arrays."""
 
 from typing import Dict
+
 import numpy as np
+
 
 def tile_results(results: Dict[str, dict], factor: int, verbose: bool = False) -> None:
     """

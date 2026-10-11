@@ -1,5 +1,6 @@
 """Compatibility entrypoint; canonical implementation is fpcode.cli.train."""
 import sys
+
 from fpcode.cli import train as _canonical
 
 if __name__ == "__main__":

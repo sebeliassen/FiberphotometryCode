@@ -5,20 +5,19 @@ Execution provenance tracking emitting atomic run.json manifests.
 """
 
 import hashlib
-from copy import deepcopy
 import json
-import os
 import platform
 import socket
 import subprocess
 import sys
 import time
+from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
-from .paths import resolve_path, to_relative_path
 from .cache_manifest import atomic_write_json
+from .paths import resolve_path, to_relative_path
 
 
 def _get_git_info() -> Dict[str, Any]:

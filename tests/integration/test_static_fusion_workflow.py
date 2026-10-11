@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from fpcode.common.cache_manifest import UNVERIFIED_NO_MANIFEST, manifest_path_for
-from fpcode.common.schemas import TOP_USE_BODYPARTS, BOT_RAW_BODYPARTS
+from fpcode.common.schemas import BOT_RAW_BODYPARTS, TOP_USE_BODYPARTS
 from fpcode.tracking import static_fusion
 
 

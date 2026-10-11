@@ -5,7 +5,6 @@ from contextlib import contextmanager
 import h5py
 import numpy as np
 
-
 RESULT_FIELDS = ("syllable", "centroid", "heading", "latent_state")
 
 

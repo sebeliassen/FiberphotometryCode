@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from fpcode.kpms.backend.configuration import BatchConfig
-from fpcode.kpms.backend.configuration import CONFIG
 from typing import Optional
+
+from fpcode.kpms.backend.configuration import CONFIG, BatchConfig
 
 
 def precompute_optimal_batch_config(

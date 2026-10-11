@@ -1,7 +1,7 @@
 """Half-open event intervals and frame-indexed syllable bouts."""
 
-from dataclasses import dataclass
 import math
+from dataclasses import dataclass
 from numbers import Integral
 
 

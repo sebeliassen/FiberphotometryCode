@@ -1,7 +1,7 @@
 """Training orchestration with an explicit expensive backend boundary."""
 
 from pathlib import Path
-from typing import Callable, Mapping, Any
+from typing import Any, Callable, Mapping
 
 from fpcode.common.paths import resolve_path
 from fpcode.kpms.config import resolve_training_config

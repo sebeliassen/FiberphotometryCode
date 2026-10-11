@@ -1,7 +1,9 @@
 """Syllable run segmentation with typed, half-open frame bounds."""
 
 from typing import Dict, List, Sequence
+
 import numpy as np
+
 from fpcode.contracts import Bout
 
 

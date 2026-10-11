@@ -2,12 +2,18 @@ import numpy as np
 import pytest
 
 from fpcode.behavior.kinematics import (
-    clean_short_runs, presence_mask_from_conf, presence_mask_from_conf_kpms,
-    smooth_heading_circular, smooth_heading_circular_legacy_fusion,
+    clean_short_runs,
+    presence_mask_from_conf,
+    presence_mask_from_conf_kpms,
+    smooth_heading_circular,
+    smooth_heading_circular_legacy_fusion,
 )
 from fpcode.behavior.syllables import (
-    extract_bouts, extract_syllable_runs, flatten_results_to_timeline,
-    LEGACY_SPARSE_NO_FILL, tile_results,
+    LEGACY_SPARSE_NO_FILL,
+    extract_bouts,
+    extract_syllable_runs,
+    flatten_results_to_timeline,
+    tile_results,
 )
 from fpcode.common import schemas
 from fpcode.contracts import pose

@@ -28,8 +28,8 @@ def test_rotation_places_matrix_axes_after_angle_axes():
 
 @pytest.mark.parametrize("relative_path", [
     "src/fpcode/tracking/fusion.py",
-    "studies/behavior/multiview_experiments/01_data_and_fusion/fuse_multiview_cohort.py",
-    "studies/behavior/multiview_experiments/01_data_and_fusion/fuse_reflection_corrected_sessions.py",
+    "studies/multiview_experiments/01_data_and_fusion/fuse_multiview_cohort.py",
+    "studies/multiview_experiments/01_data_and_fusion/fuse_reflection_corrected_sessions.py",
 ])
 def test_production_rotation_wrappers_preserve_float32_values_without_running_studies(relative_path):
     # Execute only the actual import and wrapper, avoiding historical scripts'

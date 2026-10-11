@@ -138,7 +138,7 @@ def get_current_metrics() -> Dict[str, int]:
     ]
     unforwarded = 0
     for r in runners:
-        p = REPO_ROOT / r
+        p = REPO_ROOT / "compat" / r
         if p.exists():
             txt = p.read_text(encoding="utf-8", errors="ignore")
             if "pipelines." not in txt and "fpcode." not in txt:

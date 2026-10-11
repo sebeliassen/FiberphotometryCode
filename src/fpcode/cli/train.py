@@ -5,11 +5,11 @@ import os
 from pathlib import Path
 
 from fpcode.common.config import compute_config_hash, load_yaml_config
-from fpcode.common.io import compact_kpms_checkpoint
 from fpcode.common.logging import get_logger
 from fpcode.common.notify import send_ntfy
 from fpcode.common.paths import resolve_path
 from fpcode.common.run_record import RunRecord
+from fpcode.kpms.checkpoint_io import compact_kpms_checkpoint
 from fpcode.kpms.config import resolve_training_config
 from fpcode.workflows.training import fit_model, training_input_path, validate_training_input
 

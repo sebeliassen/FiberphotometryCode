@@ -35,9 +35,22 @@ after reviewing its dependencies, or use a fresh checkout/worktree.
   `code_baseline.json`. Its `workspace/` copy was cancelled as redundant and is
   incomplete. `manifest.json` explicitly records `CANCELLED_INCOMPLETE`.
 
-A final-refactor HDD archive and source restore drill were deferred at the user's
-request to prioritize the handoff. Do not assume such a backup exists. The
-implementation commit and current working tree hold the post-baseline changes.
+The October 9 final-refactor backup and restore drill were initially deferred.
+A later sealed snapshot now exists at
+`/mnt/hdd/backups/FiberphotometryCode/20261011T143033Z-snapshot-353ab324/`.
+Its manifest records Git `e7010dd`, 96,373,603,551 bytes across 8,440 files,
+1,316 directories and 330 symlinks (10,086 entries), plus a separately hashed
+702,166,666-byte Git history bundle. Creation verifies the included payload
+before sealing and publication. A metadata-only review confirmed the manifest
+checksum and read-only snapshot root; it did not repeat the full payload rehash.
+
+This snapshot is complete for its eligible inventory, not for every empirical
+file in the workspace. Its policy excludes files at least 2 GiB, AVI/MP4 videos,
+outputs and transient caches. The manifest lists 1,730 excluded paths and
+1,070,605,488,639 excluded file bytes. Symlinks record link targets, not the
+contents at external targets. Keep separate protection for those omitted data.
+The snapshot predates the review-follow-up changes; its stored Git commit is
+not a claim that the current working tree is backed up.
 
 New general snapshots use `ops/backup/snapshot.py`. Files **at least 2 GiB** are
 excluded and recorded in the plan/manifest. Symlinks are preserved without
@@ -61,4 +74,4 @@ become sealed content-verified snapshots.
 To restore Git history separately, clone `repository.bundle` into a new directory.
 Verify the bundle and SHA-256 values against `backup.json` first. A source archive
 can also be extracted into a fresh directory and tested there. A final code restore
-drill has not been performed. Keep data recovery and code rollback separate.
+drill has not been recorded. Keep data recovery and code rollback separate.

@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from fpcode.kpms.backend.configuration import CONFIG
-from fpcode.kpms.backend.state import KPMSStateCache
 import jax
 import jax.numpy as jnp
 import jax.random as jr
 import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import numpy as np
 
+from fpcode.kpms.backend.configuration import CONFIG
+from fpcode.kpms.backend.state import KPMSStateCache
 
 _orig_v = slds_gibbs.resample_location
 

@@ -35,7 +35,7 @@ def test_counting_rejects_ambiguous_labels_vocabulary_or_frame_map(labels, state
 def test_actual_study_loop_preserves_pooled_frames_and_full_recording_duration(filename):
     # These historical scripts execute full-cohort permutations at module level.
     # Execute only their actual aggregation loop against tiny fake sessions.
-    path = Path(__file__).resolve().parents[2] / "studies/behavior/karen_studies" / filename
+    path = Path(__file__).resolve().parents[2] / "studies/karen_pff_vs_monomer/analysis" / filename
     tree = ast.parse(path.read_text())
     loops = [node for node in tree.body if isinstance(node, ast.For)
              and ast.unparse(node.target) == "(i, aid)"

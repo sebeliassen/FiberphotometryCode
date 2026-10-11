@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+Historical October 9 migration utility. Its source namespaces refer to the
+pre-migration tree; it is retained as a record, not the current cleanup workflow.
+
 ops/repo/vendor_keypoint_moseq.py
 
 Executes Step 8.2 of the Architectural Refactoring:

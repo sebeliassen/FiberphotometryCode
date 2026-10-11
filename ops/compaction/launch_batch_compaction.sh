@@ -10,9 +10,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-PYTHON_BIN="/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python"
-LOGS_DIR="${SCRIPT_DIR}/logs"
+REPO_ROOT="${REPO_ROOT:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+PYTHON_BIN="${PYTHON_BIN:-python}"
+LOGS_DIR="${REPO_ROOT}/outputs/compaction"
 RUN_TIMESTAMP="$(date +'%Y%m%d_%H%M%S')"
 LOG_FILE="${LOGS_DIR}/batch_compaction_${RUN_TIMESTAMP}.log"
 LOG_LINK="${LOGS_DIR}/batch_compaction.log"
@@ -33,7 +33,7 @@ echo "========================================================================"
 cd "${REPO_ROOT}"
 
 # Launch detached via nohup with polite CPU and I/O priority
-nohup "${PYTHON_BIN}" -u "${SCRIPT_DIR}/batch_compact_all_checkpoints.py" < /dev/null >> "${LOG_FILE}" 2>&1 &
+nohup "${PYTHON_BIN}" -u "${SCRIPT_DIR}/batch_compact_all_checkpoints.py" "$@" < /dev/null >> "${LOG_FILE}" 2>&1 &
 BG_PID=$!
 disown -h "${BG_PID}" 2>/dev/null || true
 echo "${BG_PID}" > "${PID_FILE}"

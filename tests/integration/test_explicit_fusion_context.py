@@ -7,7 +7,7 @@ import pandas as pd
 import pytest
 
 from fpcode.common.cache_manifest import read_manifest
-from fpcode.common.schemas import TOP_USE_BODYPARTS, BOT_RAW_BODYPARTS
+from fpcode.common.schemas import BOT_RAW_BODYPARTS, TOP_USE_BODYPARTS
 from fpcode.tracking import fusion, static_fusion
 from fpcode.workflows.fusion import execute_fusion
 

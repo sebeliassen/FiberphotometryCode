@@ -2,12 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any
-from typing import Dict
-from typing import Sequence
-from typing import Tuple
-import numpy as np
 import re
+from typing import Any, Dict, Sequence, Tuple
+
+import numpy as np
 
 
 def frames_from_seconds(seconds: float, fps: float) -> int:

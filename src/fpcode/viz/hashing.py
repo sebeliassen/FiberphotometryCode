@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import Iterable
-from typing import Optional
 import hashlib
 import json
+from pathlib import Path
+from typing import Any, Dict, Iterable, Optional
+
 import numpy as np
 
 from fpcode.common.cache_manifest import atomic_write_text
@@ -87,6 +85,10 @@ def hash_files(paths: Iterable[Path]) -> Dict[str, str]:
         package_dir = Path(__file__).resolve().parent
         for implementation in sorted(package_dir.rglob("*.py")):
             out["fpcode/viz/" + implementation.relative_to(package_dir).as_posix()] = sha256_file(implementation)
+        compatibility_dir = package_dir.parent / "compat" / "viz"
+        if compatibility_dir.is_dir():
+            for implementation in sorted(compatibility_dir.rglob("*.py")):
+                out["fpcode/compat/viz/" + implementation.relative_to(compatibility_dir).as_posix()] = sha256_file(implementation)
     return out
 
 

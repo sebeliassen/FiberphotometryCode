@@ -1,22 +1,33 @@
 PYTHON ?= python3
 PYTEST ?= $(PYTHON) -m pytest
 RUFF ?= $(PYTHON) -m ruff
+MYPY ?= $(PYTHON) -m mypy
 BACKUP_DEST ?= /mnt/hdd/backups/FiberphotometryCode
 SNAPSHOT ?=
 RESTORE_DEST ?=
 VALIDATION_PROJECT ?=
 VALIDATION_ARGS ?=
 
-.PHONY: help test lint architecture smoke-runtime validate-two-sessions backup-plan backup verify-backup restore-backup shims-report metrics
+.PHONY: help test lint lint-baseline typecheck package-check architecture smoke-runtime validate-two-sessions backup-plan backup verify-backup restore-backup shims-report metrics
 
 help:
-	@echo "test, lint, architecture, smoke-runtime, validate-two-sessions, backup-plan, backup, verify-backup, restore-backup, shims-report, metrics"
+	@echo "test, lint, lint-baseline, typecheck, package-check, architecture, smoke-runtime, validate-two-sessions, backup-plan, backup, verify-backup, restore-backup, shims-report, metrics"
 
 test:
-	$(PYTEST) -q
+	$(PYTEST) -q -p no:cacheprovider
 
 lint:
-	$(RUFF) check src/fpcode pipelines ops/backup ops/repo/dependencies.py
+	$(PYTHON) -B ops/repo/lint.py
+
+# Updating the debt inventory is explicit and reviewable; CI never refreshes it.
+lint-baseline:
+	$(PYTHON) -B ops/repo/lint.py --write-baseline
+
+typecheck:
+	$(MYPY)
+
+package-check:
+	$(PYTHON) -B ops/repo/package_check.py
 
 architecture:
 	$(PYTHON) -B ops/repo/dependencies.py

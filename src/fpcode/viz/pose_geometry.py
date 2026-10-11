@@ -2,17 +2,15 @@
 
 from __future__ import annotations
 
-from fpcode.viz.hashing import sha256_file
-from fpcode.viz.context import BottomPoseLandmarks
-from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import Optional
-from typing import Sequence
-from typing import Tuple
 import json
 import math
+from pathlib import Path
+from typing import Any, Dict, Optional, Sequence, Tuple
+
 import numpy as np
+
+from fpcode.viz.context import BottomPoseLandmarks
+from fpcode.viz.hashing import sha256_file
 
 KPMS_FILTER_SIZE = 9  # keypoint_moseq.util.get_instance_trajectories default
 

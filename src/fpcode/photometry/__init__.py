@@ -4,19 +4,21 @@ fpcode.photometry
 Fiber photometry signal processing, response metrics, and temporal alignment.
 """
 
+from importlib import import_module
+
+from fpcode.statistics import compute_mean_ci
+
+from .aggregation import group_signals
 from .response_metrics import (
     calculate_signal_response_metrics,
     calculate_signal_response_metrics_matrix,
 )
-from .processing import (
-    compute_mean_ci,
-    group_signals,
-    merge_phot_bonsai_cam,
-)
-from .alignment import (
-    build_fixed_moseq_dfs,
-    combined_photometry_and_syllables,
-)
+
+_LEGACY_EXPORTS = {
+    "merge_phot_bonsai_cam": "fpcode.photometry.processing",
+    "combined_photometry_and_syllables": "fpcode.photometry.alignment",
+    "build_fixed_moseq_dfs": "fpcode.photometry.alignment",
+}
 
 __all__ = [
     "calculate_signal_response_metrics",
@@ -27,3 +29,11 @@ __all__ = [
     "combined_photometry_and_syllables",
     "build_fixed_moseq_dfs",
 ]
+
+
+def __getattr__(name):
+    if name not in _LEGACY_EXPORTS:
+        raise AttributeError(f"{__name__!r} has no attribute {name!r}")
+    value = getattr(import_module(_LEGACY_EXPORTS[name]), name)
+    globals()[name] = value
+    return value

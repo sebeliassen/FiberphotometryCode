@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """
+Historical October 9 migration utility. Its source namespaces refer to the
+pre-migration tree; it is retained as a record, not the current cleanup workflow.
+
 ops/repo/update_shims.py
 ========================
 Systematically ensures all backward-compatibility shims emit DeprecationWarning,
 catalogs them in registry/SHIMS.tsv, and verifies their targets.
 """
 
-from pathlib import Path
 import warnings
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -91,7 +94,7 @@ def write_shims_tsv():
     for rel_path, target in sorted(SHIMS_MAP.items()):
         p = REPO_ROOT / rel_path
         shim_type = "module_proxy" if rel_path.startswith("core/") or "utils" in rel_path else "forwarder"
-        status = "ACTIVE" if p.exists() else "MISSING"
+        status = "ACTIVE" if (p.exists() or (REPO_ROOT / "compat" / rel_path).exists()) else "MISSING"
         notes = "Emits DeprecationWarning"
         records[rel_path] = f"{rel_path}\t{target}\t{shim_type}\t{status}\t{notes}"
     lines = ["shim_path\ttarget_module\ttype\tstatus\tnotes", *[records[key] for key in sorted(records)]]

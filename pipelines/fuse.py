@@ -1,5 +1,6 @@
 """Compatibility entrypoint; canonical implementation is fpcode.cli.fuse."""
 import sys
+
 from fpcode.cli import fuse as _canonical
 
 if __name__ == "__main__":

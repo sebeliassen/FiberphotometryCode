@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from jax.tree_util import tree_flatten_with_path
 import jax
 import jax.numpy as jnp
 import numpy as np
+from jax.tree_util import tree_flatten_with_path
 
 
 def fast_consolidated_check_for_nans(data):

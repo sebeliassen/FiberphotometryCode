@@ -6,10 +6,14 @@ from pathlib import Path
 from fpcode.common.config import compute_config_hash, load_yaml_config
 from fpcode.common.logging import get_logger
 from fpcode.common.notify import send_ntfy
-from fpcode.common.paths import resolve_path, resolve_data_path
+from fpcode.common.paths import resolve_data_path, resolve_path
 from fpcode.common.run_record import RunRecord
 from fpcode.workflows.fusion import (
-    execute_fusion, find_matched_pairs, fuse_single_pair, fuse_single_pair_static, fusion_options,
+    execute_fusion,
+    find_matched_pairs,
+    fuse_single_pair,
+    fuse_single_pair_static,
+    fusion_options,
 )
 
 logger = get_logger("fpcode.cli.fuse")

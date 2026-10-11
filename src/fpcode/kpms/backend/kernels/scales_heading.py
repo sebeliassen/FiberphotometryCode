@@ -2,16 +2,16 @@
 
 from __future__ import annotations
 
-from fpcode.kpms.backend.configuration import CONFIG
-from fpcode.kpms.backend.state import KPMSStateCache
-from jax_moseq.models.keypoint_slds import slds
-from jax_moseq.models.keypoint_slds.gibbs import compute_squared_error
 import jax
 import jax.numpy as jnp
 import jax.random as jr
 import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
 import numpy as np
+from jax_moseq.models.keypoint_slds import slds
+from jax_moseq.models.keypoint_slds.gibbs import compute_squared_error
 
+from fpcode.kpms.backend.configuration import CONFIG
+from fpcode.kpms.backend.state import KPMSStateCache
 
 _orig_s = slds_gibbs.resample_scales
 

@@ -3,15 +3,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any, Dict, Iterable, List, Tuple
+
+import numpy as np
+
+from fpcode.tracking.quality import supported_track_mask
 from fpcode.viz.context import LandmarkGroups
 from fpcode.viz.selection.bouts import frames_from_seconds
-from typing import Any
-from typing import Dict
-from typing import Iterable
-from typing import List
-from typing import Tuple
-import numpy as np
-from fpcode.tracking.quality import supported_track_mask
 
 
 def movie_context_ok(start: int, n_frames: int, pre: int, post: int) -> bool:

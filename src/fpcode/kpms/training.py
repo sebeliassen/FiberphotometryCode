@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from contextlib import nullcontext
 import pickle
+from contextlib import nullcontext
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List, Union
@@ -25,6 +25,7 @@ def _load_training_backend(device):
     configure_jax_runtime(preallocate=False, force_cpu=device == "cpu")
     import jax
     import keypoint_moseq as kpms
+
     from fpcode.kpms import runtime
     from fpcode.kpms.checkpoints import patched_load_checkpoint
     from fpcode.kpms.data import safe_fit_pca

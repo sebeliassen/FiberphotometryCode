@@ -8,15 +8,16 @@ Computational neuroscience platform supporting multi-camera posture tracking, un
 The reusable implementation is in `src/fpcode`, organized into contracts,
 adapters, alignment, tracking, photometry, behavior, KPMS, statistics,
 visualization, workflows and installed CLI modules. Study-specific analyses
-live in `studies`. Historical `core`, `pipelines`, `syllable_generation` and
-photometry entry points remain compatibility paths during migration.
+live in `studies/<project>`, with methods and cohort policy kept alongside their
+project. Historical `core`, `pipelines`, `syllable_generation` and photometry
+imports are retained in `compat`; `archive` contains preserved historical material.
 
 Start with the [documentation index](docs/README.md) for current guidance and
 preserved historical reports. The agreed architecture is documented in
 [the capability contract](docs/architecture/UNIT_CONTRACT.md); configuration
 ownership is described in [configs/README.md](configs/README.md), and backup and
 rollback procedures are in [recovery.md](docs/recovery.md). The existing
-[October 9 handoff](handoff.md) remains a dated record.
+[October 9 handoff](docs/reports/handoff.md) remains a dated record.
 
 ```bash
 # Installation: optional model/rendering dependencies remain explicit.
@@ -31,7 +32,9 @@ fpcode-render --help
 
 The default test suite uses tiny functional fixtures. Empirical scientific
 reproduction and GPU model fitting are separate checks. Existing models, videos,
-recordings and session files retain their locations.
+recordings and session files live under `data`, including `data/raw` for
+project recordings. Compatibility paths preserve legacy consumers where needed;
+Git snapshots do not cover these ignored empirical files.
 
 For an explicit real-data GPU check, see [runtime validation](docs/architecture/VALIDATION.md):
 

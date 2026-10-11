@@ -1,0 +1,454 @@
+{
+  "module_count": 140,
+  "edges": {
+    "fpcode": [],
+    "fpcode.adapters": [],
+    "fpcode.adapters.acquisition": [
+      "fpcode.contracts"
+    ],
+    "fpcode.adapters.dlc": [
+      "fpcode.contracts"
+    ],
+    "fpcode.adapters.kpms_results": [],
+    "fpcode.adapters.legacy_sessions": [
+      "fpcode.contracts"
+    ],
+    "fpcode.adapters.multiview_compatibility": [
+      "fpcode.compat.multiview.profile"
+    ],
+    "fpcode.alignment": [
+      "fpcode.alignment.frame_mapping",
+      "fpcode.alignment.resampling"
+    ],
+    "fpcode.alignment.clocks": [
+      "fpcode.contracts",
+      "fpcode.contracts.timelines"
+    ],
+    "fpcode.alignment.frame_mapping": [],
+    "fpcode.alignment.frames": [
+      "fpcode.alignment.frame_mapping"
+    ],
+    "fpcode.alignment.resampling": [
+      "fpcode.contracts",
+      "fpcode.contracts.timelines"
+    ],
+    "fpcode.behavior": [
+      "fpcode.behavior.kinematics",
+      "fpcode.behavior.syllables",
+      "fpcode.behavior.transitions"
+    ],
+    "fpcode.behavior.bouts": [
+      "fpcode.contracts"
+    ],
+    "fpcode.behavior.kinematics": [
+      "fpcode.statistics.smoothing"
+    ],
+    "fpcode.behavior.sequences": [
+      "fpcode.behavior.sequences.tiling",
+      "fpcode.behavior.sequences.timelines"
+    ],
+    "fpcode.behavior.sequences.counting": [
+      "fpcode.behavior.bouts"
+    ],
+    "fpcode.behavior.sequences.tiling": [],
+    "fpcode.behavior.sequences.timelines": [],
+    "fpcode.behavior.syllables": [
+      "fpcode.behavior.bouts",
+      "fpcode.behavior.sequences"
+    ],
+    "fpcode.behavior.transitions": [
+      "fpcode.behavior.bouts"
+    ],
+    "fpcode.cli": [],
+    "fpcode.cli.evaluate": [
+      "fpcode.common.logging",
+      "fpcode.common.notify",
+      "fpcode.common.paths",
+      "fpcode.common.run_record",
+      "fpcode.kpms.evaluation",
+      "fpcode.workflows.evaluation"
+    ],
+    "fpcode.cli.export": [
+      "fpcode.common.logging",
+      "fpcode.common.notify",
+      "fpcode.common.paths",
+      "fpcode.common.run_record",
+      "fpcode.kpms.checkpoint_io"
+    ],
+    "fpcode.cli.fuse": [
+      "fpcode.common.config",
+      "fpcode.common.logging",
+      "fpcode.common.notify",
+      "fpcode.common.paths",
+      "fpcode.common.run_record",
+      "fpcode.workflows.fusion"
+    ],
+    "fpcode.cli.render": [
+      "fpcode.common.config",
+      "fpcode.common.logging",
+      "fpcode.common.notify",
+      "fpcode.common.paths",
+      "fpcode.common.run_record",
+      "fpcode.viz.grid_movies",
+      "fpcode.workflows.rendering"
+    ],
+    "fpcode.cli.train": [
+      "fpcode.common.config",
+      "fpcode.common.logging",
+      "fpcode.common.notify",
+      "fpcode.common.paths",
+      "fpcode.common.run_record",
+      "fpcode.kpms.checkpoint_io",
+      "fpcode.kpms.config",
+      "fpcode.workflows.training"
+    ],
+    "fpcode.common": [],
+    "fpcode.common.cache_manifest": [],
+    "fpcode.common.config": [
+      "fpcode.common.paths"
+    ],
+    "fpcode.common.file_io": [
+      "fpcode.common.logging"
+    ],
+    "fpcode.common.h5_guard": [],
+    "fpcode.common.io": [
+      "fpcode.compat.io"
+    ],
+    "fpcode.common.logging": [],
+    "fpcode.common.notify": [],
+    "fpcode.common.paths": [],
+    "fpcode.common.run_record": [
+      "fpcode.common.cache_manifest",
+      "fpcode.common.paths"
+    ],
+    "fpcode.common.schemas": [
+      "fpcode.compat.schemas"
+    ],
+    "fpcode.compat": [],
+    "fpcode.compat.io": [
+      "fpcode.common",
+      "fpcode.common.file_io",
+      "fpcode.kpms.checkpoint_io"
+    ],
+    "fpcode.compat.kpms_export": [
+      "fpcode.adapters.legacy_sessions",
+      "fpcode.kpms.results",
+      "fpcode.tracking.pair_matching",
+      "fpcode.workflows.session_export"
+    ],
+    "fpcode.compat.multiview": [],
+    "fpcode.compat.multiview.profile": [
+      "fpcode.common.paths",
+      "fpcode.compat.schemas"
+    ],
+    "fpcode.compat.photometry": [],
+    "fpcode.compat.photometry.acquisition_alignment": [
+      "fpcode.photometry.aggregation",
+      "fpcode.statistics"
+    ],
+    "fpcode.compat.photometry.frame_merge": [],
+    "fpcode.compat.schemas": [
+      "fpcode.common.paths",
+      "fpcode.contracts.model",
+      "fpcode.contracts.pose"
+    ],
+    "fpcode.compat.viz": [],
+    "fpcode.compat.viz.legacy_api": [
+      "fpcode.compat.viz",
+      "fpcode.compat.viz.legacy_defaults",
+      "fpcode.viz",
+      "fpcode.viz.context",
+      "fpcode.viz.pose_geometry",
+      "fpcode.viz.provenance",
+      "fpcode.viz.selection",
+      "fpcode.viz.selection.bouts",
+      "fpcode.viz.selection.eligibility"
+    ],
+    "fpcode.compat.viz.legacy_defaults": [
+      "fpcode.common.paths",
+      "fpcode.compat.multiview.profile"
+    ],
+    "fpcode.compat.viz.legacy_io": [
+      "fpcode.compat.viz.legacy_defaults",
+      "fpcode.viz.media",
+      "fpcode.viz.selection.bouts"
+    ],
+    "fpcode.compat.viz.v2": [],
+    "fpcode.contracts": [
+      "fpcode.contracts.artifacts",
+      "fpcode.contracts.events",
+      "fpcode.contracts.pose",
+      "fpcode.contracts.sessions",
+      "fpcode.contracts.signals",
+      "fpcode.contracts.timelines"
+    ],
+    "fpcode.contracts.artifacts": [],
+    "fpcode.contracts.events": [],
+    "fpcode.contracts.model": [],
+    "fpcode.contracts.pose": [
+      "fpcode.contracts.timelines"
+    ],
+    "fpcode.contracts.session_record": [],
+    "fpcode.contracts.sessions": [],
+    "fpcode.contracts.signals": [
+      "fpcode.contracts.timelines"
+    ],
+    "fpcode.contracts.time_axis": [
+      "fpcode.contracts.timelines"
+    ],
+    "fpcode.contracts.timelines": [],
+    "fpcode.kpms": [],
+    "fpcode.kpms.backend": [],
+    "fpcode.kpms.backend.batching": [
+      "fpcode.kpms.backend.configuration"
+    ],
+    "fpcode.kpms.backend.configuration": [],
+    "fpcode.kpms.backend.kernels": [],
+    "fpcode.kpms.backend.kernels.autoregression": [
+      "fpcode.kpms.backend.state"
+    ],
+    "fpcode.kpms.backend.kernels.continuous": [
+      "fpcode.kpms.backend.configuration",
+      "fpcode.kpms.backend.state"
+    ],
+    "fpcode.kpms.backend.kernels.discrete": [
+      "fpcode.kpms.backend.configuration",
+      "fpcode.kpms.backend.state"
+    ],
+    "fpcode.kpms.backend.kernels.location": [
+      "fpcode.kpms.backend.configuration",
+      "fpcode.kpms.backend.state"
+    ],
+    "fpcode.kpms.backend.kernels.scales_heading": [
+      "fpcode.kpms.backend.configuration",
+      "fpcode.kpms.backend.state"
+    ],
+    "fpcode.kpms.backend.patch_registry": [],
+    "fpcode.kpms.backend.patching": [
+      "fpcode.kpms.backend.configuration",
+      "fpcode.kpms.backend.kernels.autoregression",
+      "fpcode.kpms.backend.kernels.continuous",
+      "fpcode.kpms.backend.kernels.discrete",
+      "fpcode.kpms.backend.kernels.location",
+      "fpcode.kpms.backend.kernels.scales_heading",
+      "fpcode.kpms.backend.patch_registry",
+      "fpcode.kpms.backend.residency",
+      "fpcode.kpms.backend.state"
+    ],
+    "fpcode.kpms.backend.residency": [],
+    "fpcode.kpms.backend.sizing": [
+      "fpcode.kpms.backend.batching"
+    ],
+    "fpcode.kpms.backend.state": [],
+    "fpcode.kpms.checkpoint_io": [
+      "fpcode.common.file_io",
+      "fpcode.common.logging"
+    ],
+    "fpcode.kpms.checkpoints": [],
+    "fpcode.kpms.config": [],
+    "fpcode.kpms.data": [
+      "fpcode.kpms.preprocessing"
+    ],
+    "fpcode.kpms.evaluation": [],
+    "fpcode.kpms.export": [
+      "fpcode.compat.kpms_export"
+    ],
+    "fpcode.kpms.fit": [
+      "fpcode.kpms.training"
+    ],
+    "fpcode.kpms.init_model": [],
+    "fpcode.kpms.metrics": [
+      "fpcode.common.logging"
+    ],
+    "fpcode.kpms.preprocessing": [
+      "fpcode.behavior.kinematics"
+    ],
+    "fpcode.kpms.results": [
+      "fpcode.adapters.kpms_results"
+    ],
+    "fpcode.kpms.runtime": [],
+    "fpcode.kpms.training": [
+      "fpcode.common.cache_manifest",
+      "fpcode.common.logging",
+      "fpcode.common.paths",
+      "fpcode.kpms",
+      "fpcode.kpms.backend.configuration",
+      "fpcode.kpms.backend.patch_registry",
+      "fpcode.kpms.checkpoints",
+      "fpcode.kpms.config",
+      "fpcode.kpms.data",
+      "fpcode.kpms.init_model",
+      "fpcode.kpms.runtime"
+    ],
+    "fpcode.photometry": [
+      "fpcode.photometry.aggregation",
+      "fpcode.photometry.response_metrics",
+      "fpcode.statistics"
+    ],
+    "fpcode.photometry.aggregation": [
+      "fpcode.adapters.legacy_sessions"
+    ],
+    "fpcode.photometry.alignment": [
+      "fpcode.compat.photometry.frame_merge"
+    ],
+    "fpcode.photometry.event_windows": [
+      "fpcode.alignment.resampling",
+      "fpcode.contracts",
+      "fpcode.contracts.timelines"
+    ],
+    "fpcode.photometry.metrics": [
+      "fpcode.photometry.response_metrics"
+    ],
+    "fpcode.photometry.preprocessing": [],
+    "fpcode.photometry.processing": [
+      "fpcode.compat.photometry.acquisition_alignment"
+    ],
+    "fpcode.photometry.response_metrics": [],
+    "fpcode.photometry.session_signals": [
+      "fpcode.adapters.legacy_sessions",
+      "fpcode.photometry.event_windows",
+      "fpcode.photometry.preprocessing"
+    ],
+    "fpcode.statistics": [
+      "fpcode.statistics.summaries"
+    ],
+    "fpcode.statistics.resampling": [],
+    "fpcode.statistics.smoothing": [],
+    "fpcode.statistics.summaries": [],
+    "fpcode.statistics.summary": [
+      "fpcode.statistics.summaries"
+    ],
+    "fpcode.tracking": [],
+    "fpcode.tracking.camera_correspondence": [
+      "fpcode.tracking.clock_sync"
+    ],
+    "fpcode.tracking.clock_sync": [
+      "fpcode.adapters.multiview_compatibility",
+      "fpcode.common.cache_manifest"
+    ],
+    "fpcode.tracking.fusion": [
+      "fpcode.adapters.multiview_compatibility",
+      "fpcode.common.cache_manifest",
+      "fpcode.contracts.pose",
+      "fpcode.statistics.smoothing",
+      "fpcode.tracking.camera_correspondence",
+      "fpcode.tracking.clock_sync",
+      "fpcode.tracking.geometry"
+    ],
+    "fpcode.tracking.geometry": [],
+    "fpcode.tracking.pair_matching": [
+      "fpcode.adapters.multiview_compatibility",
+      "fpcode.contracts.pose"
+    ],
+    "fpcode.tracking.quality": [
+      "fpcode.contracts"
+    ],
+    "fpcode.tracking.registration": [
+      "fpcode.contracts.timelines",
+      "fpcode.tracking.geometry"
+    ],
+    "fpcode.tracking.static_fusion": [
+      "fpcode.adapters.multiview_compatibility",
+      "fpcode.common.cache_manifest",
+      "fpcode.contracts.pose",
+      "fpcode.tracking.camera_correspondence",
+      "fpcode.tracking.clock_sync",
+      "fpcode.tracking.geometry"
+    ],
+    "fpcode.viz": [],
+    "fpcode.viz.context": [],
+    "fpcode.viz.figures": [
+      "fpcode.common.logging"
+    ],
+    "fpcode.viz.geometry": [
+      "fpcode.viz.pose_geometry"
+    ],
+    "fpcode.viz.grid_movies": [
+      "fpcode.common.logging"
+    ],
+    "fpcode.viz.hashing": [
+      "fpcode.common.cache_manifest"
+    ],
+    "fpcode.viz.legacy_api": [
+      "fpcode.compat.viz.legacy_api"
+    ],
+    "fpcode.viz.legacy_defaults": [
+      "fpcode.compat.viz.legacy_defaults"
+    ],
+    "fpcode.viz.legacy_io": [
+      "fpcode.compat.viz.legacy_io"
+    ],
+    "fpcode.viz.media": [
+      "fpcode.viz.selection.bouts"
+    ],
+    "fpcode.viz.pose_geometry": [
+      "fpcode.viz.context",
+      "fpcode.viz.hashing"
+    ],
+    "fpcode.viz.provenance": [
+      "fpcode.viz.context",
+      "fpcode.viz.hashing",
+      "fpcode.viz.media",
+      "fpcode.viz.selection.exemplars"
+    ],
+    "fpcode.viz.selection": [],
+    "fpcode.viz.selection.bouts": [],
+    "fpcode.viz.selection.density": [],
+    "fpcode.viz.selection.eligibility": [
+      "fpcode.tracking.quality",
+      "fpcode.viz.context",
+      "fpcode.viz.selection.bouts"
+    ],
+    "fpcode.viz.selection.exemplars": [],
+    "fpcode.viz.trajectories": [
+      "fpcode.common.logging"
+    ],
+    "fpcode.viz.v2": [
+      "fpcode.compat.viz.v2"
+    ],
+    "fpcode.workflows": [],
+    "fpcode.workflows.evaluation": [
+      "fpcode.kpms.evaluation"
+    ],
+    "fpcode.workflows.fusion": [
+      "fpcode.compat.multiview.profile",
+      "fpcode.tracking.fusion",
+      "fpcode.tracking.pair_matching",
+      "fpcode.tracking.static_fusion"
+    ],
+    "fpcode.workflows.multimodal_analysis": [
+      "fpcode.alignment.frame_mapping",
+      "fpcode.contracts",
+      "fpcode.contracts.sessions",
+      "fpcode.contracts.timelines",
+      "fpcode.workflows.photometry"
+    ],
+    "fpcode.workflows.photometry": [
+      "fpcode.alignment.resampling",
+      "fpcode.contracts",
+      "fpcode.photometry.event_windows"
+    ],
+    "fpcode.workflows.rendering": [
+      "fpcode.behavior.bouts",
+      "fpcode.common.config",
+      "fpcode.viz.grid_movies",
+      "fpcode.viz.trajectories"
+    ],
+    "fpcode.workflows.session_export": [
+      "fpcode.adapters.kpms_results",
+      "fpcode.adapters.legacy_sessions",
+      "fpcode.behavior.kinematics",
+      "fpcode.common.cache_manifest",
+      "fpcode.common.file_io",
+      "fpcode.common.logging",
+      "fpcode.compat.photometry.frame_merge"
+    ],
+    "fpcode.workflows.training": [
+      "fpcode.common.paths",
+      "fpcode.kpms.config",
+      "fpcode.kpms.training"
+    ]
+  },
+  "violations": [],
+  "cycles": []
+}

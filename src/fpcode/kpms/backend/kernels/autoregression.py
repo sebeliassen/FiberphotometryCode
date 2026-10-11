@@ -2,18 +2,17 @@
 
 from __future__ import annotations
 
-from fpcode.kpms.backend.state import KPMSStateCache
 from functools import partial
-from jax_moseq.utils import psd_inv
-from jax_moseq.utils import psd_solve
-from numba import njit
-from numba import prange
+
 import jax
 import jax.numpy as jnp
 import jax.random as jr
 import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
 import numpy as np
+from jax_moseq.utils import psd_inv, psd_solve
+from numba import njit, prange
 
+from fpcode.kpms.backend.state import KPMSStateCache
 
 _orig_ar = arhmm_gibbs.resample_ar_params
 

@@ -3,7 +3,7 @@
 ops/repo/migrate_study_unit.py
 
 Automates migrating a study unit adhering to docs/architecture/UNIT_CONTRACT.md:
-- Relocates files from source path to target studies/<domain>/<study>/
+- Relocates files from source path to target studies/<project>/
 - Leaves transparent backward-compatibility shims at old paths emitting DeprecationWarning
 - Generates standard README.md and __init__.py
 - Appends to registry/SHIMS.tsv and registry/MOVES.tsv

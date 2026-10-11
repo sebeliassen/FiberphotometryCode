@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Sequence
+from typing import Any, Dict, List, Sequence
+
 import numpy as np
 
 DENSITY_N_NEIGHBORS = 50  # Installed KPMS sampler's algorithm default.

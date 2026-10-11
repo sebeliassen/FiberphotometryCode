@@ -16,16 +16,19 @@ Key capabilities:
 
 import json
 import re
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Dict, Optional, Tuple
-from collections.abc import Mapping
 
 import numpy as np
 import pandas as pd
 
 from fpcode.adapters.multiview_compatibility import (
-    ARENA_TO_BOTCAM, ARENA_TO_CHAMBER, TTL_CACHE_PATH,
-    legacy_generated_ttl_path, legacy_timestamp_root,
+    ARENA_TO_BOTCAM,
+    ARENA_TO_CHAMBER,
+    TTL_CACHE_PATH,
+    legacy_generated_ttl_path,
+    legacy_timestamp_root,
 )
 from fpcode.common.cache_manifest import atomic_path
 

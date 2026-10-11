@@ -2,24 +2,23 @@
 
 from __future__ import annotations
 
+import contextlib
+
+import jax_moseq.models.arhmm as arhmm_model
+import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
+import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
+from jax_moseq.models import keypoint_slds
+
 from fpcode.kpms.backend.configuration import CONFIG
 from fpcode.kpms.backend.kernels.autoregression import vectorized_resample_ar_params
 from fpcode.kpms.backend.kernels.continuous import pure_numba_resample_continuous_stateseqs
 from fpcode.kpms.backend.kernels.discrete import fast_resample_discrete_stateseqs
 from fpcode.kpms.backend.kernels.location import batched_gpu_resample_location
-from fpcode.kpms.backend.kernels.scales_heading import batched_resample_heading
-from fpcode.kpms.backend.kernels.scales_heading import batched_resample_scales
-from fpcode.kpms.backend.residency import fast_consolidated_check_for_nans
-from fpcode.kpms.backend.residency import safe_device_put_as_scalar
+from fpcode.kpms.backend.kernels.scales_heading import batched_resample_heading, batched_resample_scales
+from fpcode.kpms.backend.residency import fast_consolidated_check_for_nans, safe_device_put_as_scalar
 from fpcode.kpms.backend.state import KPMSStateCache
-from jax_moseq.models import keypoint_slds
-import contextlib
 
 from .patch_registry import PatchSet, temporary_patches
-import jax_moseq.models.arhmm as arhmm_model
-import jax_moseq.models.arhmm.gibbs as arhmm_gibbs
-import jax_moseq.models.keypoint_slds.gibbs as slds_gibbs
-
 
 _ORIGINAL_FUNCTIONS = {
     "arhmm_resample_discrete": arhmm_gibbs.resample_discrete_stateseqs,
@@ -50,8 +49,8 @@ def _optimization_bindings():
     # Optional helpers have separate originals in each namespace. Restoring a
     # fitting function into utils used to lose utils' own implementation.
     try:
-        import keypoint_moseq.fitting as fitting
         import jax_moseq.utils.utils as utils
+        import keypoint_moseq.fitting as fitting
     except ImportError:
         pass
     else:

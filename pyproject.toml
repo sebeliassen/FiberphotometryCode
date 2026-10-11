@@ -36,10 +36,15 @@ test = [
     "pytest>=7.0",
     "pytest-timeout",
     "scikit-learn>=1.1",
+    "pillow>=9.0",
+    "opencv-python-headless>=4.8",
+    "imageio>=2.30",
+    "imageio-ffmpeg>=0.4",
 ]
 lint = [
-    "ruff>=0.1.0",
+    "ruff==0.16.10",
 ]
+typing = ["mypy>=1.10,<2", "pandas-stubs>=2.0"]
 dev = [
     "pre-commit",
 ]
@@ -71,9 +76,11 @@ fpcode-train = "fpcode.cli.train:main"
 fpcode-evaluate = "fpcode.cli.evaluate:main"
 fpcode-fuse = "fpcode.cli.fuse:main"
 fpcode-render = "fpcode.cli.render:main"
+fpcode-export = "fpcode.cli.export:main"
 
 [tool.setuptools.package-data]
-"fpcode.tracking" = ["*.json"]
+"fpcode" = ["py.typed"]
+"fpcode.compat.multiview" = ["resources/*.json"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -81,27 +88,14 @@ include = ["fpcode*"]
 exclude = ["tests*", "docs*", "archive*", "_backups*"]
 
 [tool.pytest.ini_options]
-testpaths = [
-    "tests/unit", "tests/architecture", "tests/integration", "tests/regression",
-    "tests/test_cache_manifest_synthetic.py",
-    "tests/test_io_utils_hardening.py",
-    "tests/test_camera_correspondence_synthetic.py",
-    "tests/test_fusion_provenance_and_cache_synthetic.py",
-    "tests/test_eval_artifacts_synthetic.py",
-    "tests/test_photometry_alignment_equivalence.py",
-    "tests/test_v2_visualization_repairs.py",
-    "tests/test_v4_repairs.py",
-    "tests/test_unit_contracts.py",
-    "tests/test_pipeline_verbs.py",
-    "tests/test_velocity_subsetting.py",
-]
+testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 pythonpath = [
     ".",
     "src",
-    "archive/compat",
+    "compat",
     "vendor/keypoint_moseq_syll",
 ]
 addopts = "-ra --strict-markers -m 'not gpu and not slow and not needs_data'"
@@ -130,11 +124,22 @@ exclude = [
     "_backups",
     "archive",
     "tests/runs",
-    "tests/test_v4_repairs.py",
-    "tests/test_oft_session_full_data.py",
+    "tests/regression/test_v4_repairs.py",
+    "tests/empirical/test_oft_session_full_data.py",
     "*.ipynb",
 ]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
 ignore = ["E501"]
+
+# Initial interface check; expand this list after each contract is annotated.
+# Deliberately separate from the functional CPU CI gate until locally verified.
+[tool.mypy]
+files = ["src/fpcode/contracts"]
+python_version = "3.10"
+follow_imports = "silent"
+ignore_missing_imports = true
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true

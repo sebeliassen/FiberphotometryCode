@@ -22,11 +22,11 @@ _EXPORTS = {
     "is_immutable_artifact": ("h5_guard", "is_immutable_artifact"),
     "safe_open_h5": ("h5_guard", "safe_open_h5"),
     "compact_kpms_checkpoint": ("io", "compact_kpms_checkpoint"),
-    "copy_dataset": ("io", "copy_dataset"),
-    "load_npz_safe": ("io", "load_npz_safe"),
-    "load_pickle_safe": ("io", "load_pickle_safe"),
-    "save_npz_atomic": ("io", "save_npz_atomic"),
-    "save_pickle_atomic": ("io", "save_pickle_atomic"),
+    "copy_dataset": ("file_io", "copy_dataset"),
+    "load_npz_safe": ("file_io", "load_npz_safe"),
+    "load_pickle_safe": ("file_io", "load_pickle_safe"),
+    "save_npz_atomic": ("file_io", "save_npz_atomic"),
+    "save_pickle_atomic": ("file_io", "save_pickle_atomic"),
     "get_logger": ("logging", "get_logger"),
     "send_ntfy": ("notify", "send_ntfy"),
     "ARCHIVE_DIR": ("paths", "ARCHIVE_DIR"),
@@ -43,10 +43,10 @@ _EXPORTS = {
     "resolve_path": ("paths", "resolve_path"),
     "to_relative_path": ("paths", "to_relative_path"),
     "RunRecord": ("run_record", "RunRecord"),
-    "DORSAL_17KP_NAMES": ("schemas", "DORSAL_17KP_NAMES"),
-    "FUSED_21KP_NAMES": ("schemas", "FUSED_21KP_NAMES"),
-    "FUSED_23KP_NAMES": ("schemas", "FUSED_23KP_NAMES"),
-    "VENTRAL_4KP_NAMES": ("schemas", "VENTRAL_4KP_NAMES"),
+    "DORSAL_17KP_NAMES": ("fpcode.contracts.pose", "DORSAL_17KP_NAMES"),
+    "FUSED_21KP_NAMES": ("fpcode.contracts.pose", "FUSED_21KP_NAMES"),
+    "FUSED_23KP_NAMES": ("fpcode.contracts.pose", "FUSED_23KP_NAMES"),
+    "VENTRAL_4KP_NAMES": ("fpcode.contracts.pose", "VENTRAL_4KP_NAMES"),
 }
 __all__ = list(_EXPORTS)
 
@@ -54,7 +54,8 @@ __all__ = list(_EXPORTS)
 def __getattr__(name):
     if name in _EXPORTS:
         module_name, attribute = _EXPORTS[name]
-        value = getattr(import_module(f".{module_name}", __name__), attribute)
+        module = import_module(module_name) if module_name.startswith("fpcode.") else import_module(f".{module_name}", __name__)
+        value = getattr(module, attribute)
         globals()[name] = value
         return value
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

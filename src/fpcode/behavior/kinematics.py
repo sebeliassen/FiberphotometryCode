@@ -10,6 +10,8 @@ from typing import Dict, Tuple
 import numpy as np
 from scipy.ndimage import median_filter
 
+from fpcode.statistics.smoothing import circular_median, coordinate_median
+
 
 def movement_changepoint_score(
     velocity, fs, *, derivative_scale="per_sample", missing="propagate", smoothing_seconds=1.67,
@@ -97,9 +99,7 @@ def smooth_heading_circular(theta: np.ndarray, window: int = 11, *, policy: str 
         return np.asarray(theta, dtype=float)
     if policy == "behavior" and window % 2 == 0:
         window += 1
-    sin_smooth = median_filter(np.sin(theta), size=window, mode="nearest")
-    cos_smooth = median_filter(np.cos(theta), size=window, mode="nearest")
-    return np.arctan2(sin_smooth, cos_smooth)
+    return circular_median(theta, window)
 
 
 def smooth_centroid_median(c: np.ndarray, window: int = 11, *, policy: str = "behavior") -> np.ndarray:
@@ -112,12 +112,7 @@ def smooth_centroid_median(c: np.ndarray, window: int = 11, *, policy: str = "be
         return np.asarray(c, dtype=float)
     if policy == "behavior" and window % 2 == 0:
         window += 1
-    return np.column_stack(
-        [
-            median_filter(c[:, 0], size=window, mode="nearest"),
-            median_filter(c[:, 1], size=window, mode="nearest"),
-        ]
-    )
+    return coordinate_median(c, window)
 
 
 def clean_short_runs(mask: np.ndarray, min_true: int = 1, min_false: int = 1, *, coerce_bool: bool = True) -> np.ndarray:

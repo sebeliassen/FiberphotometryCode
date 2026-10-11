@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from fpcode.contracts.timelines import frozen_array
+
 from .geometry import apply_affine
 
 

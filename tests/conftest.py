@@ -12,9 +12,36 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
-compat_dir = REPO_ROOT / "archive/compat"
+compat_dir = REPO_ROOT / "compat"
 if compat_dir.exists() and str(compat_dir) not in sys.path:
     sys.path.insert(0, str(compat_dir))
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--empirical",
+        action="store_true",
+        help="Collect empirical tests; select needs_data/gpu/slow markers explicitly to run them.",
+    )
+
+
+def pytest_ignore_collect(collection_path, config):
+    # Marker filtering happens after importing test modules. Ignore this directory
+    # before import so normal discovery requires no datasets or modeling backend.
+    empirical = REPO_ROOT / "tests/empirical"
+    return (collection_path == empirical or empirical in collection_path.parents) and not config.getoption("empirical")
+
+
+def pytest_configure(config):
+    # Explicit file arguments can bypass ignore-collection hooks in pytest.
+    # Require the same opt-in before those modules are imported as well.
+    if config.getoption("empirical"):
+        return
+    empirical = REPO_ROOT / "tests/empirical"
+    for argument in config.args:
+        path = Path(argument.split("::", 1)[0]).resolve()
+        if path == empirical or empirical in path.parents:
+            raise pytest.UsageError("Collect empirical tests with --empirical, then choose their runtime markers explicitly.")
 
 
 def is_placeholder(path: Path) -> bool:
@@ -80,5 +107,4 @@ def golden_dir(repo_root):
     return repo_root / "tests" / "golden"
 
 
-# The default testpaths in pyproject.toml are an explicit functional suite.
-# CPU is not a runtime guarantee: empirical/model tests require explicit paths.
+# --empirical changes collection only. Existing marker selection remains explicit.

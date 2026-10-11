@@ -1,8 +1,8 @@
 """Exercise real compatibility paths without the study test search paths."""
 
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 from ops.repo import update_shims
 

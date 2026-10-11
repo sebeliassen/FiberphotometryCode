@@ -4,7 +4,8 @@
 # Uses GPU acceleration (h264_nvenc) and sends ntfy notifications.
 
 NTFY_URL="https://ntfy.sh/woody_videos_seb"
-SPLIT_SCRIPT="/home/fsp585/Desktop/FiberphotometryCode/scripts/split_videos.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SPLIT_SCRIPT="${SCRIPT_DIR}/split_videos.sh"
 DST_BASE="/mnt/hdd/karen_project"
 OUT_DIR="${DST_BASE}/all_videos_split"
 

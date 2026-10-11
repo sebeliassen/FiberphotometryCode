@@ -15,10 +15,13 @@ one replacement report. No historical document needs to be deleted to use this i
 | [Recovery](recovery.md) | Existing backup evidence and restoration procedures |
 | [Design decision](decisions/0001-capability-modules-and-compatible-scientific-policies.md) | Why scientific policies and compatibility APIs stay explicit |
 
-The [October 9 handoff](../handoff.md) is a dated record. It is preserved and is
+The [October 9 handoff](reports/handoff.md) is a dated record. It is preserved and is
 not the current task list or latest validation result. Current test selection is
 defined in `pyproject.toml`; each explicit runtime check writes its own evidence
 under `outputs/<run-id>/validation.json`.
+
+The [October 9–11 refactor report](reports/refactor_report.md) records the
+measured checkpoints, their limits and the follow-up architecture correction.
 
 ## Historical engineering and scientific references
 
@@ -38,10 +41,12 @@ precede later repairs; consult the maintained guidance above for current usage.
 ## Study documentation and preservation
 
 Study instructions belong alongside their analysis under [studies](../studies/).
-Many existing notes still live under [syllable_generation](../syllable_generation/)
-and some records remain under [reports](../reports/). Those locations are retained
-until a document's owning study and incoming links have been checked. Frozen
-bundles are indexed by [archive/ARCHIVE_INDEX.md](../archive/ARCHIVE_INDEX.md).
+Projects are organized directly under `studies/<project>`, rather than separate
+behavior and photometry trees. Shared implementations live in `src/fpcode`;
+project-specific hypotheses, exclusions and cohort policies stay with the project.
+Live historical imports live in [compat](../compat/). Frozen review bundles
+belong under `archive/bundles` and are indexed by
+[archive/ARCHIVE_INDEX.md](../archive/ARCHIVE_INDEX.md).
 
 New broadly reusable guidance belongs here; study hypotheses, exclusions and
 cohort-specific notes belong with their study. Consolidation should handle a

@@ -7,14 +7,9 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional
 if TYPE_CHECKING:
     import pandas as pd
 
-# Soft dependency typing (so importing this module doesn't force pandas at import-time)
-try:
-    import pandas as pd
-    DataFrame = pd.DataFrame
-    Series = pd.Series
-except Exception:  # pragma: no cover
-    DataFrame = Any
-    Series = Any
+# Historical annotation aliases; importing records needs no pandas runtime.
+DataFrame = Any
+Series = Any
 
 
 @dataclass(frozen=True)
@@ -119,23 +114,31 @@ class SessionRecord:
     def get_table_map(self) -> Dict[str, "pd.DataFrame"]:
         out: Dict[str, "pd.DataFrame"] = {}
         for k, df in self.tracking.items():
-            if hasattr(df, "shape"): out[f"tracking:{k}"] = df
+            if hasattr(df, "shape"):
+                out[f"tracking:{k}"] = df
         for k, df in self.photometry.items():
-            if hasattr(df, "shape"): out[f"photometry:{k}"] = df
+            if hasattr(df, "shape"):
+                out[f"photometry:{k}"] = df
         for k, df in self.events.items():
-            if hasattr(df, "shape"): out[f"events:{k}"] = df
+            if hasattr(df, "shape"):
+                out[f"events:{k}"] = df
         for k, df in self.syllables.items():
-            if hasattr(df, "shape"): out[f"syllables:{k}"] = df
+            if hasattr(df, "shape"):
+                out[f"syllables:{k}"] = df
         out.update({f"extra:{k}": v for k, v in self.extras.items() if hasattr(v, "shape")})
         return out
 
     def get_refs_map(self) -> Dict[str, "pd.DataFrame"]:
         """Dict view of present reference tables."""
         out: Dict[str, "pd.DataFrame"] = {}
-        if self.video_refs_df is not None:      out["videos"] = self.video_refs_df
-        if self.tracking_refs_df is not None:   out["tracking_refs"] = self.tracking_refs_df
-        if self.photometry_refs_df is not None: out["photometry_refs"] = self.photometry_refs_df
-        if self.event_refs_df is not None:      out["event_refs"] = self.event_refs_df
+        if self.video_refs_df is not None:
+            out["videos"] = self.video_refs_df
+        if self.tracking_refs_df is not None:
+            out["tracking_refs"] = self.tracking_refs_df
+        if self.photometry_refs_df is not None:
+            out["photometry_refs"] = self.photometry_refs_df
+        if self.event_refs_df is not None:
+            out["event_refs"] = self.event_refs_df
         return out
 
     def summary(self) -> dict:

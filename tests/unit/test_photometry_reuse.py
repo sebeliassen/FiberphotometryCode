@@ -5,11 +5,10 @@ import pandas as pd
 import pytest
 
 from fpcode.adapters.legacy_sessions import as_signal_series
-from fpcode.photometry import calculate_signal_response_metrics_matrix, group_signals
-from fpcode.photometry import preprocessing
+from fpcode.photometry import calculate_signal_response_metrics_matrix, group_signals, preprocessing
 from fpcode.photometry.session_signals import legacy_nearest_window, prepare_region_traces
 from fpcode.statistics import compute_mean_ci
-from studies.photometry.exploratory.analysis import response_metrics, signal_processing
+from studies.photometry_exploration.analysis import response_metrics, signal_processing
 
 
 def session():

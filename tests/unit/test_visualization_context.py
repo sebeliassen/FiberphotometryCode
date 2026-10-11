@@ -1,24 +1,28 @@
 """Small independent landmark/file contexts; no cohort data or video backend."""
 
-import ast
 import __future__
+
+import ast
 import hashlib
 import json
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import pytest
 
-from fpcode.viz.context import BottomPoseLandmarks, LandmarkGroups, SelectionInputs
 from fpcode.viz import hashing
+from fpcode.viz.context import BottomPoseLandmarks, LandmarkGroups, SelectionInputs
 from fpcode.viz.hashing import HashCache
 from fpcode.viz.media import load_fused_tracks, media_file_identity
 from fpcode.viz.pose_geometry import compute_robust_bot_pose, fusion_geometry
 from fpcode.viz.provenance import (
-    make_cache_key, selection_provenance_matches, source_input_hashes, verify_manifest_inputs,
+    make_cache_key,
+    selection_provenance_matches,
+    source_input_hashes,
+    verify_manifest_inputs,
 )
 from fpcode.viz.selection.density import choose_tier
 from fpcode.viz.selection.eligibility import summarize_window_qc
@@ -80,7 +84,7 @@ def test_track_reader_uses_file_and_requested_landmark_order(tmp_path):
 
 
 def test_production_selector_loads_its_explicit_tracking_file_without_model_imports(tmp_path):
-    source = ROOT / "studies/behavior/multiview_experiments/04_reports_and_figures/select_cohort_static_21kp_v2_syllable_manifest.py"
+    source = ROOT / "studies/multiview_experiments/04_reports_and_figures/select_cohort_static_21kp_v2_syllable_manifest.py"
     tree = ast.parse(source.read_text())
     loader = next(node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef) and node.name == "get_fused")
     namespace = {"fused_cache": {}, "FUSED_DIR": tmp_path, "load_fused_tracks": load_fused_tracks,

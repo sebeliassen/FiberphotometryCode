@@ -7,14 +7,14 @@ import pandas as pd
 import pytest
 
 from fpcode.behavior.bouts import run_boundaries
-from fpcode.behavior.kinematics import movement_changepoint_score, detect_movement_initiations
+from fpcode.behavior.kinematics import detect_movement_initiations, movement_changepoint_score
 from fpcode.behavior.transitions import adjacent_pairs, compute_transition_matrix
-from studies.behavior.kinematics_ulrik.lib.aggregation import get_group_transition_matrix
-from studies.behavior.kinematics_ulrik.lib.micro_kinematics import extract_bouts as study_bouts
-from studies.behavior.kinematics_ulrik.lib.motifs import extract_ngrams, get_label_mapping
-from studies.behavior.kinematics_ulrik.lib.networks import build_transition_matrix
-from studies.behavior.replications_datta.datta.lib import snippets
-from studies.behavior.replications_datta.datta.panel_1f import run_panel_1f_unified as unified
+from studies.kinematics_ulrik.lib.aggregation import get_group_transition_matrix
+from studies.kinematics_ulrik.lib.micro_kinematics import extract_bouts as study_bouts
+from studies.kinematics_ulrik.lib.motifs import extract_ngrams, get_label_mapping
+from studies.kinematics_ulrik.lib.networks import build_transition_matrix
+from studies.replications_datta.datta.lib import snippets
+from studies.replications_datta.datta.panel_1f import run_panel_1f_unified as unified
 
 
 def session(labels, **columns):
@@ -78,7 +78,7 @@ def test_manual_mapping_uses_actual_loader_and_preserves_standard_label_policy(t
     labels_dir.mkdir(parents=True)
     path = labels_dir / "manual_labels.csv"
     path.write_text("project,syllable,label\nAMPH,1,left turn\nAMPH,2,dash\nAMPH,3,rear\nAMPH,4,no video\n")
-    monkeypatch.setattr("studies.behavior.kinematics_ulrik.lib.motifs.get_repo_root", lambda: tmp_path)
+    monkeypatch.setattr("studies.kinematics_ulrik.lib.motifs.get_repo_root", lambda: tmp_path)
     assert get_label_mapping([], style="standard") == {1: "left turn", 2: "walk/dash", 3: "rear"}
     assert get_label_mapping([], style="raw", manual_labels_path=path) == {
         1: "left turn", 2: "dash", 3: "rear", 4: "no video"}

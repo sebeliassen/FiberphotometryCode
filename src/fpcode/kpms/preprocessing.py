@@ -22,8 +22,20 @@ if not hasattr(np, "bool8"):
 
 from fpcode.behavior.kinematics import (
     clean_short_runs,
+)
+from fpcode.behavior.kinematics import (
     presence_mask_from_conf_kpms as presence_mask_from_conf,
 )
+
+__all__ = [
+    "clamp_conf_nonneg",
+    "filter_with_masks",
+    "presence_mask_from_conf",
+    "safe_fit_pca",
+    "subset_after_filter",
+    "subset_by_activity",
+    "subset_spread_blocks",
+]
 
 
 def _clean_short_runs(mask, min_true=1, min_false=1):

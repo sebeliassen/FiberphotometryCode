@@ -22,11 +22,18 @@ from typing import Any, Dict, Optional
 
 import numpy as np
 import pandas as pd
-from scipy.ndimage import median_filter
-from fpcode.tracking.geometry import rot2d as _rotation_matrices
+
 from fpcode.adapters.multiview_compatibility import legacy_tracking_paths
+from fpcode.statistics.smoothing import circular_median, coordinate_median
+from fpcode.tracking.geometry import rot2d as _rotation_matrices
 
 try:
+    from fpcode.contracts.pose import (
+        BOT_RENAME_MAP,
+        DEFAULT_ARENA_WIDTH,
+        TOP_USE_BODYPARTS,
+    )
+
     from ..common.cache_manifest import (
         OK as _CACHE_OK,
     )
@@ -38,13 +45,13 @@ try:
         verify_manifest,
         write_manifest,
     )
-    from ..common.schemas import (
-        BOT_RENAME_MAP,
-        DEFAULT_ARENA_WIDTH,
-        TOP_USE_BODYPARTS,
+    from .camera_correspondence import (
+        CameraMappingContext,
+        get_session_calibration_details,
+        get_session_mapping,
+        mapping_fingerprint,
     )
-    from .camera_correspondence import CameraMappingContext, get_session_calibration_details, get_session_mapping, mapping_fingerprint
-    from .clock_sync import get_session_ttl_offset, load_ttl_cache
+    from .clock_sync import get_session_ttl_offset
 except ImportError:
     from cache_manifest import (
         OK as _CACHE_OK,
@@ -57,13 +64,18 @@ except ImportError:
         verify_manifest,
         write_manifest,
     )
-    from camera_correspondence import CameraMappingContext, get_session_calibration_details, get_session_mapping, mapping_fingerprint
+    from camera_correspondence import (
+        CameraMappingContext,
+        get_session_calibration_details,
+        get_session_mapping,
+        mapping_fingerprint,
+    )
     from schemas import (
         BOT_RENAME_MAP,
         DEFAULT_ARENA_WIDTH,
         TOP_USE_BODYPARTS,
     )
-    from ttl_sync import get_session_ttl_offset, load_ttl_cache
+    from ttl_sync import get_session_ttl_offset
 
 _CORE_DIR = Path(__file__).resolve().parent
 # Implementation files whose content changes invalidate fused caches.
@@ -73,9 +85,11 @@ _FUSION_CODE_FILES = [
     _CORE_DIR / "camera_correspondence.py",
     _CORE_DIR / "clock_sync.py",
     _CORE_DIR.parent / "adapters" / "multiview_compatibility.py",
+    _CORE_DIR.parent / "compat" / "multiview" / "profile.py",
     _CORE_DIR.parent / "common" / "schemas.py",
+    _CORE_DIR.parent / "compat" / "schemas.py",
     _CORE_DIR.parent / "contracts" / "pose.py",
-    _CORE_DIR.parent / "behavior" / "kinematics.py",
+    _CORE_DIR.parent / "statistics" / "smoothing.py",
 ]
 
 
@@ -97,10 +111,15 @@ def rot2d(angle: np.ndarray) -> np.ndarray:
     return _rotation_matrices(angle, dtype=np.float32)
 
 
-from fpcode.behavior.kinematics import (
-    smooth_heading_circular_legacy_fusion as smooth_heading_circular,
-    smooth_centroid_median_legacy_fusion as smooth_centroid_median,
-)
+
+
+def smooth_heading_circular(theta: np.ndarray, window: int = 11) -> np.ndarray:
+    """Preserve fusion's historical short-series and even-window smoothing."""
+    return circular_median(theta, window)
+
+
+def smooth_centroid_median(c: np.ndarray, window: int = 11) -> np.ndarray:
+    return coordinate_median(c, window)
 
 
 def fuse_single_pair(

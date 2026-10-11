@@ -14,7 +14,6 @@ import stat
 import sys
 from pathlib import Path, PurePosixPath
 
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_BACKUP_ROOT = Path("/mnt/hdd/backups/TierA_backup_20261009")
 # Phase-0 provenance was copied beside the Tier-A payload, outside its inventory.
