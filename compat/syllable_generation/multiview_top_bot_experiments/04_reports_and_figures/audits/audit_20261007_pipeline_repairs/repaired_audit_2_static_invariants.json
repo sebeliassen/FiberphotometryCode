@@ -1,0 +1,22 @@
+{
+  "total_sessions_audited": 118,
+  "all_dorsal_preservation_passed": true,
+  "all_paw_formulas_passed": true,
+  "all_unmapped_frames_masked": true,
+  "real_anchor_perturbation_test": {
+    "passed": true,
+    "max_diff_px": 0.0
+  },
+  "negative_controls": {
+    "coordinate_shift_caught": true,
+    "measured_shift_diff_px": 7.48388671875,
+    "paw_swap_caught": true,
+    "measured_swap_diff_px": 11.800262451171875
+  },
+  "anatomical_left_right": {
+    "ventral_sensor_view": "Camera looks up at bottom glass",
+    "horizontal_reflection": "refl_x = 972 - raw_x reverses mirror orientation",
+    "bilateral_swap": "PAW_MAP swaps left/right pairs so bottom-right sensor keypoint maps to top-left coordinate",
+    "validation_status": "VERIFIED_CONCORDANT"
+  }
+}

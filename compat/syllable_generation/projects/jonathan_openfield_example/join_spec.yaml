@@ -1,0 +1,8 @@
+sources:
+  - name: animals
+    file: animals.csv
+    key: ["ID"]    # joins via metadata.animal_id (string compare)
+    map:
+      Geno:             metadata.genotype
+      Left Hemisphere:  metadata.signal_0
+      Right Hemisphere: metadata.signal_1

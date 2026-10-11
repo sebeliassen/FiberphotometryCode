@@ -1,0 +1,52 @@
+{
+  "onecam_k240k": {
+    "description": "Single-Cam Baseline (17 Dorsal kp, 30fps x2)",
+    "n_snippets": 12879,
+    "n_active_syllables": 69,
+    "R2_labels": 0.34578263759613037,
+    "R2_kmeans_same_K": 0.6566298007965088,
+    "R2_ratio": 0.5266020894050598,
+    "median_bout_frames_60fps": 26.0,
+    "median_bout_ms": 433.33333333333337
+  },
+  "old_tandem_seed404": {
+    "description": "Dynamic Re-anchored Fusion (23 kp)",
+    "n_snippets": 11475,
+    "n_active_syllables": 63,
+    "R2_labels": 0.20607101917266846,
+    "R2_kmeans_same_K": 0.6664844155311584,
+    "R2_ratio": 0.3091910481452942,
+    "median_bout_frames_60fps": 41.0,
+    "median_bout_ms": 683.3333333333334
+  },
+  "pilot_static_21kp": {
+    "description": "Static Affine Fusion Arm A (21 kp: 17 dorsal + 4 paws)",
+    "n_snippets": 2868,
+    "n_active_syllables": 17,
+    "R2_labels": 0.18466836214065552,
+    "R2_kmeans_same_K": 0.5991740226745605,
+    "R2_ratio": 0.30820488929748535,
+    "median_bout_frames_60fps": 6.0,
+    "median_bout_ms": 100.0
+  },
+  "pilot_static_23kp": {
+    "description": "Static Affine Fusion Arm B (23 kp: 17 dorsal + 4 paws + 2 anchors)",
+    "n_snippets": 2770,
+    "n_active_syllables": 22,
+    "R2_labels": 0.22317928075790405,
+    "R2_kmeans_same_K": 0.6220250725746155,
+    "R2_ratio": 0.3587946593761444,
+    "median_bout_frames_60fps": 7.0,
+    "median_bout_ms": 116.66666666666667
+  },
+  "pilot_static_21kp_k12": {
+    "description": "Static Affine 21kp Calibrated Kappa (1.5e12)",
+    "n_snippets": 8024,
+    "n_active_syllables": 56,
+    "R2_labels": 0.21952426433563232,
+    "R2_kmeans_same_K": 0.6683906316757202,
+    "R2_ratio": 0.32843708992004395,
+    "median_bout_frames_60fps": 18.0,
+    "median_bout_ms": 300.0
+  }
+}

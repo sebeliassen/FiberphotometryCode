@@ -1,0 +1,32 @@
+# Pre-commit configuration for FiberphotometryCode
+# Enforces file size boundaries and syntax integrity
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-added-large-files
+        name: Block large binary files (>2MB)
+        args: ['--maxkb=2048']
+      - id: check-yaml
+        name: Validate YAML configurations
+        exclude: ^(\.agents/|archive/|tests/)
+      - id: check-json
+        name: Validate JSON documents
+        exclude: ^(tests/runs/|archive/)
+      - id: check-merge-conflict
+      - id: check-case-conflict
+  - repo: local
+    hooks:
+      - id: maintained-source-lint
+        name: Check maintained source against reviewed lint debt
+        entry: python -B ops/repo/lint.py
+        language: system
+        pass_filenames: false
+        files: ^(src/|studies/|tests/|ops/|pipelines/|pyproject\.toml$|registry/LINT_BASELINE\.json$)
+        types_or: [python, toml, json]
+      - id: library-architecture
+        name: Check library dependency boundaries
+        entry: python -B ops/repo/dependencies.py
+        language: system
+        pass_filenames: false
+        files: ^(src/fpcode/.*\.py$|ops/repo/dependencies\.py$)

@@ -1,0 +1,56 @@
+# ==============================================================================
+# Configuration: Cohort Static 21-Keypoint Production Queue (3 Seeds)
+# Single Source of Truth for Hyperparameters & Pipeline Settings
+# ==============================================================================
+
+model:
+  base_name: "model_21kp_static_50ar_200slds"
+  seeds: [101, 102, 103]
+  target_fps: 60
+  seg_length: 10030
+  min_segment_frames: 600
+
+training:
+  num_ar_iters: 50
+  num_slds_iters: 200
+  total_iters: 250
+  save_every_n: 25
+  init_kappa: 1.0e+06
+  slds_kappa: 1.5e+15
+
+paths:
+  experiment_dir: "syllable_generation/multiview_top_bot_experiments"
+  data_source_dir: "syllable_generation/multiview_top_bot_experiments/data/cohort_fused_static_21kp"
+  cohort_dir: "syllable_generation/multiview_top_bot_experiments/cohort_static_21kp"
+  pilot_config_src: "syllable_generation/multiview_top_bot_experiments/pilot_comparison_21kp_static/config.yml"
+
+keypoints:
+  dorsal:
+    - "nose"
+    - "left_ear_tip"
+    - "right_ear_tip"
+    - "neck"
+    - "mid_back"
+    - "mouse_center"
+    - "mid_backend"
+    - "mid_backend2"
+    - "mid_backend3"
+    - "tail_base"
+    - "left_shoulder"
+    - "left_midside"
+    - "left_hip"
+    - "right_shoulder"
+    - "right_midside"
+    - "right_hip"
+    - "head_midpoint"
+  paws:
+    - "left_front_paw"
+    - "right_front_paw"
+    - "left_hind_paw"
+    - "right_hind_paw"
+  anterior: ["tail_base"]
+  posterior: ["nose"]
+
+notification:
+  server: "https://ntfy.sh"
+  topic: "woody_videos_seb"

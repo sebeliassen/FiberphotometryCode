@@ -1,0 +1,5645 @@
+{
+  "schema_version": 1,
+  "ruff_version": "ruff 0.16.10",
+  "scope": [
+    "studies",
+    "tests",
+    "ops"
+  ],
+  "diagnostics": [
+    {
+      "path": "ops/repo/build_triage.py",
+      "code": "F401",
+      "message": "`re` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/build_triage.py",
+      "code": "F401",
+      "message": "`sys` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/build_triage.py",
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/build_triage.py",
+      "code": "F841",
+      "message": "Local variable `file_info` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/metrics.py",
+      "code": "F401",
+      "message": "`os` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/metrics.py",
+      "code": "F401",
+      "message": "`sys` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/metrics.py",
+      "code": "F401",
+      "message": "`typing.List` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/metrics.py",
+      "code": "F401",
+      "message": "`typing.Tuple` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/metrics.py",
+      "code": "F841",
+      "message": "Local variable `e` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/migrate_study_unit.py",
+      "code": "F401",
+      "message": "`shutil` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/migrate_study_unit.py",
+      "code": "F401",
+      "message": "`typing.Dict` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/migrate_study_unit.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 3
+    },
+    {
+      "path": "ops/repo/shims_report.py",
+      "code": "F841",
+      "message": "Local variable `header` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/update_shims.py",
+      "code": "F401",
+      "message": "`warnings` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/update_shims.py",
+      "code": "F841",
+      "message": "Local variable `mod_name` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "ops/repo/vendor_keypoint_moseq.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 4
+    },
+    {
+      "path": "studies/deep_research_experiments/action_prediction_error/analyze_variance_distribution.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/deep_research_experiments/action_prediction_error/lib/metrics.py",
+      "code": "F841",
+      "message": "Local variable `slope_mag` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/deep_research_experiments/action_prediction_error/lib/metrics.py",
+      "code": "F841",
+      "message": "Local variable `slope_var` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/deep_research_experiments/action_prediction_error/lib/metrics.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/deep_research_experiments/action_prediction_error/run_ppe_analysis.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/deep_research_experiments/action_prediction_error/run_ppe_analysis.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 13
+    },
+    {
+      "path": "studies/deep_research_experiments/action_prediction_error/run_ppe_analysis.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 1
+    },
+    {
+      "path": "studies/deep_research_experiments/action_prediction_error/run_ppe_analysis.py",
+      "code": "F841",
+      "message": "Local variable `IGNORE_GENOTYPES` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/deep_research_experiments/action_prediction_error/run_ppe_analysis.py",
+      "code": "F841",
+      "message": "Local variable `raw_mean` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/deep_research_experiments/action_prediction_error/run_ppe_analysis.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/deep_research_experiments/peth_lateralized_da.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/deep_research_experiments/peth_lateralized_da.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 13
+    },
+    {
+      "path": "studies/deep_research_experiments/peth_lateralized_da.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 2
+    },
+    {
+      "path": "studies/deep_research_experiments/peth_lateralized_da_optimized.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 9
+    },
+    {
+      "path": "studies/deep_research_experiments/peth_lateralized_da_virtual.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/deep_research_experiments/plot_lateralized_da.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/deep_research_experiments/plot_lateralized_da.py",
+      "code": "F841",
+      "message": "Local variable `n_points` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/deep_research_experiments/plot_lateralized_da_regions.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/deep_research_experiments/utils/check_project_attr.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/deep_research_experiments/utils/summarize_regions.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/juvenile_intruder/config.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/juvenile_intruder/enrich.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 20
+    },
+    {
+      "path": "studies/juvenile_intruder/enrich.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/analyze_coordinate_jitter.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/analyze_syllable_kinematics.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 5
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/attach_karen_final_model.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/attach_karen_final_model.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/compare_karen_vs_amph_kinematics.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/compare_karen_vs_amph_kinematics.py",
+      "code": "F401",
+      "message": "`os` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/compare_karen_vs_amph_kinematics.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 2
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/compare_karen_vs_amph_kinematics.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 18
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/diagnose_centroid_tracking_errors.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 5
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/enrich.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 18
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/enrich.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/enrich.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/enrich.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 3
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/enrich.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 39
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/find_similar_syllables.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 11
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/generate_all_density_clean_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 10
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/generate_all_density_clean_grid_movies_vfi.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 10
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/generate_all_karen_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 10
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/generate_clean_density_grid_movies_production.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 10
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/generate_density_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/generate_karen_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/generate_karen_trajectory_plots.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 10
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/generate_test_corrected_videos.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/generate_top30_dual_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 11
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/generate_top30_sig_dendrogram.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 9
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/generate_top30_sig_dendrogram.py",
+      "code": "F841",
+      "message": "Local variable `ddata` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/link_karen_botcam.py",
+      "code": "F841",
+      "message": "Local variable `matching_topcam` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/render_publication_figures.py",
+      "code": "F841",
+      "message": "Local variable `df_wave` is assigned to but never used",
+      "count": 2
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/rsync_karen_botcam.py",
+      "code": "F841",
+      "message": "Local variable `total_bytes` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/run_animal_permutation_tests.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 10
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/run_animal_permutation_tests.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/run_karen_pff_vs_monomer_master_pipeline.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/tracking.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/tracking.py",
+      "code": "F401",
+      "message": "`pathlib.Path` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/tracking.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/tracking.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 9
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/transparent_animal_permutation_analysis.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 9
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/transparent_animal_permutation_analysis.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/verify_karen_rebuild_parity.py",
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/verify_karen_rebuild_parity.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 2
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/verify_karen_rebuild_parity.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 15
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/verify_karen_timeseries_sync.py",
+      "code": "F541",
+      "message": "f-string without any placeholders",
+      "count": 12
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/verify_karen_timeseries_sync.py",
+      "code": "F841",
+      "message": "Local variable `ref_s0` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/karen_pff_vs_monomer/analysis/verify_karen_timeseries_sync.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/generate_all_metric_timecourses.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/generate_all_metric_timecourses.py",
+      "code": "F841",
+      "message": "Local variable `drug` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/generate_all_metric_timecourses.py",
+      "code": "F841",
+      "message": "Local variable `is_drug` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/generate_executive_timecourse_plot.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/generate_executive_timecourse_plot.py",
+      "code": "F841",
+      "message": "Local variable `is_drug` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/generate_longitudinal_cohort_plots.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/generate_macro_behavior_summary.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 8
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/generate_syllable_trajectory_arrows.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/generate_unified_executive_presentation_plot.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/run_cohort_static_21kp_v2_longitudinal_suite.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/run_cohort_static_21kp_v2_longitudinal_suite.py",
+      "code": "F841",
+      "message": "Local variable `cmap` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/run_karen_5tier_phenotyping_suite.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/run_karen_5tier_phenotyping_suite.py",
+      "code": "F841",
+      "message": "Local variable `df_speed_diff` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/run_karen_5tier_phenotyping_suite.py",
+      "code": "F841",
+      "message": "Local variable `scatter` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/run_karen_genotype_analysis.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 8
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/run_karen_genotype_analysis.py",
+      "code": "F841",
+      "message": "Local variable `bars` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/run_karen_genotype_analysis.py",
+      "code": "F841",
+      "message": "Local variable `df_temp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/run_karen_longitudinal_lmms.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/run_karen_permutation_tests.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/run_karen_permutation_tests.py",
+      "code": "F841",
+      "message": "Local variable `n_mon` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/experiments/karen_phenotyping/run_karen_permutation_tests.py",
+      "code": "F841",
+      "message": "Local variable `n_pff` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/aggregation.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/clustering.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 14
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/kinematic_similarity.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 8
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/label_mapping.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 9
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/label_mapping.py",
+      "code": "F841",
+      "message": "Local variable `path` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/loader.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/loader.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/loader.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/metrics.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 12
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/metrics.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/metrics.py",
+      "code": "F841",
+      "message": "Local variable `path` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/micro_kinematics.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 17
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/micro_kinematics.py",
+      "code": "F841",
+      "message": "Local variable `global_vel` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/micro_kinematics.py",
+      "code": "F841",
+      "message": "Local variable `raw_col` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/motifs.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 26
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/networks.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/neural_pnas.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 21
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/neural_pnas.py",
+      "code": "F841",
+      "message": "Local variable `bars` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/neural_pnas.py",
+      "code": "F841",
+      "message": "Local variable `fs` is assigned to but never used",
+      "count": 2
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/neural_pnas.py",
+      "code": "F841",
+      "message": "Local variable `palette` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/pnas_replication.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/pnas_replication.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 37
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/pnas_replication.py",
+      "code": "F841",
+      "message": "Local variable `ax` is assigned to but never used",
+      "count": 3
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/pnas_replication.py",
+      "code": "F841",
+      "message": "Local variable `syll_to_letter` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/quantitative_viz.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/quantitative_viz.py",
+      "code": "F841",
+      "message": "Local variable `ax` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/quantitative_viz.py",
+      "code": "F841",
+      "message": "Local variable `label` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/quantitative_viz.py",
+      "code": "F841",
+      "message": "Local variable `labels` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/quantitative_viz.py",
+      "code": "F841",
+      "message": "Local variable `stat_str` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/quantitative_viz.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 3
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/regional_timing.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/saliency_modeling.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/saliency_modeling.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 23
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/saliency_modeling.py",
+      "code": "F841",
+      "message": "Local variable `response` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/saliency_modeling.py",
+      "code": "F841",
+      "message": "Local variable `time_axis` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/temporal.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 12
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/temporal.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/temporal.py",
+      "code": "F841",
+      "message": "Local variable `ent_delta` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/temporal_saliency.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 14
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/unique_information.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 5
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/unique_information.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 28
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/unique_information.py",
+      "code": "F841",
+      "message": "Local variable `response` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/lib/unique_information.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/kinematics_ulrik/run_analysis.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/__init__.py",
+      "code": "F401",
+      "message": "`.window_optimization.evaluate_discriminability_vs_coherence` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/__init__.py",
+      "code": "F401",
+      "message": "`.window_optimization.evaluate_dopamine_alignment` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/__init__.py",
+      "code": "F401",
+      "message": "`.window_optimization.evaluate_downstream_decodability` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/__init__.py",
+      "code": "F401",
+      "message": "`.window_optimization.evaluate_kl_information_gain` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/__init__.py",
+      "code": "F401",
+      "message": "`.window_optimization.evaluate_transition_predictability` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/dtw.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/dtw.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/group_analysis.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/group_analysis.py",
+      "code": "F841",
+      "message": "Local variable `scatter` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/group_analysis.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/group_analysis.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/kinematic_encoding.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/kinematic_encoding.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/window_optimization.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/lib/evaluation/window_optimization.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 10
+    },
+    {
+      "path": "studies/language_models/lib/fusion/clustering.py",
+      "code": "F401",
+      "message": "`cuml` imported but unused; consider using `importlib.util.find_spec` to test for availability",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/fusion/clustering.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/lib/fusion/clustering.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/lib/optimization/optimizer.py",
+      "code": "F401",
+      "message": "`urllib.request` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/optimization/optimizer.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/lib/preprocessing/optimization.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/lib/preprocessing/optimization.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/lib/preprocessing/optimization.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/lib/preprocessing/rle.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/lib/preprocessing/segmentation.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 10
+    },
+    {
+      "path": "studies/language_models/lib/preprocessing/tokenization.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/build_run12_clean_bout_cache.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/render_slide7_component_interpretation_figure.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/render_slide7_component_interpretation_figure.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/render_slide7_component_interpretation_figure.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/render_slide8_trajectory_figure.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/render_slide8_trajectory_figure.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/render_slide8_trajectory_figure.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_nmf_adversarial_audits.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_nmf_adversarial_audits.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_nmf_adversarial_audits.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `I`",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "E712",
+      "message": "Avoid equality comparisons to `True`; use `df_jsd[\"support_adequate\"]:` for truth checks",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `df_jsd_summ` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `hmm` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `log_trans` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_anc` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_ent_ki` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_ent_wt` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_exit_ki` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_exit_wt` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_ki_b` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_ki_t` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_wt_b` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_wt_t` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/nmf_review_package/code/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `y_te` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/01_horizon_dynamics/run_past_window_sweep.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/01_horizon_dynamics/run_past_window_sweep.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/01_horizon_dynamics/test_canonical_transformer_scaling.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/01_horizon_dynamics/test_canonical_transformer_scaling.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/01_horizon_dynamics/test_canonical_transformer_scaling.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 7
+    },
+    {
+      "path": "studies/language_models/pipelines/01_horizon_dynamics/test_canonical_transformer_scaling.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/01_horizon_dynamics/test_transformer_long_past_scaling.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/01_horizon_dynamics/test_transformer_long_past_scaling.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/01_horizon_dynamics/test_transformer_long_past_scaling.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 6
+    },
+    {
+      "path": "studies/language_models/pipelines/01_horizon_dynamics/test_transformer_long_past_scaling.py",
+      "code": "F821",
+      "message": "Undefined name `shutil`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/02_frame_vs_bout/audit_frame_vs_bout_mechanisms.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/02_frame_vs_bout/audit_frame_vs_bout_mechanisms.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 15
+    },
+    {
+      "path": "studies/language_models/pipelines/02_frame_vs_bout/audit_frame_vs_bout_mechanisms.py",
+      "code": "F841",
+      "message": "Local variable `y_curr_s` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/02_frame_vs_bout/run_68s_comparison.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/02_frame_vs_bout/run_68s_comparison.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 8
+    },
+    {
+      "path": "studies/language_models/pipelines/02_frame_vs_bout/run_frame_vs_bout_benchmark.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/02_frame_vs_bout/test_2x2_cross_prediction.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/02_frame_vs_bout/test_2x2_cross_prediction.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/02_frame_vs_bout/test_2x2_cross_prediction.py",
+      "code": "F841",
+      "message": "Local variable `fold_g_p1` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/02_frame_vs_bout/test_2x2_cross_prediction.py",
+      "code": "F841",
+      "message": "Local variable `fold_g_p3` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/02_frame_vs_bout/test_duration_augmented_rle.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/02_frame_vs_bout/test_duration_augmented_rle.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 13
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_categorical_predictive_frontier.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 9
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_categorical_predictive_frontier.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_conditional_future_dispersion.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_density_scaling_sweep.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_density_scaling_sweep.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_empirical_frontier_suite.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_empirical_frontier_suite.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 5
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_epsilon_density_dispersion_map.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_epsilon_density_dispersion_map.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_full_empirical_frontier_diagnostics.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_full_empirical_frontier_diagnostics.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 6
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_joint_bias_variance_surface.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_joint_bias_variance_surface.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_past_future_distance_transfer.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_past_future_distance_transfer.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_predictor_hierarchy_benchmark.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_predictor_hierarchy_benchmark.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_predictor_hierarchy_benchmark.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 15
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_predictor_hierarchy_benchmark.py",
+      "code": "F401",
+      "message": "`urllib.request` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_predictor_hierarchy_benchmark.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_sequence_benchmark_suite.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_sequence_benchmark_suite.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_sequence_benchmark_suite.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 7
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_sequence_benchmark_suite.py",
+      "code": "F401",
+      "message": "`urllib.request` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_sequence_benchmark_suite.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_stratified_categorical_frontier.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 8
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_stratified_categorical_frontier.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_w_h_predictability_phase_diagram.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_w_h_predictability_phase_diagram.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_x_conditioned_model_gating.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/run_x_conditioned_model_gating.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 5
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_audit_transformer_clean_bouts.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_audit_transformer_clean_bouts.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 8
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_audit_transformer_clean_bouts.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_complete_pn_ladder_audit.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 5
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_complete_pn_ladder_audit.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 14
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_complete_pn_ladder_audit.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_continuous_pose_vs_syllable.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_continuous_pose_vs_syllable.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 11
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_continuous_pose_vs_syllable.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_counts_vs_dwell.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_counts_vs_dwell.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 31
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_counts_vs_dwell.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_discrete_strategy_bottleneck.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_discrete_strategy_bottleneck.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_discrete_strategy_bottleneck.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 17
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_discrete_strategy_bottleneck.py",
+      "code": "F401",
+      "message": "`urllib.request` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_discrete_strategy_bottleneck.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_exclude_syll0_pn_ladder.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 5
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_exclude_syll0_pn_ladder.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 12
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_exclude_syll0_pn_ladder.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_shuffled_vs_ordered_reconciliation.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_shuffled_vs_ordered_reconciliation.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/04_predictive_frontier/test_shuffled_vs_ordered_reconciliation.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/11_render_9vibe_spliced_exemplars.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/11_render_9vibe_spliced_exemplars.py",
+      "code": "F841",
+      "message": "Local variable `resp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/13_fit_clean_production_models.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/13_fit_clean_production_models.py",
+      "code": "F841",
+      "message": "Local variable `labels` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/13_fit_clean_production_models.py",
+      "code": "F841",
+      "message": "Local variable `n_topics` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/13_fit_clean_production_models.py",
+      "code": "F841",
+      "message": "Local variable `n_windows_per_session` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/13_fit_clean_production_models.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/14_run_clean_confined_eta2_sweep.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/14_run_clean_confined_eta2_sweep.py",
+      "code": "F841",
+      "message": "Local variable `resp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/14_run_clean_confined_eta2_sweep.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/16_run_bayesian_hyperparameter_sweep.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/16_run_bayesian_hyperparameter_sweep.py",
+      "code": "F401",
+      "message": "`cuml` imported but unused; consider using `importlib.util.find_spec` to test for availability",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/16_run_bayesian_hyperparameter_sweep.py",
+      "code": "F841",
+      "message": "Local variable `abs_end_frame` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/16_run_bayesian_hyperparameter_sweep.py",
+      "code": "F841",
+      "message": "Local variable `resp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/17_run_continuous_bout_scalar_benchmark.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 5
+    },
+    {
+      "path": "studies/language_models/pipelines/17_run_continuous_bout_scalar_benchmark.py",
+      "code": "F401",
+      "message": "`cuml.cluster.HDBSCAN` imported but unused; consider using `importlib.util.find_spec` to test for availability",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/17_run_continuous_bout_scalar_benchmark.py",
+      "code": "F401",
+      "message": "`cuml.manifold.UMAP` imported but unused; consider using `importlib.util.find_spec` to test for availability",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/17_run_continuous_bout_scalar_benchmark.py",
+      "code": "F401",
+      "message": "`requests` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/17_run_continuous_bout_scalar_benchmark.py",
+      "code": "F841",
+      "message": "Local variable `win_sids` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/17_run_continuous_bout_scalar_benchmark.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/18_run_multi_clustering_benchmark.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/18_run_multi_clustering_benchmark.py",
+      "code": "F401",
+      "message": "`requests` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/18_run_multi_clustering_benchmark.py",
+      "code": "F841",
+      "message": "Local variable `wandb_run` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/18_run_multi_clustering_benchmark.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/19_bayes_opt_kmeans_vs_gmm.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/19_bayes_opt_kmeans_vs_gmm.py",
+      "code": "F841",
+      "message": "Local variable `resp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/19_bayes_opt_kmeans_vs_gmm.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/1_fit_and_export_9vibe_model.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/language_models/pipelines/1_fit_and_export_9vibe_model.py",
+      "code": "F841",
+      "message": "Local variable `resp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/1_fit_and_export_9vibe_model.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/21_bayes_opt_karen_kmeans_vs_gmm.py",
+      "code": "F841",
+      "message": "Local variable `resp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/22_contextual_modality_audit.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 8
+    },
+    {
+      "path": "studies/language_models/pipelines/2_generate_vibe_cohort_analytics.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/2_generate_vibe_cohort_analytics.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/3_align_photometry_peth.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/4_run_postural_kernel_sweep.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 5
+    },
+    {
+      "path": "studies/language_models/pipelines/4_run_postural_kernel_sweep.py",
+      "code": "F841",
+      "message": "Local variable `resp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/4_run_postural_kernel_sweep.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/5_run_lm_weighting_sweep.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 5
+    },
+    {
+      "path": "studies/language_models/pipelines/5_run_lm_weighting_sweep.py",
+      "code": "F841",
+      "message": "Local variable `resp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/5_run_lm_weighting_sweep.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/6_run_kinematic_sweep_benchmark.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/language_models/pipelines/6_run_kinematic_sweep_benchmark.py",
+      "code": "F841",
+      "message": "Local variable `resp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/6_run_kinematic_sweep_benchmark.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/7_run_broad_sweep_kinematic_benchmark.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 8
+    },
+    {
+      "path": "studies/language_models/pipelines/7_run_broad_sweep_kinematic_benchmark.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/7_run_master_sweep_benchmark.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/language_models/pipelines/7_run_master_sweep_benchmark.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/8_run_confined_eta2_sweep.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/language_models/pipelines/8_run_confined_eta2_sweep.py",
+      "code": "F841",
+      "message": "Local variable `resp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/8_run_confined_eta2_sweep.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/analyze_4_cohorts_fig1_fig2.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/analyze_4_cohorts_fig1_fig2.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/analyze_4_cohorts_fig1_fig2.py",
+      "code": "F841",
+      "message": "Local variable `null_p0_wtsal` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/analyze_4_cohorts_rigorous.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/build_run12_clean_bout_cache.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/diagnostic_overfitting_check.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/diagnostic_overfitting_check.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/diagnostic_overfitting_check.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `I`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/diagnostic_overfitting_check.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/generate_vibe_passports.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/generate_vibe_passports.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_4_cohort_figures.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_4_cohort_figures.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_4_cohort_figures.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `I`",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_4_cohort_figures.py",
+      "code": "F841",
+      "message": "Local variable `bars` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_4_cohort_figures.py",
+      "code": "F841",
+      "message": "Local variable `cohort_names` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_4_cohort_figures.py",
+      "code": "F841",
+      "message": "Local variable `cohort_order` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_4_cohort_figures.py",
+      "code": "F841",
+      "message": "Local variable `entry_f` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_4_cohort_figures.py",
+      "code": "F841",
+      "message": "Local variable `fig` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_4_cohort_multimodal_figures.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_4_cohort_multimodal_figures.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_4_cohort_multimodal_figures.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `I`",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_4_cohort_multimodal_figures.py",
+      "code": "F841",
+      "message": "Local variable `cohort_order` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_autocorr_vs_pattern_figure.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_markovianity_and_entropy_decoupling_figure.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_markovianity_and_entropy_decoupling_figure.py",
+      "code": "F841",
+      "message": "Local variable `H_pair_k` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_slide7_component_interpretation_figure.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_slide7_component_interpretation_figure.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_slide7_component_interpretation_figure.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_slide8_trajectory_figure.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_slide8_trajectory_figure.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/render_slide8_trajectory_figure.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_2d_timescale_surface.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_2d_timescale_surface.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_2d_timescale_surface.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_4d_behavioral_characterization.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_4d_behavioral_characterization.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_causal_hmm_sufficiency.py",
+      "code": "F841",
+      "message": "Local variable `b1` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_causal_hmm_sufficiency.py",
+      "code": "F841",
+      "message": "Local variable `b2` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_causal_hmm_sufficiency.py",
+      "code": "F841",
+      "message": "Local variable `bars` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_definitive_coordinate_system_suite.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 7
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_definitive_coordinate_system_suite.py",
+      "code": "F841",
+      "message": "Local variable `m0_mean` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_definitive_story_discrimination_suite.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 8
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_definitive_story_discrimination_suite.py",
+      "code": "F841",
+      "message": "Local variable `bp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_entropy_null_and_shared_coupling.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 7
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_entropy_null_and_shared_coupling.py",
+      "code": "F841",
+      "message": "Local variable `df_null_ani` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_event_depth_analysis.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_event_depth_analysis.py",
+      "code": "F841",
+      "message": "Local variable `starts` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_excess_timescale_persistence.py",
+      "code": "F841",
+      "message": "Local variable `S` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_extended_nmf_retention_sweep.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_extended_nmf_retention_sweep.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `I`",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_focused_genotype_dissection_suite.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_focused_genotype_dissection_suite.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `I`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_focused_genotype_dissection_suite.py",
+      "code": "F841",
+      "message": "Local variable `X_mat` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_focused_genotype_dissection_suite.py",
+      "code": "F841",
+      "message": "Local variable `log_trans` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_focused_genotype_dissection_suite.py",
+      "code": "F841",
+      "message": "Local variable `y_vec` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_group_confound_audit.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_group_confound_audit.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `I`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_hierarchical_next_bout_ladder.py",
+      "code": "F841",
+      "message": "Local variable `z_mu` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_latent_regime_sufficiency.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_nmf_adversarial_audits.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_nmf_adversarial_audits.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_nmf_adversarial_audits.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `I`",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_rapid_presentation_figures.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_rapid_presentation_figures.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_rapid_presentation_figures.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_rapid_presentation_figures.py",
+      "code": "F401",
+      "message": "`urllib.request` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_rapid_presentation_figures.py",
+      "code": "F841",
+      "message": "Local variable `bars` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_rapid_presentation_figures.py",
+      "code": "F841",
+      "message": "Local variable `folds` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_rapid_presentation_figures.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_shared_state_genotype_dissection.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_shared_state_genotype_dissection.py",
+      "code": "F841",
+      "message": "Local variable `A_wt` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_shared_state_genotype_dissection.py",
+      "code": "F841",
+      "message": "Local variable `X_b` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_shared_state_genotype_dissection.py",
+      "code": "F841",
+      "message": "Local variable `b1` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_shared_state_genotype_dissection.py",
+      "code": "F841",
+      "message": "Local variable `b2` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_shared_state_genotype_dissection.py",
+      "code": "F841",
+      "message": "Local variable `lag_labels` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_shared_state_genotype_dissection.py",
+      "code": "F841",
+      "message": "Local variable `local_P_shared` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_shared_state_genotype_dissection.py",
+      "code": "F841",
+      "message": "Local variable `log_trans` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_shared_state_genotype_dissection.py",
+      "code": "F841",
+      "message": "Local variable `q_names` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "E712",
+      "message": "Avoid equality comparisons to `True`; use `df_jsd[\"support_adequate\"]:` for truth checks",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `df_jsd_summ` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `hmm` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `log_trans` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_anc` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_ent_ki` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_ent_wt` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_exit_ki` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_exit_wt` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_ki_b` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_ki_t` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_wt_b` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `s_wt_t` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_simple_genotype_comparison_suite.py",
+      "code": "F841",
+      "message": "Local variable `y_te` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_unified_history_benchmark.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/run_unified_history_benchmark.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/test_nmf_dense_retention.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/presentation/test_nmf_dense_retention.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `I`",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/run_broad_sweep_kinematic_table.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/run_broad_sweep_kinematic_table.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/run_conditional_future_dispersion.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/run_density_scaling_sweep.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/run_density_scaling_sweep.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/run_empirical_frontier_suite.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/run_empirical_frontier_suite.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 5
+    },
+    {
+      "path": "studies/language_models/pipelines/run_full_empirical_frontier_diagnostics.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/run_full_empirical_frontier_diagnostics.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 6
+    },
+    {
+      "path": "studies/language_models/pipelines/run_joint_bias_variance_surface.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/run_joint_bias_variance_surface.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/run_past_future_distance_transfer.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/run_past_future_distance_transfer.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/test_audit_transformer_clean_bouts.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/test_audit_transformer_clean_bouts.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 8
+    },
+    {
+      "path": "studies/language_models/pipelines/test_audit_transformer_clean_bouts.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_complete_pn_ladder_audit.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 5
+    },
+    {
+      "path": "studies/language_models/pipelines/test_complete_pn_ladder_audit.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 14
+    },
+    {
+      "path": "studies/language_models/pipelines/test_complete_pn_ladder_audit.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_continuous_pose_vs_syllable.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/test_continuous_pose_vs_syllable.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 11
+    },
+    {
+      "path": "studies/language_models/pipelines/test_continuous_pose_vs_syllable.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/test_counts_vs_dwell.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/test_counts_vs_dwell.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 31
+    },
+    {
+      "path": "studies/language_models/pipelines/test_counts_vs_dwell.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_exact_pose_dissection.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/test_exact_pose_dissection.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 21
+    },
+    {
+      "path": "studies/language_models/pipelines/test_exact_pose_dissection.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_exact_pose_dissection_fast.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/test_exact_pose_dissection_fast.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 11
+    },
+    {
+      "path": "studies/language_models/pipelines/test_exact_pose_dissection_fast.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_exclude_syll0_pn_ladder.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 5
+    },
+    {
+      "path": "studies/language_models/pipelines/test_exclude_syll0_pn_ladder.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 12
+    },
+    {
+      "path": "studies/language_models/pipelines/test_exclude_syll0_pn_ladder.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_nmf_comp_check.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_nmf_comp_check.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_nmf_retention_sweep.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_nmf_strict_nested_cv.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_shuffled_vs_ordered_reconciliation.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/language_models/pipelines/test_shuffled_vs_ordered_reconciliation.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/test_shuffled_vs_ordered_reconciliation.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/test_skeptical_audit.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/pipelines/test_skeptical_audit_deep.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/language_models/pipelines/test_skeptical_audit_deep.py",
+      "code": "F841",
+      "message": "Local variable `win_offset_old` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_skeptical_audit_deep.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_skeptical_audit_deep.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 4
+    },
+    {
+      "path": "studies/language_models/pipelines/test_wt_saline_trajectories.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/pipelines/test_wt_saline_trajectories.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/language_models/videogen/generator.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/videogen/generator.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/videogen/render_wt_trivibe_120s.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/language_models/videogen/test_render_vibe_video.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/model_inspection/launch_gui.py",
+      "code": "F841",
+      "message": "Local variable `window` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/analysis/phase_1_causality/ccm.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/analysis/phase_1_causality/ccm.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/analysis/phase_1_causality/te.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/analysis/phase_1_causality/utils.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/analysis/phase_1_causality/varlingam.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/00_signal_alignment_audit.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/00_signal_alignment_audit.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/00_signal_alignment_audit.py",
+      "code": "F841",
+      "message": "Local variable `regions` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/03_epoch_causality.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 5
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/04_signal_peths.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/04_signal_peths.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 8
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/04_signal_peths.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/05_sliding_causality_peth.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/05_sliding_causality_peth.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 8
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/05_sliding_causality_peth.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/05_sliding_causality_peth.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/06_llm_tabular_extraction.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/06_llm_tabular_extraction.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 12
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/06_llm_tabular_extraction.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/06_llm_tabular_extraction.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/07_theoretical_validation.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 12
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/07_theoretical_validation.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/find_filter_params.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/find_filter_params.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 9
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/find_filter_params.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/find_filter_params.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/generate_nb.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/inspect_n.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/inspect_n.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/monoamine_interactions/notebooks/utils/photometry.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/scripts/debug_regex.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/scripts/verify_exclusions.py",
+      "code": "F401",
+      "message": "`syllable_generation.loaders.jonathan.loader.SessionRecord` imported but unused; consider using `importlib.util.find_spec` to test for availability",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/steps/tracking.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/monoamine_interactions/steps/tracking.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/monoamine_interactions/steps/tracking.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/multimodal_movies/composer.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/multimodal_movies/composer.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 1
+    },
+    {
+      "path": "studies/multimodal_movies/composer.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/multimodal_movies/generators/plots.py",
+      "code": "F403",
+      "message": "`from ..plots import *` used; unable to detect undefined names",
+      "count": 1
+    },
+    {
+      "path": "studies/multimodal_movies/grids/video.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/multimodal_movies/main.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/02_fuse_dorsal_ventral.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/04_test_kpms_shapes_cpu.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 5
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/audit_calibration_validity.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/fuse_all_continuous_calibrated_cohort.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/fuse_all_continuous_calibrated_cohort.py",
+      "code": "F401",
+      "message": "`pathlib.Path` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/fuse_cohort_static.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/fuse_multiview_cohort.py",
+      "code": "F841",
+      "message": "Local variable `ts_clean` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/input_preflight_audit.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/input_preflight_audit.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/input_preflight_audit.py",
+      "code": "F841",
+      "message": "Local variable `res` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/input_preflight_audit.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/test_4_golden_rules_fusion.py",
+      "code": "F841",
+      "message": "Local variable `c_top_smooth` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/test_ttl_aligned_fusion.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/test_ttl_aligned_fusion.py",
+      "code": "F841",
+      "message": "Local variable `bot_ty` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/test_ttl_aligned_fusion.py",
+      "code": "F841",
+      "message": "Local variable `top_ty` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/01_data_and_fusion/verify_fused_in_kpms_pipeline.py",
+      "code": "F841",
+      "message": "Local variable `components_2d` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_cohort_2ar_2slds_test.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_cohort_static_21kp_production.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 21
+    },
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_cohort_static_21kp_production.py",
+      "code": "F401",
+      "message": "`pathlib.Path` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_cohort_static_21kp_production.py",
+      "code": "F401",
+      "message": "`urllib.request` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_cohort_static_21kp_production.py",
+      "code": "F841",
+      "message": "Local variable `results` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_kappa_scan_and_production_pipeline.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_proper_search_and_production.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_tandem_production_50ar_200slds.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 20
+    },
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_tandem_production_50ar_200slds.py",
+      "code": "F401",
+      "message": "`urllib.request` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_tandem_production_50ar_200slds.py",
+      "code": "F841",
+      "message": "Local variable `chunk_dur` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/03_evaluation_and_eml/compute_tandem_cohort_eml_rankings.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 5
+    },
+    {
+      "path": "studies/multiview_experiments/03_evaluation_and_eml/compute_tandem_cohort_eml_rankings.py",
+      "code": "F401",
+      "message": "`urllib.request` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/03_evaluation_and_eml/enrich_video_refs_and_analyze_sequences.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/03_evaluation_and_eml/enrich_video_refs_and_analyze_sequences.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/03_evaluation_and_eml/export_seed404_continuous_calibrated_results.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/analyze_seed404_behavioral_architecture.py",
+      "code": "F841",
+      "message": "Local variable `N_eff_nats` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/analyze_seed404_behavioral_architecture.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 4
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/analyze_seed404_genotype_and_condition.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_independent_verification/audit_1_heldout_registration_deepdive.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_independent_verification/audit_2_real_static_fusion_invariants.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_independent_verification/audit_2_real_static_fusion_invariants.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_independent_verification/audit_3_synthetic_clock_phase_and_real_lag.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_independent_verification/audit_3_synthetic_clock_phase_and_real_lag.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_independent_verification/audit_4_training_inputs_and_cache_provenance.py",
+      "code": "F841",
+      "message": "Local variable `mismatch_detected` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_independent_verification/audit_4_training_inputs_and_cache_provenance.py",
+      "code": "F841",
+      "message": "Local variable `paw_missing_counts` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_independent_verification/audit_5_heading_and_bouts_discrepancy.py",
+      "code": "F841",
+      "message": "Local variable `traj_data` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_1_stationary_floor_and_epoch_registration.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_2_timing_provenance_and_full_cohort_audit.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_2_timing_provenance_and_full_cohort_audit.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_2_timing_provenance_and_full_cohort_audit.py",
+      "code": "F841",
+      "message": "Local variable `spd_b` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_3_verification_scripts.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 4
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_4_end_to_end_data_trace.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_4_end_to_end_data_trace.py",
+      "code": "F841",
+      "message": "Local variable `n_results_sessions` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_5_provenance_bound_cache_validator.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_6_synchronized_density_sampling_and_renderers.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_6_synchronized_density_sampling_and_renderers.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_7_schedule_and_numerical_validation.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_7_schedule_and_numerical_validation.py",
+      "code": "F841",
+      "message": "Local variable `test_meta` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_8_trajectory_compactness_pilot.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_20261007_pipeline_repairs/repair_8_trajectory_compactness_pilot.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_current_seed404_gallery_tiles.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_current_seed404_gallery_tiles.py",
+      "code": "F841",
+      "message": "Local variable `clip_frames` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_current_seed404_gallery_tiles.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 5
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_ingestion_retention.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_priority1_frame_label_correspondence.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_priority1_frame_label_correspondence.py",
+      "code": "F841",
+      "message": "Local variable `arena` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_priority1_frame_label_correspondence.py",
+      "code": "F841",
+      "message": "Local variable `bot_map` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_priority2_static_fusion_invariants.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_priority2_static_fusion_invariants.py",
+      "code": "F841",
+      "message": "Local variable `A` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_priority2_static_fusion_invariants.py",
+      "code": "F841",
+      "message": "Local variable `b` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_priority2_static_fusion_invariants.py",
+      "code": "F841",
+      "message": "Local variable `bot_noise_perturbation_delta` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_priority2_static_fusion_invariants.py",
+      "code": "F841",
+      "message": "Local variable `bot_scorer` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_priority2_static_fusion_invariants.py",
+      "code": "F841",
+      "message": "Local variable `max_paw_diff` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_priority3_heldout_registration_accuracy.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_priority4_metric_definitions.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/audit_priority4_metric_definitions.py",
+      "code": "F841",
+      "message": "Local variable `d` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/compare_pilot_static_diagnostics.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 4
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/compare_pilot_static_diagnostics.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/diagnose_tandem_tile_heterogeneity.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 16
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/diagnose_tandem_tile_heterogeneity.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 5
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/diagnose_tandem_tile_heterogeneity.py",
+      "code": "F841",
+      "message": "Local variable `dfs_t3` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/audits/diagnose_tandem_tile_heterogeneity.py",
+      "code": "F841",
+      "message": "Local variable `ego_var` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/build_cohort_static_21kp_seed101_labeling_gallery.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/build_cohort_static_21kp_v2_seed101_labeling_gallery.py",
+      "code": "F841",
+      "message": "Local variable `mean_w` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/build_cohort_static_21kp_v2_seed101_labeling_gallery.py",
+      "code": "F841",
+      "message": "Local variable `traj_super_gif_rel` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/build_cohort_static_21kp_v2_seed101_labeling_gallery.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/build_cohort_static_21kp_v2_seed101_labeling_gallery.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/build_seed404_labeling_gallery.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/compare_two_camera_vs_one_camera_distribution.py",
+      "code": "F841",
+      "message": "Local variable `annot_prev` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/compare_two_camera_vs_one_camera_distribution.py",
+      "code": "F841",
+      "message": "Local variable `fam_prevalence_dict` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/compare_two_camera_vs_one_camera_distribution.py",
+      "code": "F841",
+      "message": "Local variable `scatter` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/compare_two_camera_vs_one_camera_distribution.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 5
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/compute_seed404_to_k240k_crosswalk.py",
+      "code": "F841",
+      "message": "Local variable `col_sums` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/generate_deep_dive_report.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 10
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/plot_negative_control_audit.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 10
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/probe_active_similarity.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 16
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/probe_active_similarity.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 13
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/probe_avi_tracking_pairings.py",
+      "code": "F841",
+      "message": "Local variable `pair` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/probe_heading_and_kinematics.py",
+      "code": "F841",
+      "message": "Local variable `flips_count` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/probe_qc_policies_comparison.py",
+      "code": "F841",
+      "message": "Local variable `pca_components` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/probe_qc_policies_comparison.py",
+      "code": "F841",
+      "message": "Local variable `pca_mean` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/render_all_cohort_static_21kp_seed101_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/render_all_cohort_static_21kp_v2_seed101_grid_movies.py",
+      "code": "F841",
+      "message": "Local variable `pairs_by_sid` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/render_all_cohort_static_21kp_v2_seed101_trajectories.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/render_all_cohort_static_21kp_v2_seed101_trajectories.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 12
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/render_all_seed101_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/render_all_seed404_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/render_pilot_static_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/render_seed101_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 9
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/render_seed303_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 10
+    },
+    {
+      "path": "studies/multiview_experiments/04_reports_and_figures/render_syllable_12_random_movie.py",
+      "code": "F841",
+      "message": "Local variable `window_size_bot` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/examples/coords_to_3d_vid.py",
+      "code": "F841",
+      "message": "Local variable `bodyparts` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/multiview_experiments/examples/minimal_example.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/multiview_experiments/validation/test_flipping.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/oft_baseline/enrich.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 18
+    },
+    {
+      "path": "studies/oft_baseline/enrich.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/oft_baseline/ifdn_policy/enrich.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 11
+    },
+    {
+      "path": "studies/photometry_exploration/analysis/performance_funcs.py",
+      "code": "E721",
+      "message": "Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/analysis/performance_funcs.py",
+      "code": "F403",
+      "message": "`from studies.photometry.exploratory.config import *` used; unable to detect undefined names",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/analysis/performance_funcs.py",
+      "code": "F405",
+      "message": "`actions_attr_dict` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/analysis/performance_funcs.py",
+      "code": "F811",
+      "message": "Redefinition of unused `c_score` from line 50: `c_score` redefined here",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/analysis/performance_funcs.py",
+      "code": "F811",
+      "message": "Redefinition of unused `calculate_rate` from line 19: `calculate_rate` redefined here",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/analysis/performance_funcs.py",
+      "code": "F811",
+      "message": "Redefinition of unused `d_prime` from line 42: `d_prime` redefined here",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/analysis/performance_funcs.py",
+      "code": "F811",
+      "message": "Redefinition of unused `get_hr_and_far` from line 27: `get_hr_and_far` redefined here",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/analysis/response_metrics.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/kpms/load_and_analyze_session_state.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/photometry_exploration/kpms/syllable_generator.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/kpms/syllable_generator.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/kpms/trimming.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/notebooks/sebastian/signal_action_prediction.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/photometry_exploration/notebooks/sebastian/tsnepy.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/plotting/main_plotting.py",
+      "code": "F821",
+      "message": "Undefined name `go`",
+      "count": 2
+    },
+    {
+      "path": "studies/photometry_exploration/plotting/main_plotting.py",
+      "code": "F841",
+      "message": "Local variable `x_range` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/plotting/main_plotting.py",
+      "code": "F841",
+      "message": "Local variable `y_range` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/utils.py",
+      "code": "F403",
+      "message": "`from studies.photometry.exploratory.config import *` used; unable to detect undefined names",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/utils.py",
+      "code": "F405",
+      "message": "`attr_interval_dict` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/photometry_exploration/utils.py",
+      "code": "F405",
+      "message": "`peak_interval_config` may be undefined, or defined from star imports",
+      "count": 2
+    },
+    {
+      "path": "studies/replications_datta/datta/lib/__init__.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/lib/features.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/lib/shuffling.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/replications_datta/datta/lib/stats.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1e/digest_panel_1e_amph.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1e/digest_panel_1e_amph.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1e/digest_panel_1e_unified.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1e/plot_panel_1e_amph.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 21
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1e/plot_panel_1e_unified.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 20
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1e/run_panel_1e_amph.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1f/compare_projects_1f.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1f/digest_panel_1f_unified.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1f/digest_panel_1f_unified.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 5
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1f/digest_panel_1f_unified.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1f/plot_panel_1f_unified.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1f/plot_panel_1f_unified.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1f/plot_panel_1f_unified.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1f/run_panel_1f_unified.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1h/digest_panel_1h_unified.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 17
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1h/digest_panel_1h_unified.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1h/plot_panel_1h_unified.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1h/plot_panel_1h_unified.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 6
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1h/plot_panel_1h_unified.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1h/plot_panel_1h_unified.py",
+      "code": "F841",
+      "message": "Local variable `im` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/panel_1h/run_panel_1h_unified.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta/run_pipeline.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/replications_datta/datta_orig/panels/1e/digest_shuffles.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/replications_datta/datta_orig/panels/1e/digest_shuffles.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 3
+    },
+    {
+      "path": "studies/replications_datta/datta_orig/panels/1e/digest_shuffles.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta_orig/panels/1e/digest_shuffles.py",
+      "code": "F841",
+      "message": "Local variable `t0` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/datta_orig/processing/01_generate_datta_corrs.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 12
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/lib/loader.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/lib/processing.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 7
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/messy_north_star.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 65
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/messy_north_star.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 126
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/messy_north_star.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 7
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/messy_north_star.py",
+      "code": "F821",
+      "message": "Undefined name `display`",
+      "count": 3
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/modules/fingerprint.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 11
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/modules/geometry.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/modules/peak_timing.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 23
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/modules/peak_timing.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/modules/peak_timing.py",
+      "code": "F841",
+      "message": "Local variable `time_vec` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/modules/peak_timing.py",
+      "code": "F841",
+      "message": "Local variable `valid_ends` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/modules/peak_timing.py",
+      "code": "F841",
+      "message": "Local variable `valid_starts` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/modules/responsiveness.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 9
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/modules/specificity.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 10
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/modules/vigor_valence.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 13
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/modules/vigor_waveforms.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 15
+    },
+    {
+      "path": "studies/replications_datta/panel_1z/modules/vigor_waveforms.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/syllable_traces/run_trace_analysis.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/replications_datta/syllable_traces/run_trace_analysis.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 14
+    },
+    {
+      "path": "studies/replications_datta/syllable_traces/run_trace_analysis.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/chain_analysis/core.py",
+      "code": "F841",
+      "message": "Local variable `gap_bouts` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/chain_analysis/inter_chain.py",
+      "code": "F841",
+      "message": "Local variable `K` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/chain_analysis/inter_chain.py",
+      "code": "F841",
+      "message": "Local variable `cid_to_idx` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/chain_grid_movie_wrapper.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 6
+    },
+    {
+      "path": "studies/sequence_viz/chain_grid_movie_wrapper.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/chain_grid_movie_wrapper.py",
+      "code": "F841",
+      "message": "Local variable `branch_sync_frame` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/chain_grid_movie_wrapper.py",
+      "code": "F841",
+      "message": "Local variable `colormap` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/chain_grid_movie_wrapper.py",
+      "code": "F841",
+      "message": "Local variable `total_frames` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustered_seqnmf/fit_clustered_seqnmf_model.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustered_seqnmf/fit_clustered_seqnmf_model.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustered_seqnmf/fit_clustered_seqnmf_model.py",
+      "code": "F841",
+      "message": "Local variable `meta_defs` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustered_seqnmf/generate_3panel_whole_chain_exemplars.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/clustered_seqnmf/generate_clustered_seqnmf_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/audit_clustering_discrepancy.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/audit_clustering_discrepancy.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 6
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/audit_clustering_discrepancy.py",
+      "code": "F841",
+      "message": "Local variable `latents` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/compute_n_step_sequence_stats.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/evaluate_kinematic_information_retention.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/evaluate_kinematic_information_retention.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/evaluate_kinematic_information_retention.py",
+      "code": "F841",
+      "message": "Local variable `df_matched` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/evaluate_kinematic_information_retention.py",
+      "code": "F841",
+      "message": "Local variable `lvl_name` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/run_clustering_resolution_experiment.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/run_clustering_resolution_experiment.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 14
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/run_clustering_resolution_experiment.py",
+      "code": "F841",
+      "message": "Local variable `cents` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/run_clustering_resolution_experiment.py",
+      "code": "F841",
+      "message": "Local variable `heads` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/run_clustering_resolution_experiment.py",
+      "code": "F841",
+      "message": "Local variable `is_locomotor` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/run_clustering_resolution_experiment.py",
+      "code": "F841",
+      "message": "Local variable `latents` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/run_clustering_resolution_experiment.py",
+      "code": "F841",
+      "message": "Local variable `n_stages` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/run_clustering_resolution_experiment.py",
+      "code": "F841",
+      "message": "Local variable `sylls` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/run_clustering_resolution_experiment.py",
+      "code": "F841",
+      "message": "Local variable `token_names` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/run_p90_similarity_and_video_generation.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/clustering_resolution_comparison/run_p90_similarity_and_video_generation.py",
+      "code": "F841",
+      "message": "Local variable `lvl_name` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/compare_clustering_resolutions_separation.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 6
+    },
+    {
+      "path": "studies/sequence_viz/compare_exemplar_filtering_metrics.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/compare_exemplar_filtering_metrics.py",
+      "code": "F841",
+      "message": "Local variable `cname` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/compare_exemplar_filtering_metrics.py",
+      "code": "F841",
+      "message": "Local variable `meth_cids` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/compare_exemplar_filtering_metrics.py",
+      "code": "F841",
+      "message": "Local variable `t0` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/compare_exemplar_filtering_metrics.py",
+      "code": "F841",
+      "message": "Local variable `vfi` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/compute_syllable_catalog.py",
+      "code": "F841",
+      "message": "Local variable `unique_sylls` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/export_chatgpt/plot_hierarchical_diagnostics.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 5
+    },
+    {
+      "path": "studies/sequence_viz/export_chatgpt/plot_hierarchical_diagnostics.py",
+      "code": "F841",
+      "message": "Local variable `df_macro` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/export_chatgpt/plot_hierarchical_diagnostics.py",
+      "code": "F841",
+      "message": "Local variable `df_rep` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/export_chatgpt/run_hierarchical_feasibility_experiment.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/export_chatgpt/run_hierarchical_feasibility_experiment.py",
+      "code": "F841",
+      "message": "Local variable `h_init` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/export_chatgpt/run_hierarchical_feasibility_experiment.py",
+      "code": "F841",
+      "message": "Local variable `history_free` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/export_chatgpt/run_hierarchical_feasibility_experiment.py",
+      "code": "F841",
+      "message": "Local variable `surr_hist` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/extract_level1_chain_quantitative_results.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/extract_level1_chain_quantitative_results.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 4
+    },
+    {
+      "path": "studies/sequence_viz/extract_level1_chain_quantitative_results.py",
+      "code": "F401",
+      "message": "`urllib.request` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/extract_level1_chain_quantitative_results.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/extract_level3_chain_quantitative_results.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/extract_level3_chain_quantitative_results.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 3
+    },
+    {
+      "path": "studies/sequence_viz/extract_level3_chain_quantitative_results.py",
+      "code": "F401",
+      "message": "`urllib.request` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/extract_level3_chain_quantitative_results.py",
+      "code": "F841",
+      "message": "Local variable `bars1` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/extract_level3_chain_quantitative_results.py",
+      "code": "F841",
+      "message": "Local variable `bars2` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/extract_level3_chain_quantitative_results.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/generate_hidden_slide_mann_whitney_plot.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/generate_hidden_slide_mann_whitney_plot.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 3
+    },
+    {
+      "path": "studies/sequence_viz/generate_perfect_self_transition_slides.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/generate_slide_friendly_self_transitions.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/generate_sniff_clustered_slide_figures.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/generate_sniff_clustered_slide_figures.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/hierarchical_pilot/export_4state_bundle_and_html.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/hierarchical_pilot/generate_30min_hierarchical_timeline.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/hierarchical_pilot/generate_4state_interactive_html.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/hierarchical_pilot/generate_kinematics_timelines.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/hierarchical_pilot/hierarchical_subroutine_model.py",
+      "code": "F403",
+      "message": "`from studies.behavior.sequence_viz.export_chatgpt.hierarchical_subroutine_model import *` used; unable to detect undefined names",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/hierarchical_pilot/plot_hierarchical_timeline.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/hierarchical_pilot/plot_hierarchical_timeline.py",
+      "code": "F841",
+      "message": "Local variable `leg1` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/hierarchical_pilot/plot_hierarchical_timeline.py",
+      "code": "F841",
+      "message": "Local variable `leg2` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/hierarchical_pilot/run_controlled_upper_timescale_experiment.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/hierarchical_pilot/run_controlled_upper_timescale_experiment.py",
+      "code": "F841",
+      "message": "Local variable `l2` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/hierarchical_pilot/test_continuous_emissions.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/optimized_seqnmf/convolutional_seqnmf.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 18
+    },
+    {
+      "path": "studies/sequence_viz/optimized_seqnmf/fit_optimized_seqnmf_model.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/optimized_seqnmf/run_seqnmf_quantitative_sweep.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/optimized_seqnmf/run_seqnmf_quantitative_sweep.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/episode_adapter.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/episode_pilot_config.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/evaluate_and_plot.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/evaluate_and_plot.py",
+      "code": "F841",
+      "message": "Local variable `per_animal_cov` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/evaluate_and_plot.py",
+      "code": "F841",
+      "message": "Local variable `recs` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/prepare_episode_stream.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/prepare_episode_stream.py",
+      "code": "F841",
+      "message": "Local variable `syll_to_meta_arr` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/probabilistic_episode_model.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/probabilistic_episode_model.py",
+      "code": "F841",
+      "message": "Local variable `T` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/probabilistic_episode_model.py",
+      "code": "F841",
+      "message": "Local variable `b_ends` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/probabilistic_episode_model.py",
+      "code": "F841",
+      "message": "Local variable `b_starts` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/probabilistic_episode_model.py",
+      "code": "F841",
+      "message": "Local variable `bout_meta` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/probabilistic_episode_model.py",
+      "code": "F841",
+      "message": "Local variable `cents` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/probabilistic_episode_model.py",
+      "code": "F841",
+      "message": "Local variable `observed_raw_sylls` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/probabilistic_episode_model.py",
+      "code": "F841",
+      "message": "Local variable `raw_sylls` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/render_comparison_gallery.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/sequence_viz/probabilistic_episode_pilot/run_episode_pilot.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 5
+    },
+    {
+      "path": "studies/sequence_viz/render_1x3_final_exemplars.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/sequence_viz/render_1x3_final_exemplars.py",
+      "code": "F841",
+      "message": "Local variable `heads` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/render_1x3_theme_B_right_turn_options.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 5
+    },
+    {
+      "path": "studies/sequence_viz/render_1x3_theme_B_right_turn_options.py",
+      "code": "F841",
+      "message": "Local variable `heads` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/render_2x3_friday_seqnmf_exemplars.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/sequence_viz/render_2x3_friday_seqnmf_exemplars.py",
+      "code": "F841",
+      "message": "Local variable `heads` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/render_2x3_friday_seqnmf_exemplars.py",
+      "code": "F841",
+      "message": "Local variable `theme_id` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/render_2x3_right_turn_chains.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/sequence_viz/render_2x3_right_turn_chains.py",
+      "code": "F841",
+      "message": "Local variable `heads` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/render_2x3_saline_exemplar_videos.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/run_24_candidate_exemplar_batch.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/run_24_candidate_screening_batch.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/run_24_candidate_transition_exemplars.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/run_24_candidate_transition_exemplars.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/run_all_methods_chain_verification.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/run_all_methods_chain_verification.py",
+      "code": "F841",
+      "message": "Local variable `vfi` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/run_all_methods_chain_verification.py",
+      "code": "F841",
+      "message": "Local variable `video_paths` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/run_bout_quality_and_spatial_diagnostics.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/run_bout_quality_and_spatial_diagnostics.py",
+      "code": "F841",
+      "message": "Local variable `worst_tok` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/run_multimethod_diagnostic_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/run_prioritized_additions_pilot.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/sequence_viz/run_relational_topology_and_heading_reset_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/sequence_viz/run_relational_topology_and_heading_reset_movies.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/session_building/jonathan/__init__.py",
+      "code": "F401",
+      "message": "`.build.build` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/__init__.py",
+      "code": "F401",
+      "message": "`.context.BuildContext` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F403",
+      "message": "`from ..utils.photometry import *` used; unable to detect undefined names",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`animal_id_for` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`attach_frame_idx_column` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`best_csv_match` may be undefined, or defined from star imports",
+      "count": 3
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`calculate_manual_dff` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`calculate_ransac_subtraction` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`calculate_rolling_dff` may be undefined, or defined from star imports",
+      "count": 2
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`calculate_rolling_zscore` may be undefined, or defined from star imports",
+      "count": 3
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`calculate_signal_prominence` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`calculate_wallace_dff` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`compute_dff_and_z` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`dedup_preserve_order` may be undefined, or defined from star imports",
+      "count": 2
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`estimate_fps` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`get_signal_cols` may be undefined, or defined from star imports",
+      "count": 3
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`list_alltimestamps_entries` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`list_combined_csv_entries` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`np` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`parse_trial_tokens` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`plan_from_header` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F405",
+      "message": "`update_signal_meta_from_signals` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "code": "F841",
+      "message": "Local variable `sig_meta` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/utils/photometry.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/utils/photometry.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 9
+    },
+    {
+      "path": "studies/session_building/jonathan/utils/photometry.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 1
+    },
+    {
+      "path": "studies/session_building/jonathan/utils/photometry.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 2
+    },
+    {
+      "path": "studies/session_model_exports/attach_double_flip_kpms.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 6
+    },
+    {
+      "path": "studies/session_model_exports/attach_double_flip_kpms.py",
+      "code": "F841",
+      "message": "Local variable `r2s_keys` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/session_model_exports/attach_double_flip_kpms.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/session_model_exports/attach_kpms.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 2
+    },
+    {
+      "path": "studies/session_model_exports/attach_kpms.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 1
+    },
+    {
+      "path": "studies/session_model_exports/attach_kpms.py",
+      "code": "W293",
+      "message": "Blank line contains whitespace",
+      "count": 1
+    },
+    {
+      "path": "studies/session_model_exports/attach_syllables_kpms.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/session_model_exports/attach_syllables_kpms.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/session_model_exports/generate_animated_trajectories.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 12
+    },
+    {
+      "path": "studies/session_model_exports/generate_k240k_results_and_pkl.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "studies/session_model_exports/generate_k240k_results_and_pkl.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/session_model_exports/generate_run12_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 11
+    },
+    {
+      "path": "studies/session_model_exports/generate_run12_trajectory_plots.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/session_model_exports/rebuild_all_trajectory_gifs.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 7
+    },
+    {
+      "path": "studies/session_model_exports/rebuild_grid_movies_30_to_99.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 12
+    },
+    {
+      "path": "studies/session_model_exports/rebuild_grid_movies_30_to_99.py",
+      "code": "F841",
+      "message": "Local variable `max_video_size` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/session_model_exports/render_all_run12_visualizations.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 13
+    },
+    {
+      "path": "studies/session_model_exports/utils/sampling.py",
+      "code": "F401",
+      "message": "`fpcode.behavior.syllables.flatten_results_sparse_legacy` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/session_model_exports/utils/sampling.py",
+      "code": "F401",
+      "message": "`fpcode.behavior.syllables.tile_results` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/session_model_exports/utils/sampling.py",
+      "code": "F401",
+      "message": "`typing.Optional` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "studies/session_model_exports/utils/sampling.py",
+      "code": "F841",
+      "message": "Local variable `max_span` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/session_model_exports/utils/sampling.py",
+      "code": "I001",
+      "message": "Import block is un-sorted or un-formatted",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/audit_dlc_injection_timing.py",
+      "code": "F841",
+      "message": "Local variable `det_delay_min` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/audit_dlc_injection_timing.py",
+      "code": "F841",
+      "message": "Local variable `inf_delay_min` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/audit_photometry_handling_artifacts.py",
+      "code": "F841",
+      "message": "Local variable `df0` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/audit_photometry_handling_artifacts.py",
+      "code": "F841",
+      "message": "Local variable `entry_f` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/capacity/audit_shmoseq_evidence.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "studies/shmoseq/capacity/audit_shmoseq_evidence.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 6
+    },
+    {
+      "path": "studies/shmoseq/capacity/audit_shmoseq_evidence.py",
+      "code": "F841",
+      "message": "Local variable `syllables_dict` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/capacity/compute_state_similarity_and_overlap.py",
+      "code": "F841",
+      "message": "Local variable `bars8` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/capacity/compute_state_similarity_and_overlap.py",
+      "code": "F841",
+      "message": "Local variable `fps` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/capacity/run_detailed_audit_and_timelines.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/shmoseq/compare_shmoseq_stickiness_8kp_vs_17kp.py",
+      "code": "F841",
+      "message": "Local variable `n_ki` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/diagnostic_lagged_mi_bias.py",
+      "code": "F841",
+      "message": "Local variable `fps` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/diagnostic_state_vs_time.py",
+      "code": "F841",
+      "message": "Local variable `fps` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/diagnostic_state_vs_time.py",
+      "code": "F841",
+      "message": "Local variable `s_past` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/diagnostic_state_vs_time.py",
+      "code": "F841",
+      "message": "Local variable `shuff_mis` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/extract_shmoseq_inputs_8kp.py",
+      "code": "F841",
+      "message": "Local variable `nom_inj_40` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/generate_presentation_lag_figures.py",
+      "code": "F841",
+      "message": "Local variable `lags` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/generate_presentation_lag_figures.py",
+      "code": "F841",
+      "message": "Local variable `markov_sub` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/generate_presentation_lag_figures.py",
+      "code": "F841",
+      "message": "Local variable `real_sub` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/generate_presentation_lag_figures.py",
+      "code": "F841",
+      "message": "Local variable `s_wts` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/generate_reality_check_slide_figures.py",
+      "code": "F841",
+      "message": "Local variable `n_combos` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/generate_state_inspection_videos.py",
+      "code": "F841",
+      "message": "Local variable `clip_states` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/inspect_handling_gaps_and_align_events.py",
+      "code": "F841",
+      "message": "Local variable `mid_f` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/morphology_audit/generate_targeted_8kp_grid_movies.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 10
+    },
+    {
+      "path": "studies/shmoseq/morphology_audit/run_controlled_pipeline_comparison.py",
+      "code": "W291",
+      "message": "Trailing whitespace",
+      "count": 5
+    },
+    {
+      "path": "studies/shmoseq/plot_lagged_mi_by_group.py",
+      "code": "F841",
+      "message": "Local variable `lags` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/plot_lagged_mi_by_group.py",
+      "code": "F841",
+      "message": "Local variable `shuff_mis` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/plot_lagged_mi_clean_baseline_removed.py",
+      "code": "F841",
+      "message": "Local variable `lags` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/run_exact_animal_permutation_test.py",
+      "code": "F841",
+      "message": "Local variable `bars_f` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/run_exact_animal_permutation_test.py",
+      "code": "F841",
+      "message": "Local variable `bars` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/run_k12_pipeline.py",
+      "code": "F841",
+      "message": "Local variable `n_ki` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/run_k12_pipeline.py",
+      "code": "F841",
+      "message": "Local variable `obs_dlt_l1` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/run_shmoseq_characterization.py",
+      "code": "F841",
+      "message": "Local variable `bp` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/run_shmoseq_model_fit.py",
+      "code": "E741",
+      "message": "Ambiguous variable name: `l`",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/run_shmoseq_phenotype_evaluation.py",
+      "code": "F841",
+      "message": "Local variable `ki_amph` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/run_shmoseq_phenotype_evaluation.py",
+      "code": "F841",
+      "message": "Local variable `wt_amph` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "studies/shmoseq/test_model_fit.py",
+      "code": "F821",
+      "message": "Undefined name `np`",
+      "count": 1
+    },
+    {
+      "path": "studies/turnlab/cache_index.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/turnlab/cache_index.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/turnlab/detect.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 2
+    },
+    {
+      "path": "studies/turnlab/initiation.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "studies/turnlab/peth_plot.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 10
+    },
+    {
+      "path": "studies/turnlab/peth_plot.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 3
+    },
+    {
+      "path": "studies/turnlab/peth_plot.py",
+      "code": "E722",
+      "message": "Do not use bare `except`",
+      "count": 3
+    },
+    {
+      "path": "studies/turnlab/peth_plot.py",
+      "code": "F403",
+      "message": "`from .config import *` used; unable to detect undefined names",
+      "count": 1
+    },
+    {
+      "path": "studies/turnlab/peth_plot.py",
+      "code": "F405",
+      "message": "`CONFIDENCE_LEVEL` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/turnlab/peth_plot.py",
+      "code": "F405",
+      "message": "`MIN_TRACES_PER_SYLLABLE` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/turnlab/peth_plot.py",
+      "code": "F405",
+      "message": "`PROJECT_DIR_FULL` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/turnlab/peth_plot.py",
+      "code": "F405",
+      "message": "`SAMPLING_RATE` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/turnlab/peth_plot.py",
+      "code": "F405",
+      "message": "`SIGNAL_COLS` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/turnlab/peth_plot.py",
+      "code": "F405",
+      "message": "`SMOOTHING_POLY_ORDER` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/turnlab/peth_plot.py",
+      "code": "F405",
+      "message": "`SMOOTHING_WINDOW` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/turnlab/peth_plot.py",
+      "code": "F405",
+      "message": "`WINDOW_SECONDS` may be undefined, or defined from star imports",
+      "count": 1
+    },
+    {
+      "path": "studies/turnlab/utils.py",
+      "code": "E701",
+      "message": "Multiple statements on one line (colon)",
+      "count": 4
+    },
+    {
+      "path": "tests/empirical/test_kpms_checkpoint_compaction.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "tests/empirical/test_multiview_sync_and_renderer_regression.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "tests/empirical/test_multiview_sync_and_renderer_regression.py",
+      "code": "F841",
+      "message": "Local variable `raw_nx` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "tests/empirical/test_multiview_sync_and_renderer_regression.py",
+      "code": "F841",
+      "message": "Local variable `raw_ny` is assigned to but never used",
+      "count": 1
+    },
+    {
+      "path": "tests/integration/test_eval_artifacts_synthetic.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 3
+    },
+    {
+      "path": "tests/integration/test_fusion_provenance_and_cache_synthetic.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 4
+    },
+    {
+      "path": "tests/integration/test_fusion_provenance_and_cache_synthetic.py",
+      "code": "E702",
+      "message": "Multiple statements on one line (semicolon)",
+      "count": 2
+    },
+    {
+      "path": "tests/integration/test_training_lifecycle.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 1
+    },
+    {
+      "path": "tests/regression/test_photometry_alignment_equivalence.py",
+      "code": "F401",
+      "message": "`fpcode.photometry.alignment.build_fixed_moseq_dfs` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "tests/unit/test_cache_manifest_synthetic.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "tests/unit/test_camera_correspondence_synthetic.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "tests/unit/test_camera_mapping_context.py",
+      "code": "F401",
+      "message": "`pathlib.Path` imported but unused",
+      "count": 1
+    },
+    {
+      "path": "tests/unit/test_io_utils_hardening.py",
+      "code": "E402",
+      "message": "Module level import not at top of file",
+      "count": 1
+    },
+    {
+      "path": "tests/unit/test_photometry_reuse.py",
+      "code": "E731",
+      "message": "Do not assign a `lambda` expression, use a `def`",
+      "count": 1
+    }
+  ]
+}

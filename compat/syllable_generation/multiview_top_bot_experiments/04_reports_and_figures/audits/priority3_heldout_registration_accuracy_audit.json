@@ -1,0 +1,209 @@
+{
+  "Arena1": {
+    "calibration_sessions_count": 8,
+    "heldout_sessions_count": 32,
+    "cal_mean_median_px": 5.209619495153399,
+    "heldout_mean_median_px": 11.763771145933227,
+    "heldout_mean_p95_px": 21.830543958507484,
+    "heldout_details": [
+      {
+        "sid": "2026-03-15T10_52_02_top_left",
+        "n_eval_points": 5050,
+        "median_res_px": 5.019077301025391,
+        "p90_res_px": 11.412911415100098,
+        "p95_res_px": 14.676314353942871,
+        "p99_res_px": 19.167648315429688,
+        "max_res_px": 25.92826271057129,
+        "corr_x": 0.9991926387754401,
+        "corr_y": 0.9995184400182608,
+        "is_calibration": false
+      },
+      {
+        "sid": "2026-03-15T10_54_25_top_left",
+        "n_eval_points": 7910,
+        "median_res_px": 3.3108843067607263,
+        "p90_res_px": 8.492891665200805,
+        "p95_res_px": 11.489585524764399,
+        "p99_res_px": 22.12187045265979,
+        "max_res_px": 197.66676091217954,
+        "corr_x": 0.9986856792096566,
+        "corr_y": 0.9987911951170388,
+        "is_calibration": false
+      },
+      {
+        "sid": "2026-04-27T14_05_05_top_left",
+        "n_eval_points": 5656,
+        "median_res_px": 21.562038975144265,
+        "p90_res_px": 28.829977359780766,
+        "p95_res_px": 30.677882000611547,
+        "p99_res_px": 34.0568632290056,
+        "max_res_px": 52.19591823814001,
+        "corr_x": 0.9989435550239184,
+        "corr_y": 0.9987586353200335,
+        "is_calibration": false
+      },
+      {
+        "sid": "2026-04-27T15_09_59_top_left",
+        "n_eval_points": 7676,
+        "median_res_px": 22.554223859360505,
+        "p90_res_px": 30.962347205828777,
+        "p95_res_px": 32.35047378091459,
+        "p99_res_px": 34.27646211352551,
+        "max_res_px": 58.314288101011655,
+        "corr_x": 0.9990756674292504,
+        "corr_y": 0.9989564992068566,
+        "is_calibration": false
+      },
+      {
+        "sid": "2026-04-27T16_17_19_top_left",
+        "n_eval_points": 8962,
+        "median_res_px": 19.717700846540552,
+        "p90_res_px": 27.764672672622012,
+        "p95_res_px": 29.847497034417053,
+        "p99_res_px": 33.108712320235234,
+        "max_res_px": 247.4394273439613,
+        "corr_x": 0.9980075249374,
+        "corr_y": 0.9981825118734481,
+        "is_calibration": false
+      }
+    ]
+  },
+  "Arena2": {
+    "calibration_sessions_count": 7,
+    "heldout_sessions_count": 29,
+    "cal_mean_median_px": 4.516584822511532,
+    "heldout_mean_median_px": 9.848758981398532,
+    "heldout_mean_p95_px": 20.469250544751223,
+    "heldout_details": [
+      {
+        "sid": "2026-03-15T10_52_02_bottom_left",
+        "n_eval_points": 6020,
+        "median_res_px": 5.361874580383301,
+        "p90_res_px": 12.829569816589355,
+        "p95_res_px": 14.659629821777344,
+        "p99_res_px": 17.425626754760742,
+        "max_res_px": 22.022716522216797,
+        "corr_x": 0.998972793603559,
+        "corr_y": 0.9968314233534536,
+        "is_calibration": false
+      },
+      {
+        "sid": "2026-03-15T10_54_25_bottom_left",
+        "n_eval_points": 11508,
+        "median_res_px": 2.2131486152173387,
+        "p90_res_px": 8.120760127927227,
+        "p95_res_px": 11.233622965724507,
+        "p99_res_px": 14.947718097902193,
+        "max_res_px": 40.48114145427486,
+        "corr_x": 0.9992583555884781,
+        "corr_y": 0.9995184075505261,
+        "is_calibration": false
+      },
+      {
+        "sid": "2026-03-15T11_48_09_bottom_left",
+        "n_eval_points": 6882,
+        "median_res_px": 3.3619518943252915,
+        "p90_res_px": 9.65788820464733,
+        "p95_res_px": 14.173497939286408,
+        "p99_res_px": 28.2726446916809,
+        "max_res_px": 77.65335442258005,
+        "corr_x": 0.9984151394392597,
+        "corr_y": 0.9986297944069253,
+        "is_calibration": false
+      },
+      {
+        "sid": "2026-04-28T13_21_05_bottom_left",
+        "n_eval_points": 6542,
+        "median_res_px": 21.329398165031023,
+        "p90_res_px": 25.254527327649747,
+        "p95_res_px": 27.262332236929996,
+        "p99_res_px": 37.71377589539482,
+        "max_res_px": 82.89429000328573,
+        "corr_x": 0.9984895645650995,
+        "corr_y": 0.9988575272619659,
+        "is_calibration": false
+      },
+      {
+        "sid": "2026-04-28T14_58_25_bottom_left",
+        "n_eval_points": 12040,
+        "median_res_px": 20.83414842526426,
+        "p90_res_px": 25.590355754444417,
+        "p95_res_px": 28.72377871589688,
+        "p99_res_px": 38.4100868310785,
+        "max_res_px": 72.2431583159987,
+        "corr_x": 0.9988176375941417,
+        "corr_y": 0.998970647155839,
+        "is_calibration": false
+      }
+    ]
+  },
+  "Arena3": {
+    "calibration_sessions_count": 8,
+    "heldout_sessions_count": 28,
+    "cal_mean_median_px": 4.687841921235661,
+    "heldout_mean_median_px": 10.007117708840484,
+    "heldout_mean_p95_px": 19.13042459489219,
+    "heldout_details": [
+      {
+        "sid": "2026-03-15T10_52_02_bottom_right",
+        "n_eval_points": 6558,
+        "median_res_px": 3.2404580116271973,
+        "p90_res_px": 10.67044448852539,
+        "p95_res_px": 14.866456985473633,
+        "p99_res_px": 22.36264991760254,
+        "max_res_px": 32.833431243896484,
+        "corr_x": 0.9963690989844431,
+        "corr_y": 0.9989539568188655,
+        "is_calibration": false
+      },
+      {
+        "sid": "2026-03-15T10_54_25_bottom_right",
+        "n_eval_points": 7018,
+        "median_res_px": 3.799276450318852,
+        "p90_res_px": 10.069843263707694,
+        "p95_res_px": 13.995301102138141,
+        "p99_res_px": 24.815522892141335,
+        "max_res_px": 255.84758979250148,
+        "corr_x": 0.9973257195263425,
+        "corr_y": 0.9984251807360556,
+        "is_calibration": false
+      },
+      {
+        "sid": "2026-03-15T11_48_09_bottom_right",
+        "n_eval_points": 9148,
+        "median_res_px": 3.724053575029078,
+        "p90_res_px": 10.037446484031781,
+        "p95_res_px": 11.340295728482376,
+        "p99_res_px": 16.44725356152845,
+        "max_res_px": 62.75921438948017,
+        "corr_x": 0.9989127648499817,
+        "corr_y": 0.9990087735375923,
+        "is_calibration": false
+      },
+      {
+        "sid": "2026-04-28T13_21_05_bottom_right",
+        "n_eval_points": 7090,
+        "median_res_px": 20.47020194084091,
+        "p90_res_px": 25.175308156926608,
+        "p95_res_px": 27.16580117570555,
+        "p99_res_px": 33.722173258588995,
+        "max_res_px": 60.927536654485905,
+        "corr_x": 0.9993916161901755,
+        "corr_y": 0.9993564692221938,
+        "is_calibration": false
+      },
+      {
+        "sid": "2026-04-28T14_58_25_bottom_right",
+        "n_eval_points": 11238,
+        "median_res_px": 20.52650328674485,
+        "p90_res_px": 24.949499336004138,
+        "p95_res_px": 26.226728164841873,
+        "p99_res_px": 31.247342084530317,
+        "max_res_px": 50.53376310473593,
+        "corr_x": 0.9995032930280054,
+        "corr_y": 0.9994563984265995,
+        "is_calibration": false
+      }
+    ]
+  }
+}

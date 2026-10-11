@@ -1,0 +1,28 @@
+{
+  "arm": "21kp_static",
+  "regimen": "20 AR + 80 SLDS (100 iters)",
+  "num_sessions": 10,
+  "target_frames": 24.0,
+  "target_ms": 400.0,
+  "tolerance_frames": 2.0,
+  "optimal_10session_kappa": 1000000000000000.0,
+  "optimal_median_frames": 23.0,
+  "optimal_median_ms": 383.33333333333337,
+  "recommended_cohort_kappa_1.5x": 1500000000000000.0,
+  "recommended_cohort_kappa_2.0x": 2000000000000000.0,
+  "winning_model_dir": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/pilot_comparison_21kp_static/model_21kp_static__calib100_step1_seed404",
+  "final_symlink_dir": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/pilot_comparison_21kp_static/model_21kp_static_calibrated100_final",
+  "history": [
+    {
+      "step": 1,
+      "kappa": 1000000000000000.0,
+      "log10_kappa": 15.0,
+      "median_frames": 23.0,
+      "median_ms": 383.33333333333337,
+      "diff_from_target": 1.0,
+      "elapsed_min": 0.0,
+      "model_dir": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/pilot_comparison_21kp_static/model_21kp_static__calib100_step1_seed404",
+      "results_h5": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/pilot_comparison_21kp_static/model_21kp_static__calib100_step1_seed404/results.h5"
+    }
+  ]
+}

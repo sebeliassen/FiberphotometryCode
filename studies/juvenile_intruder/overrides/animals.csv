@@ -1,0 +1,17 @@
+mouse_id,genotype,fiber1_id,region1_sens,fiber2_id,region2_sens
+84,TH-Cre,G4,lNAc_DA,G6,rNAc_5HT
+85,TH-Cre,G4,lNAc_DA,G6,rNAc_5HT
+86,TH-Cre,G4,lNAc_5HT,G6,rNAc_DA
+2,WT,G4,VTA_NE,G6,NAc_DA
+6,WT,G4,DRN_NE,G6,NAc_5HT
+10,WT,G4,DRN_NE,G6,NAc_5HT
+4,WT,G4,VTA_NE,G6,NAc_DA
+8,WT,G4,VTA_NE,G6,NAc_DA
+1,WT,G4,DRN_NE,G6,NAc_5HT
+3,WT,G4,DRN_NE,G6,NAc_5HT
+7,WT,G4,lNAc_5HT,G6,rNAc_DA
+5,WT,G4,VTA_NE,G6,NAc_DA
+100,TH-Cre,G0,lNAc_5HT,G2,rNAc_DA
+101,TH-Cre,G0,lNAc_DA,G2,rNAc_5HT
+105,TH-Cre negative,G0,lNAc_5HT,G2,rNAc_DA
+107,TH-Cre negative,G0,lNAc_DA,G2,rNAc_5HT

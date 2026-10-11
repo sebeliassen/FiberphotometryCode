@@ -1,0 +1,171 @@
+{
+  "scheduling_tests": {
+    "scenario_50ar_200slds": {
+      "chunks": [
+        [
+          0,
+          50,
+          true,
+          "AR Phase (0 -> 50)"
+        ],
+        [
+          50,
+          100,
+          false,
+          "SLDS Phase (50 -> 100)"
+        ],
+        [
+          100,
+          150,
+          false,
+          "SLDS Phase (100 -> 150)"
+        ],
+        [
+          150,
+          200,
+          false,
+          "SLDS Phase (150 -> 200)"
+        ],
+        [
+          200,
+          250,
+          false,
+          "SLDS Phase (200 -> 250)"
+        ]
+      ],
+      "final_iter": 250,
+      "passed": true
+    },
+    "scenario_50ar_300slds": {
+      "chunks": [
+        [
+          0,
+          50,
+          true,
+          "AR Phase (0 -> 50)"
+        ],
+        [
+          50,
+          100,
+          false,
+          "SLDS Phase (50 -> 100)"
+        ],
+        [
+          100,
+          150,
+          false,
+          "SLDS Phase (100 -> 150)"
+        ],
+        [
+          150,
+          200,
+          false,
+          "SLDS Phase (150 -> 200)"
+        ],
+        [
+          200,
+          250,
+          false,
+          "SLDS Phase (200 -> 250)"
+        ],
+        [
+          250,
+          300,
+          false,
+          "SLDS Phase (250 -> 300)"
+        ],
+        [
+          300,
+          350,
+          false,
+          "SLDS Phase (300 -> 350)"
+        ]
+      ],
+      "final_iter": 350,
+      "passed": true
+    },
+    "scenario_30ar_90slds_custom_chunk": {
+      "chunks": [
+        [
+          0,
+          40,
+          false,
+          "SLDS Phase (0 -> 40)"
+        ],
+        [
+          40,
+          80,
+          false,
+          "SLDS Phase (40 -> 80)"
+        ],
+        [
+          80,
+          120,
+          false,
+          "SLDS Phase (80 -> 120)"
+        ]
+      ],
+      "final_iter": 120,
+      "passed": true
+    },
+    "scenario_resume_from_250_to_350": {
+      "chunks": [
+        [
+          250,
+          300,
+          false,
+          "SLDS Phase (250 -> 300)"
+        ],
+        [
+          300,
+          350,
+          false,
+          "SLDS Phase (300 -> 350)"
+        ]
+      ],
+      "final_iter": 350,
+      "passed": true
+    }
+  },
+  "numerical_parity_tests": {
+    "pca_reconstruction_max_err": 1.0231815394945443e-12,
+    "pca_reconstruction_passed": true,
+    "custom_model_init_finite": true,
+    "latent_reconstruction_shape_correct": true,
+    "Cd_matrix_shape": [
+      40,
+      11
+    ],
+    "C_matrix_shape": [
+      40,
+      10
+    ],
+    "d_vector_shape": [
+      40
+    ],
+    "sigmasq_val": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "all_passed": true
+}

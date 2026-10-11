@@ -1,0 +1,14 @@
+{
+  "iter_0_to_2": {
+    "from_iter": 0,
+    "to_iter": 2,
+    "ari": 0.0026130923514803787,
+    "label_change_pct": 96.44185972599256
+  },
+  "iter_2_to_4": {
+    "from_iter": 2,
+    "to_iter": 4,
+    "ari": 0.2192076725494479,
+    "label_change_pct": 52.70971673185695
+  }
+}

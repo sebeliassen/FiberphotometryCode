@@ -1,0 +1,216 @@
+{
+  "frame_reconciliation": {
+    "num_continuous_segments": 338,
+    "num_preprocessed_batches": 2077,
+    "batch_length": 10031,
+    "total_valid_frames_in_batches": 18982082,
+    "total_padded_dummy_frames": 1852305,
+    "total_vfi_frames": 18929934,
+    "total_results_frames": 18929934,
+    "results_vs_vfi_discrepancy": 0
+  },
+  "paw_quality_in_batches": {
+    "left_front_paw": {
+      "mean_confidence": 0.7420769929885864,
+      "median_confidence": 0.7974975109100342,
+      "p10_confidence": 0.389664888381958,
+      "p90_confidence": 1.0010000467300415,
+      "low_confidence_pct_under_0_4": 10.59521770477295,
+      "finite_coord_pct": 100.0
+    },
+    "right_front_paw": {
+      "mean_confidence": 0.6815636157989502,
+      "median_confidence": 0.728665828704834,
+      "p10_confidence": 0.324798583984375,
+      "p90_confidence": 0.9583001732826233,
+      "low_confidence_pct_under_0_4": 15.160033226013184,
+      "finite_coord_pct": 100.0
+    },
+    "left_hind_paw": {
+      "mean_confidence": 0.8534902334213257,
+      "median_confidence": 0.9099187850952148,
+      "p10_confidence": 0.6050097942352295,
+      "p90_confidence": 1.0010000467300415,
+      "low_confidence_pct_under_0_4": 3.1541216373443604,
+      "finite_coord_pct": 100.0
+    },
+    "right_hind_paw": {
+      "mean_confidence": 0.8900821208953857,
+      "median_confidence": 0.9399600625038147,
+      "p10_confidence": 0.7033867835998535,
+      "p90_confidence": 1.0010000467300415,
+      "low_confidence_pct_under_0_4": 2.0934267044067383,
+      "finite_coord_pct": 100.0
+    }
+  },
+  "representative_frame_traces": [
+    {
+      "trace_label": "Arena1_Epoch1",
+      "session_id": "2025-12-03T09_51_05_top_left",
+      "top_source_frame": 69803,
+      "bot_mapped_frame": 69804,
+      "raw_top_nose": [
+        194.6953125,
+        223.2734375,
+        1.0
+      ],
+      "raw_bot_paw": [
+        488.940185546875,
+        421.3390197753906,
+        0.8913708925247192
+      ],
+      "fused_h5_nose": [
+        194.6953125,
+        223.2734375
+      ],
+      "fused_h5_paw": [
+        208.4125213623047,
+        206.90667724609375,
+        0.8913708925247192
+      ],
+      "continuous_segment": "2025-12-03T09_51_05_top_left_seg000",
+      "segment_frame_index": 60920,
+      "batch_index": 42,
+      "batch_time": 914,
+      "batch_y_paw_centered_rotated": [
+        208.47801208496094,
+        206.96827697753906
+      ],
+      "batch_conf_paw": 0.892370879650116,
+      "batch_mask": 1.0,
+      "results_syllable": 35,
+      "results_latent_sample": [
+        0.23620643490909682,
+        0.21176727530349534,
+        -0.6931630968189175,
+        -0.045468560163362835
+      ]
+    },
+    {
+      "trace_label": "Arena2_Epoch1",
+      "session_id": "2026-01-08T10_06_18_bottom_left",
+      "top_source_frame": 24333,
+      "bot_mapped_frame": 24328,
+      "raw_top_nose": [
+        310.671875,
+        364.203125,
+        1.0
+      ],
+      "raw_bot_paw": [
+        145.68211364746094,
+        912.38134765625,
+        0.7320451736450195
+      ],
+      "fused_h5_nose": [
+        310.671875,
+        364.203125
+      ],
+      "fused_h5_paw": [
+        330.65863037109375,
+        344.2293701171875,
+        0.7320451736450195
+      ],
+      "continuous_segment": "2026-01-08T10_06_18_bottom_left_seg000",
+      "segment_frame_index": 8632,
+      "batch_index": 465,
+      "batch_time": 8632,
+      "batch_y_paw_centered_rotated": [
+        330.58721923828125,
+        344.23321533203125
+      ],
+      "batch_conf_paw": 0.7330451607704163,
+      "batch_mask": 1.0,
+      "results_syllable": 95,
+      "results_latent_sample": [
+        1.6298075273051829,
+        -0.44720737447328696,
+        1.8412830840242893,
+        0.3527614772233455
+      ]
+    },
+    {
+      "trace_label": "Arena3_Epoch1",
+      "session_id": "2026-03-05T11_01_01_bottom_right",
+      "top_source_frame": 65625,
+      "bot_mapped_frame": 65620,
+      "raw_top_nose": [
+        7.875,
+        30.375,
+        0.8239532709121704
+      ],
+      "raw_bot_paw": [
+        815.2625122070312,
+        44.34395217895508,
+        0.13227508962154388
+      ],
+      "fused_h5_nose": [
+        7.875,
+        30.375
+      ],
+      "fused_h5_paw": [
+        52.41087341308594,
+        15.522974014282227,
+        0.13227508962154388
+      ],
+      "continuous_segment": "2026-03-05T11_01_01_bottom_right_seg000",
+      "segment_frame_index": 40611,
+      "batch_index": 931,
+      "batch_time": 607,
+      "batch_y_paw_centered_rotated": [
+        52.43825912475586,
+        15.617799758911133
+      ],
+      "batch_conf_paw": 0.1332750916481018,
+      "batch_mask": 1.0,
+      "results_syllable": 13,
+      "results_latent_sample": [
+        -1.3034429283367914,
+        -1.6913639043663022,
+        -0.4260056968264857,
+        1.909673130134464
+      ]
+    },
+    {
+      "trace_label": "Arena1_Epoch2",
+      "session_id": "2026-04-27T14_05_05_top_left",
+      "top_source_frame": 69118,
+      "bot_mapped_frame": 69108,
+      "raw_top_nose": [
+        20.4140625,
+        64.7734375,
+        0.8261141777038574
+      ],
+      "raw_bot_paw": [
+        824.5725708007812,
+        139.25404357910156,
+        0.20857635140419006
+      ],
+      "fused_h5_nose": [
+        20.4140625,
+        64.7734375
+      ],
+      "fused_h5_paw": [
+        83.07450103759766,
+        101.85464477539062,
+        0.20857635140419006
+      ],
+      "continuous_segment": "2026-04-27T14_05_05_top_left_seg000",
+      "segment_frame_index": 59018,
+      "batch_index": 1401,
+      "batch_time": 9013,
+      "batch_y_paw_centered_rotated": [
+        83.00800323486328,
+        101.92021179199219
+      ],
+      "batch_conf_paw": 0.20957635343074799,
+      "batch_mask": 1.0,
+      "results_syllable": 79,
+      "results_latent_sample": [
+        0.14113509175785294,
+        -2.58573569223431,
+        -0.49869066960901526,
+        0.7356315245981254
+      ]
+    }
+  ]
+}

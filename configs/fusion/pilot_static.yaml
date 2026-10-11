@@ -1,0 +1,10 @@
+# configs/fusion/pilot_static.yaml
+mode: "pilot_static"
+compatibility_profile: "legacy_multiview"
+top_dir: "karen_project/h5_files"
+bot_dir: "karen_project/botcam_h5_files"
+output_dir: "syllable_generation/multiview_top_bot_experiments/fused_h5_pilot_static"
+arena_width: 972.0
+keypoints:
+  num_keypoints: 21
+  layout: "pilot_static"

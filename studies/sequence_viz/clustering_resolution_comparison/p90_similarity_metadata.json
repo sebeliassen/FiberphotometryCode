@@ -1,0 +1,230 @@
+[
+  {
+    "level_id": 1,
+    "level_name": "Level 1: Original Syllables",
+    "theme_id": "theme_A_rear_descent",
+    "theme_title": "Theme A: Wall-Rear & Descent Launch",
+    "p90_target_similarity": 0.718,
+    "actual_panel_similarities": [
+      0.718,
+      0.709,
+      0.689
+    ],
+    "panel_animals": [
+      "1694",
+      "1658",
+      "1767"
+    ],
+    "total_candidates_N": 62,
+    "total_animals_N": 11
+  },
+  {
+    "level_id": 2,
+    "level_name": "Level 2: Conservative Synonym Merging",
+    "theme_id": "theme_A_rear_descent",
+    "theme_title": "Theme A: Wall-Rear & Descent Launch",
+    "p90_target_similarity": 0.717,
+    "actual_panel_similarities": [
+      0.718,
+      0.709,
+      0.689
+    ],
+    "panel_animals": [
+      "1694",
+      "1658",
+      "1767"
+    ],
+    "total_candidates_N": 74,
+    "total_animals_N": 13
+  },
+  {
+    "level_id": 3,
+    "level_name": "Level 3: Functional Families with Distinctions Preserved",
+    "theme_id": "theme_A_rear_descent",
+    "theme_title": "Theme A: Wall-Rear & Descent Launch",
+    "p90_target_similarity": 0.516,
+    "actual_panel_similarities": [
+      0.517,
+      0.514,
+      0.513
+    ],
+    "panel_animals": [
+      "1666",
+      "1658",
+      "728"
+    ],
+    "total_candidates_N": 45,
+    "total_animals_N": 15
+  },
+  {
+    "level_id": 4,
+    "level_name": "Level 4: Broad Functional Families",
+    "theme_id": "theme_A_rear_descent",
+    "theme_title": "Theme A: Wall-Rear & Descent Launch",
+    "p90_target_similarity": 0.434,
+    "actual_panel_similarities": [
+      0.434,
+      0.433,
+      0.433
+    ],
+    "panel_animals": [
+      "1664",
+      "1666",
+      "1658"
+    ],
+    "total_candidates_N": 455,
+    "total_animals_N": 15
+  },
+  {
+    "level_id": 1,
+    "level_name": "Level 1: Original Syllables",
+    "theme_id": "theme_B_turn_slalom",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "p90_target_similarity": 0.804,
+    "actual_panel_similarities": [
+      0.808,
+      0.809,
+      0.799
+    ],
+    "panel_animals": [
+      "1664",
+      "1765",
+      "1658"
+    ],
+    "total_candidates_N": 155,
+    "total_animals_N": 15
+  },
+  {
+    "level_id": 2,
+    "level_name": "Level 2: Conservative Synonym Merging",
+    "theme_id": "theme_B_turn_slalom",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "p90_target_similarity": 0.804,
+    "actual_panel_similarities": [
+      0.808,
+      0.809,
+      0.799
+    ],
+    "panel_animals": [
+      "1664",
+      "1765",
+      "1658"
+    ],
+    "total_candidates_N": 155,
+    "total_animals_N": 15
+  },
+  {
+    "level_id": 3,
+    "level_name": "Level 3: Functional Families with Distinctions Preserved",
+    "theme_id": "theme_B_turn_slalom",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "p90_target_similarity": 0.745,
+    "actual_panel_similarities": [
+      0.745,
+      0.746,
+      0.778
+    ],
+    "panel_animals": [
+      "1771",
+      "1666",
+      "1664"
+    ],
+    "total_candidates_N": 18,
+    "total_animals_N": 7
+  },
+  {
+    "level_id": 4,
+    "level_name": "Level 4: Broad Functional Families",
+    "theme_id": "theme_B_turn_slalom",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "p90_target_similarity": 0.668,
+    "actual_panel_similarities": [
+      0.672,
+      0.659,
+      0.656
+    ],
+    "panel_animals": [
+      "1771",
+      "728",
+      "1680"
+    ],
+    "total_candidates_N": 94,
+    "total_animals_N": 14
+  },
+  {
+    "level_id": 1,
+    "level_name": "Level 1: Original Syllables",
+    "theme_id": "theme_C_sensory_rest",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "p90_target_similarity": 0.705,
+    "actual_panel_similarities": [
+      0.705,
+      0.708,
+      0.712
+    ],
+    "panel_animals": [
+      "1775",
+      "728",
+      "1773"
+    ],
+    "total_candidates_N": 111,
+    "total_animals_N": 14
+  },
+  {
+    "level_id": 2,
+    "level_name": "Level 2: Conservative Synonym Merging",
+    "theme_id": "theme_C_sensory_rest",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "p90_target_similarity": 0.696,
+    "actual_panel_similarities": [
+      0.696,
+      0.695,
+      0.705
+    ],
+    "panel_animals": [
+      "740",
+      "728",
+      "1775"
+    ],
+    "total_candidates_N": 121,
+    "total_animals_N": 14
+  },
+  {
+    "level_id": 3,
+    "level_name": "Level 3: Functional Families with Distinctions Preserved",
+    "theme_id": "theme_C_sensory_rest",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "p90_target_similarity": 0.214,
+    "actual_panel_similarities": [
+      0.209,
+      0.206,
+      0.225
+    ],
+    "panel_animals": [
+      "728",
+      "1658",
+      "1749"
+    ],
+    "total_candidates_N": 18,
+    "total_animals_N": 9
+  },
+  {
+    "level_id": 4,
+    "level_name": "Level 4: Broad Functional Families",
+    "theme_id": "theme_C_sensory_rest",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "p90_target_similarity": 0.636,
+    "actual_panel_similarities": [
+      0.639,
+      0.64,
+      0.631
+    ],
+    "panel_animals": [
+      "740",
+      "1775",
+      "1773"
+    ],
+    "total_candidates_N": 224,
+    "total_animals_N": 14
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "git_status_categories": {
+    " M": 73,
+    " D": 2173,
+    "??": 86
+  },
+  "dangling_links": [
+    {
+      "path": "compat/syllable_generation/context/tandem_viz_guide.md",
+      "target": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/tandem_viz_guide.md"
+    },
+    {
+      "path": "studies/session_model_exports/name_syllables",
+      "target": "../../../../syllable_annotation"
+    },
+    {
+      "path": "studies/session_model_exports/syllable_chains",
+      "target": "../../../../sequence_viz/chain_analysis"
+    }
+  ]
+}

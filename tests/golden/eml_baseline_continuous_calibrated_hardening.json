@@ -1,0 +1,33 @@
+{
+  "baseline_name": "eml_baseline_continuous_calibrated_hardening",
+  "provenance": {
+    "source_file": "syllable_generation/multiview_top_bot_experiments/SWE_HARDENING_STAGES_1_TO_3_REPORT.md",
+    "associated_dossier": "KPMS_SEED_404_EML_SELECTION_AND_SWE_HARDENING_REPORT.md",
+    "description": "Continuous-calibrated tandem cohort EML evaluation with stable sorting and read-only checkpoint inspection",
+    "date_recorded": "2026-10-05",
+    "dataset_sessions": 118,
+    "active_segments": 3473,
+    "total_active_frames": 17374468,
+    "latent_dim": 10
+  },
+  "rankings": [
+    {
+      "rank": 1,
+      "seed": 404,
+      "model_name": "tandem_calibrated_50ar_200slds_seed404",
+      "eml_mean": 225001430.0,
+      "eml_std": 234745.0,
+      "is_winner": true,
+      "note": "Top ranking within error margin"
+    },
+    {
+      "rank": 2,
+      "seed": 101,
+      "model_name": "tandem_calibrated_50ar_200slds_seed101",
+      "eml_mean": 224940120.0,
+      "eml_std": 302124.0,
+      "is_winner": false,
+      "note": "Within error bounds of Seed 404"
+    }
+  ]
+}
