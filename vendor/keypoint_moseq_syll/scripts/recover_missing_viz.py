@@ -238,7 +238,7 @@ def generate_missing(project_dir_str, model_name, do_plots=True, do_movies=True,
 
             # Import optimal flip list for specific filtering
             try:
-                from syllable_generation.syllabizers.keypoint_moseq_syll.utils.optimal_flip_list import OPTIMAL_FLIP_IDS
+                from vendor.keypoint_moseq_syll.utils.optimal_flip_list import OPTIMAL_FLIP_IDS
                 OPTIMAL_FLIP_STRS = [str(x) for x in OPTIMAL_FLIP_IDS]
             except ImportError:
                 print("WARNING: Could not import OPTIMAL_FLIP_IDS._ Using default string filtering only.")

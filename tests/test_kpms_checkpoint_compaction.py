@@ -31,10 +31,10 @@ import numpy as np
 from keypoint_moseq.fitting import marginal_log_likelihood
 
 # Import our compaction engine and patch
-from syllable_generation.syllabizers.keypoint_moseq_syll.utils.compact_checkpoint import (
+from vendor.keypoint_moseq_syll.utils.compact_checkpoint import (
     compact_checkpoint,
 )
-from syllable_generation.syllabizers.keypoint_moseq_syll.utils.patch_checkpoint import (
+from vendor.keypoint_moseq_syll.utils.patch_checkpoint import (
     apply_kpms_checkpoint_patch,
     is_checkpoint_packed,
     patched_load_checkpoint,

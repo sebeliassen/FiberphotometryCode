@@ -32,13 +32,13 @@ import pandas as pd
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import load_chain_movie_resources
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_adapter import (
+from studies.behavior.sequence_viz.chain_grid_movie_wrapper import load_chain_movie_resources
+from studies.behavior.sequence_viz.probabilistic_episode_pilot.episode_adapter import (
     compute_theme_references,
     score_and_standardize_candidates,
 )
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import DATA_DIR, THEMES
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.probabilistic_episode_model import (
+from studies.behavior.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import DATA_DIR, THEMES
+from studies.behavior.sequence_viz.probabilistic_episode_pilot.probabilistic_episode_model import (
     ProbabilisticEpisodeModel,
 )
 

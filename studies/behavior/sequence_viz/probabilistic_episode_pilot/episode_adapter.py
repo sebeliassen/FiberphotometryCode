@@ -27,7 +27,7 @@ from scipy.interpolate import interp1d
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
+from studies.behavior.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
     THEMES,
     TRAIN_ANIMALS,
 )

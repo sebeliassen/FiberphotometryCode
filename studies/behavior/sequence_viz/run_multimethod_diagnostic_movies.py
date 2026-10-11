@@ -42,7 +42,7 @@ os.environ["JAX_PLATFORMS"] = "cpu"
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+from studies.behavior.sequence_viz.chain_grid_movie_wrapper import (
     filter_chain_outliers,
     generate_branch_grid_movie,
     generate_chain_grid_movie,

@@ -29,7 +29,7 @@ import pandas as pd
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.optimized_seqnmf.convolutional_seqnmf import ConvolutionalSeqNMF
+from studies.behavior.sequence_viz.optimized_seqnmf.convolutional_seqnmf import ConvolutionalSeqNMF
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/optimized_seqnmf"
 CONFIG_FILE = OUTPUT_DIR / "seqnmf_optimal_hyperparams.json"

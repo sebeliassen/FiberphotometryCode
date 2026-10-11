@@ -11,7 +11,7 @@ def test_study_behavior_imports_work_in_fresh_interpreter_without_eager_config()
     root = Path(__file__).resolve().parents[2]
     code = textwrap.dedent(f"""
         import sys
-        sys.path[:0] = [{str(root)!r}, {str(root / 'src')!r}]
+        sys.path[:0] = [{str(root)!r}, {str(root / 'src')!r}, {str(root / 'archive/compat')!r}]
         from studies.behavior.kinematics_ulrik.lib import aggregation, networks, micro_kinematics, motifs
         from studies.behavior.replications_datta.datta.lib import snippets, features
         from studies.behavior.replications_datta.datta.panel_1f import run_panel_1f_unified as unified
@@ -47,7 +47,7 @@ def test_historical_metrics_split_exports_keep_identity_without_import_cycles(sp
     code = textwrap.dedent(f"""
         import importlib
         import sys
-        sys.path[:0] = [{str(root)!r}, {str(root / 'src')!r}, {str(root / 'syllable_generation')!r}]
+        sys.path[:0] = [{str(root)!r}, {str(root / 'src')!r}, {str(root / 'archive/compat')!r}, {str(root / 'archive/compat/syllable_generation')!r}]
         canonical_prefix = 'studies.behavior.kinematics_ulrik.lib.'
         historical_name = 'syllable_generation.analysis.ulrik_kinematics.lib.metrics'
         if {split_first!r}:

@@ -7,7 +7,7 @@ from typing import List
 
 import pandas as pd
 
-from syllable_generation.datamodel import SessionRecord
+from fpcode.contracts.session_record import SessionRecord
 
 from ..config import JCFG
 from ..context import BuildContext

@@ -47,11 +47,11 @@ sys.modules['numpy._core.numeric'] = _numeric
 from scipy.interpolate import interp1d
 from sklearn.decomposition import PCA
 
-from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+from studies.behavior.sequence_viz.chain_grid_movie_wrapper import (
     generate_chain_grid_movie,
     load_chain_movie_resources,
 )
-from syllable_generation.analysis.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
+from studies.behavior.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
     get_verified_metadata,
 )
 

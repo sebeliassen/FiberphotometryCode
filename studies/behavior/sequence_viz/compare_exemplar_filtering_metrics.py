@@ -35,8 +35,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import load_chain_movie_resources
-from syllable_generation.analysis.sequence_viz.run_24_candidate_transition_exemplars import (
+from studies.behavior.sequence_viz.chain_grid_movie_wrapper import load_chain_movie_resources
+from studies.behavior.sequence_viz.run_24_candidate_transition_exemplars import (
     SYLL_TO_CLUSTER,
     TransitionBucketEvaluator,
 )

@@ -36,10 +36,10 @@ os.environ["CUDA_VISIBLE_DEVICES"] = ""
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.extract_level3_chain_quantitative_results import (
+from studies.behavior.sequence_viz.extract_level3_chain_quantitative_results import (
     decode_episodes_in_session,
 )
-from syllable_generation.analysis.sequence_viz.optimized_seqnmf.convolutional_seqnmf import ConvolutionalSeqNMF
+from studies.behavior.sequence_viz.optimized_seqnmf.convolutional_seqnmf import ConvolutionalSeqNMF
 
 DATA_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/data"
 PRESENTATION_DIR = REPO_ROOT / "syllable_generation/presentations"

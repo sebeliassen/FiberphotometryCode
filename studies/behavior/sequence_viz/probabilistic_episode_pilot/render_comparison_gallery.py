@@ -40,11 +40,11 @@ import numpy.core.numeric as _numeric
 
 sys.modules['numpy._core.numeric'] = _numeric
 
-from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+from studies.behavior.sequence_viz.chain_grid_movie_wrapper import (
     generate_chain_grid_movie,
     load_chain_movie_resources,
 )
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
+from studies.behavior.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
     DATA_DIR,
     MOVIES_DIR,
     THEMES,

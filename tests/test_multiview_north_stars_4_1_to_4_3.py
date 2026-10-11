@@ -19,8 +19,8 @@ from fpcode.common.paths import REPO_ROOT
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.multiview_top_bot_experiments.core.evaluation_metrics import extract_syllable_statistics
-from syllable_generation.multiview_top_bot_experiments.core.schemas import (
+from fpcode.kpms.evaluation import extract_syllable_statistics
+from fpcode.common.schemas import (
     BOT_USE_BODYPARTS,
     TOP_USE_BODYPARTS,
 )

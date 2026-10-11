@@ -27,7 +27,7 @@ from pathlib import Path
 import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-EXP_DIR = REPO_ROOT / "syllable_generation/multiview_top_bot_experiments"
+EXP_DIR = REPO_ROOT / "studies/behavior/multiview_experiments"
 EML_SCRIPT = EXP_DIR / "03_evaluation_and_eml/compute_tandem_cohort_eml_rankings.py"
 if str(EXP_DIR) not in sys.path:
     sys.path.insert(0, str(EXP_DIR))

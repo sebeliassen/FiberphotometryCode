@@ -12,6 +12,9 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+compat_dir = REPO_ROOT / "archive/compat"
+if compat_dir.exists() and str(compat_dir) not in sys.path:
+    sys.path.insert(0, str(compat_dir))
 
 
 def is_placeholder(path: Path) -> bool:

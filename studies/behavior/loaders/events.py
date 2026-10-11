@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List
 
-from syllable_generation.datamodel import SessionRecord
+from fpcode.contracts.session_record import SessionRecord
 
 from .jonathan.context import BuildContext
 

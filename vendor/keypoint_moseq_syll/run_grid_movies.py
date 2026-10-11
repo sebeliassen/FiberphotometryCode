@@ -118,7 +118,7 @@ def run_for_project(project_dir_str, model_name):
 
     # Import optimal flip list for specific filtering
     try:
-        from syllable_generation.syllabizers.keypoint_moseq_syll.utils.optimal_flip_list import OPTIMAL_FLIP_IDS
+        from vendor.keypoint_moseq_syll.utils.optimal_flip_list import OPTIMAL_FLIP_IDS
         print(f"Loaded {len(OPTIMAL_FLIP_IDS)} optimal flip IDs.")
         # Ensure string comparison
         OPTIMAL_FLIP_STRS = [str(x) for x in OPTIMAL_FLIP_IDS]

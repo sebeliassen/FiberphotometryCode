@@ -24,10 +24,10 @@ from sklearn.preprocessing import StandardScaler
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
+from studies.behavior.sequence_viz.clustering_resolution_comparison.run_clustering_resolution_experiment import (
     get_verified_metadata,
 )
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
+from studies.behavior.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import (
     DATA_DIR,
     KPMS_RESULTS_PATH,
     TRAIN_ANIMALS,
@@ -44,7 +44,7 @@ def extract_bout_stream():
 
     # 1. Load Level 2 Conservative Synonym mapping (93 states)
     print("[1/5] Loading Level 2 Conservative Synonym mapping (93 states)...")
-    from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import LEVEL2_MAP
+    from studies.behavior.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import LEVEL2_MAP
     syll_to_meta_arr = LEVEL2_MAP
 
     # 2. Load KPMS results and video frame indexes

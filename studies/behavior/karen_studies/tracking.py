@@ -6,7 +6,7 @@ import re
 from syllable_generation.loaders.jonathan.utils.files import (
     parse_video_path, parse_h5_path, group_by_session_id, sort_parsed_h5_key
 )
-from syllable_generation.datamodel import SessionRecord
+from fpcode.contracts.session_record import SessionRecord
 from config import JCFG
 
 def parse_ids_from_filename(filename: str):

@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from syllable_generation.datamodel import SessionRecord
+from fpcode.contracts.session_record import SessionRecord
 from syllable_generation.loaders.jonathan.utils.files import (
     group_by_session_id,
     parse_h5_path,

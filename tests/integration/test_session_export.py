@@ -11,7 +11,7 @@ import pytest
 from fpcode.adapters.kpms_results import open_kpms_results, results_to_frame_table
 from fpcode.kpms.export import export_tandem_cohort_results
 from fpcode.workflows import session_export
-from syllable_generation.datamodel import SessionRecord
+from fpcode.contracts.session_record import SessionRecord
 
 
 def write_pose(path, nose_name, centers, offset):

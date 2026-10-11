@@ -27,7 +27,7 @@ import seaborn as sns
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.optimized_seqnmf.convolutional_seqnmf import ConvolutionalSeqNMF
+from studies.behavior.sequence_viz.optimized_seqnmf.convolutional_seqnmf import ConvolutionalSeqNMF
 
 OUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/clustered_seqnmf"
 DATA_FILE = OUT_DIR / "clustered_sequence_dataset.pkl"

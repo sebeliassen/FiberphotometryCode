@@ -12,10 +12,10 @@ from pathlib import Path
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.hierarchical_pilot.generate_4state_interactive_html import (
+from studies.behavior.sequence_viz.hierarchical_pilot.generate_4state_interactive_html import (
     build_4state_interactive_html,
 )
-from syllable_generation.analysis.sequence_viz.hierarchical_pilot.run_controlled_upper_timescale_experiment import (
+from studies.behavior.sequence_viz.hierarchical_pilot.run_controlled_upper_timescale_experiment import (
     OUTPUT_DIR,
     ControlledHierarchicalModel,
     extract_tracks_with_posteriors,

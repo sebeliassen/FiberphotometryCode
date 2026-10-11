@@ -2,7 +2,7 @@
 # NEW: import project enrich and locate its overrides dir
 from pathlib import Path
 
-from syllable_generation.datamodel import SessionRecord
+from fpcode.contracts.session_record import SessionRecord
 from syllable_generation.projects.jonathan_openfield_example import enrich as project_enrich
 
 from .context import BuildContext

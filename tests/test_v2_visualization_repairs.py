@@ -58,7 +58,7 @@ SCRIPT_DIR = EXP_DIR / "04_reports_and_figures"
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-import viz_v2_common as vc  # noqa: E402
+import fpcode.viz.v2 as vc  # noqa: E402
 
 
 # =============================================================================

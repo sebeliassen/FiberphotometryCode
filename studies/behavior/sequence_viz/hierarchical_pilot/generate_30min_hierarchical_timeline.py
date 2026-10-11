@@ -30,7 +30,7 @@ import matplotlib.pyplot as plt
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.hierarchical_pilot.test_continuous_emissions import (
+from studies.behavior.sequence_viz.hierarchical_pilot.test_continuous_emissions import (
     ContinuousHierarchicalModel,
 )
 

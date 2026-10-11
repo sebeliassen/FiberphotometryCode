@@ -33,7 +33,7 @@ from scipy.optimize import linear_sum_assignment
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.optimized_seqnmf.convolutional_seqnmf import ConvolutionalSeqNMF
+from studies.behavior.sequence_viz.optimized_seqnmf.convolutional_seqnmf import ConvolutionalSeqNMF
 
 OUTPUT_DIR = REPO_ROOT / "syllable_generation/analysis/sequence_viz/optimized_seqnmf"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

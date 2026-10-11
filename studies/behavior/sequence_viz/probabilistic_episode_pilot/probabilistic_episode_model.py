@@ -27,7 +27,7 @@ import numpy as np
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.analysis.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import THEMES
+from studies.behavior.sequence_viz.probabilistic_episode_pilot.episode_pilot_config import THEMES
 
 
 class ProbabilisticEpisodeModel:
@@ -466,7 +466,7 @@ class ProbabilisticEpisodeModel:
         dur_bouts = int(end_b - start_b)
 
         # Human ethological syllable tokens that occurred
-        from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import HUMAN_LABELS
+        from studies.behavior.sequence_viz.chain_grid_movie_wrapper import HUMAN_LABELS
         meta_tokens = [HUMAN_LABELS.get(int(m), f"syll_{int(m):02d}") for m in bout_meta[start_b:end_b]]
         observed_raw_sylls = raw_sylls[sf:ef]
 

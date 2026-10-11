@@ -37,7 +37,7 @@ import numpy.core.numeric as _numeric
 
 sys.modules['numpy._core.numeric'] = _numeric
 
-from syllable_generation.analysis.sequence_viz.chain_grid_movie_wrapper import (
+from studies.behavior.sequence_viz.chain_grid_movie_wrapper import (
     HUMAN_LABELS,
     generate_chain_grid_movie,
     load_chain_movie_resources,

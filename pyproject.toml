@@ -101,7 +101,8 @@ python_functions = ["test_*"]
 pythonpath = [
     ".",
     "src",
-    "syllable_generation/syllabizers/keypoint_moseq_syll",
+    "archive/compat",
+    "vendor/keypoint_moseq_syll",
 ]
 addopts = "-ra --strict-markers -m 'not gpu and not slow and not needs_data'"
 markers = [

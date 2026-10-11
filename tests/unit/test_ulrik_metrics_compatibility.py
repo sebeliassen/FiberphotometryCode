@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import numpy as np
 import pandas as pd
 
-from syllable_generation.analysis.ulrik_kinematics.lib import metrics
+from studies.behavior.kinematics_ulrik.lib import metrics
 from studies.behavior.kinematics_ulrik.lib import label_mapping
 
 

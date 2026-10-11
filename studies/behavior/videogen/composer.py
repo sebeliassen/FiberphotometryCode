@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from syllable_generation.datamodel import SessionRecord
+from fpcode.contracts.session_record import SessionRecord
 from . import config
 from .grids.photometry import PhotometryGridGenerator
 from .grids.syllable import SyllableGridGenerator
