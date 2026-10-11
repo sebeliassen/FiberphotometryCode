@@ -33,7 +33,7 @@ def get_quantitative_group_usage(sessions, mapping: Dict[int, str], min_instance
     Aggregate usage into the 9 Turn x Vigor categories.
     Returns DF with 'Time_Pct' and 'Onset_Count' for the Categories.
     """
-    from syllable_generation.analysis.ulrik_kinematics.lib.metrics import get_syllable_instances
+    from studies.behavior.kinematics_ulrik.lib.metrics import get_syllable_instances
 
     rows = []
 
@@ -164,7 +164,7 @@ def get_fingerprint_data(sessions, top_n=5, min_instances: int = 0):
     Get normalized metrics for top N syllables across all sessions.
     Returns DataFrame ready for Radar Plot.
     """
-    from syllable_generation.analysis.ulrik_kinematics.lib.metrics import get_syllable_instances
+    from studies.behavior.kinematics_ulrik.lib.metrics import get_syllable_instances
 
     all_stats = []
 

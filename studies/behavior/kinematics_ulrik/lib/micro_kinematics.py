@@ -100,7 +100,7 @@ def verify_micro_module(sessions):
     Mathematical defense test for Micro-Kinematics.
     Ensures that the aggregation of syllables exactly matches the global physics engine.
     """
-    from syllable_generation.analysis.ulrik_kinematics.lib import metrics
+    from studies.behavior.kinematics_ulrik.lib import metrics
     print("\n" + "="*50)
     print(" VERIFICATION: MICRO-PHYSICS EXTRACTION & INVARIANCE")
     print("="*50)

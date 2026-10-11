@@ -83,7 +83,7 @@ def get_group_usage(sessions, top_n: int = 20, min_instances: int = 0) -> pd.Dat
     Calculate average syllable usage across animal groups.
     Returns a long-form DF suitable for seaborn.
     """
-    from syllable_generation.analysis.ulrik_kinematics.lib.metrics import get_syllable_usage
+    from studies.behavior.kinematics_ulrik.lib.metrics import get_syllable_usage
 
     import pandas as pd
     rows = []

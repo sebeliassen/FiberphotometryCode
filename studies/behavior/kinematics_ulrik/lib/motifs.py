@@ -120,7 +120,7 @@ def get_top_motifs(sessions, n: int = 3, top_k: int = 10, mapping: dict = None) 
 
 def calculate_sequence_entropy(sessions) -> float:
     """Wrapper to calculate stationary entropy via existing metrics"""
-    from syllable_generation.analysis.ulrik_kinematics.lib import metrics
+    from studies.behavior.kinematics_ulrik.lib import metrics
     # Assuming run_analysis path logic allows this
 
     h_sum = 0
@@ -413,7 +413,7 @@ def verify_motifs_module(sessions):
     Paired Verification Check: True Data vs Sequence Shuffle Perturbation.
     Prints diagnostic tables to standard output.
     """
-    from syllable_generation.analysis.ulrik_kinematics import config
+    from studies.behavior.kinematics_ulrik import config
     print("\n" + "="*50)
     print(" MODULE VERIFICATION: MOTIFS & SHUFFLE PERTURBATION")
     print("="*50)

@@ -212,7 +212,7 @@ def main():
     args = parser.parse_args()
     # Config retains the historical syllable_generation/data and output roots.
     # Delay it until orchestration: imports and --help must not create outputs.
-    from syllable_generation.analysis.replications.datta.lib import config
+    from studies.behavior.replications_datta.datta.lib import config
 
     p_config = get_project_config(args.project)
     if args.output_dir:

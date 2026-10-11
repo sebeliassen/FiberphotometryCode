@@ -29,7 +29,7 @@ from scipy.stats import entropy, ks_2samp
 REPO_ROOT = Path("/home/fsp585/Desktop/FiberphotometryCode")
 sys.path.insert(0, str(REPO_ROOT))
 
-from syllable_generation.multiview_top_bot_experiments.audit_cohort_correlations import find_matched_pairs
+from fpcode.tracking.pair_matching import find_matched_pairs
 
 PKL_TANDEM = REPO_ROOT / "syllable_generation/data/sessions_karen_project_w_sylls_tandem_cohort.pkl"
 PKL_K240K = REPO_ROOT / "syllable_generation/data/sessions_karen_project_w_sylls_k240k.pkl"
