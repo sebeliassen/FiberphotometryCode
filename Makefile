@@ -4,11 +4,13 @@ RUFF ?= $(PYTHON) -m ruff
 BACKUP_DEST ?= /mnt/hdd/backups/FiberphotometryCode
 SNAPSHOT ?=
 RESTORE_DEST ?=
+VALIDATION_PROJECT ?=
+VALIDATION_ARGS ?=
 
-.PHONY: help test lint architecture backup-plan backup verify-backup restore-backup shims-report metrics
+.PHONY: help test lint architecture smoke-runtime validate-two-sessions backup-plan backup verify-backup restore-backup shims-report metrics
 
 help:
-	@echo "test, lint, architecture, backup-plan, backup, verify-backup, restore-backup, shims-report, metrics"
+	@echo "test, lint, architecture, smoke-runtime, validate-two-sessions, backup-plan, backup, verify-backup, restore-backup, shims-report, metrics"
 
 test:
 	$(PYTEST) -q
@@ -18,6 +20,14 @@ lint:
 
 architecture:
 	$(PYTHON) -B ops/repo/dependencies.py
+
+# Explicit optional gate, separate from the fast functional suite.
+smoke-runtime:
+	$(PYTHON) -B ops/diagnostics/smoke_runtime.py
+
+validate-two-sessions:
+	@test -n "$(VALIDATION_PROJECT)" || (echo 'Supply VALIDATION_PROJECT=/path/to/pilot/project'; exit 2)
+	$(PYTHON) -B ops/diagnostics/validate_two_sessions.py --project "$(VALIDATION_PROJECT)" $(VALIDATION_ARGS)
 
 backup-plan:
 	$(PYTHON) -B ops/backup/snapshot.py plan --root "$(CURDIR)" --policy configs/backup.yaml
