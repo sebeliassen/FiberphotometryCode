@@ -2,121 +2,46 @@
 
 Computational neuroscience platform supporting multi-camera posture tracking, unsupervised behavioral syllable segmentation (Keypoint-MoSeq), and synchronized multi-channel fiber photometry analysis. Developed in the Gether Laboratory, Department of Neuroscience, University of Copenhagen (Panum Institute).
 
----
 
-## 1. Scientific & Engineering Scope
+## Current code and documentation
 
-The repository provides an end-to-end analytical framework integrating high-density pose estimation with neural recording:
-1. **Multi-Camera & Dual-View Tracking**: Spatial registration (affine transforms) and temporal synchronization (crystal clock pulse & hardware TTL anchors) between dorsal (top) and ventral (bottom) camera viewpoints (DeepLabCut 21/23 keypoint models).
-2. **Keypoint-MoSeq (KPMS)**: Unsupervised behavioral segmentation via Autoregressive Hidden Markov Models (ARHMM) and Switching Linear Dynamical Systems (SLDS), mapping continuous kinematic trajectories into discrete postural syllables.
-3. **Fiber Photometry Ingestion & Synchronization**: Multi-wavelength fluorescent biosensor recording (monoamine dynamics, calcium transients), baseline polynomial/photobleaching correction, and peri-event time histogram (PETH) alignment.
-4. **Sequence & Temporal Dynamics**: State transition probability matrices, ethological sequence factorization (SeqNMF), and higher-order syntactic modeling.
+The reusable implementation is in `src/fpcode`, organized into contracts,
+adapters, alignment, tracking, photometry, behavior, KPMS, statistics,
+visualization, workflows and installed CLI modules. Study-specific analyses
+live in `studies`. Historical `core`, `pipelines`, `syllable_generation` and
+photometry entry points remain compatibility paths during migration.
 
-> [!IMPORTANT]
-> **Ethological Nomenclature Standard**: In accordance with `.agents/rules/nomenclature.md`, all automated clusters, discrete syllables, and unsupervised components are documented using **objective kinematic, spatial, and statistical descriptors** (e.g. centroid velocity, body elongation, vertical displacement, entropy) rather than subjective functional labels.
+Start with the [documentation index](docs/README.md) for current guidance and
+preserved historical reports. The agreed architecture is documented in
+[the capability contract](docs/architecture/UNIT_CONTRACT.md); configuration
+ownership is described in [configs/README.md](configs/README.md), and backup and
+rollback procedures are in [recovery.md](docs/recovery.md). The existing
+[October 9 handoff](handoff.md) remains a dated record.
 
----
-
-## 2. Repository Map
-
-```text
-FiberphotometryCode/
-│
-├── core/                                   # Shared foundational library modules (Single Source of Truth)
-│   ├── schemas.py                          # Canonical body parts, keypoint indices & configuration models
-│   ├── paths.py                            # Central workspace-relative path resolution
-│   ├── camera_correspondence.py            # Affine spatial calibration & Basler crystal sync
-│   ├── fusion_engine.py                    # Dual-camera dorsal-ventral keypoint fusion
-│   ├── io_utils.py                         # Defensive HDF5, NumPy, and Pickle adapters
-│   ├── h5_guard.py                         # Immutability enforcement for immutable checkpoints
-│   ├── cache_manifest.py                   # Cryptographic sidecar manifests and provenance tracking
-│   ├── eval_artifacts.py                   # Permutation-invariant EML evaluation & label permutation
-│   └── logging_utils.py                    # Structured logging engine and alert dispatch
-│
-├── configs/                                # Versioned YAML configuration files
-│   ├── tandem_cohort_50ar_200slds.yml      # Production 50-AR 200-SLDS parameters
-│   └── ...
-│
-├── syllable_generation/                    # Primary behavioral segmentation pipeline
-│   ├── multiview_top_bot_experiments/      # Canonical active production pipeline
-│   │   ├── 01_data_and_fusion/             # Data ingestion, sync verification & cohort fusion
-│   │   ├── 02_training_runners/            # Model fitting, seed queues & hyperparameter sweeps
-│   │   ├── 03_evaluation_and_eml/          # Multi-seed EML evaluation & ranking scorecards
-│   │   ├── 04_reports_and_figures/         # Trajectory renders, grid movies & diagnostic galleries
-│   │   └── core/                           # Pipeline-specific engine extensions
-│   ├── analysis/                           # Specialized downstream analyses
-│   │   ├── replications/                   # Published replication workflows (Datta et al.)
-│   │   ├── language_models/                # Markov transition orders, syntax & state entropy
-│   │   ├── sequence_viz/                   # SeqNMF sequence motif factorizations
-│   │   ├── shmoseq/                        # Shmoseq parameter fitting and validation
-│   │   ├── syllable_chains/                # Multi-syllable transition chain dynamics
-│   │   ├── ulrik_kinematics/               # Kinematic parameter extractions
-│   │   └── karen_pff_vs_monomer_longitudinal_master_study/ # Longitudinal cohort study pipelines
-│   └── data/                               # Session databases and preprocessed tracking arrays
-│
-├── fiberphotometry/                        # Fiber photometry extraction, baseline correction & PETHs
-│   ├── kpms/                               # KPMS-photometry trial alignment adapters
-│   ├── notebooks/                          # Interactive analysis and visualization notebooks
-│   └── turnlab/                            # Turn segmentation and angular velocity routines
-│
-├── monoamine_interactions/                 # Multi-sensor monoamine cross-correlation studies
-│   ├── notebooks/                          # Signal extraction and PETH workflows
-│   └── projects/                           # Sensor baseline projects
-│
-├── tests/                                  # Test suite, regression benchmarks & golden datasets
-│   ├── unit/                               # Fast CPU tests (math, transforms, schemas)
-│   ├── integration/                        # Pipeline stage mocks & verification
-│   └── golden/                             # Immutable EML benchmarks & baseline scorecards
-│
-├── docs/                                   # Architectural guides, operational runbooks & audits
-│   ├── ARCHITECTURE.md                     # Data flow & stage pipeline design
-│   ├── DATA_LAYOUT.md                      # Artifact classification (Tiers A/B/C) & storage policy
-│   ├── RUNBOOK.md                          # Execution procedures, disaster recovery & resume workflows
-│   └── KNOWN_ISSUES.md                     # Documented findings, anomalies & hardening ledger
-│
-├── scripts/                                # Maintenance, backup & archive generation utilities
-│   ├── build_swe_archive.py                # Standalone code-review bundle generator
-│   └── ...
-│
-├── ARTIFACT_INVENTORY.tsv                  # Complete repository cryptographic inventory (26,863 files)
-├── DUPLICATES.tsv                          # Comprehensive hash deduplication & bundle directory audit
-├── BACKUP_REPORT.md                        # Phase 0 backup verification & physical disk report
-└── pyproject.toml                          # Package specification and test configuration
-```
-
----
-
-## 3. Quickstart & Environment
-
-### Python Environment
-Scientific computing dependencies rely on Python 3.10+, JAX (GPU/CUDA 12.4), PyTorch, DeepLabCut, and Keypoint-MoSeq:
 ```bash
-# Recommended conda/mamba environment
-conda activate kpms_gpu_cuml
-
-# Install repository in editable mode
-pip install -e .
+# Installation: optional model/rendering dependencies remain explicit.
+python -m pip install -e '.[test,kpms]'
+make test PYTHON=/path/to/the/project/environment/bin/python
+make architecture PYTHON=/path/to/the/project/environment/bin/python
+fpcode-train --help
+fpcode-evaluate --help
+fpcode-fuse --help
+fpcode-render --help
 ```
 
-### Running Verification Tests
+The default test suite uses tiny functional fixtures. Empirical scientific
+reproduction and GPU model fitting are separate checks. Existing models, videos,
+recordings and session files retain their locations.
+
+For an explicit real-data GPU check, see [runtime validation](docs/architecture/VALIDATION.md):
+
 ```bash
-# Run all fast CPU unit and synthetic tests
-pytest -m "cpu and not needs_data"
-
-# Run tests including data-bound fixtures (if local datasets present)
-pytest -m "cpu"
+make validate-two-sessions PYTHON=/path/to/the/project/environment/bin/python \
+  VALIDATION_PROJECT=/path/to/pilot/project
 ```
 
----
+This samples two sessions and runs exactly two AR plus two SLDS updates in a
+fresh process, preserving its evidence under `outputs/<run-id>`.
 
-## 4. Documentation References
-- [System Architecture & Data Flow](file:///home/fsp585/Desktop/FiberphotometryCode/docs/ARCHITECTURE.md)
-- [Data Layout & Storage Tiers](file:///home/fsp585/Desktop/FiberphotometryCode/docs/DATA_LAYOUT.md)
-- [Operational Runbook & Disaster Recovery](file:///home/fsp585/Desktop/FiberphotometryCode/docs/RUNBOOK.md)
-- [Known Issues & Bug Ledger](file:///home/fsp585/Desktop/FiberphotometryCode/docs/KNOWN_ISSUES.md)
-- [Phase 0 Backup Report](file:///home/fsp585/Desktop/FiberphotometryCode/BACKUP_REPORT.md)
-
----
-
-## 5. License
-Licensed under the GNU General Public License v3.0 - see the [LICENSE](file:///home/fsp585/Desktop/FiberphotometryCode/LICENSE) file for details.
+Unsupervised state names follow `.agents/rules/nomenclature.md`: use objective
+kinematic, spatial and statistical descriptors.

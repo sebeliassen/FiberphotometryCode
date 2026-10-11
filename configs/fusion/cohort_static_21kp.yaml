@@ -1,5 +1,6 @@
 # configs/fusion/cohort_static_21kp.yaml
 mode: "static_21kp"
+compatibility_profile: "legacy_multiview"
 top_dir: "karen_project/h5_files"
 bot_dir: "karen_project/botcam_h5_files"
 output_dir: "syllable_generation/multiview_top_bot_experiments/data/cohort_fused_static_21kp_v2"

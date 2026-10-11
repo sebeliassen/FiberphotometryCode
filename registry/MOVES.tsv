@@ -510,3 +510,5 @@ syllable_generation/videogen/generators/__init__.py	studies/behavior/videogen/__
 syllable_generation/videogen/generators/plots.py	studies/behavior/videogen/plots.py	STUDY_MIGRATION	Migrated behavior_misc study file	SHIM
 syllable_generation/videogen/grids/__init__.py	studies/behavior/videogen/__init__.py	STUDY_MIGRATION	Migrated behavior_misc study file	SHIM
 syllable_generation/analysis/replications/datta_utils.py	src/fpcode/photometry/alignment.py	CLASS_A_EXTRACTION	Extracted datta_utils to fpcode.photometry.alignment	SHIM
+configs/cohort_static_21kp.yml	configs/training/cohort_static_21kp.yml	CONFIG_MIGRATION	Unchanged legacy training manifest; original path retained	YES
+configs/tandem_cohort_50ar_200slds.yml	configs/training/tandem_cohort_50ar_200slds.yml	CONFIG_MIGRATION	Unchanged legacy training manifest; original path retained	YES

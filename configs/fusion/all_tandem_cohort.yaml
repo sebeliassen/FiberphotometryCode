@@ -1,5 +1,6 @@
 # configs/fusion/all_tandem_cohort.yaml
 mode: "tandem_23kp"
+compatibility_profile: "legacy_multiview"
 top_dir: "karen_project/h5_files"
 bot_dir: "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions"
 output_dir: "syllable_generation/multiview_top_bot_experiments/fused_h5_full_cohort"
