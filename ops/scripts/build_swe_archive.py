@@ -3,22 +3,22 @@
 Build lightweight code-review zip archive for FiberphotometryCode repository.
 Replaces large non-selfwritten files (data, binaries, models, videos, logs, etc.)
 with informative .txt placeholders, strips Jupyter notebook outputs,
-and includes an executive SWE review prompt and archive README.
+and includes the comprehensive 3-day Refactor Report and an executive SWE review prompt.
 """
 
 import json
 import mimetypes
 import os
+import shutil
 import time
 import zipfile
 from datetime import datetime, timezone
-
 from pathlib import Path
 
 WORKSPACE_DIR = os.environ.get("REPO_ROOT", str(Path(__file__).resolve().parents[2]))
 OUTPUT_ZIP_PATH = os.path.join(WORKSPACE_DIR, "fiberphotometry_code_review.zip")
 
-EXCLUDE_DIR_NAMES = {".git", "__pycache__", ".pytest_cache", ".ruff_cache"}
+EXCLUDE_DIR_NAMES = {".git", "__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache"}
 
 ALWAYS_CODE_EXTS = {
     ".py", ".md", ".rst", ".sh", ".bash", ".zsh",
@@ -148,33 +148,41 @@ def make_placeholder_content(rel_path: str, fname: str, ext: str, size: int, mti
 
 
 def generate_swe_bot_prompt(stats: dict) -> str:
-    return f"""# Software Engineering & Architecture Review Prompt
+    return f"""# Software Engineering & Architecture Review Prompt: "From This to This"
 
 You are acting as a Principal Research Software Engineer and Python Architect specializing in scientific computing, machine learning pipelines, and computational neuroscience.
 
-You are provided with a complete code review archive (`fiberphotometry_code_review.zip`) of the `FiberphotometryCode` repository.
+You are provided with a complete code review archive (`fiberphotometry_code_review.zip`) of the `FiberphotometryCode` repository following a major 3-day architectural refactor (October 9–11, 2026).
 
 ---
 
-## 1. Repository Background & Scientific Domain
-This codebase supports advanced behavioral neuroscience and fiber photometry analysis:
-- **Keypoint-MoSeq (KPMS)**: Unsupervised behavioral segmentation of animal postures into discrete syllables using Autoregressive Hidden Markov Models (ARHMM) and SLDS.
-- **Multi-Camera & Tandem View**: Synchronized top and bottom camera tracking (DeepLabCut 21/23 keypoints), affine camera registration, pseudo-3D posture modeling, and behavioral syllable classification.
-- **Fiber Photometry Analysis**: Synchronized calcium / monoamine sensor signal processing (e.g. DA, 5-HT, NE), baseline correction, peri-event time histograms (PETHs), and behavioral correlation.
-- **Sequence Analysis**: Ethological sequence analysis (SeqNMF, syllable chains, transition matrices).
+## 1. Executive Context: "We Went From This... To This"
+
+Over the last 3 days, this codebase underwent a comprehensive architectural overhaul.
+Before this refactor, the repository was an organic, monolithic academic research directory:
+- 860 GB of empirical data, models, and caches intermingled directly with source files.
+- Two massive legacy root packages (`syllable_generation/` and `fiberphotometry/`) riddled with circular dependencies.
+- 767 redundant/duplicated script copies and 841 files with hardcoded local paths (`/home/fsp585/...`).
+- Zero formal CI test gates and fragile session pickle compatibility.
+- NVMe SSD at 100% capacity with only 3.4 GB free space remaining.
+
+### Current HEAD State (`codex/modular-refactor`):
+- **Canonical Library**: Extracted a modular, capability-based library in `src/fpcode/` (121 modules, 0 circular imports, 0 architecture layering violations).
+- **Clean Root**: Both `syllable_generation/` and `fiberphotometry/` completely retired from the root tree into `archive/compat/`.
+- **Data Segregation**: 855 GB of empirical artifacts separated into a canonical top-level `data/` hierarchy (`data/sessions`, `data/models`, `data/fused`, `data/analysis_cache`), recovering **219 GB of free NVMe SSD headroom**.
+- **Automated Verification**: **420 passed tests in 6.2s** (`make test`), automated AST architecture dependency enforcement (`make architecture`), and real GPU-validated runtime diagnostics (`make validate-two-sessions`).
+- **Zero Scientific Regression**: 677 dynamic backward-compatibility shims preserving historical unpickling and notebook imports without breaking active research.
+- **Content-Verified Backup**: Sealed immutable **96.37 GB snapshot** on `/mnt/hdd` passing full SHA-256 manifest verification (`make verify-backup`).
+
+*See `REFACTOR_REPORT.md` at the root of this archive for the complete day-by-day execution record and metrics scorecard.*
 
 ---
 
 ## 2. Archive Construction & Placeholder Convention
-To allow full repository review without gigabytes of raw video, DLC tracking data, and model checkpoints:
-- **Source Code**: Python files (`.py`), Markdown (`.md`), Shell scripts (`.sh`), and configuration files (`.yaml`, `.json`, etc.) are included **verbatim** in full.
+To allow full repository review without hundreds of gigabytes of raw video, DLC tracking data, and model checkpoints:
+- **Source Code**: Python files (`.py`), Markdown (`.md`), Shell scripts (`.sh`), and configuration files (`.yaml`, `.json`, `.toml`) are included **verbatim** in full.
 - **Jupyter Notebooks**: All `.ipynb` notebooks are included with execution cell outputs stripped (retaining all markdown and Python code cells).
-- **Data & Binaries as Placeholders**: All large non-selfwritten files (CSVs, HDF5 `.h5`, Pickles `.pkl`, video recordings `.avi`/`.mp4`, plots `.png`, and zip backups) are replaced with **`<original_filename>.txt`** placeholder files. Each placeholder records:
-  - Original filename and relative path
-  - Detected file type / format
-  - Exact byte size and human-readable size
-  - Last modified timestamp
-  - Symlink details (if applicable)
+- **Data & Binaries as Placeholders**: All large non-selfwritten files (CSVs, HDF5 `.h5`, Pickles `.pkl`, video recordings `.avi`/`.mp4`, plots `.png`, and zip backups) are replaced with **`<original_filename>.txt`** placeholder files recording format, size, and timestamp metadata.
 
 ### Summary Statistics of this Archive:
 - **Total Files Represented**: {stats['total_files']:,}
@@ -184,47 +192,24 @@ To allow full repository review without gigabytes of raw video, DLC tracking dat
 
 ---
 
-## 3. Your Review Objectives & Expected Deliverables
+## 3. Your Review Objectives: "What Do You Think, Refactoring Experts?"
 
-Please conduct a thorough, rigorous software engineering audit of this repository and provide an actionable, prioritized roadmap across the following 6 core pillars:
+Please conduct an expert review of the refactored architecture and answer two primary questions:
 
-### Pillar 1: Repository Structure & Directory Hierarchy
-- Identify organizational anti-patterns (e.g., redundant backup folders like `syllable_generation_backup_*`, `multiview_top_bot_experiments_code_backup_*`, root-level clutter, orphaned scratch folders).
-- Propose a clean, standardized monorepo or multi-package layout following modern Python standards (e.g., `src/`, `configs/`, `pipelines/`, `scripts/`, `docs/`, `tests/`).
-- Recommend proper segregation between **raw input data**, **cached intermediate features**, **model checkpoints**, and **final presentation figures/deliverables**.
+### Part A: How Did We Already Do?
+Evaluate the engineering quality and trade-offs of the refactor across:
+1. **Package Layering & Modularity**: The downward-only dependency structure in `src/fpcode/` (`contracts` $\rightarrow$ `domain modules` $\rightarrow$ `workflows` $\rightarrow$ `cli`).
+2. **Backward Compatibility Strategy**: The use of dynamic attribute delegation shims (`__getattr__`, `__dir__`) and pickle compatibility hooks (`contracts/session_record.py`).
+3. **Storage & Data Separation**: The canonical `data/` hierarchy vs code separation.
+4. **Testing Architecture**: The stratification of fast functional tests (<7s for 420 tests) vs guarded real-hardware diagnostics.
 
-### Pillar 2: Architectural Modularity & Separation of Concerns
-- Analyze script vs library boundaries: many scripts mix CLI arguments, data loading, heavy mathematical fitting, visualization generation, and file I/O in single monolithic files.
-- Design reusable module boundaries (e.g., `io`, `calibration`, `modeling`, `metrics`, `visualization`).
-- Address hardcoded assumptions (e.g., absolute filesystem paths `/home/fsp585/...` vs configuration management using Hydra, Pydantic, or YAML).
-
-### Pillar 3: Code Duplication & Dead Code Pruning
-- Identify cloned or slightly diverged duplicate scripts across different experiment directories.
-- Identify legacy prototypes that should be archived or merged into canonical runners.
-- Highlight common utility functions that should be consolidated into a shared core package.
-
-### Pillar 4: Reproducibility, Configuration & Environment Management
-- Audit dependencies, requirements, and environment management (e.g., `pyproject.toml`, conda `environment.yml`).
-- Recommend best practices for hardware-accelerated scientific computing (GPU/CUDA memory scaling, page cache compaction, PyTorch/JAX memory management).
-- Propose data artifact tracking (e.g., DVC or lightweight manifest hashing) so experiments can reference inputs/checkpoints cleanly.
-
-### Pillar 5: Testing, Validation & Continuous Integration
-- Review the current `tests/` directory (noting generated test run outputs vs actual unit/integration tests).
-- Design a test strategy including:
-  - Fast unit tests for geometry/affine math and photometry signal processing.
-  - Mocked integration tests for KPMS model fitting and pipeline runners.
-  - Regression tests for syllable classification and trajectory generation.
-- Suggest a lightweight GitHub Actions / CI pipeline.
-
-### Pillar 6: Prioritized Step-by-Step Refactoring Roadmap
-Provide a phased implementation plan:
-- **Phase 1: Immediate Hygiene & Quick Wins** (safe file moves, `.gitignore` hardening, root cleanup, removing dead backups).
-- **Phase 2: Core Package Consolidation** (establishing canonical packages, shared utilities, and config schema).
-- **Phase 3: Pipeline & CLI Standardization** (refactoring runners to use unified CLI/config interfaces).
-- **Phase 4: CI/CD & Testing Infrastructure**.
-
----
-Please begin your audit by analyzing the top-level repository structure and identifying the highest-impact architectural improvements.
+### Part B: Could We Do More? (Next Horizons in SWE & Principles)
+Provide concrete, prioritized recommendations for the next phase of software engineering maturity:
+1. **Shim Sunset Strategy**: How should the 677 backward-compatibility shims be phased out over time without breaking lab members?
+2. **Type Safety & Static Analysis**: How to introduce MyPy and strict typing into scientific Python with dynamic arrays (NumPy/JAX).
+3. **Data Versioning**: Best practices for tracking multi-gigabyte models and datasets (DVC, LakeFS, Git-LFS).
+4. **Pipeline Orchestration**: Moving from standalone CLI scripts to DAG runners (Kedro, Snakemake, Prefect).
+5. **Packaging & CI/CD**: Recommendations for automated GitHub Actions workflows and distribution.
 """
 
 
@@ -236,6 +221,7 @@ This archive was created for automated software engineering analysis, architectu
 ## Archive Metadata
 - **Creation Date**: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}
 - **Source Workspace**: `FiberphotometryCode`
+- **Working Branch**: `codex/modular-refactor` (PR #1)
 - **Total Files in Repository**: {stats['total_files']:,}
 - **Source Code & Config Files (Full)**: {stats['code_files']:,}
 - **Jupyter Notebooks (Outputs Stripped)**: {stats['notebook_files']:,}
@@ -250,6 +236,7 @@ Each placeholder contains complete metadata about the file's original type, size
 
 ## Review Instructions for AI / SWE Bot
 See `REPOSITORY_STRUCTURE_AND_PROMPT.md` at the root of this archive for detailed background and review objectives.
+See `REFACTOR_REPORT.md` at the root of this archive for the 3-day refactor report.
 """
 
 
@@ -405,17 +392,28 @@ def main():
         zf.writestr("README_CODE_REVIEW_ARCHIVE.md", readme_text)
         zf.writestr("REPOSITORY_STRUCTURE_AND_PROMPT.md", prompt_text)
 
+        # Include the newly created Refactor Report right at the root of the zip archive!
+        refactor_report_path = os.path.join(WORKSPACE_DIR, "docs", "reports", "refactor_report.md")
+        if os.path.exists(refactor_report_path):
+            with open(refactor_report_path, "r", encoding="utf-8") as rrf:
+                zf.writestr("REFACTOR_REPORT.md", rrf.read())
+
     # Atomically rename
     if os.path.exists(OUTPUT_ZIP_PATH):
         os.remove(OUTPUT_ZIP_PATH)
     os.rename(temp_zip_path, OUTPUT_ZIP_PATH)
+
+    # Also copy to reports/ for permanent archiving
+    reports_zip_path = os.path.join(WORKSPACE_DIR, "reports", "fiberphotometry_code_review.zip")
+    shutil.copy2(OUTPUT_ZIP_PATH, reports_zip_path)
 
     elapsed = time.time() - start_time
     zip_size_mb = os.path.getsize(OUTPUT_ZIP_PATH) / (1024 * 1024)
 
     print("=" * 80)
     print("ARCHIVE CREATION COMPLETE!")
-    print(f"Output File          : {OUTPUT_ZIP_PATH}")
+    print(f"Output File (Root)   : {OUTPUT_ZIP_PATH}")
+    print(f"Output File (Reports): {reports_zip_path}")
     print(f"Final Zip Size       : {zip_size_mb:.2f} MB")
     print(f"Total Files Handled  : {stats['total_files']:,}")
     print(f"Code Files (Verbatim): {stats['code_files']:,}")
