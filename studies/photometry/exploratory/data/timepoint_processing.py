@@ -3,9 +3,9 @@ from collections import defaultdict
 
 import pandas as pd
 
-from fiberphotometry.config import SESSION_CONFIG
-from fiberphotometry.data.data_loading import DataContainer
-from fiberphotometry.data.handlers import (
+from studies.photometry.exploratory.config import SESSION_CONFIG
+from studies.photometry.exploratory.data.data_loading import DataContainer
+from studies.photometry.exploratory.data.handlers import (
     SPECIAL_PROCESSORS,
     _ensure_columns,
     base_event_name,

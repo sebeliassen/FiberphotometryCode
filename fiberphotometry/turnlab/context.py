@@ -1,13 +1,28 @@
-_SESSIONS = None
-_PROJECT_DIR = None
+"""
+[DEPRECATED SHIM] fiberphotometry/turnlab/context.py
+==================================================
+Relocated to: studies/photometry/turnlab/context.py
+"""
 
-def set_context(sessions, project_dir_full=None):
-    global _SESSIONS, _PROJECT_DIR
-    _SESSIONS = sessions
-    _PROJECT_DIR = project_dir_full
+import importlib
+import sys
+import warnings
 
-def get_sessions():
-    return _SESSIONS
+warnings.warn(
+    "fiberphotometry.turnlab.context is deprecated; import from studies.photometry.turnlab.context instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
-def get_project_dir():
-    return _PROJECT_DIR
+_real = importlib.import_module("studies.photometry.turnlab.context")
+sys.modules[__name__] = _real
+
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)
+
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()

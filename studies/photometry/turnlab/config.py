@@ -1,0 +1,10 @@
+SAMPLING_RATE = 80
+WINDOW_SECONDS = 10
+SMOOTHING_WINDOW = 25
+SMOOTHING_POLY_ORDER = 3
+CONFIDENCE_LEVEL = 1.96
+SIGNAL_COLS = ['signal_0_470_dff_z', 'signal_1_470_dff_z']
+MIN_TRACES_PER_SYLLABLE = 10
+DEFAULT_PETH_DIR = 'peth_turns'
+DEFAULT_CACHE_DIR = 'turn_cache'
+PROJECT_DIR_FULL = '/home/fsp585/Desktop/FiberphotometryCode/tests/kpms_all_sessions_frac_1_ld10_jn24'

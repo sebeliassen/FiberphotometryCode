@@ -1,10 +1,28 @@
-SAMPLING_RATE = 80
-WINDOW_SECONDS = 10
-SMOOTHING_WINDOW = 25
-SMOOTHING_POLY_ORDER = 3
-CONFIDENCE_LEVEL = 1.96
-SIGNAL_COLS = ['signal_0_470_dff_z', 'signal_1_470_dff_z']
-MIN_TRACES_PER_SYLLABLE = 10
-DEFAULT_PETH_DIR = 'peth_turns'
-DEFAULT_CACHE_DIR = 'turn_cache'
-PROJECT_DIR_FULL = '/home/fsp585/Desktop/FiberphotometryCode/tests/kpms_all_sessions_frac_1_ld10_jn24'
+"""
+[DEPRECATED SHIM] fiberphotometry/turnlab/config.py
+==================================================
+Relocated to: studies/photometry/turnlab/config.py
+"""
+
+import importlib
+import sys
+import warnings
+
+warnings.warn(
+    "fiberphotometry.turnlab.config is deprecated; import from studies.photometry.turnlab.config instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+_real = importlib.import_module("studies.photometry.turnlab.config")
+sys.modules[__name__] = _real
+
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)
+
+if __name__ == "__main__":
+    if hasattr(_real, "main"):
+        _real.main()

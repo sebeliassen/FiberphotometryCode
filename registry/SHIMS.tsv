@@ -17,8 +17,16 @@ fiberphotometry/analysis/performance_funcs.py	studies.photometry.exploratory.ana
 fiberphotometry/analysis/plotting.py	studies.photometry.exploratory.analysis.plotting	DeprecationWarning	ACTIVE
 fiberphotometry/analysis/response_metrics.py	studies.photometry.exploratory.analysis.response_metrics	DeprecationWarning	ACTIVE
 fiberphotometry/analysis/signal_processing.py	studies.photometry.exploratory.analysis.signal_processing	DeprecationWarning	ACTIVE
+fiberphotometry/analysis/timepoint_analysis.py	studies.photometry.exploratory.analysis.timepoint_analysis	forwarder	ACTIVE	Emits DeprecationWarning
 fiberphotometry/analysis/timepoint_analysis_leonie.py	studies.photometry.exploratory.analysis.timepoint_analysis_leonie	DeprecationWarning	ACTIVE
+fiberphotometry/config.py	studies.photometry.exploratory.config	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/data/data_loading.py	studies.photometry.exploratory.data.data_loading	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/data/handlers.py	studies.photometry.exploratory.data.handlers	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/data/mouse.py	studies.photometry.exploratory.data.mouse	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/data/oft_session_loading.py	studies.photometry.exploratory.data.oft_session_loading	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/data/session_loading.py	studies.photometry.exploratory.data.session_loading	forwarder	ACTIVE	Emits DeprecationWarning
 fiberphotometry/data/session_synchronization.py	studies.photometry.exploratory.data.session_synchronization	DeprecationWarning	ACTIVE
+fiberphotometry/data/syncer.py	studies.photometry.exploratory.data.syncer	forwarder	ACTIVE	Emits DeprecationWarning
 fiberphotometry/data/timepoint_processing.py	studies.photometry.exploratory.data.timepoint_processing	DeprecationWarning	ACTIVE
 fiberphotometry/kpms/batching.py	studies.photometry.exploratory.kpms.batching	DeprecationWarning	ACTIVE
 fiberphotometry/kpms/create_session_state_2.py	studies.photometry.exploratory.kpms.create_session_state_2	DeprecationWarning	ACTIVE
@@ -26,15 +34,27 @@ fiberphotometry/kpms/load_and_analyze_session_state.py	studies.photometry.explor
 fiberphotometry/kpms/syllable_appender.py	studies.photometry.exploratory.kpms.syllable_appender	DeprecationWarning	ACTIVE
 fiberphotometry/kpms/syllable_generator.py	studies.photometry.exploratory.kpms.syllable_generator	DeprecationWarning	ACTIVE
 fiberphotometry/kpms/trial.py	studies.photometry.exploratory.kpms.trial	DeprecationWarning	ACTIVE
+fiberphotometry/kpms/trimming.py	studies.photometry.exploratory.kpms.trimming	forwarder	ACTIVE	Emits DeprecationWarning
 fiberphotometry/kpms/update_config.py	studies.photometry.exploratory.kpms.update_config	DeprecationWarning	ACTIVE
 fiberphotometry/notebooks/sebastian/signal_action_prediction.py	studies.photometry.exploratory.notebooks.sebastian.signal_action_prediction	DeprecationWarning	ACTIVE
 fiberphotometry/notebooks/sebastian/tsnepy.py	studies.photometry.exploratory.notebooks.sebastian.tsnepy	DeprecationWarning	ACTIVE
 fiberphotometry/plotting/main_plotting.py	studies.photometry.exploratory.plotting.main_plotting	DeprecationWarning	ACTIVE
 fiberphotometry/processing/add_injection_times_temp.py	studies.photometry.exploratory.processing.add_injection_times_temp	DeprecationWarning	ACTIVE
+fiberphotometry/processing/combine_session_timestamps.py	studies.photometry.exploratory.processing.combine_session_timestamps	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/processing/plotting_setup.py	studies.photometry.exploratory.processing.plotting_setup	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/processing/session_sampling.py	studies.photometry.exploratory.processing.session_sampling	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/processing/signal_info_setup.py	studies.photometry.exploratory.processing.signal_info_setup	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/turnlab/cache_index.py	studies.photometry.turnlab.cache_index	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/turnlab/config.py	studies.photometry.turnlab.config	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/turnlab/context.py	studies.photometry.turnlab.context	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/turnlab/detect.py	studies.photometry.turnlab.detect	forwarder	ACTIVE	Emits DeprecationWarning
 fiberphotometry/turnlab/experiments.py	studies.photometry.turnlab.experiments	DeprecationWarning	ACTIVE
 fiberphotometry/turnlab/initiation.py	studies.photometry.turnlab.initiation	DeprecationWarning	ACTIVE
 fiberphotometry/turnlab/linking.py	studies.photometry.turnlab.linking	DeprecationWarning	ACTIVE
+fiberphotometry/turnlab/peth_plot.py	studies.photometry.turnlab.peth_plot	forwarder	ACTIVE	Emits DeprecationWarning
 fiberphotometry/turnlab/sanity.py	studies.photometry.turnlab.sanity	DeprecationWarning	ACTIVE
+fiberphotometry/turnlab/utils.py	studies.photometry.turnlab.utils	forwarder	ACTIVE	Emits DeprecationWarning
+fiberphotometry/utils.py	studies.photometry.exploratory.utils	forwarder	ACTIVE	Emits DeprecationWarning
 scripts/batch_compact_all_checkpoints.py	ops.scripts.batch_compact_all_checkpoints	DeprecationWarning	ACTIVE
 scripts/build_swe_archive.py	ops.scripts.build_swe_archive	DeprecationWarning	ACTIVE
 scripts/execute_phase3_moves.py	ops.scripts.execute_phase3_moves	DeprecationWarning	ACTIVE

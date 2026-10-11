@@ -1,9 +1,9 @@
 import numpy as np
 from scipy.stats import norm
 
-from fiberphotometry.config import *
-from fiberphotometry.data.data_loading import DataContainer
-from fiberphotometry.utils import count_session_events
+from studies.photometry.exploratory.config import *
+from studies.photometry.exploratory.data.data_loading import DataContainer
+from studies.photometry.exploratory.utils import count_session_events
 
 
 def set_event_counts(mouse):

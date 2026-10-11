@@ -238,8 +238,8 @@ def compute_moseq_tables(project_dir, model_name, *, fps=60, min_frequency=0.005
 
 
 def apply_plotting_setup_to_sessions(sessions, *, sanity_check=True):
-    from fiberphotometry.config import PLOTTING_CONFIG
-    from fiberphotometry.processing.plotting_setup import PlottingSetup
+    from studies.photometry.exploratory.config import PLOTTING_CONFIG
+    from studies.photometry.exploratory.processing.plotting_setup import PlottingSetup
     PlottingSetup(**PLOTTING_CONFIG['cpt']).apply_plotting_setup_to_sessions(sessions)
     if sanity_check:
         print("Applied plotting setup to sessions.")
