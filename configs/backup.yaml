@@ -3,6 +3,19 @@
   "required_mount": "/mnt/hdd",
   "free_space_margin_bytes": 1073741824,
   "include_git_bundle": true,
-  "exclude_names": [".git", "__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache"],
-  "exclude_patterns": []
+  "exclude_names": [
+    ".git",
+    "__pycache__",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".mypy_cache"
+  ],
+  "exclude_patterns": [
+    "*.avi",
+    "*.mp4",
+    "outputs",
+    "archive/scratch",
+    "archive/logs",
+    "data/analysis_cache"
+  ]
 }
