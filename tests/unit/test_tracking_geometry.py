@@ -102,3 +102,26 @@ def test_legacy_array_threshold_policy_remains_distinct_from_strict_pose_policy(
                       ("point",), "pixel", "camera")
     with pytest.raises(ValueError, match="threshold"):
         confidence_mask(pose, threshold=-1)
+def test_confidence_streaks_keep_native_gaps_and_bridge_only_declared_interruptions():
+    import numpy as np
+    import pytest
+
+    from fpcode.tracking.quality import confidence_streak_candidates
+
+    scores = np.array([.1, .1, .9, .1, .1])
+    frames = np.arange(100, 105)
+    assert confidence_streak_candidates(scores, frames, fps=2., threshold=.8, minimum_seconds=2.) == []
+    calls = confidence_streak_candidates(scores, frames, fps=2., threshold=.8, minimum_seconds=2., bridge_seconds=.5)
+    assert [(c['start_frame'], c['end_frame_exclusive'], c['low_frames']) for c in calls] == [(100, 105, 4)]
+    assert calls[0]['duration_s'] == 2.5
+    assert calls[0]['low_fraction'] == .8
+    assert confidence_streak_candidates(np.zeros(4), np.array([100, 101, 105, 106]),
+        fps=2., threshold=.8, minimum_seconds=2., bridge_seconds=10.) == []
+    missing = confidence_streak_candidates(np.array([np.nan, .1, .1, .1]), np.arange(4),
+        fps=2., threshold=.8, minimum_seconds=2.)
+    assert missing[0]['low_frames'] == 4
+    assert missing[0]['end_frame_exclusive'] == 4
+    with pytest.raises(ValueError, match='native'):
+        confidence_streak_candidates(np.zeros(2), np.array([4, 3], dtype=np.uint64),
+            fps=2., threshold=.8, minimum_seconds=2.)
+
