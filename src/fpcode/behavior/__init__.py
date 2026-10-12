@@ -5,7 +5,11 @@ Behavioral analysis modules: kinematics, activity trimming,
 Markov syllable transitions, and bout run-length dynamics.
 """
 
-from .kinematics import (
+from .analysis.transitions import (
+    compute_stationary_distribution,
+    compute_transition_matrix,
+)
+from .observations.kinematics import (
     clean_short_runs,
     presence_mask_from_conf,
     smooth_centroid_median,
@@ -16,10 +20,6 @@ from .syllables import (
     extract_syllable_runs,
     flatten_results_to_timeline,
     tile_results,
-)
-from .transitions import (
-    compute_stationary_distribution,
-    compute_transition_matrix,
 )
 
 __all__ = [
