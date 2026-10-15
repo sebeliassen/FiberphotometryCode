@@ -50,7 +50,7 @@ Keep reconstruction curves separate per vocabulary; do not compare their raw
 errors as a common target. No selection by group effects or qualitative acceptance.
 
 Checks:6focused passed; fullCPU852passed/6warnings; lint3078reviewed/no new debt;
-architecture201/no violations/cycles; maps regenerated3and146dirs checked; help
+architecture201/no violations/cycles; maps regenerated2and146dirs checked; help
 and dry plan passed. No shared numerical changes or debt refresh. Detailed report:
 studies/karen_pff_vs_monomer/analysis/REFERENCE_SEQNMF_POOLED_RUN_20261015.md.
 Next: bounded K20capacity comparison, choose quantitative shortlist, then agreed
