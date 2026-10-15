@@ -1,4 +1,85 @@
+## Karen P80 review COMPLETE and ready for human labels (2026-10-15)
+
+Delivery output: outputs/karen_pooled_p80_review_20261015.49families/49P80grids/
+147executions from groupedK10(.3/s43,9supported),K18(.3/s43,18),K22(.3/s42,22).
+All models unchanged. Every grid has3different mice, actualP78.18–81.82, native
+60Hz natural pace/onset-fixed camera/source-syllable dot+strip. No trajectory inset
+or time warping. Full grid playback257.37s;3plays/file12min52s before notes.
+
+Viewer loopback http://127.0.0.1:8766/ ; forward8766overSSH/VSCode Ports.8765was
+occupied and untouched. index.html has browser-local notes, coherence/distinctness,
+related IDs, request-p100/random checkbox and Export labels JSON. labels.csv is
+blank alternative. p100/random not rendered yet; await flags from P80review.
+
+Preparation fingerprinted all99native sources, exact saved model/call hashes,
+raw→grouped paths and support.51videos have different row counts from caches;
+13calls lack encoded-video endpoints and are explicitly unavailable, not shifted
+or truncated.49families remain. All147selected full cores have finite latents/
+position/heading. final_media_audit.json PASS;147dot-colour pixel checks, allpanel/
+grid hashes and native paths, full encoded decoding; zero missing/offscreen dots.
+
+Ranking reuses established four-block latent/onset-relative displacement/heading/
+logduration descriptors,32time-phase samples for ranking only, common pooled
+animal-balanced scaling and actual medoid exemplar distances. It does not implement
+the newly discussed multi-view/elastic-alignment metric research.6focused tests,
+render doctor, lint3078reviewed/no newdebt and146maps passed. No shared algorithms
+changed; no human chain acceptance yet. Source/report: render_reference_review.py
+and P80_REVIEW_20261015.md. Next: user P80labelling, export JSON, then targeted
+p100/random where uncertain or possibly redundant.
+
+Browser UI persistence/export passed in isolated Chrome. Continuous browser video
+playback/seek was inconclusive under headless automation; all encoded frames
+decoded separately. Browser details in browser_validation.json.
+
+## Karen video review budget estimated (2026-10-15)
+
+Planning only; no new movies/ranks generated. Outputs under capacity root:
+VIDEO_REVIEW_BUDGET.md,video_budget_summary.csv,video_budget_per_family.csv,
+video_budget_assumptions.json,calculate_video_budget.py. Three-panel, three-mode
+review of supported groupedK10/18/22:49families/147movies/441execution panels,
+~13min one gridplay,~39min one focus replay per panel,~130min at10plays/file.
+GroupedK18+K22:40families/~10.4min once/~104min at10plays. Same empirical duration
+pool used for all modes pending final ranks; exact expected max of distinct
+uniform sampled durations, +0.5s context eachside. No notes/navigation included.
+
+## Karen capacity sweep COMPLETE; human-labelled theme inspection (2026-10-15)
+
+All60configurations (K6/10/14/18/22 × lambda.3/3 × seeds42/43/44 × two
+vocabularies) completed:48new fits/12K10reused. Final audit verified all model/
+call hashes, shapes/parameters, finite arrays and native durations for862829
+persisted calls/840factor rows. Seven targeted null models include the post-hoc
+intermediate groupedK18 check;19surrogates/type/model. Main status lists six
+original null candidates; final_audit.json includes the supplementary seventh.
+No refits for the supplement, no held-out or inferential p-value claim.
+
+Output root: outputs/karen_pooled_capacity_20261015. final_audit.json PASS;
+capacity curves, family distributions, adjacent-K split/merge edges and order-null
+summaries ready. Best time coverage perK rises from4.1%to18.0%in raw100states,
+and13.8%to35.0%in grouped69states; no clear plateau established byK22. Seeds vary;
+these maxima are candidate comparisons, not average method comparisons.
+First-order-preserving null bout coverage is often close to real: do not claim
+all detected families establish higher-order syntax. Fixed duration slots and
+non-uniform Euler trails limit interpretation; coherent chains can still be useful.
+
+User now asks which actual themes eachK creates and whether extraKfragments
+similar executions. Human Karen syllable annotations can support text-first
+inspection of actual observed paths/variants acrossK before movies. These are
+provisional labels, partly built into grouped input, not independent chain truth.
+All fits have L=3bout steps: increasingKcannot establish variable-length4/5step
+routines or insertion tolerance. Distinguish diverse catalogue from coherent
+within-family variants; no single entropy/interestingness score resolves both.
+Existing validation12focused/858CPU/lint/maps remains applicable; only output
+postprocessing and documentation changed after the committed sweep source.
+
 # Current task state
+
+Text-first exports completed: human_labelled_families.csv covers840factors and
+human_labelled_observed_variants.csv.gz covers74145distinct factor/path rows,
+with exact annotation paths/hashes in human_label_sources.json. HUMAN_LABELLED_THEMES.md
+shows all factors for coverage-leading settings at eachK/vocabulary. Most frequent
+paths are observations, not accepted theme names. Median supported grouped factor
+modal-path fraction is9–12%; this can reflect useful variation or broad two-of-three
+stage matching. Inspect variants and unknown-label fractions before selectingK.
 
 ## Intermediate-K capacity sweep and verification running (2026-10-15)
 

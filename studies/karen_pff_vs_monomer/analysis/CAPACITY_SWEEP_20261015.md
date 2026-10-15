@@ -99,3 +99,33 @@ Next after completed diagnostics: inspect the capacity/coherence/coverage/stabil
 tradeoff, retain a compact and/or finer catalogue as justified, then prepare the
 agreed p100/P80/random movies for targeted qualitative labelling. Do not infer
 the largest K or lowest reconstruction error is automatically the best catalogue.
+
+## Completed checkpoint
+
+All60configurations and diagnostics finished. `final_audit.json` verifies model/
+call hashes, parameters/shapes, finite arrays and native durations for862829
+accepted calls/840factors. Supplementary grouped K18/lambda.3/seed43 null check
+(selected after capacity curves, exploratory) adds a seventh candidate without
+refitting. Seven models each have19surrogates/type and paired re-inferred realH.
+
+At eachK, maximum physical time coverage across the six lambda/seed settings:
+
+| Vocabulary | K6 | K10 | K14 | K18 | K22 |
+| --- | --- | --- | --- | --- | --- |
+| Original100 | 4.1% | 8.3% | 11.4% | 12.8% | 18.0% |
+| Grouped69 | 13.8% | 17.3% | 23.2% | 31.2% | 35.0% |
+
+These are candidate maxima, not method averages or proof thatK22is best. Seed
+variation remains substantial and no clear plateau is established byK22. Accepted
+matching errors are token-template measures, not independent physical coherence.
+First-order null bout coverage is often close to real; frequency controls alone
+cannot establish higher-order grammar. Descriptive null ranges do not justify
+significance claims.
+
+Text-first inspection uses the exact Karen raw100 and grouped69annotation CSVs
+and actual accepted observed paths, with raw IDs/unknown states preserved.
+`HUMAN_LABELLED_THEMES.md` and `human_labelled_families.csv` under the output
+root support review before video work. Human descriptions are provisional,
+including existing grooming subtype conventions, and label coherence is partly
+built into the grouped input. All models use fixed three-bout templates; longer
+variable-length routines have not been learned by this capacity sweep.
