@@ -1,5 +1,43 @@
 # Current task state
 
+## Karen delivery worktree active; low-input preparation completed (2026-10-15)
+
+Research source/config/docs preserved on refactor at
+6c179ae64e9da9c673605a9f45eb5626111efa75 (276 inventoried maintained files, no
+empirical payloads). Delivery branch codex/karen-seqnmf-delivery is active in:
+/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery
+Delivery commit25e19d7 binds/replays the September raw-state reference and records
+Karen input readiness. Continue delivery work THERE; this original checkout
+remains codex/modular-refactor for preserved broad research and the viewer.
+main/legacy unchanged, no push. This entry is a navigation/status pointer only.
+
+Authoritative latest delivery state/report:
+.worktrees/karen-seqnmf-delivery/docs/tasks/CURRENT.md
+.worktrees/karen-seqnmf-delivery/studies/sequence_viz/baselines/seqnmf_sep14/REPLAY_20261015.md
+Persistent replay/input/check fingerprints are alongside that report; runtime
+CSVs are under that worktree's outputs/seqnmf_sep14_verified_replay_20261015.
+
+Saved W/H replay matches all2136episodes, tokens and animal count/duration
+summaries (max template error discrepancy2.22e-8). All169879historical bouts in
+30sessions bind to archived KPMS labels/native VFI. Original prefix includes only
+10saline sessions,50000bouts. Audit found26gap-crossing calls and next-bout
+endpoint overshoot; historical numbers retained, correction requirements explicit.
+This is saved-detector replay, not independent inference/refit or validation of
+the unmatched unified-sniff quantitative-slide version. No new fits/searches.
+
+Karen metadata/cache availability checked:99recordings,21mice(12PFF/9monomer),
+native60Hz;12train+4validation+5reserved mice,73exploration/26reserved recordings.
+Existing98recording exclusion masks/split preserved; no new full mask audit.
+CPU suite846passed, architecture/lint/maps passed; delivery has a narrow isort
+classification fix for3historical data namespaces absent from clean worktrees.
+No lint-debt refresh or shared scientific algorithm changes. Details/check limits
+are in delivery repository_validation.json. Original ignored artifacts untouched.
+
+Next scientific input: primary Karen vocabulary/resolution and bounded
+parameter/stability scope before fresh fitting, then targeted qualitative review.
+Preservation/isolation/reference replay/input inventory are complete; the earlier
+in-progress entries below describe their prior checkpoint, not current status.
+
 ## Delivery isolation and saved-model replay in progress (2026-10-15)
 
 User authorised the low-human-input steps: preserve maintained refactor work,
