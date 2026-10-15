@@ -1,5 +1,71 @@
 # Current task state
 
+## Delivery isolated; raw-state reference replay matched (2026-10-15)
+
+Completed user-authorised minimal-human-input work. Refactor research preserved
+as commit6c179ae64e9da9c673605a9f45eb5626111efa75 (276 explicitly inventoried
+maintained source/config/docs files, about2.2MB, no empirical payload staging).
+Original checkout remains codex/modular-refactor. Created delivery branch
+codex/karen-seqnmf-delivery in the separate ignored nested worktree:
+/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery.
+main/legacy unchanged, no remote push. Existing viewer remains in original root.
+
+New study runner studies/sequence_viz/replay_sep14_reference.py verifies pinned
+input hashes, loads only the selected local saved W/H and bout bundle, compiles
+two inspected retrieval methods from the exact legacy blob, and never imports
+the old fitting/notification runner. Explicit --execute/input/output/native
+manifest required. Address-space cap4GiB,2threads; no JAX initialization/fits.
+
+Final outputs in this worktree:
+outputs/seqnmf_sep14_verified_replay_20261015/replay.json and episode/animal/native
+binding/boundary/order CSVs. All2136saved episodes match embedded and exported
+catalogues: exact factor/bout/frame identities and observed strings; floating
+atol1e-7/rtol1e-6, max template-error difference2.22e-8. Animal/factor counts and
+historical duration sums also match. This replays saved W AND H; no independent
+H inference or optimization reproduced. Training prefix is50000bouts from only
+10saline sessions/10mice, not balanced all30-session training.
+
+All169879historical bouts/30sessions bind exactly to archived KPMS labels and
+native VFI start/end coordinates; inclusive model-row durations match40Hz.
+H5/VFI freshly fingerprinted, existing Run12 native projection/rate evidence
+retained with its limited timestamp-validation scope. Historical bout end_frame
+is inclusive; initial unqualified positive coordinate-gap counter is superseded.
+Final native-aware audit:26episode calls cross segment/support gaps,0cross
+sessions. All2136exported end fields extend beyond the included last bout due
+to old next-bout formula (median36native frames,max2994). Bout-summed durations
+still match. Preserve literal reproduction separately from boundary/endpoint
+corrections in new Karen work; no repaired group inference was run.
+
+Karen readiness inventory in outputs/karen_delivery_input_inventory_20261015:
+all99caches/21mice present (12PFF/9monomer), declared60Hz;12train+4validation+5test
+mice;73exploration/26reserved recordings. Mask key present in98caches, matching
+the98recordings with reviewed exclusions; the other recording has no interval.
+Existing policy/exposure/split unchanged. Metadata/header checks only, no full
+new projection/mask audit and no cohort pickle load or behavioural evaluation.
+
+Persistent evidence/report under studies/sequence_viz/baselines/seqnmf_sep14:
+REPLAY_20261015.md, verified_replay.json, karen_input_readiness.json; initial
+reference_manifest.json retained as dated artifact inventory. Exact unified-sniff
+quantitative-slide version and final-movie interval manifests remain unresolved.
+
+Checks: CPU doctor passed; make test-cpu846passed/6deprecation warnings. Architecture
+passed (201modules/no violations/cycles); folder maps regenerated3maps and checked
+146directories. Focused runner lint passed. Fresh import introduces no numerical,
+data/backend modules (NumPy was already loaded at interpreter startup), no JAX;
+CLI help is metadata-only. Full worktree lint initially saw6import-order diagnostics
+in5unchanged files because ignored historical data namespaces are absent here.
+Narrow isort known-first-party entries for those3namespaces restore stable
+classification; no debt baseline refreshed and no unrelated scientific imports
+reordered. Final make lint passed:3078reviewed diagnostics/no new debt; baseline
+unchanged. Final maps check passed146directories. Validation evidence is saved
+alongside the baseline as repository_validation.json. No broader rerun required
+after documentation and lint-classification-only changes.
+
+Next requiring scientific input: choose primary Karen vocabulary/resolution and
+bounded fit/stability scope, then freeze the recipe. Targeted qualitative chain
+review and final intra/inter choices follow quantitative checks. No new fitting,
+search restart or scientific acceptance was inferred from this mechanical step.
+
 ## Delivery isolation and saved-model replay in progress (2026-10-15)
 
 User authorised the low-human-input steps: preserve maintained refactor work,

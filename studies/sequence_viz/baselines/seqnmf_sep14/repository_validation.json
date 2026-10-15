@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-15",
+  "interpreter": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+  "research_checkpoint": "6c179ae64e9da9c673605a9f45eb5626111efa75",
+  "cpu_doctor": "PASS; metadata only",
+  "cpu_suite": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 make test-cpu PYTHON=/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "passed": 846,
+    "warnings": 6,
+    "elapsed_seconds": 20.26
+  },
+  "architecture": {
+    "passed": true,
+    "shared_modules": 201,
+    "violations": 0,
+    "cycles": 0
+  },
+  "lint": {
+    "passed": true,
+    "reviewed_diagnostics": 3078,
+    "new_debt": 0,
+    "baseline_refreshed": false,
+    "portability_fix": "Explicitly classify three historical data namespaces; no scientific import reordering"
+  },
+  "folder_maps": {
+    "passed": true,
+    "directories": 146,
+    "updated_maps": 3
+  },
+  "runner_import_help": {
+    "passed": true,
+    "introduced_numerical_modules": false,
+    "jax_initialized": false,
+    "note": "NumPy already present at interpreter startup; comparison uses modules introduced by importing the runner"
+  },
+  "saved_detector_replay": {
+    "replayed_episodes": 2136,
+    "embedded_and_exported_catalogues_match": true,
+    "animal_factor_summaries_match": true,
+    "maximum_absolute_csv_errors": {
+      "peak_activation": 5.551115123125783e-17,
+      "template_error": 2.2128640475571615e-08,
+      "stage_support": 0.0,
+      "duration_sec": 8.881784197001252e-16
+    },
+    "float_atol": 1e-07,
+    "float_rtol": 1e-06,
+    "integer_identifiers_and_token_strings": "exact"
+  },
+  "limits": [
+    "Functional suite validates the preserved platform; empirical replay validates this particular saved reference.",
+    "No independent H inference or stochastic refit. No new Karen empirical fit.",
+    "Package resources and shared library APIs were unchanged; no installed-wheel build performed."
+  ]
+}
