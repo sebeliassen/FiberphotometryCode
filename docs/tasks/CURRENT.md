@@ -1,5 +1,38 @@
 # Current task state
 
+## Pooled Karen fit panel completed on delivery branch (2026-10-15)
+
+User explicitly changed delivery fitting to one pooled generator on the whole
+dataset. All99recordings/all21mice/all5waves includingL-DOPA were used. No animal
+split/subsampling in these new fits; former reserved mice ARE included. Historical
+split files remain unchanged as provenance. Do not claim held-out validation for
+this new pooled analysis; older entries below describe prior scope.
+
+Source/run report on codex/karen-seqnmf-delivery source commit43964d6:
+/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/studies/karen_pff_vs_monomer/analysis/REFERENCE_SEQNMF_POOLED_RUN_20261015.md
+Authoritative latest CURRENT is in that worktree. Original root remains refactor.
+
+30pooled fits COMPLETE/exit0: original100state and reviewed grouped69state with
+unknowns separate; K10,L3,80iterations,lambda0/.1/.3/1/3,seeds42/43/44. Detached
+nohup/setsid job3727659/driver3727660 has finished. No KPMS refits/notifications.
+Output/log:
+/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_pooled_reference_seqnmf_20261015/run.log
+
+Frozen recipe/matrices/native refs/models/actual calls/result correspondence saved.
+All99reviewed masks verified, native gaps preserved, H unsupported onsets hardzero,
+correct half-open ends. CPU/GPU8update preflight passed; GPU RTX4090 selected from
+actual timing. All320307persisted calls across30fits passed independent token/
+native-boundary/duration/mask/threshold audit. Finaloutput45MiB.6focused tests
+passed; fullCPU852passed; lint3078reviewed/no new debt, architecture/maps passed.
+
+User asked whether10components enough and quantitative PCA-like capacity measures.
+Reconstruction/physical union coverage/multi-mouse distinctness/redundancy/seed
+stability are recorded. capacity_metrics_K10.csv adds uncentred1−relative_error²,
+NOT percent behaviour/PCA variance explained. Current panel allK10; cannot yet
+establish sufficient capacity. Proposed next: K20at selected lambda settings,
+then anotherKonlyif useful gains persist, followed by qualitative shortlist and
+p100/P80/random movies. K20follow-up was not launched in the completed30fitjob.
+
 ## Karen delivery worktree active; low-input preparation completed (2026-10-15)
 
 Research source/config/docs preserved on refactor at
