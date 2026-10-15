@@ -1,5 +1,61 @@
 # Current task state
 
+## All-data pooled Karen K10 panel complete (2026-10-15)
+
+User authorised fitting/logging, then explicitly replaced train/validation design
+with ONE pooled generator over the whole dataset, like intended KPMS usage.
+All99recordings/all21mice/all5waves includingL-DOPA were used; every eligible bout,
+no subsampling/held-out animals. Original split files remain unchanged but are
+provenance only for this run. Do not claim prior reserved animals are untouched
+by this delivery fit, or label these diagnostics held-out validation.
+
+New study reference_seqnmf.py/run_reference_seqnmf.py preserve recovered historical
+ratio updates/activation competition/per-lag Wnorm, add hard onset masks, native
+gap/exclusion barriers and corrected actual-final-bout half-open endpoints.
+This is distinct from newer shared SeqNMF's data-dependent regularizer. Metadata/
+help/plan do not initialize GPU or load cohort inputs. Six focused tests cover
+independent native-boundary expectations, masked activations, block independence,
+literal old CPU update identity and endpoint/gap detection checks.
+
+Finite panel: L1/100states and existing L3_unresolved_separate/69states (unknown/
+dump IDs stay distinct), K10/L3bouts/80iterations,lambda0/.1/.3/1/3,seeds42/43/44:
+30fits. All99reviewed masks checked against interval policy. Same physical support
+underlies both vocabularies, followed by within-block grouped RLE. All source
+array/mapping/code identities and packed matrices/refs frozen in recipe.json.
+Raw315035/grouped307651supported onsets. No new KPMS fitting/notifications.
+
+Detached nohup/setsid job PID/PGID3727659,driver3727660 completedexit0,30/30. Output:
+/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_pooled_reference_seqnmf_20261015
+Absolute tail command: tail -f /home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_pooled_reference_seqnmf_20261015/run.log
+driver_status/status COMPLETE; finaloutput45MiB. Actual backend preflight8iterations
+on full raw matrix passed CPU/GPU atol3e-5,rtol3e-4(maxW1.20e-5,H5.97e-6); GPU
+selected from measured CPU16.75s/GPU.075s timed8updates. RTX4090,JAX.6.2,float32,
+highest matmul precision. Not universal backend equivalence/convergence evidence.
+2threads,8GiB RSSguard,25%GPU fraction,80GiB diskfloor,4GiB outputguard,3h timeout.
+
+Persisted-call audit PASS all320307calls/30fits: parameters complete, inputsource
+hashes, finite arrays, hard-zero unsupported H, actual saved thresholds, observed
+tokens, same native block, internal adjacency, corrected endpoints and60Hzduration.
+results.csv maps every parameter/seed to metrics; seed_stability.csv template
+matching; factor_catalogue.csv all300factors with actual observed variants and
+argmax-exact counts. capacity_metrics_K10.csv includes1−global_relative_error²,
+explicitly uncentred reconstruction score, not percent behaviour explained.
+
+User asked whetherK10sufficient and for PCA-like quantitative capacity measures.
+Discussed Kcurves for reconstruction, physical union time coverage, distinct
+multi-mouse supported families, redundancy and seed stability. Current30fits all
+K10: cannot infer sufficient capacity yet. Proposed K20at selected lambdas is a
+FOLLOW-UP, not launched here; anotherKonlyif useful gains remain substantial.
+Keep reconstruction curves separate per vocabulary; do not compare their raw
+errors as a common target. No selection by group effects or qualitative acceptance.
+
+Checks:6focused passed; fullCPU852passed/6warnings; lint3078reviewed/no new debt;
+architecture201/no violations/cycles; maps regenerated3and146dirs checked; help
+and dry plan passed. No shared numerical changes or debt refresh. Detailed report:
+studies/karen_pff_vs_monomer/analysis/REFERENCE_SEQNMF_POOLED_RUN_20261015.md.
+Next: bounded K20capacity comparison, choose quantitative shortlist, then agreed
+p100/P80/random qualitative review. Initial fit panel is COMPLETE, not still running.
+
 ## Delivery isolated; raw-state reference replay matched (2026-10-15)
 
 Completed user-authorised minimal-human-input work. Refactor research preserved
