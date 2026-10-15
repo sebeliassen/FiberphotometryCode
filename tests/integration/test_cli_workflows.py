@@ -57,6 +57,7 @@ def test_nested_training_parameters_reach_fitting_boundary(tmp_path, monkeypatch
     data.write_bytes(b"fixture")
     config = write_yaml(tmp_path / "config.yaml", {
         "project_dir": str(tmp_path), "model_name": "tiny", "data_path": str(data), "seed": 8,
+        "resource_estimates": {"input_array_bytes": 48, "method": "fixture shape times dtype size", "scope": "tiny fixture"},
         "hyperparameters": {"num_ar_iters": 2, "num_slds_iters": 3, "total_iters": 5,
                             "save_every_n_iters": 1, "init_kappa": 17, "slds_kappa": 19},
     })
@@ -82,6 +83,7 @@ def test_nested_training_parameters_reach_fitting_boundary(tmp_path, monkeypatch
     assert record["config"]["seed"] == 11 and record["config"]["device"] == "cpu"
     assert record["config_hash"] == compute_config_hash(record["config"])
     assert record["source_config"] == {"path": str(config), "hash": compute_config_hash(yaml.safe_load(config.read_text()))}
+    assert record["resource_estimates"] == consumed["resource_estimates"]
     assert "config_path" not in record["config"] and "config_hash" not in record["config"]
 
 
@@ -103,6 +105,7 @@ def test_production_nested_settings_resolve_to_350_iterations(repo_root):
     ({"save_every_n_iters": 0}, "save_every"),
     ({"use_memory_patch": "false"}, "boolean"),
     ({"slds_kappa": float("nan")}, "finite"),
+    ({"resource_estimates": 32}, "resource_estimates must be a mapping"),
 ])
 def test_invalid_training_settings_fail_explicitly(config, message):
     with pytest.raises(ValueError, match=message):

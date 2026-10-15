@@ -46,6 +46,8 @@ def resolve_training_config(config: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(config, Mapping):
         raise ValueError("Training configuration must be a mapping")
     resolved = dict(config)
+    if config.get("resource_estimates") is not None and not isinstance(config["resource_estimates"], Mapping):
+        raise ValueError("resource_estimates must be a mapping with explicit units, method and scope")
     declared = {key: config[key] for key in _FIELDS if key in config}
     for section_name in ("hyperparameters", "training"):
         section = config.get(section_name, {})

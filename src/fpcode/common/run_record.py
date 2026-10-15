@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
 from .cache_manifest import atomic_write_json
+from .environment import initialized_devices, package_versions
 from .paths import resolve_path, to_relative_path
 
 
@@ -32,18 +33,7 @@ def _get_git_info() -> Dict[str, Any]:
 
 def _get_gpu_info() -> Dict[str, Any]:
     """Inspect an already initialized backend without importing or starting one."""
-    gpu_info = {"available": False, "device_name": "None", "cuda_version": "None", "inspection": "not_initialized"}
-    try:
-        torch = sys.modules.get("torch")
-        if torch is not None and torch.cuda.is_initialized():
-            gpu_info["available"] = True
-            gpu_info["device_name"] = torch.cuda.get_device_name(0)
-            gpu_info["device_count"] = torch.cuda.device_count()
-            gpu_info["cuda_version"] = torch.version.cuda
-            gpu_info["inspection"] = "initialized_torch"
-    except Exception:
-        pass
-    return gpu_info
+    return initialized_devices()
 
 
 class RunRecord:
@@ -59,6 +49,7 @@ class RunRecord:
         config_hash: Optional[str] = None,
         seed: Optional[int] = None,
         extra: Optional[Dict[str, Any]] = None,
+        resource_estimates: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
     ):
         self.run_name = pipeline or run_name
@@ -67,6 +58,9 @@ class RunRecord:
         self.source_config = {"path": config_path, "hash": config_hash}
         self.seed = seed
         self.extra = deepcopy(extra or {})
+        # Caller-supplied estimates carry their own units/method/scope. None is
+        # unknown; installed devices or serialized input sizes are not estimates.
+        self.resource_estimates = deepcopy(resource_estimates)
         self.start_time = time.time()
         self.start_time_iso = datetime.now(timezone.utc).isoformat()
         self.input_fingerprints: Dict[str, Any] = {}
@@ -129,12 +123,14 @@ class RunRecord:
             "config": self.config,
             "source_config": self.source_config,
             "seed": self.seed,
+            "resource_estimates": self.resource_estimates,
             "environment": {
                 "python_version": sys.version.split()[0],
                 "executable": sys.executable,
                 "hostname": socket.gethostname(),
                 "platform": platform.platform(),
                 "gpu": _get_gpu_info(),
+                "packages": package_versions(),
             },
             "inputs": self.input_fingerprints,
             "outputs": self.output_fingerprints,

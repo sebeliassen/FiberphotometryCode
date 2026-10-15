@@ -19,6 +19,14 @@ ownership is described in [configs/README.md](configs/README.md), and backup and
 rollback procedures are in [recovery.md](docs/recovery.md). The existing
 [October 9 handoff](docs/reports/handoff.md) remains a dated record.
 
+Coding/research agents should start with [AGENTS.md](AGENTS.md), the
+[navigation index](ARCHITECTURE_INDEX.md) and [current task state](docs/tasks/CURRENT.md).
+Task recipes for [validation](docs/agent-workflows/validation.md),
+[KPMS execution/optimizations](docs/agent-workflows/kpms.md) and
+[scientific media](docs/agent-workflows/visualization.md) point to supported APIs.
+Run `python -B -m fpcode.cli.doctor --json --require cpu` for read-only setup
+diagnostics; a refreshed installation also provides `fpcode-doctor`.
+
 ```bash
 # Installation: optional model/rendering dependencies remain explicit.
 python -m pip install -e '.[test,kpms]'

@@ -10,10 +10,23 @@ one replacement report. No historical document needs to be deleted to use this i
 | --- | --- |
 | [Repository README](../README.md) | Installation, package entry points and fast checks |
 | [Capability contract](architecture/UNIT_CONTRACT.md) | Module responsibilities and allowed dependencies |
+| [Behavioural abstraction plan](architecture/BEHAVIOURAL_ABSTRACTION_PLAN.md) | Accepted unit layers, adjacent methods and independently selectable analysis choices |
+| [Broad behavioural search plan](architecture/BROAD_BEHAVIOURAL_SEARCH_PLAN.md) | Planning space for method, feature-routing, timing, assembly and context exploration; current gaps and possible implementation route |
+| [Broad-search execution plan](architecture/BROAD_SEARCH_EXECUTION_PLAN.md) | Staged two-cohort preparation, method contrasts, reporting conditions and optional WT DA verification |
+| [External scientific critique brief](architecture/BEHAVIOURAL_LAYERS_EXTERNAL_CRITIQUE_20261013.md) | Self-contained seven-layer layout, available methods and difficult unresolved questions for another chatbot |
+| [Gemini suggestions](architecture/GEMINI_SUGGESTIONS_20261013.md) | Assessed scientific additions for interpretable chain families, variants, composition and downstream phenotyping |
+| [Current external verification brief](architecture/CHAIN_VERIFICATION_EXTERNAL_BRIEF_20261014.md) | Actual available data, stopped-search evidence and downstream chain/intra/inter/WT DA questions for another chatbot |
+| [Current Gemini critique triage](architecture/GEMINI_VERIFICATION_TRIAGE_20261014.md) | Completed versus outstanding checks, new duration/animal-influence evidence and a bounded route to qualitative review |
+| [Next chain-generator quantitative panel](architecture/CHAIN_GENERATOR_QUANTITATIVE_PANEL_20261014.md) | Updated priority for condition/genotype, intra/inter, repeatability, partial anchors, spatial and WT DA evaluation before qualitative narrowing |
+| [Behavioural modules and interfaces](../src/fpcode/behavior/README.md) | Implemented structure, relocated capabilities, planned modules and compatibility checks |
+| [Antigravity implementation handoff](agent-workflows/ANTIGRAVITY_BEHAVIOUR_IMPLEMENTATION_HANDOFF.md) | Bounded first pass for seven planned modules, structure preservation, nontrivialities and independent verification |
 | [Validation](architecture/VALIDATION.md) | Fast tests, CPU rendering checks and bounded two-session GPU validation |
 | [Configuration guide](../configs/README.md) | Active profiles, legacy configuration links and photometry policies |
 | [Recovery](recovery.md) | Existing backup evidence and restoration procedures |
 | [Design decision](decisions/0001-capability-modules-and-compatible-scientific-policies.md) | Why scientific policies and compatibility APIs stay explicit |
+| [Agent entry point](../AGENTS.md) and [navigation](../ARCHITECTURE_INDEX.md) | Scoped operating guidance and generated source lookup |
+| [Current task state](tasks/CURRENT.md) | Latest continuation state; earlier handoffs are dated records |
+| [Workflow recipes](agent-workflows/validation.md) | Validation selection; linked KPMS and visualization procedures |
 
 The [October 9 handoff](reports/handoff.md) is a dated record. It is preserved and is
 not the current task list or latest validation result. Current test selection is

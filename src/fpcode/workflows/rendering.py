@@ -71,7 +71,7 @@ def load_render_inputs(results_path, manifest_path=None):
 
 def plan_rendering(inputs, render_type, grid_size, syllables=None):
     """Validate artifact requirements and eligible bouts without loading a model."""
-    from fpcode.behavior.bouts import extract_bouts
+    from fpcode.behavior.primitives.bouts import extract_bouts
     from fpcode.viz.grid_movies import DENSITY_SAMPLING_OPTIONS, exact_grid_layout
 
     if render_type not in {"grid_movies", "trajectories", "all"}:

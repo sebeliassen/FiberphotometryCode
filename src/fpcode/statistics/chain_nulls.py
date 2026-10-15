@@ -4,6 +4,54 @@ import numpy as np
 import pandas as pd
 
 
+def sample_first_order_bouts(segments, *, length, initial, vocabulary, replicates, seed,
+                            forbid_self=True, memory_mb=128):
+    """Plug-in categorical first-order surrogates fitted without segment joins.
+
+    Fit on explicit reference segments, fix the requested initial token and
+    sample replicates in parallel. Unsupported rows use empirical frequencies
+    on allowed support. With RLE input, self transitions stay structurally zero;
+    singleton-only support cannot generate a multi-bout RLE sequence. This null
+    does not fix exact state counts or integrate transition-fit uncertainty.
+    """
+    if min(length, vocabulary, replicates, memory_mb) <= 0 or not 0 <= initial < vocabulary:
+        raise ValueError("invalid first-order surrogate dimensions/support")
+    if (vocabulary ** 2 * 24 + replicates * (length * 8 + vocabulary * 8)) > memory_mb * 1024 ** 2:
+        raise MemoryError("first-order surrogate exceeds requested memory budget")
+    counts = np.zeros((vocabulary, vocabulary), dtype=float)
+    frequency = np.zeros(vocabulary, dtype=float)
+    for tokens in segments:
+        z = np.asarray(tokens)
+        if z.ndim != 1 or not np.issubdtype(z.dtype, np.integer) or np.any(z < 0) or np.any(z >= vocabulary):
+            raise ValueError("reference tokens differ from declared vocabulary")
+        if forbid_self and np.any(z[1:] == z[:-1]):
+            raise ValueError("RLE reference contains adjacent identical bouts")
+        frequency += np.bincount(z, minlength=vocabulary)
+        np.add.at(counts, (z[:-1], z[1:]), 1)
+    if not frequency.sum():
+        raise ValueError("empty first-order reference")
+    probabilities = counts.copy()
+    for state in range(vocabulary):
+        if not probabilities[state].sum():
+            probabilities[state] = frequency
+        if forbid_self:
+            probabilities[state, state] = 0
+        if probabilities[state].sum():
+            probabilities[state] /= probabilities[state].sum()
+    cdf = probabilities.cumsum(axis=1)
+    supported = probabilities.sum(axis=1) > 0
+    cdf[supported, -1] = 1.
+    rng = np.random.default_rng(seed)
+    result = np.empty((replicates, length), dtype=np.int64)
+    result[:, 0] = initial
+    for index in range(1, length):
+        previous = result[:, index - 1]
+        if not supported[previous].all():
+            raise ValueError("reference has no allowed outgoing RLE transition")
+        result[:, index] = np.sum(rng.random(replicates)[:, None] >= cdf[previous], axis=1)
+    return result
+
+
 def frequency_expectations(ids, reference_blocks, pairs):
     """Exact finite-population self/ABA expected counts, independent of gap slots.
 

@@ -15,11 +15,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import h5py
-import keypoint_moseq as kpms
 import numpy as np
-from keypoint_moseq.io import _get_path, load_hdf5
 
-_ORIGINAL_LOAD_CHECKPOINT = kpms.io.load_checkpoint
+from .backend.patch_registry import PatchSet
+
+_ORIGINAL_LOAD_CHECKPOINT = None
+_CHECKPOINT_PATCHES = None
 
 
 def compact_checkpoint(
@@ -226,6 +227,8 @@ def patched_load_checkpoint(
     Drop-in replacement for keypoint_moseq.io.load_checkpoint that transparently
     supports legacy, rolling, and compacted checkpoints.
     """
+    from keypoint_moseq.io import _get_path, load_hdf5
+
     path = _get_path(project_dir, model_name, path, "checkpoint.h5")
 
     if not os.path.exists(path):
@@ -294,13 +297,22 @@ def patched_load_checkpoint(
 
 def apply_kpms_checkpoint_patch() -> None:
     """Apply the checkpoint monkeypatch to keypoint_moseq globally."""
-    kpms.io.load_checkpoint = patched_load_checkpoint
-    kpms.load_checkpoint = patched_load_checkpoint
+    global _CHECKPOINT_PATCHES, _ORIGINAL_LOAD_CHECKPOINT
+    if _CHECKPOINT_PATCHES is None:
+        import keypoint_moseq as kpms
+
+        _ORIGINAL_LOAD_CHECKPOINT = kpms.io.load_checkpoint
+        _CHECKPOINT_PATCHES = PatchSet([
+            (kpms.io, "load_checkpoint", patched_load_checkpoint),
+            (kpms, "load_checkpoint", patched_load_checkpoint),
+        ]).apply()
     print("[kpms_patch] Checkpoint compaction monkeypatch active.")
 
 
 def remove_kpms_checkpoint_patch() -> None:
     """Restore stock keypoint_moseq checkpoint loader."""
-    kpms.io.load_checkpoint = _ORIGINAL_LOAD_CHECKPOINT
-    kpms.load_checkpoint = _ORIGINAL_LOAD_CHECKPOINT
+    global _CHECKPOINT_PATCHES
+    patches, _CHECKPOINT_PATCHES = _CHECKPOINT_PATCHES, None
+    if patches is not None:
+        patches.restore()
     print("[kpms_patch] Restored stock keypoint_moseq loader.")

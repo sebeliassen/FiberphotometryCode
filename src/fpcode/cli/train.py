@@ -52,6 +52,7 @@ def run_training(args):
                pca_path=str(resolve_path(cfg["pca_path"])) if cfg.get("pca_path") else str(model_dir.parent / "pca.p"))
     record = RunRecord(pipeline="train", output_dir=model_dir, config=cfg,
                        config_path=str(config_path), config_hash=compute_config_hash(source), seed=seed,
+                       resource_estimates=cfg.get("resource_estimates"),
                        extra={"model_name": name, "device": args.device, "resolved_config": cfg})
     try:
         if args.device == "cpu":

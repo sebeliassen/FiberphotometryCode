@@ -77,6 +77,7 @@ fpcode-evaluate = "fpcode.cli.evaluate:main"
 fpcode-fuse = "fpcode.cli.fuse:main"
 fpcode-render = "fpcode.cli.render:main"
 fpcode-export = "fpcode.cli.export:main"
+fpcode-doctor = "fpcode.cli.doctor:main"
 
 [tool.setuptools.package-data]
 "fpcode" = ["py.typed"]

@@ -14,16 +14,13 @@ Synthetic, CPU-only tests for core.cache_manifest:
 
 import json
 import os
+import subprocess
 import sys
 import tempfile
 import time
 import unittest
 from pathlib import Path
 from unittest import mock
-
-EXP_DIR = Path(__file__).resolve().parents[2] / "studies/multiview_experiments"
-if str(EXP_DIR) not in sys.path:
-    sys.path.insert(0, str(EXP_DIR))
 
 from fpcode.common import cache_manifest as cm
 
@@ -272,10 +269,16 @@ class TestFingerprintCost(unittest.TestCase):
         self.assertIsNone(cm._inputs_match(rec, same))
         self.assertIsNotNone(cm._inputs_match(rec, diff))
 
-    def test_module_is_stdlib_only(self):
-        for heavy in ("jax", "h5py", "pandas", "numpy"):
-            src = Path(cm.__file__).read_text()
-            self.assertNotIn(f"import {heavy}", src)
+    def test_module_import_does_not_load_numerical_or_modeling_backends(self):
+        # Explicit NPZ operations may load NumPy; metadata-only import must not.
+        # A source substring incorrectly rejected lazy operation-local imports
+        # and could miss indirect imports entirely. Check real fresh-process state.
+        source_root = str(Path(cm.__file__).resolve().parents[2])
+        script = (f"import sys; sys.path.insert(0, {source_root!r}); from fpcode.common import cache_manifest; "
+                  "assert not any(name in sys.modules for name in ('jax', 'h5py', 'pandas', 'numpy'))")
+        # -S excludes workstation site hooks that can preload NumPy themselves.
+        completed = subprocess.run([sys.executable, "-B", "-S", "-c", script], capture_output=True, text=True, timeout=10)
+        self.assertEqual(completed.returncode, 0, completed.stderr)
 
 
 if __name__ == "__main__":

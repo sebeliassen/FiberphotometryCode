@@ -8,13 +8,19 @@ RESTORE_DEST ?=
 VALIDATION_PROJECT ?=
 VALIDATION_ARGS ?=
 
-.PHONY: help test lint lint-baseline typecheck package-check architecture smoke-runtime validate-two-sessions backup-plan backup verify-backup restore-backup shims-report metrics
+.PHONY: help test test-cpu doctor lint lint-baseline typecheck package-check architecture folder-maps folder-maps-check smoke-runtime validate-two-sessions backup-plan backup verify-backup restore-backup shims-report metrics
 
 help:
-	@echo "test, lint, lint-baseline, typecheck, package-check, architecture, smoke-runtime, validate-two-sessions, backup-plan, backup, verify-backup, restore-backup, shims-report, metrics"
+	@echo "test, test-cpu, doctor, lint, lint-baseline, typecheck, package-check, architecture, folder-maps, folder-maps-check, smoke-runtime, validate-two-sessions, backup-plan, backup, verify-backup, restore-backup, shims-report, metrics"
 
 test:
 	$(PYTEST) -q -p no:cacheprovider
+
+test-cpu:
+	$(PYTHON) -B ops/repo/cpu_check.py
+
+doctor:
+	$(PYTHON) -B -m fpcode.cli.doctor --json
 
 lint:
 	$(PYTHON) -B ops/repo/lint.py
@@ -31,6 +37,12 @@ package-check:
 
 architecture:
 	$(PYTHON) -B ops/repo/dependencies.py
+
+folder-maps:
+	$(PYTHON) -B ops/repo/generate_folder_maps.py
+
+folder-maps-check:
+	$(PYTHON) -B ops/repo/generate_folder_maps.py --check
 
 # Explicit optional gate, separate from the fast functional suite.
 smoke-runtime:

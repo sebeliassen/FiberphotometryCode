@@ -30,3 +30,9 @@ repos:
         language: system
         pass_filenames: false
         files: ^(src/fpcode/.*\.py$|ops/repo/dependencies\.py$)
+      - id: folder-maps-drift
+        name: Check hierarchical folder maps are up to date
+        entry: python -B ops/repo/generate_folder_maps.py --check
+        language: system
+        pass_filenames: false
+        files: ^((src/fpcode|ops|pipelines|studies|tests)/.*\.py$|configs/.*\.(yaml|yml|txt)$|.*\.folder-map\.md$|ARCHITECTURE_INDEX\.md$|\.gitignore$)

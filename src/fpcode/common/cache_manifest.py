@@ -20,7 +20,8 @@ Provides:
   * ``verify_artifact_set``   - validates several related artifacts as one
                                 consistent set (same ``set_id`` / config hash).
 
-Pure stdlib: safe to import without JAX / h5py / pandas.
+Metadata/import paths use stdlib only; an explicit NPZ operation loads NumPy.
+Safe to import without numerical or modeling backends.
 """
 
 from __future__ import annotations
@@ -115,6 +116,104 @@ def atomic_write_text(target: PathLike, text: str) -> None:
 
 def atomic_write_json(target: PathLike, obj: Any) -> None:
     atomic_write_text(target, json.dumps(obj, indent=2, sort_keys=True, default=str))
+
+
+def cached_npz_component(directory, identity, builder, *, max_uncompressed_bytes=512*1024**2):
+    """Coordinate one atomic, data-only component creation across Linux workers.
+
+    Callers supply exact consumed dependencies, split, masks, clocks, source and
+    numerical parameters in identity. A kernel advisory lock is released on
+    worker death; incomplete temporary files never become cache hits. NumPy is
+    imported only during this explicit operation. No pickles are accepted.
+    Returns (arrays, hit, key); identity is embedded in the published artifact.
+    """
+    import fcntl
+    import zipfile
+    from math import prod
+    from numbers import Integral
+
+    import numpy as np
+
+    if (isinstance(max_uncompressed_bytes, bool) or not isinstance(max_uncompressed_bytes, Integral)
+            or max_uncompressed_bytes < 1):
+        raise ValueError("max_uncompressed_bytes must be a positive integer")
+    encoded = json.dumps(identity, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    key = hashlib.sha256(encoded.encode()).hexdigest()
+    directory = Path(directory)
+    directory.mkdir(parents=True, exist_ok=True)
+    target = directory / f"{key}.npz"
+
+    def read_checked(path):
+        try:
+            with zipfile.ZipFile(path) as archive:
+                entries = archive.infolist()
+                names = [entry.filename for entry in entries]
+                if len(set(names)) != len(names) or "__identity_json.npy" not in names:
+                    raise ValueError("cached component has duplicate arrays or lacks identity")
+                # NPY headers and Unicode identity storage are bounded separately
+                # from the caller's array payload cap, before any decompression.
+                overhead = 4096*len(entries) + len(encoded.encode())*4
+                if sum(item.file_size for item in entries) > max_uncompressed_bytes + overhead:
+                    raise MemoryError("cached component exceeds declared uncompressed cap")
+                payload_bytes = 0
+                for entry in entries:
+                    if not entry.filename.endswith(".npy"):
+                        raise ValueError("cached component contains a non-array member")
+                    with archive.open(entry) as handle:
+                        version = np.lib.format.read_magic(handle)
+                        if version == (1, 0):
+                            shape, _, dtype = np.lib.format.read_array_header_1_0(handle)
+                        elif version == (2, 0):
+                            shape, _, dtype = np.lib.format.read_array_header_2_0(handle)
+                        else:
+                            raise ValueError("cached component has unsupported array header version")
+                        if dtype.hasobject:
+                            raise ValueError("cached component contains object arrays")
+                        array_bytes = prod(shape)*dtype.itemsize
+                        if handle.tell()+array_bytes != entry.file_size:
+                            raise ValueError("cached component array header disagrees with stored size")
+                        if entry.filename != "__identity_json.npy":
+                            payload_bytes += array_bytes
+                if payload_bytes > max_uncompressed_bytes:
+                    raise MemoryError("cached component exceeds declared array cap")
+            with np.load(path, allow_pickle=False) as data:
+                stored_identity = data["__identity_json"]
+                if stored_identity.shape != () or str(stored_identity) != encoded:
+                    raise ValueError("cached component identity mismatch")
+                result = {k: data[k] for k in data.files if k != "__identity_json"}
+            if any(value.dtype.hasobject for value in result.values()):
+                raise ValueError("cached component contains object arrays")
+            if sum(value.nbytes for value in result.values()) > max_uncompressed_bytes:
+                raise MemoryError("cached component exceeds declared array cap")
+            return result
+        except (OSError, EOFError, zipfile.BadZipFile, KeyError) as exc:
+            raise ValueError("cached component is corrupt or incomplete") from exc
+
+    with (directory / f"{key}.lock").open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        hit = target.exists()
+        if not hit:
+            # Only this key's inactive writer temps can be removed while its
+            # kernel lock is held. A killed worker never leaves the lock held.
+            for abandoned in directory.glob(f".{target.name}.*.tmp"):
+                abandoned.unlink(missing_ok=True)
+            arrays = {k: np.asarray(v) for k, v in dict(builder()).items()}
+            if (any(not isinstance(k, str) or not k or k in {"file", "__identity_json"}
+                    or "/" in k or "\\" in k for k in arrays)
+                    or any(value.dtype.hasobject for value in arrays.values())):
+                raise ValueError("cache payload must contain only non-object arrays and unreserved keys")
+            if sum(v.nbytes for v in arrays.values()) > max_uncompressed_bytes:
+                raise MemoryError("component exceeds uncompressed cache array cap")
+            arrays["__identity_json"] = np.array(encoded)
+            with atomic_path(target) as tmp:
+                with tmp.open("wb") as handle:
+                    np.savez_compressed(handle, **arrays)
+                # Validate bytes/identity while still private: an invalid build
+                # cannot become a durable component hit for another worker.
+                result = read_checked(tmp)
+        else:
+            result = read_checked(target)
+        return result, hit, key
 
 
 def cleanup_stale_temps(directory: PathLike, older_than_s: float = 3600.0) -> List[Path]:

@@ -53,6 +53,88 @@ LAYERS["workflows"] = set(LAYERS) - {"cli"}
 LAYERS["cli"] = set(LAYERS)
 LAYERS["compat"] = set(LAYERS) - {"cli"}
 
+# These are unit choices inside the behavior capability, rather than an
+# alternative to the top-level dependency contract. Workflows compose detectors
+# and measurements; detector implementations do not reach into one another's
+# higher layers or recover that permission through an aggregate public import.
+BEHAVIOR_LAYERS = {
+    "observations": {"observations"},
+    "primitives": {"observations", "primitives"},
+    "episodes": {"observations", "primitives", "episodes"},
+    "assemblies": {"observations", "assemblies"},
+    "context": {"observations", "primitives", "context"},
+    "analysis": {"observations", "primitives", "analysis"},
+}
+# Higher unit choices may reuse primitive views and interval/counting helpers,
+# but fitted primitive detector internals belong behind explicit result adapters.
+BEHAVIOR_PRIMITIVE_DETECTORS = {"fpcode.behavior.primitives.segmentation"}
+BEHAVIOR_FOUNDATIONS = {"fpcode.behavior.unit_adapters", "fpcode.behavior.compatibility"}
+# Label-to-interval conversion reuses the canonical gap-aware RLE helper rather
+# than implementing a second segmentation policy. This is a single adapter
+# dependency, not permission to select primitive detectors or resolutions.
+BEHAVIOR_FOUNDATION_DEPENDENCIES = {
+    "fpcode.behavior.unit_adapters": {"fpcode.behavior.primitives.bouts"},
+    "fpcode.behavior.compatibility": set(),
+}
+# Old paths remain import-compatible, but new shared callers name the owner.
+# Timeline reconstruction and historical tiling are retained adapters, not
+# forwarding facades or detector implementations in the new unit layers.
+BEHAVIOR_FACADES = {
+    "fpcode.behavior": {
+        "fpcode.behavior.observations.kinematics", "fpcode.behavior.primitives.bouts",
+        "fpcode.behavior.analysis.transitions", "fpcode.behavior.sequences.timelines",
+        "fpcode.behavior.sequences.tiling", "fpcode.behavior.syllables",
+    },
+    "fpcode.behavior.syllables": {
+        "fpcode.behavior.primitives.bouts", "fpcode.behavior.sequences.timelines",
+        "fpcode.behavior.sequences.tiling",
+    },
+    "fpcode.behavior.sequences": {
+        "fpcode.behavior.sequences.timelines", "fpcode.behavior.sequences.tiling",
+    },
+    "fpcode.behavior.kinematics": {"fpcode.behavior.observations.kinematics"},
+    "fpcode.behavior.bouts": {"fpcode.behavior.primitives.bouts"},
+    "fpcode.behavior.resolutions": {"fpcode.behavior.primitives.resolutions"},
+    "fpcode.behavior.variants": {"fpcode.behavior.analysis.variants"},
+    "fpcode.behavior.phenotyping": {"fpcode.behavior.analysis.phenotyping"},
+    "fpcode.behavior.transitions": {"fpcode.behavior.analysis.transitions"},
+    "fpcode.behavior.sequences.counting": {"fpcode.behavior.primitives.counting"},
+    "fpcode.behavior.sequences.chains": {"fpcode.behavior.episodes.chains"},
+    "fpcode.behavior.sequences.seqnmf": {"fpcode.behavior.episodes.seqnmf"},
+    "fpcode.behavior.sequences.organisation": {"fpcode.behavior.analysis.organisation"},
+    "fpcode.behavior.sequences.prediction": {"fpcode.behavior.analysis.prediction"},
+}
+
+
+def _behavior_dependency_violation(name, imported):
+    if name in BEHAVIOR_FACADES:
+        if imported.startswith("fpcode.") and imported not in BEHAVIOR_FACADES[name]:
+            return f"behavior facade must forward to a named owner: {imported}"
+        return None
+    if imported in BEHAVIOR_FACADES and not name.startswith("fpcode.compat."):
+        return f"canonical caller must import the behavior owner, not its facade: {imported}"
+    if name in BEHAVIOR_FOUNDATIONS:
+        if imported.startswith("fpcode.") and (imported not in BEHAVIOR_FOUNDATIONS
+                                               and imported not in BEHAVIOR_FOUNDATION_DEPENDENCIES[name]
+                                               and imported.split(".")[1] not in {"contracts", "common"}):
+            return f"behavior foundation dependency {imported}"
+        return None
+    own_parts, target_parts = name.split("."), imported.split(".")
+    if len(own_parts) < 3 or own_parts[:2] != ["fpcode", "behavior"]:
+        return None
+    own_layer = own_parts[2]
+    if own_layer not in BEHAVIOR_LAYERS or target_parts[:2] != ["fpcode", "behavior"]:
+        return None
+    if own_layer != "primitives" and any(
+            imported == detector or imported.startswith(detector + ".")
+            for detector in BEHAVIOR_PRIMITIVE_DETECTORS):
+        return f"primitive detector dependency {imported}"
+    if imported in BEHAVIOR_FOUNDATIONS:
+        return None
+    if len(target_parts) < 3 or target_parts[2] not in BEHAVIOR_LAYERS[own_layer]:
+        return f"forbidden behavior layer dependency {imported}"
+    return None
+
 
 def module_name(path, package_root):
     parts = list(path.relative_to(package_root.parent).with_suffix("").parts)
@@ -173,8 +255,13 @@ def audit(package_root):
                 except (ImportError, ValueError) as error:
                     violations.append(f"{name}:{node.lineno}: invalid relative import: {error}")
                     continue
-                candidates = [base] + [f"{base}.{alias.name}" for alias in node.names
-                                       if f"{base}.{alias.name}" in paths]
+                child_modules = [f"{base}.{alias.name}" for alias in node.names
+                                 if f"{base}.{alias.name}" in paths]
+                # A named behavior submodule is an explicit target, unlike a
+                # symbol reexported by the aggregate compatibility initializer.
+                # Preserve the normal initializer edge for all other imports.
+                candidates = ([base] if not (base.startswith("fpcode.behavior")
+                                             and len(child_modules) == len(node.names)) else []) + child_modules
             elif isinstance(node, ast.Call):
                 try:
                     imported = _literal_import_call(node, import_aliases, name, package)
@@ -201,18 +288,22 @@ def audit(package_root):
                         violations.append(f"{name}:{node.lineno}: forbidden dependency {imported}")
                     if dynamic and imported not in paths:
                         violations.append(f"{name}:{node.lineno}: missing dynamic import target {imported}")
+                    behavior_violation = _behavior_dependency_violation(name, imported)
+                    if behavior_violation:
+                        violations.append(f"{name}:{node.lineno}: {behavior_violation}")
                 if imported in paths and imported != name:
                     graph[name].add(imported)
         violations.extend(f"{name}:{line}: argument parsing at import time"
                           for line in _top_level_parse_calls(tree))
-        if facade_forwarded:
+        if facade_forwarded or name in BEHAVIOR_FACADES:
             # An old public path cannot gain permission to implement algorithms
             # simply by being listed as a compatibility facade.
             for node in tree.body:
                 if (isinstance(node, ast.ClassDef)
                         or isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
                         and node.name not in {"__getattr__", "__dir__"}):
-                    violations.append(f"{name}:{node.lineno}: compatibility facade must only forward names")
+                    kind = "behavior" if name in BEHAVIOR_FACADES else "compatibility"
+                    violations.append(f"{name}:{node.lineno}: {kind} facade must only forward names")
     return {"module_count": len(paths), "edges": {name: sorted(edges) for name, edges in graph.items()},
             "violations": violations, "cycles": _cycles(graph)}
 

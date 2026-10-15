@@ -21,7 +21,7 @@ from fpcode.adapters.legacy_sessions import (
     attach_export_tables,
     project_legacy_photometry_table,
 )
-from fpcode.behavior.kinematics import legacy_nose_tail_kinematics
+from fpcode.behavior.observations.kinematics import legacy_nose_tail_kinematics
 from fpcode.common.cache_manifest import atomic_path
 from fpcode.common.file_io import safe_load_pickle
 from fpcode.common.logging import get_logger

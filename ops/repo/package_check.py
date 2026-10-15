@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
@@ -43,6 +44,11 @@ def main() -> int:
         with ZipFile(wheel) as archive:
             names = set(archive.namelist())
             assert "fpcode/py.typed" in names, "Type marker missing from wheel"
+            for module in ("contracts/behavior_units.py", "behavior/unit_adapters.py", "behavior/compatibility.py",
+                           "behavior/observations/kinematics.py", "behavior/primitives/bouts.py",
+                           "behavior/episodes/seqnmf.py", "behavior/analysis/unit_views.py",
+                           "behavior/episodes/staged.py", "behavior/assemblies/grammar.py", "behavior/context/models.py"):
+                assert "fpcode/" + module in names, f"Behaviour layer module missing from wheel: {module}"
             for name in RESOURCE_NAMES:
                 assert f"fpcode/compat/multiview/resources/{name}" in names, f"Packaged calibration resource missing: {name}"
         installation = workspace / "venv"
@@ -58,15 +64,28 @@ def main() -> int:
             f"assert Path(fpcode.__file__).is_relative_to(Path({str(installation)!r}))",
             "from fpcode.tracking.geometry import rot2d",
             "assert rot2d(0).shape == (2, 2)",
+            "from fpcode.contracts import FrameSpan, SessionKey, UnitOccurrence, UnitStream, UnitType",
+            "from fpcode.behavior.analysis.unit_views import measure_unit_organisation",
+            "from fpcode.behavior.episodes.seqnmf import SeqNMF",
+            "from fpcode.behavior.sequences.seqnmf import SeqNMF as old_seqnmf",
+            "from fpcode.behavior.context import models",
+            "assert SeqNMF is old_seqnmf and models.IMPLEMENTATION_STATUS == 'implemented'",
+            "stream = UnitStream(SessionKey('synthetic'), 'episode', 'model', 'video', 10.,",
+            "                    (FrameSpan(0, 20),), (UnitType('a'),),",
+            "                    (UnitOccurrence('one', 'a', FrameSpan(0, 10)), UnitOccurrence('two', 'a', FrameSpan(10, 20))))",
+            "assert measure_unit_organisation(stream, gap_seconds=0)['counts']['self_pairs'] == 1",
             "resources = files('fpcode.compat.multiview').joinpath('resources')",
             f"for name in {RESOURCE_NAMES!r}:",
             "    assert json.loads(resources.joinpath(name).read_text())",
             "assert not {'jax', 'keypoint_moseq', 'studies', 'syllable_generation'} & set(sys.modules)",
         ))
         run([str(python), "-I", "-B", "-c", check], cwd=workspace, env=env)
-        for verb in ("train", "evaluate", "fuse", "render", "export"):
+        for verb in ("train", "evaluate", "fuse", "render", "export", "doctor"):
             run([str(installation / f"bin/fpcode-{verb}"), "--help"], cwd=workspace, env=env)
-        print("Wheel type marker, all calibration resources, canonical import and five installed CLI help commands passed outside checkout.")
+        diagnostic = subprocess.run([str(installation / "bin/fpcode-doctor"), "--json"],
+                                    cwd=workspace, env=env, check=True, capture_output=True, text=True)
+        assert json.loads(diagnostic.stdout)["backend"]["inspection"] == "not_initialized"
+        print("Wheel resources/type marker, canonical import, six CLI help commands and read-only doctor passed outside checkout.")
     return 0
 
 

@@ -20,10 +20,10 @@ if not hasattr(np, "bool8"):
     np.bool8 = np.bool_
 
 
-from fpcode.behavior.kinematics import (
+from fpcode.behavior.observations.kinematics import (
     clean_short_runs,
 )
-from fpcode.behavior.kinematics import (
+from fpcode.behavior.observations.kinematics import (
     presence_mask_from_conf_kpms as presence_mask_from_conf,
 )
 

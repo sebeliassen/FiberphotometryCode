@@ -67,6 +67,12 @@ arbitrary recordings.
 1. **`observations.representations`**: Continuous kinematic features (`speed`, planar `heading`, circular `angular_velocity`, `centroid_x`, `centroid_y`, and `compute_interval_trajectory_metrics`) from explicit `PoseSeries` and `TimeAxis`. Preserves raw observations, native coordinates, and per-landmark validity without leaking across missing frames or unobserved trajectories.
 2. **`primitives.segmentation`**: `CentroidPrimitiveSegmenter` vector-quantized baseline. Fits frozen centroids and scaling strictly on training samples; assigns held-out rows with `-1` for unsupported observations. Emits `UnitStream` via the canonical gap-aware RLE adapter.
 3. **`episodes.staged`**: `StagedEpisodeModel` implementing configured categorical explicit-duration HSMM and staged HMM inference. Decodes phase intervals, separates same-routine reentry invocations, handles boundary right-censoring via survival mass, and attaches `PhaseRecord` and `CompletionEvidence` sidecars.
+   `fit_staged_model` adds bounded categorical Viterbi hard-EM reestimation on
+   explicit training streams. It learns emissions and supported segment
+   transitions while keeping initial probabilities, topology and event-count
+   duration PMFs fixed. Fit diagnostics disclose training identities, priors,
+   seeds, counts, convergence/objectives and resource budgets. This is seeded
+   parameter fitting, not learned routine/topology or duration discovery.
 4. **`episodes.grammar`**: `GrammarEpisodeDetector` implementing primitive-to-episode detection from caller-specified finite grammars. Preserves scoped child references, alternative weighted derivations, and gap barriers.
 5. **`assemblies.grammar`**: `GrammarAssemblyComposer` implementing episode-to-assembly composition. Reuses the generic finite parser, preserves episode child references, and supports DAG reuse of child types across assembly definitions.
 6. **`context.models`**: `EventContextHMM` implementing categorical event-context models. Operates on frozen lower unit streams, measures persistence in event steps, preserves physical gap boundaries, and emits `StatePosteriorRecord` sidecars.
@@ -83,6 +89,13 @@ they do not need to alter KPMS labels, resolution crosswalks or chain detection.
 Execution and onset/phase analyses align the original supported frame samples
 to each unit's native intervals. Passing features to those analyses is explicit;
 detectors do not automatically copy or consume every feature channel.
+
+`analysis.unit_views.measure_unit_composition` and `aggregate_unit_composition`
+describe constituent diversity, exact repetition, catalogue support/fragmentation
+and bounded within-/between-type edit agreement. Lower vocabulary identities stay
+scoped to their source model; unsupported or clipped source bouts remain explicit
+and do not enter sequence comparisons. These are separate descriptive diagnostics,
+not a universal quality score or proof of similar physical execution.
 
 `extract_trajectory_features(..., arena_bounds=(xmin, xmax, ymin, ymax))` adds
 `distance_nearest_corner`, `distance_nearest_edge` and `distance_center`, using

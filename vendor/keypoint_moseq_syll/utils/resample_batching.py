@@ -23,10 +23,5 @@ def __getattr__(name):
 def __dir__():
     return dir(_real)
 
-BatchConfig = _real.BatchConfig
-CONFIG = _real.CONFIG
-precompute_optimal_batch_config = _real.precompute_optimal_batch_config
-apply_optimizations = _real.apply_optimizations
-restore_original_kernels = _real.restore_original_kernels
-kpms_optimizations = _real.kpms_optimizations
-KPMSStateCache = _real.KPMSStateCache
+# The module alias already preserves every canonical attribute and its identity.
+# Eager attribute bindings would defeat the runtime facade's lazy backend loading.

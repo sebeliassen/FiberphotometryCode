@@ -1,6 +1,8 @@
 # Test discovery and validation
 
-`make test` discovers `tests/` and runs the fast functional suite. Synthetic
+`make test` discovers `tests/` and runs the fast functional suite. `make test-cpu`
+runs that selection with modeling-backend imports forbidden in the test process
+and automatic third-party pytest plugin loading disabled. Synthetic
 checks live in `unit/`, `integration/`, `regression/` and `architecture/`;
 `golden/` holds bounded, reviewed fixtures. Moving these files does not change
 their assertions or remove the established functional coverage.
@@ -12,8 +14,7 @@ collection. Empirical modules defer dataset loading and optional backend imports
 until execution, so this command checks discovery without fitting models:
 
 ```bash
-python -B -m pytest tests/empirical --empirical --collect-only -q \
-  -m 'needs_data or gpu or slow' -p no:cacheprovider
+python -B ops/repo/cpu_check.py --collect-empirical
 ```
 
 To run a particular empirical check, supply its path, `--empirical` and an
@@ -28,8 +29,8 @@ preserved; `registry/TEST_MOVES.tsv` records their destinations.
 
 CPU CI uses `configs/environments/ci-cpu-requirements.txt`, which pins the active
 dependency closure observed in the validated Python 3.10 environment. It runs
-the functional suite, architecture audit, empirical collection, maintained
-source lint and an installed-wheel check. GPU and empirical scientific
+the guarded functional suite, architecture audit, empirical collection, maintained
+source lint, generated-navigation check and an installed-wheel check. GPU and empirical scientific
 validation remain explicit additional gates.
 
 `make lint` enforces full rules on the installed library and core entry points,

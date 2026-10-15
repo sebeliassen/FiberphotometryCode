@@ -54,7 +54,11 @@ def _validate_inputs(initial, transition, emission, duration=None, *, memory_bud
     for value, name in ((memory_budget_bytes, "memory budget"), (max_work, "work budget")):
         if isinstance(value, bool) or not isinstance(value, Integral) or value < 1:
             raise ValueError(f"{name} must be a positive integer")
-    if 64*(t+1)*q + 16*q*q + 256*t > memory_budget_bytes:
+    # Viterbi calls forward while its traceback arrays are still live. Explicit
+    # durations also allocate survival storage and duration-by-state batches.
+    temporal_bytes = (96 if duration is not None else 64)*(t+1)*q
+    duration_bytes = 0 if duration is None else 16*q*d + 64*min(d, t)*q + 32*min(d, t)
+    if temporal_bytes + 16*q*q + 256*t + duration_bytes > memory_budget_bytes:
         raise ValueError("sequence inference memory budget exceeded")
     if max(t, 1)*q*q*d > max_work:
         raise ValueError("sequence inference work budget exceeded")
@@ -267,47 +271,27 @@ def forward_hsmm(
     alpha : np.ndarray
         Shape (T + 1, Q), forward log probabilities ending at each time boundary.
     """
-    log_init = np.asarray(log_initial, dtype=np.float64)
-    log_trans = np.asarray(log_transition, dtype=np.float64)
-    log_emiss = np.asarray(log_emission, dtype=np.float64)
-    log_dur = np.asarray(log_duration_pmfs, dtype=np.float64)
-
+    log_init, log_trans, log_emiss, log_dur = (np.asarray(a, dtype=np.float64) for a in
+        (log_initial, log_transition, log_emission, log_duration_pmfs))
     _validate_inputs(log_init, log_trans, log_emiss, log_dur,
                      memory_budget_bytes=memory_budget_bytes, max_work=max_work)
     T, Q = log_emiss.shape
-    _, D_max = log_dur.shape
-    if T == 0:
+    if not T:
         return 0.0, np.zeros((1, Q), dtype=np.float64)
-
-    log_survival = compute_survival_log_pmfs(log_dur)
-    prefix, counts = _segment_emissions(log_emiss)
-    alpha = np.full((T + 1, Q), float("-inf"), dtype=np.float64)
-
-    for t in range(1, T + 1):
-        is_terminal = (t == T)
-        for j in range(Q):
-            incoming: list[float] = []
-            for d in range(1, min(D_max, t) + 1):
-                s = t - d
-                dur_score = log_survival[j, d - 1] if (is_terminal and right_censored) else log_dur[j, d - 1]
-                if np.isneginf(dur_score):
-                    continue
-                emiss_sum = _segment_score(prefix, counts, s, t, j)
-                if s == 0:
-                    init_branch = log_init[j] + dur_score + emiss_sum
-                    if not np.isneginf(init_branch):
-                        incoming.append(float(init_branch))
-                else:
-                    for i in range(Q):
-                        if i == j or np.isneginf(log_trans[i, j]) or np.isneginf(alpha[s, i]):
-                            continue
-                        trans_branch = alpha[s, i] + log_trans[i, j] + dur_score + emiss_sum
-                        incoming.append(float(trans_branch))
-            if incoming:
-                alpha[t, j] = float(logsumexp(np.array(incoming, dtype=np.float64)))
-
-    log_likelihood = float(logsumexp(alpha[T]))
-    return log_likelihood, alpha
+    survival = compute_survival_log_pmfs(log_dur)
+    prefix, forbidden = _segment_emissions(log_emiss)
+    alpha = np.full((T+1, Q), -np.inf)
+    incoming = np.full_like(alpha, -np.inf)
+    incoming[0] = log_init
+    for stop in range(1, T+1):
+        durations = np.arange(1, min(log_dur.shape[1], stop)+1)
+        starts = stop-durations
+        emissions = prefix[stop]-prefix[starts]
+        emissions[forbidden[stop] != forbidden[starts]] = -np.inf
+        pmf = survival if right_censored and stop == T else log_dur
+        alpha[stop] = logsumexp(incoming[starts]+pmf[:, durations-1].T+emissions, axis=0)
+        incoming[stop] = logsumexp(alpha[stop, :, None]+log_trans, axis=0)
+    return float(logsumexp(alpha[T])), alpha
 
 
 def viterbi_hsmm(
@@ -340,94 +324,53 @@ def viterbi_hsmm(
     HSMMResult
         Likelihood, parsed segments, frame-by-frame MAP state assignments, and best path score.
     """
-    log_init = np.asarray(log_initial, dtype=np.float64)
-    log_trans = np.asarray(log_transition, dtype=np.float64)
-    log_emiss = np.asarray(log_emission, dtype=np.float64)
-    log_dur = np.asarray(log_duration_pmfs, dtype=np.float64)
-
+    log_init, log_trans, log_emiss, log_dur = (np.asarray(a, dtype=np.float64) for a in
+        (log_initial, log_transition, log_emission, log_duration_pmfs))
     _validate_inputs(log_init, log_trans, log_emiss, log_dur,
                      memory_budget_bytes=memory_budget_bytes, max_work=max_work)
     T, Q = log_emiss.shape
-    _, D_max = log_dur.shape
-    if T == 0:
+    if not T:
         return HSMMResult(0.0, (), np.empty(0, dtype=int), 0.0)
-
-    log_survival = compute_survival_log_pmfs(log_dur)
-    prefix, counts = _segment_emissions(log_emiss)
-
-    # Segment emissions computed safely with np.sum to avoid -inf - (-inf) NaN
-
-    # V[t, j] = best log score ending a segment of state j at boundary t (t in 1..T)
-    V = np.full((T + 1, Q), float("-inf"), dtype=np.float64)
-    # bp_prev_state[t, j] = state of previous segment
-    bp_prev_state = np.full((T + 1, Q), -1, dtype=int)
-    # bp_dur[t, j] = duration of this segment
-    bp_dur = np.full((T + 1, Q), 0, dtype=int)
-
-    # Initialization: segments starting at t=0
-    for d in range(1, min(D_max, T) + 1):
-        is_terminal = (d == T)
-        for j in range(Q):
-            emiss_sum = _segment_score(prefix, counts, 0, d, j)
-            dur_score = log_survival[j, d - 1] if (is_terminal and right_censored) else log_dur[j, d - 1]
-            score = log_init[j] + dur_score + emiss_sum
-            if score > V[d, j]:
-                V[d, j] = score
-                bp_prev_state[d, j] = -1  # initial segment
-                bp_dur[d, j] = d
-
-    # DP over boundary t = 2..T
-    for t in range(2, T + 1):
-        is_terminal = (t == T)
-        max_d = min(D_max, t - 1)  # duration for subsequent segments (must leave >= 1 step before)
-        for d in range(1, max_d + 1):
-            s = t - d
-            dur_col = d - 1
-            for j in range(Q):
-                dur_score = log_survival[j, dur_col] if (is_terminal and right_censored) else log_dur[j, dur_col]
-                if np.isneginf(dur_score):
-                    continue
-                emiss_sum = _segment_score(prefix, counts, s, t, j)
-                # Best previous state i != j
-                for i in range(Q):
-                    if i == j or np.isneginf(log_trans[i, j]) or np.isneginf(V[s, i]):
-                        continue
-                    total = V[s, i] + log_trans[i, j] + dur_score + emiss_sum
-                    if total > V[t, j]:
-                        V[t, j] = total
-                        bp_prev_state[t, j] = i
-                        bp_dur[t, j] = d
-
+    survival = compute_survival_log_pmfs(log_dur)
+    prefix, forbidden = _segment_emissions(log_emiss)
+    V = np.full((T+1, Q), -np.inf)
+    incoming = np.full_like(V, -np.inf)
+    incoming[0] = log_init
+    predecessors = np.full((T+1, Q), -1, dtype=int)
+    bp_state, bp_duration = np.full_like(predecessors, -1), np.zeros_like(predecessors)
+    states = np.arange(Q)
+    for stop in range(1, T+1):
+        # Preserve historical ties: an initial segment wins before the ascending
+        # subsequent durations, and the smallest predecessor state wins ties.
+        durations = (np.r_[stop, np.arange(1, stop)] if stop <= log_dur.shape[1]
+                     else np.arange(1, log_dur.shape[1]+1))
+        starts = stop-durations
+        emissions = prefix[stop]-prefix[starts]
+        emissions[forbidden[stop] != forbidden[starts]] = -np.inf
+        pmf = survival if right_censored and stop == T else log_dur
+        candidates = incoming[starts]+pmf[:, durations-1].T+emissions
+        best = np.argmax(candidates, axis=0)
+        V[stop] = candidates[best, states]
+        bp_duration[stop] = durations[best]
+        bp_state[stop] = predecessors[starts[best], states]
+        transitions = V[stop, :, None]+log_trans
+        predecessors[stop] = np.argmax(transitions, axis=0)
+        incoming[stop] = transitions[predecessors[stop], states]
     best_score = float(np.max(V[T]))
     if np.isneginf(best_score):
-        return HSMMResult(float("-inf"), (), np.full(T, -1, dtype=int), float("-inf"))
-
-    # Traceback segments
-    segments_list: list[HSMMSegment] = []
-    map_states = np.full(T, -1, dtype=int)
-
-    curr_t = T
-    curr_state = int(np.argmax(V[T]))
-
-    while curr_t > 0 and curr_state >= 0:
-        d = bp_dur[curr_t, curr_state]
-        prev_s = bp_prev_state[curr_t, curr_state]
-        start_t = curr_t - d
-        seg_score = float(V[curr_t, curr_state] - (V[start_t, prev_s] if prev_s >= 0 else 0.0))
-        segments_list.append(HSMMSegment(curr_state, start_t, curr_t, d, seg_score))
-        map_states[start_t:curr_t] = curr_state
-        curr_t = start_t
-        curr_state = prev_s
-
-    segments_list.reverse()
-    marginal_ll, _ = forward_hsmm(log_init, log_trans, log_emiss, log_dur, right_censored=right_censored,
-                                memory_budget_bytes=memory_budget_bytes, max_work=max_work)
-    return HSMMResult(
-        marginal_ll,
-        tuple(segments_list),
-        map_states,
-        best_score,
-    )
+        return HSMMResult(-np.inf, (), np.full(T, -1, dtype=int), -np.inf)
+    segments, path = [], np.full(T, -1, dtype=int)
+    stop, state = T, int(np.argmax(V[T]))
+    while stop > 0:
+        duration, previous = int(bp_duration[stop, state]), int(bp_state[stop, state])
+        start = stop-duration
+        score = float(V[stop, state]-(V[start, previous] if previous >= 0 else 0.))
+        segments.append(HSMMSegment(state, start, stop, duration, score))
+        path[start:stop] = state
+        stop, state = start, previous
+    likelihood, _ = forward_hsmm(log_init, log_trans, log_emiss, log_dur,
+        right_censored=right_censored, memory_budget_bytes=memory_budget_bytes, max_work=max_work)
+    return HSMMResult(likelihood, tuple(reversed(segments)), path, best_score)
 
 
 __all__ = [

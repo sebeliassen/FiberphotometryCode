@@ -28,11 +28,13 @@ jobs:
           python -m pip install --no-deps --no-build-isolation -e .
       - name: Functional suite and architecture
         run: |
-          make test
+          make test-cpu
           make architecture
       - name: Collect empirical tests without loading data or models
-        run: python -B -m pytest tests/empirical --empirical --collect-only -q -m "needs_data or gpu or slow" -p no:cacheprovider
+        run: python -B ops/repo/cpu_check.py --collect-empirical
       - name: Lint maintained code
         run: make lint
+      - name: Check generated navigation
+        run: make folder-maps-check
       - name: Build and inspect installed wheel outside checkout
         run: make package-check

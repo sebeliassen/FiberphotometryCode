@@ -11,4 +11,4 @@ trigger: all
    - Elevation/posture (e.g., "high vertical displacement", "low elevation")
    - Component nomenclature: "Component k", "Mode m"
    - Information theory: "constrained state entropy", "non-Markovian history gain $\Delta_{\text{history}}$"
-3. Reference full guidelines in `syllable_generation/analysis/language_models/mds/01_theory_and_strategy/04_objective_ethological_nomenclature_guidelines.md`.
+3. Reference full guidelines in `studies/language_models/mds/01_theory_and_strategy/04_objective_ethological_nomenclature_guidelines.md`.

@@ -4,6 +4,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 from numbers import Integral, Real
+from types import MappingProxyType
 
 import numpy as np
 
@@ -230,4 +231,154 @@ def _kmeans_plus_plus_init(x, k, rng):
     return centers
 
 
-__all__ = ["IMPLEMENTATION_STATUS", "CentroidPrimitiveSegmenter"]
+@dataclass(frozen=True)
+class WholeBoutCodebook:
+    """Training-only feature/joint/parent-subtype identities on unchanged intervals.
+
+    Parent IDs are categories. Joint distances use a separately weighted one-hot
+    block; no arithmetic on the numerical value of an ID is performed. Missing
+    feature rows and unseen categorical parents remain unsupported (empty string).
+    Resource caps cover owned arrays; caller-owned input storage is excluded.
+    """
+
+    route: str
+    feature_names: tuple[str, ...]
+    location: np.ndarray
+    scale: np.ndarray
+    parents: tuple[str, ...]
+    centers: dict
+    parent_weight: float = 1.
+    memory_budget_bytes: int = 256*1024**2
+
+    def __post_init__(self):
+        names, parents = tuple(self.feature_names), tuple(self.parents)
+        budget = _positive(self.memory_budget_bytes, "memory_budget_bytes")
+        if (self.route not in {"feature", "joint", "within_parent"} or not names
+                or len(set(names)) != len(names) or any(not isinstance(n, str) or not n for n in names)
+                or not parents or len(set(parents)) != len(parents)
+                or any(not isinstance(p, str) or not p for p in parents)):
+            raise ValueError("codebook schema requires supported route and unique nonempty feature/parent names")
+        if (isinstance(self.parent_weight, bool) or not isinstance(self.parent_weight, Real)
+                or not np.isfinite(self.parent_weight) or self.parent_weight < 0):
+            raise ValueError("parent_weight must be finite and nonnegative")
+        expected_keys = set(parents) if self.route == "within_parent" else {"all"}
+        if not isinstance(self.centers, (dict, MappingProxyType)) or set(self.centers) != expected_keys:
+            raise ValueError("codebook center groups differ from declared route/parents")
+        f = len(names) + (len(parents) if self.route == "joint" else 0)
+        raw_arrays = [np.asarray(self.location), np.asarray(self.scale)] + [np.asarray(c) for c in self.centers.values()]
+        if 32*sum(a.size for a in raw_arrays) > budget:
+            raise MemoryError("whole-bout parameter array budget exceeded")
+        location, scale = frozen_array(self.location, dtype=float), frozen_array(self.scale, dtype=float)
+        centers = {p: frozen_array(c, dtype=float) for p, c in self.centers.items()}
+        if (location.shape != (len(names),) or scale.shape != location.shape
+                or not np.isfinite(location).all() or not np.isfinite(scale).all() or np.any(scale <= 0)
+                or any(c.ndim != 2 or not len(c) or c.shape[1] != f or not np.isfinite(c).all()
+                       for c in centers.values())):
+            raise ValueError("codebook fitted arrays disagree with schema or finite positive scales")
+        if 4*(location.nbytes+scale.nbytes+sum(c.nbytes for c in centers.values())) > budget:
+            raise MemoryError("whole-bout parameter array budget exceeded")
+        for name, value in (("feature_names", names), ("parents", parents), ("location", location),
+                            ("scale", scale), ("centers", MappingProxyType(centers)),
+                            ("parent_weight", float(self.parent_weight)), ("memory_budget_bytes", budget)):
+            object.__setattr__(self, name, value)
+
+    @classmethod
+    def fit(cls, values, parent_ids, *, feature_names, route="feature", clusters=8,
+            seed=101, iterations=40, parent_weight=1., memory_budget_bytes=256*1024**2):
+        values, parent_ids = np.asarray(values, dtype=float), np.asarray(parent_ids, dtype=str)
+        _positive(clusters, "clusters")
+        _positive(iterations, "iterations")
+        _positive(memory_budget_bytes, "memory_budget_bytes")
+        if isinstance(seed, bool) or not isinstance(seed, Integral) or seed < 0:
+            raise ValueError("seed must be a nonnegative integer")
+        feature_names = tuple(feature_names)
+        if (route not in {"feature", "joint", "within_parent"} or values.ndim != 2
+                or parent_ids.shape != (len(values),) or values.shape[1] != len(feature_names)
+                or not len(feature_names) or len(set(feature_names)) != len(feature_names)
+                or any(not isinstance(n, str) or not n for n in feature_names)
+                or isinstance(parent_weight, bool) or not isinstance(parent_weight, Real)
+                or not np.isfinite(parent_weight) or parent_weight < 0):
+            raise ValueError("explicit whole-bout feature schema, categorical parents and supported creator required")
+        valid = np.isfinite(values).all(axis=1) & (parent_ids != "")
+        if valid.sum() < clusters:
+            raise ValueError("insufficient finite training bouts for codebook")
+        parents = tuple(sorted(set(parent_ids[valid])))
+        f = len(feature_names) + (len(parents) if route == "joint" else 0)
+        estimated = len(values)*(64*f+32) + 64*clusters*f
+        if estimated > memory_budget_bytes:
+            raise MemoryError("whole-bout training array budget exceeded")
+        x = values[valid]
+        location = np.median(x, axis=0)
+        scale = np.quantile(x, .75, axis=0)-np.quantile(x, .25, axis=0)
+        scale = np.where(scale > 1e-9, scale, 1.)
+        x = np.clip((x-location)/scale, -8, 8)/np.sqrt(values.shape[1])
+        ids = parent_ids[valid]
+        if route == "joint":
+            crosswalk = {p: i for i, p in enumerate(parents)}
+            cat = np.zeros((len(ids), len(parents)))
+            cat[np.arange(len(ids)), [crosswalk[p] for p in ids]] = np.sqrt(parent_weight/2)
+            x = np.column_stack([x, cat])
+        rng = np.random.default_rng(seed)
+        centers = {}
+        groups = parents if route == "within_parent" else ("all",)
+        for parent in groups:
+            part = x[ids == parent] if route == "within_parent" else x
+            k = min(clusters, max(1, len(part)//5)) if route == "within_parent" else clusters
+            fitted = _kmeans_plus_plus_init(part, k, rng)
+            batch = _batch_size(10000, memory_budget_bytes, estimated, k, f)
+            for _ in range(iterations):
+                labels = np.empty(len(part), dtype=np.int64)
+                for lo in range(0, len(part), batch):
+                    labels[lo:lo+batch] = _assign(part[lo:lo+batch], fitted)
+                sums = np.zeros_like(fitted)
+                np.add.at(sums, labels, part)
+                count = np.bincount(labels, minlength=k)
+                updated = np.divide(sums, count[:, None], out=fitted.copy(), where=count[:, None] > 0)
+                done = np.max(np.abs(updated-fitted)) < 1e-5
+                fitted = updated
+                if done:
+                    break
+            centers[parent] = frozen_array(fitted, dtype=float)
+        return cls(route, tuple(feature_names), frozen_array(location, dtype=float),
+                   frozen_array(scale, dtype=float), parents, centers, float(parent_weight), memory_budget_bytes)
+
+    def assign(self, values, parent_ids, *, batch_size=10000, memory_budget_bytes=None):
+        values, ids = np.asarray(values, dtype=float), np.asarray(parent_ids, dtype=str)
+        if values.ndim != 2 or values.shape[1] != len(self.feature_names) or ids.shape != (len(values),):
+            raise ValueError("assignment schema differs from fitted whole-bout codebook")
+        budget = self.memory_budget_bytes if memory_budget_bytes is None else memory_budget_bytes
+        width = max(map(len, self.catalog_ids))
+        k = max(len(c) for c in self.centers.values())
+        f = len(self.feature_names)+(len(self.parents) if self.route == "joint" else 0)
+        fixed = len(values)*width*4 + sum(c.nbytes for c in self.centers.values())
+        batch = _batch_size(batch_size, budget, fixed, k, f)
+        output = np.full(len(values), "", dtype=f"U{width}")
+        crosswalk = {p: i for i, p in enumerate(self.parents)}
+        for lo in range(0, len(values), batch):
+            hi = min(lo+batch, len(values))
+            valid = np.isfinite(values[lo:hi]).all(axis=1)
+            positions = np.flatnonzero(valid)+lo
+            x = np.clip((values[positions]-self.location)/self.scale, -8, 8)/np.sqrt(len(self.feature_names))
+            if self.route == "joint":
+                supported = np.array([p in crosswalk for p in ids[positions]], dtype=bool)
+                positions, x = positions[supported], x[supported]
+                cat = np.zeros((len(positions), len(self.parents)))
+                cat[np.arange(len(positions)), [crosswalk[p] for p in ids[positions]]] = np.sqrt(self.parent_weight/2)
+                x = np.column_stack([x, cat])
+            if self.route == "within_parent":
+                for parent, centers in self.centers.items():
+                    use = ids[positions] == parent
+                    if np.any(use):
+                        output[positions[use]] = [f"{parent}:v{c}" for c in _assign(x[use], centers)]
+            elif len(x):
+                output[positions] = [f"type_{c}" for c in _assign(x, self.centers["all"])]
+        return output
+
+    @property
+    def catalog_ids(self):
+        if self.route == "within_parent":
+            return tuple(f"{p}:v{i}" for p in self.parents for i in range(len(self.centers[p])))
+        return tuple(f"type_{i}" for i in range(len(self.centers["all"])))
+
+
+__all__ = ["IMPLEMENTATION_STATUS", "CentroidPrimitiveSegmenter", "WholeBoutCodebook"]
