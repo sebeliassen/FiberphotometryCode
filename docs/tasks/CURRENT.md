@@ -1,5 +1,48 @@
 # Current task state
 
+## Intermediate-K capacity sweep and verification running (2026-10-15)
+
+User supplied detailed K/metrics suggestions, then explicitly authorised execution
+and subsequent verification. Implemented pooled K6/10/14/18/22,lambda.3/3,seeds42/43/44,
+both original100/grouped69state vocabularies.60configs,12existingK10reused,48new;
+same frozen all99recordings/all21mice/all5waves matrices/masks and L3/80iterations.
+No held-out claim, no group/DA selection. Lambda pair fixed before newfits: .3
+coverage-performing reference and3stronger competition contrast.
+
+New study source reference_capacity.py/run_reference_capacity.py. All fit params,
+base/source IDs, model/call hashes and directories saved. Post-fit pipeline:
+per-family accepted and pre-cutoff candidate-error distributions/support/effective
+mice; template AND physical execution-overlap redundancy; per-family seed matches
+with phase-locked and full-norm +/-1stage cosine; all adjacent-K split/merge edges
+with directional containment, no forced one-to-one acrossK. All seed traces and
+per-family distributions retained, not a single combined winner score.
+
+Targeted null candidates:coverage leader,stable-family leader,compactK10reference
+per vocabulary, deduped. Freeze W and originalthresholds; re-infer BOTH real/null H
+with same80updates/seed101.19paired surrogates/type shared across candidates.
+Frequency null preserves exact block token counts but may create adjacent repeats,
+no re-RLE. First-order null uses randomized Euler trails preserving exact directed
+transition counts, endpoints, token marginals and original no-self edges. Not
+uniform over trails; changed fractions recorded. Native support/duration slots
+fixed; null time coverage is conditional, not a duration/kinematic null. Diagnostic
+counts/ranges, no independent p-values. Not exceeding first-order is not a veto
+on otherwise coherent families. New tests verify these preservation statements.
+
+Detached nohup/setsid/timeout PID/PGID3734761,driver3734762,worker3734794:
+/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_pooled_capacity_20261015
+Log command: tail -f /home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_pooled_capacity_20261015/run.log
+Status while fitting indexed60configs; follow log for subsequent diagnostics/null
+stages until status COMPLETE. This is a finite pipeline, not an unbounded search.
+2threads/8GiB RSSguard/25%GPU fraction/80GiB diskfloor/4GiB outputguard/3h timeout.
+Existing completed K10 panel remains immutable and separately auditable.
+
+Validation:12focused tests passed, fullCPU858passed/6warnings, lint3078reviewed/
+no new debt, maps2regenerated/146checked, CLI plan/help passed. Shared algorithms
+unchanged. Source/run definition:
+studies/karen_pff_vs_monomer/analysis/CAPACITY_SWEEP_20261015.md.
+Next: monitor finite pipeline, inspect generated Kcurves/per-family/null findings,
+audit persisted correspondence, retain tradeoff candidates, then targeted movies.
+
 ## All-data pooled Karen K10 panel complete (2026-10-15)
 
 User authorised fitting/logging, then explicitly replaced train/validation design
