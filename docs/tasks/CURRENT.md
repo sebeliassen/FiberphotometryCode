@@ -1,3 +1,15 @@
+## Mac viewer access matched to legacy Studio (2026-10-15)
+
+Inspected codex/legacy-consolidation KPMS Studio launcher/guide: web backend8000,
+optional native pywebview withDISPLAY, documented SSH-L for remote browser.
+New review viewer now reuses existing ops/diagnostics/serve_local_viewer.py
+(Tornado static files/video byte ranges) at127.0.0.1:8766. Replaced only our simple
+http.server PID3757492.8765oldviewer untouched. Liveindex200 and MP4Range206/
+exactbytes checked; viewer_server_validation.json PASS. START_HERE.md in review
+output gives Mac VSCode RemoteSSH Ports8766or new local MacTerminal ssh-L command.
+User-side forwarding remains necessary; no Mac tunnel/playback verification claim.
+Labels persist in Macbrowser storage; exported JSON is downloaded on Mac.
+
 ## Karen P80 review COMPLETE and ready for human labels (2026-10-15)
 
 Delivery output: outputs/karen_pooled_p80_review_20261015.49families/49P80grids/
