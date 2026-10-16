@@ -1,3 +1,107 @@
+## Six-panel review complete: model and sampling-mode dropdowns (2026-10-16)
+
+All 147 movies are ready: 49 supported families across the three grouped K10,
+K18 and K22 models, three sampling modes, and six executions per movie. Layout
+is two rows by three columns, 2160 × 1920 at native 60 Hz. Open
+http://localhost:8766/six_panel_20261016/ through the existing Mac SSH tunnel to
+woody (10.209.3.161). Relative links in the original gallery preserve the user's
+browser origin. The original three-panel views remain available.
+
+The viewer has model, family and sampling-mode dropdowns. The top-10 filter is
+on by default (9 + 10 + 10 supported families); all 49 are accessible. Each movie
+uses one mode throughout: closest exemplar neighbours (p100), P80, or uniform
+random. Models, calls and original rankings are unchanged. All original P80
+examples remain panels 1–3 in their expanded grids. Camera transforms stay fixed
+at onset; all modes share each family's crop scale. Finished panels turn dark.
+
+Ratings are separate for each family and mode under the new browser key
+karen-pooled-six-panel-20261016-v1. Earlier three-panel ratings are displayed as
+read-only reference and exported separately; the original storage key is
+untouched. Both old and new JSON imports are supported. Export downloads
+karen_six_panel_labels.json. No reviewed family or model is automatically accepted.
+
+Final media audit passed: hashes for 147 grids and 882 components, selected native
+paths and full-core latent support, 882 source-colour pixel samples (maximum
+error 45, tolerance 65), and 734 finished-panel darkness checks. Every encoded
+frame was decoded during rendering; FPS, dimensions and longest-panel timing
+passed. There were no missing tracking or off-screen centroid frames.
+Browser model/mode switching, per-mode note separation, earlier-label preservation,
+reload, import and export passed in an isolated profile. HTTP 200 and exact-byte
+video Range 206 checks passed. Mac-side tunnel/playback was not tested by the agent.
+
+Single-play material: P80 4m44s, p100 5m46s, random 4m36s; total 15m7s. The
+most-common-first P80 subset takes about 3m8s, before replays and notes. Rendering
+completed with four CPU workers and two numerical/encoder threads each, an 8 GiB
+combined RSS guard, 80 GiB free-disk floor, 8 GiB output cap and three-hour timeout.
+
+Validation: 12 focused tests and 868 CPU tests passed (six existing warnings);
+lint passed with 3,078 reviewed diagnostics and no new debt; 146 folder maps are
+synchronized. Sources: render_six_panel_review.py, six_panel_gallery.html, and the
+backward-compatible six-panel extension to render_generator_review_grids.py.
+Report: SIX_PANEL_REVIEW_20261016.md. Next: user review and mode-specific JSON export.
+
+## Six-panel all-mode Karen review rendering (2026-10-16)
+
+User requested6executions/video in2rows×3columns, p100/P80/random dropdowns for
+any current review model. Scope all49supported families across groupedK10/18/22,
+147movies/882executions; top10default filter remains. No new fitting/ranking or
+physical-similarity optimisation. New output nested under existing8766root:
+outputs/karen_pooled_p80_review_20261015/six_panel_20261016.
+
+Original ranking/recipe/model/call hashes verified; six P80sets retain original
+first3examples in all49families.49families ×3modes ×6uniquecalls; random uniform
+fromfullrankedpool; animaldiversity onlyrankedselectionwithinpools. ActualP100
+90.91–100(smallpools),P80 74.55–83.64(six-call fallback),random0–100. Samecrop
+scale per family acrossall18examples; native60Hz/naturalspeed/onsetfixed camera,
+source-syllable dots/strip; finished panels dark. Allselected fullcores valid.
+
+Three-model/all-mode preview9grids/54panels PASSED decode/timing/no missing or
+offscreen dots;2x3poster inspected. Render remains nohup/timeout capped; current
+4workers×2threads (32CPUs/122GiB available), combinedRSSguard8GiB/freefloor80GiB/
+outputcap8GiB; launch.json records initial2worker preflight and adjustment.
+Currentrender PID in render.pid; progressrun.log; awaitfinalstatusCOMPLETE.
+
+New viewer model/family/mode dropdowns, top10default, six panel details/fullscreen,
+mode-specific ratings. Earlier3panel P80labels read-only reference from original
+browserkey, preserved/exported separately. Newpackagekeykaren-pooled-six-panel-
+20261016-v1; importaccepts old/new exports. Browser tests for all3models/modes,
+legacy preservation, per-mode notes, reload/import/export PASSED in isolatedprofile.
+Testharness removed. Rootindex/top10relative links added; older views preserved.
+
+Validation12focusedtests/868CPUtests(6existingwarnings), lint3078reviewed/no new
+debt,146maps passed. Newstudy render_six_panel_review.py +six_panel_gallery.html;
+existing render_generator_review_grids.py extends layout to6while preserving3.
+Next: finish rendering and media/pixel/hash audits, then user six-panel review.
+
+## Initial Karen P80 human feedback and common-family priority (2026-10-16)
+
+User supplied partial karen_p80_labels.json; original preserved/hash recorded in
+outputs/karen_p80_partial_labels_20261016.16entries:15explicit coherence labels
+(K10:3Similar/5Dissimilar;K18:2Similar/3Mixed/2Dissimilar),oneK18_F07comment-only
+positive,not silently scored. NoK22labels. Blankdistinctness/defaultfalsefollowup
+are not rejections. Family/trial/package bindings verified; no videos re-reviewed,
+models refitted, phenotype/DA comparisons or automated family deletions.
+
+Useful anchors K10_F03/F06/F07,K18_F02/F06. Wall-inspection comment and tolerated
+pause support theme+execution-variant distinction. K18_F03panels1and3 have identical
+raw53→15→96order despite commentfirsttwoSimilar/thirdnot; tokenorder cannot fully
+represent qualitative similarity. K10F07Similar/F02Dissimilar have essentially same
+~.555556medianmatchingerror. ThreeK10most-common ranks2/3/4areDissimilar:frequency
+prioritises review but does not establish coherence. Incomplete sequential sample
+cannot rankKsettings or establish full-family validity from3P80examples.
+
+User prefers up to10most-common components per setting. Added generated top10.html
+to SAME8766viewer with reciprocal relative link from49familyindex, same localStorage
+key/no movie regeneration/no lost labels.29supported families(9K10+10K18+10K22),
+12alreadyexplicitlyrated,17remaining;~4.4min at3plays each before notes. Top10counts
+retain81.7%ofK18calls/70.3%ofK22calls. Physicaluniontimecoverage25.5%vsfull31.2%
+(K18),27.0%vsfull35.0%(K22),retaining81.8%/77.2%ofmodel-coveredtime. Overlaps
+countedonce for time; counts are detections. K10tiny6callunsupportedF08excluded
+fromreview asbefore. Sourceinput/masks/models unchanged; JSsyntax andHTTP200for
+newviewpassed. Findings/CSVs/provenance in output PARTIAL_LABEL_FINDINGS.md.
+Next: common-family P80review; use small p100/random contrasts on clear positive/
+negative anchors to separate ranking/core problems from broaderheterogeneity.
+
 ## Mac viewer access matched to legacy Studio (2026-10-15)
 
 Inspected codex/legacy-consolidation KPMS Studio launcher/guide: web backend8000,
