@@ -1,7 +1,9 @@
 # 14 September presentation: reference recovery
 
-Audit date: 15 October 2026. Presentation date is user-confirmed. **Status: partly
-recovered; model replay and full numerical reproduction have not been performed.**
+Audit date: 15 October 2026. Presentation date is user-confirmed. **Status: saved
+raw-state detector replay matched; original KPMS/native-frame binding verified.
+Full presentation recovery remains partial.** See the subsequent
+[executed replay and transfer audit](REPLAY_20261015.md).
 This folder records provenance and the acceptance procedure, not another model
 implementation or a claim that every analysis in the presentation is lab-approved.
 
@@ -14,7 +16,7 @@ vocabularies, fit settings, detection rules and display selections.
 | --- | --- | --- |
 | Exact final Theme A/C filenames | Original MP4/PNG pairs; `render_1x3_final_exemplars.py`; panel mice match the script and surviving posters | Renderer traced; exact original recording/start/end selection manifest not yet recovered |
 | `final_1x3_theme_B_dash_rank2_panels456.mp4` | Original MP4/PNG; six-panel `candidate_2x3_chain2_dash_rank2_exemplar.mp4`; `render_2x3_right_turn_chains.py` | Final three mice/HUD match parent panels 4–6; three sampled movie frames closely match that row. Exact final editing command remains unlocated |
-| Branch variants 27.1%, 22.6%, 10.6% | Original episode CSV, saved model payload, hyperparameter JSON, 10 September fit log | CSV independently recounted: 95/350, 79/350, 37/350. Saved weights have not yet been loaded/reprojected |
+| Branch variants 27.1%, 22.6%, 10.6% | Original episode CSV, saved model payload, hyperparameter JSON, 10 September fit log | Counts match; subsequent replay from saved W/H matches all 2,136 detections and animal summaries |
 | Five-step coverage 14.1%, 46.1%, 76.2% | Original `clustering_rigorous_coverage_statistics.csv`, L1/100, L3/22, L4/14 rows | Exact tabulated values match; coverage is a recurring-sequence census, not evidence that one seqNMF fit explains these fractions. Exact census implementation still needs binding |
 | Conservative Level 2 theme usage, 30 sessions | `fig_hidden_slide_level2_mann_whitney.png`; `generate_hidden_slide_mann_whitney_plot.py` | Original visually matches supplied figure, including six displayed p-values and dot/bar arrangement; raw rates/statistics not recomputed |
 | Four-group mutual information vs Markov null | `pres_4_groups_vs_markov_null.png`; `generate_presentation_lag_figures.py`; saved `lagged_mi_results_1000s.pkl` | Original visually matches supplied figure and peak annotations; cached numbers/null generation not recomputed |
@@ -57,10 +59,11 @@ that its interval was a particular factor detection.
 
 Historical resource loader defaults name KPMS model `amph_prod_k150k_run_12`,
 `results.h5`, `video_frame_indexes.npz` and original video files. That is the
-**upstream syllabizer**, not the seqNMF model identity. Current relocated physical
-resources still need binding. Old scripts use 40 Hz model-row conventions and
-frame-index mapping; those assumptions must be verified from actual resources,
-not inferred from file lengths or transferred automatically to Karen.
+**upstream syllabizer**, not the seqNMF model identity. The subsequent replay binds
+all historical bout starts/ends and labels to the archived KPMS results and exact
+native VFI. Bout end coordinates are inclusive; durations count model rows at
+40Hz. Native projection uses existing reviewed Run12 clock evidence with its
+timestamp-validation limits. Do not transfer these conventions automatically to Karen.
 
 The B parent movie is in `movies_2x3_right_turn_chains/`. Its lower 378 image rows
 match the final movie's body at sampled frames 0,73,146 with mean absolute decoded
@@ -139,7 +142,10 @@ endorsed mechanistic conclusions.
 
 Use explicit statuses: artifact recovered; renderer traced; model/data bound;
 saved-model replay matched; stochastic refit assessed; Karen adaptation reviewed.
-The first two are substantially established for the supplied examples. The later
-statuses remain open. The branching/worktree strategy is unchanged: preserve the
-current refactor work, then create a scoped delivery branch/worktree from that
-checkpoint. No Git branch, commit, training run or search was created by this audit.
+The raw-state model/data binding and saved-detector replay are now established.
+Independent activation inference/refitting, exact final movie interval manifests,
+the unmatched quantitative-slide version and Karen scientific review remain open.
+Refactor is now preserved at 6c179ae, with a separate
+`codex/karen-seqnmf-delivery` worktree. The initial artifact audit did not change
+Git state; the subsequent authorised isolation/replay step did. No model training
+or search was needed for either.

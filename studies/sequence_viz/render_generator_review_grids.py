@@ -27,8 +27,13 @@ from studies.sequence_viz.recreate_generator_videos import (
 )
 
 
-def grid_filters(counts):
+def grid_filters(counts, *, columns=None):
     """Pad only after each execution ends; never stretch, repeat or freeze it."""
+    if not counts or min(counts) <= 0:
+        raise ValueError("every panel must contain at least one frame")
+    columns = len(counts) if columns is None else columns
+    if columns < 1 or len(counts) % columns:
+        raise ValueError("panel layout must form complete rows")
     maximum = max(counts)
     parts = []
     for i, count in enumerate(counts):
@@ -38,21 +43,27 @@ def grid_filters(counts):
             f"drawtext=text='Finished (natural speed)':fontcolor=white:fontsize=28:"
             f"x=(w-text_w)/2:y=h/2:enable='gte(n,{count})'[p{i}]"
         )
-    parts.append("".join(f"[p{i}]" for i in range(len(counts))) + f"hstack=inputs={len(counts)}[out]")
+    inputs = "".join(f"[p{i}]" for i in range(len(counts)))
+    if columns == len(counts):
+        parts.append(inputs + f"hstack=inputs={len(counts)}[out]")
+    else:
+        layout = "|".join(f"{720 * (i % columns)}_{960 * (i // columns)}" for i in range(len(counts)))
+        parts.append(inputs + f"xstack=inputs={len(counts)}:layout={layout}[out]")
     return ";".join(parts)
 
 
-def render_grid(family, clips, output, *, selection_mode):
+def render_grid(family, clips, output, *, selection_mode, columns=3):
     import cv2
 
-    if selection_mode not in ("p100", "p80", "random") or len(clips) != 3:
-        raise ValueError("one movie requires three panels with one common selection mode")
+    if selection_mode not in ("p100", "p80", "random") or len(clips) not in (3, 6):
+        raise ValueError("one movie requires three or six panels with one common selection mode")
     if any(c["example"].get("selection_mode") != selection_mode for c in clips):
         raise ValueError("mixed selection modes in one movie are forbidden")
     path = output / (family["stem"] + "_" + selection_mode + "_grid.mp4")
     temporary = path.with_suffix(".partial.mp4")
     counts = [c["frames"] for c in clips]
-    filters = grid_filters(counts)
+    filters = grid_filters(counts, columns=columns)
+    rows = len(clips) // columns
     command = ["ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error", "-y", "-filter_complex_threads", "1"]
     for clip in clips:
         command += ["-threads", "1", "-i", str(output / clip["filename"])]
@@ -88,7 +99,7 @@ def render_grid(family, clips, output, *, selection_mode):
     try:
         if not capture.isOpened():
             raise ValueError("grid cannot be decoded")
-        if (capture.get(cv2.CAP_PROP_FRAME_WIDTH), capture.get(cv2.CAP_PROP_FRAME_HEIGHT)) != (720 * len(clips), 960):
+        if (capture.get(cv2.CAP_PROP_FRAME_WIDTH), capture.get(cv2.CAP_PROP_FRAME_HEIGHT)) != (720 * columns, 960 * rows):
             raise ValueError("grid dimensions differ")
         if abs(capture.get(cv2.CAP_PROP_FPS) - 60) > 0.001:
             raise ValueError("grid clock differs")
@@ -114,8 +125,10 @@ def render_grid(family, clips, output, *, selection_mode):
         clips=[dict(filename=c["filename"], sha256=c["sha256"], frames=c["frames"]) for c in clips],
         filters=filters,
         timing="each source clip at original 60fps; dark finished panel after its end",
-        width=720 * len(clips),
-        height=960,
+        width=720 * columns,
+        height=960 * rows,
+        columns=columns,
+        rows=rows,
     )
     path.with_suffix(".json").write_text(json.dumps(result, indent=2) + "\n")
     return result

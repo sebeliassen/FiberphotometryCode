@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Karen — qualitative chain labelling</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#15181e;color:#edf0f5}
+body{max-width:1500px;margin:24px auto;padding:0 20px 60px}h1{font-size:30px;margin-bottom:8px}h2{margin-bottom:8px}
+p{line-height:1.5}.muted,small{color:#bbc4d2}.notice{background:#293446;border-left:4px solid #a9ccff;padding:12px 16px}
+button,select,input,textarea{font:inherit;border:1px solid #536176;border-radius:6px;background:#242b36;color:inherit;padding:8px}
+button{cursor:pointer}button:hover{background:#34435b}button:disabled{opacity:.4;cursor:default}a{color:#a9ccff}
+label{display:inline-flex;gap:8px;align-items:center}.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0}
+#family{min-width:240px;max-width:100%}video{display:block;width:100%;max-height:70vh;background:#080a0e;margin-top:14px}
+.fields{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0}#theme{flex:1;min-width:240px}textarea{box-sizing:border-box;width:100%;min-height:75px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}.card{border:1px solid #455166;background:#1c222d;padding:12px;border-radius:8px}
+.card h3{margin:0 0 10px}.card label{display:flex;margin:8px 0;justify-content:space-between}.card input[type=text]{width:100%;box-sizing:border-box}.card small{display:block;line-height:1.5}
+details{border:1px solid #3a465a;border-radius:7px;padding:10px;margin:12px 0}summary{cursor:pointer}pre{white-space:pre-wrap;overflow-wrap:anywhere}
+#saveStatus{font-weight:600}#status[role=alert]{color:#ffca9b}input:focus,textarea:focus,select:focus,button:focus{outline:2px solid #adcaff;outline-offset:2px}
+@media(max-width:800px){.cards{grid-template-columns:1fr}.toolbar label{flex-wrap:wrap}body{padding:0 12px 40px}}
+</style></head>
+<body>
+<h1>Qualitative chain labelling</h1>
+<p id="notice" class="notice"></p>
+<p>Start with the four <strong>random</strong> selections: 24 executions beyond the P80 examples already reviewed.
+Give executions showing the same behavioural routine the same group letter; letters apply only within this movie.
+Keep useful variations together if they share a routine, and describe the difference if helpful. “Unsure” is fine.
+Panel numbers run left to right, top row then bottom row. There is no need to review every mode.</p>
+<div class="toolbar">
+<label>Review set <select id="scope"><option value="focused">Focused four families</option><option value="top">Top 10 per model</option><option value="all">All families</option></select></label>
+<label>Model <select id="model"><option value="all">Both models · 3 bouts</option><option value="10">K10 · 3 bouts</option><option value="18">K18 · 3 bouts</option></select></label>
+<label>Examples <select id="mode"><option value="random">Uniform random · start here</option><option value="p80">P80</option><option value="p100">p100 · closest neighbours</option></select></label>
+</div>
+<div class="toolbar"><button id="prev">Previous</button><label>Family <select id="family"></select></label><button id="next">Next</button>
+<button id="replay">Replay</button><button id="fullscreen">Fullscreen</button><label><input id="loop" type="checkbox">Loop</label></div>
+<p id="progress" class="muted"></p><h2 id="title"></h2><p id="info" class="muted"></p>
+<video id="player" controls playsinline preload="metadata"></video>
+<p><a id="direct" target="_blank" rel="noopener">Open grid MP4</a> · <a id="catalogue" href="../rank_repaired_catalogue_20261016/cleaned_ranking_correction/">Original catalogue</a></p>
+<small>p100: closest exemplar neighbours. P80: near the 80th percentile of proximity, not 80% correctness.
+Random: uniform over eligible occurrences. Natural playback, fixed-onset camera and source-syllable colours; .5s context each side.</small>
+<div class="fields"><label>Overall similarity <select id="coherence"><option value="">Unreviewed</option><option>Similar</option><option>Mixed / unclear</option><option>Dissimilar</option></select></label>
+<label for="theme">Shared routine / theme</label><input id="theme" placeholder="Optional: what is the mouse doing, and in what order?"></div>
+<div id="cards" class="cards"></div>
+<label for="notes">Family notes: useful variants, possible splits or duplicates</label><textarea id="notes" placeholder="Optional; short observations are useful."></textarea>
+<details id="earlier"><summary>Your earlier judgement for this exact movie</summary><pre id="reference"></pre></details>
+<details><summary>How labels are saved</summary><p>Changes save automatically in this browser at this address. Export JSON before changing browser, port or computer.
+This page has its own label storage; earlier catalogue labels are preserved. Imports check the package, movie and individual panel identities.</p></details>
+<div class="toolbar"><button id="export">Export labels JSON</button><label>Import JSON <input id="import" type="file" accept=".json,application/json"></label>
+<span id="saveStatus" aria-live="polite"></span></div><p id="status" role="alert"></p>
+<script>
+const DATA=__REVIEW_DATA__;
+const $=id=>document.getElementById(id);
+const GROUPS=['','A','B','C','D','E','F','Unsure'];
+const COHERENCE=['','Similar','Mixed / unclear','Dissimilar'];
+const modelFamilies=new Map(DATA.families.map(f=>[f.stem,f]));
+let store={package:DATA.package,source_package:DATA.source_package,labels:{}},visible=[],active=null,storageFailed=false;
+function key(f,mode){return f.stem+'::'+mode}
+function checkEntry(k,n){
+ const parts=k.split('::'),f=modelFamilies.get(parts[0]),m=f?.movies[parts[1]];
+ if(!m||!n||n.family!==f.stem||n.trial!==f.trial||n.mode!==parts[1]||n.movie_sha256!==m.sha256||n.panels!==6)throw Error('Movie identity mismatch: '+k);
+ if(!COHERENCE.includes(n.coherence)||typeof n.theme!=='string'||typeof n.notes!=='string'||!Array.isArray(n.executions)||n.executions.length!==6)throw Error('Invalid judgement: '+k);
+ n.executions.forEach((e,i)=>{const p=m.panels[i];if(e.panel!==p.number||e.clip_sha256!==p.clip_sha256||e.recording!==p.recording||e.source_index!==p.source_index||e.start_frame!==p.start_frame||e.stop_frame!==p.stop_frame||!GROUPS.includes(e.group)||typeof e.action!=='string'||typeof e.boundary!=='boolean'||typeof e.tracking!=='boolean')throw Error('Panel identity or label mismatch: '+k+' panel '+(i+1))});
+ return n;
+}
+try{const old=JSON.parse(localStorage.getItem(DATA.package)||'null');if(old){if(old.package!==DATA.package||old.source_package!==DATA.source_package)throw Error('Stored review package differs');Object.entries(old.labels||{}).forEach(([k,n])=>checkEntry(k,n));store=old}}
+catch(e){storageFailed=true;$('status').textContent='Could not load saved labels: '+e.message+'. Export any new work; existing storage will not be overwritten.'}
+function persist(){if(storageFailed){$('saveStatus').textContent='Export needed — local storage unavailable';return}try{localStorage.setItem(DATA.package,JSON.stringify(store));$('saveStatus').textContent='Saved in this browser'}catch(e){storageFailed=true;$('saveStatus').textContent='Export needed — local storage unavailable'}}
+function progress(){const own=visible.filter(f=>store.labels[key(f,$('mode').value)]).length;$('progress').textContent=own+' / '+visible.length+' '+$('mode').value+' selections with notes or labels · other modes optional';$('prev').disabled=+$('family').value<=0;$('next').disabled=+$('family').value>=visible.length-1}
+function save(){if(!active)return;const {f,mode,m}=active;const n={family:f.stem,trial:f.trial,mode,bout_length:f.bout_length,panels:6,movie_sha256:m.sha256,coherence:$('coherence').value,theme:$('theme').value,notes:$('notes').value,executions:m.panels.map((p,i)=>({panel:p.number,clip_sha256:p.clip_sha256,recording:p.recording,source_index:p.source_index,start_frame:p.start_frame,stop_frame:p.stop_frame,group:$('group'+i).value,action:$('action'+i).value,boundary:$('boundary'+i).checked,tracking:$('tracking'+i).checked})),updated_at:new Date().toISOString()};
+ checkEntry(key(f,mode),n);store.labels[key(f,mode)]=n;persist();progress()}
+function element(tag,text){const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node}
+function labelledControl(card,text,node){const label=element('label',text);label.append(node);card.append(label)}
+function show(){
+ const f=visible[+$('family').value];if(!f)return;const mode=$('mode').value,m=f.movies[mode],n=store.labels[key(f,mode)];active={f,mode,m};
+ const v=$('player');v.pause();v.src=m.filename;v.poster=m.poster;$('direct').href=m.filename;
+ $('title').textContent=f.stem+' · '+mode+' · six executions';$('info').textContent='K'+f.K+' · '+f.bout_length+'-bout model · '+f.saved_calls+' saved calls · '+f.eligible_mice+' mice · '+m.playback_s.toFixed(2)+' seconds per replay';
+ $('coherence').value=n?.coherence||'';$('theme').value=n?.theme||'';$('notes').value=n?.notes||'';$('cards').replaceChildren();
+ m.panels.forEach((p,i)=>{const old=n?.executions[i],card=element('section');card.className='card';card.append(element('h3','Panel '+p.number+' · Mouse '+p.subject));
+  const group=element('select');group.id='group'+i;GROUPS.forEach(g=>{const o=element('option',g||'Unreviewed');o.value=g;group.append(o)});group.value=old?.group||'';group.oninput=save;labelledControl(card,'Behaviour group',group);
+  const action=element('input');action.type='text';action.id='action'+i;action.setAttribute('aria-label','Panel '+p.number+' action');action.placeholder='Optional: action / ordered routine';action.value=old?.action||'';action.oninput=save;card.append(action);
+  for(const [field,label] of [['boundary','Extra / missing start or ending'],['tracking','Tracking / visibility problem']]){const box=element('input');box.type='checkbox';box.id=field+i;box.checked=!!old?.[field];box.oninput=save;labelledControl(card,label,box)}
+  const details=element('details'),summary=element('summary','Syllables and source');details.append(summary);details.append(element('small',p.segments.map(s=>'S'+s.syllable_id+' '+(DATA.names[s.syllable_id]||'unassigned')+' ('+s.duration_s.toFixed(2)+'s)').join(' → ')));details.append(element('small',p.recording+' · frames ['+p.start_frame+', '+p.stop_frame+') · proximity P'+p.percentile.toFixed(1)));const a=element('a','Open panel movie');a.href=p.clip;a.target='_blank';a.rel='noopener';details.append(a);card.append(details);$('cards').append(card);
+ });
+ const reference=DATA.reference_labels[key(f,mode)];$('earlier').hidden=!reference;$('reference').textContent=reference?((reference.coherence||'Unrated')+'\n'+(reference.notes||'')):'';$('saveStatus').textContent=n?'Earlier notes loaded':'Unreviewed — nothing saved yet';progress();
+}
+function filter(){const previous=active?.f.stem;visible=DATA.families.filter(f=>($('model').value==='all'||String(f.K)===$('model').value)&&($('scope').value==='all'||($('scope').value==='top'?f.occurrence_rank<=10:DATA.focused.includes(f.stem))));if($('scope').value==='focused')visible.sort((a,b)=>DATA.focused.indexOf(a.stem)-DATA.focused.indexOf(b.stem));else visible.sort((a,b)=>a.K-b.K||a.occurrence_rank-b.occurrence_rank);$('family').replaceChildren();visible.forEach((f,i)=>{const o=element('option',f.stem+' · '+f.saved_calls+' calls');o.value=i;$('family').append(o)});$('family').value=Math.max(0,visible.findIndex(f=>f.stem===previous));show()}
+function importObject(incoming){
+ if(incoming.package!==DATA.package||incoming.source_package!==DATA.source_package||!incoming.labels||typeof incoming.labels!=='object'||Array.isArray(incoming.labels))throw Error('This file belongs to another review. Earlier notes are already included; import this page’s exported JSON here.');
+ const entries=Object.entries(incoming.labels);entries.forEach(([k,n])=>checkEntry(k,n));
+ store.labels={...store.labels,...incoming.labels};persist();show();$('status').textContent='Imported '+entries.length+' selections.';
+}
+$('scope').onchange=filter;$('model').onchange=filter;$('mode').onchange=show;$('family').onchange=show;
+$('prev').onclick=()=>{$('family').value=Math.max(0,+$('family').value-1);show()};$('next').onclick=()=>{$('family').value=Math.min(visible.length-1,+$('family').value+1);show()};
+$('replay').onclick=()=>{const v=$('player');v.currentTime=0;v.play().catch(e=>{$('status').textContent=e.message})};$('loop').onchange=()=>{$('player').loop=$('loop').checked};
+$('fullscreen').onclick=()=>{const v=$('player');if(v.requestFullscreen)v.requestFullscreen().catch(e=>{$('status').textContent=e.message});else if(v.webkitEnterFullscreen)v.webkitEnterFullscreen()};
+['coherence','theme','notes'].forEach(id=>$(id).oninput=save);
+$('export').onclick=()=>{const exported={...store,source_manifest_sha256:DATA.source_manifest_sha256,exported_at:new Date().toISOString()},url=URL.createObjectURL(new Blob([JSON.stringify(exported,null,2)],{type:'application/json'})),a=element('a');a.href=url;a.download='karen_core_review_labels.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+$('import').onchange=async()=>{try{const file=$('import').files[0];if(file)importObject(JSON.parse(await file.text()))}catch(e){$('status').textContent='Import rejected: '+e.message}finally{$('import').value=''}};
+$('notice').textContent=DATA.notice;filter();
+</script></body></html>

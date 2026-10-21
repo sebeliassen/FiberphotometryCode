@@ -1,0 +1,148 @@
+{
+  "status": "SAVED_DETECTOR_REPLAY_MATCHED",
+  "inputs": [
+    {
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/compat/syllable_generation/analysis/sequence_viz/optimized_seqnmf/optimized_seqnmf_model_results.pkl",
+      "sha256": "ca71454c2b9ea0a32574e8f66f50538362bf8e66ef153e2e4ff65401f182cd1f",
+      "bytes": 2588814
+    },
+    {
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/compat/syllable_generation/analysis/sequence_viz/data/unified_sequence_dataset.pkl",
+      "sha256": "c91a5c3436d129d5b21766b79fa61f2dd08a600451e359e976198d852809a4d4",
+      "bytes": 19139380
+    },
+    {
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/compat/syllable_generation/analysis/sequence_viz/optimized_seqnmf/optimized_seqnmf_verified_episodes.csv",
+      "sha256": "b16c4b1ce63c99108b3cacb7701630dde2f3970621344d3b45bf211ee93b4984",
+      "bytes": 285671
+    },
+    {
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/compat/syllable_generation/analysis/sequence_viz/data/session_metadata_ground_truth.csv",
+      "sha256": "a667e154bb8c3630551ed1b51eb749d5f2168e4c885b5eac424f3352edac2093",
+      "bytes": 7431
+    }
+  ],
+  "legacy_source": {
+    "commit": "b83298fcfb15ffd5ce3f6dbbd863b1f8e98af03e",
+    "path": "syllable_generation/analysis/sequence_viz/optimized_seqnmf/convolutional_seqnmf.py",
+    "git_blob": "af98d5d7cbdadb8baceb79731fcc2ab89fcbc226",
+    "sha256": "b7c8038a4ecdd21d5d0cc42fcd709c340174378fa3cc59150d5815e237188f5d",
+    "bytes": 14809
+  },
+  "code_commit": "6c179ae64e9da9c673605a9f45eb5626111efa75",
+  "driver_sha256": "2faa303f022f12f2ea3a4293a5120eb5e7266fd4cbf5b7434114ca7f6f8f8a88",
+  "model": {
+    "W_shape": [
+      100,
+      10,
+      3
+    ],
+    "H_shape": [
+      10,
+      50000
+    ],
+    "W_dtype": "float32",
+    "H_dtype": "float32",
+    "hyperparameters": {
+      "K": 10,
+      "L": 3,
+      "lambda_ortho": 1.0,
+      "max_iter": 80,
+      "bouts_fitted": 50000
+    }
+  },
+  "comparison": {
+    "replayed_episodes": 2136,
+    "embedded_and_exported_catalogues_match": true,
+    "animal_factor_summaries_match": true,
+    "maximum_absolute_csv_errors": {
+      "peak_activation": 5.551115123125783e-17,
+      "template_error": 2.2128640475571615e-08,
+      "stage_support": 0.0,
+      "duration_sec": 8.881784197001252e-16
+    },
+    "float_atol": 1e-07,
+    "float_rtol": 1e-06,
+    "integer_identifiers_and_token_strings": "exact"
+  },
+  "training_scope": {
+    "input_sessions": 30,
+    "input_bouts": 169879,
+    "prefix_bouts": 50000,
+    "contributing_sessions": 10,
+    "contributing_animals": 10,
+    "drug_bouts": {
+      "Saline": 50000
+    }
+  },
+  "native_binding": {
+    "status": "ALL_HISTORICAL_BOUTS_BOUND_TO_SAVED_KPMS_ROWS",
+    "source_files": [
+      {
+        "path": "/home/fsp585/Desktop/FiberphotometryCode/outputs/broad_search_preflight_20261013/native_input_manifest.json",
+        "bytes": 48804,
+        "sha256": "3ab2c52a1dbbb7dbbfee9e747958cf0c068050eae4db86577e6c0aea6217b2b2"
+      },
+      {
+        "path": "/mnt/hdd/old_projects/kpms_checkpoints_archive/amph_project/amph_prod_k150k_run_12/results.h5",
+        "bytes": 594189168,
+        "sha256": "5bad3a6de12df09a61f31b4145357210f36ddebee6e05683668d16989778a1da"
+      },
+      {
+        "path": "/mnt/hdd/old_projects/kpms_checkpoints_archive/amph_project/amph_prod_k150k_run_12/video_frame_indexes.npz",
+        "bytes": 7696754,
+        "sha256": "c18652e6703d8f0e96cabf6089bf8ef6bdd821acd71427946ad4f617936f2ec9"
+      }
+    ],
+    "sessions": 30,
+    "bouts": 169879,
+    "historical_end_frame_semantics": "inclusive native coordinate of final model row",
+    "duration_semantics": "inclusive model-row count divided by documented 40 Hz model clock",
+    "clock_evidence": {
+      "model_fps": 40,
+      "model_fps_source": "/home/fsp585/Desktop/FiberphotometryCode/vendor/keypoint_moseq_syll/amph_project/config.yml:176",
+      "native_video_fps": 80.025,
+      "native_video_fps_source": "/home/fsp585/Desktop/FiberphotometryCode/studies/language_models/nmf_review_package/README.md:3",
+      "native_video_fps_evidence_level": "Historical reviewed Run12 acquisition policy (NMF review README:3; shmoseq/audit_dlc_injection_timing.py:49). Bounded clock probes support the approximate80Hz acquisition scale but are not full-recording timing validation.",
+      "native_frame_mapping_source": "/home/fsp585/Desktop/FiberphotometryCode/studies/session_model_exports/generate_run12_grid_movies.py:235",
+      "model_rows_per_native_seconds": "Use explicit native frame coordinates and declared native fps; do not multiply VFI or compress gaps.",
+      "header_timestamp_probe": "/home/fsp585/Desktop/FiberphotometryCode/outputs/broad_search_preflight_20261013/clock_header_evidence.json",
+      "sample_encoded_playback_fps": 60,
+      "timestamp_validation_limit": "First20,001 rows of one trial; no all-recording alignment or rate confirmation."
+    },
+    "limit": "Uses existing reviewed Run12 projection policy; no new all-recording video timestamp calibration."
+  },
+  "transfer_audit": {
+    "session_crossing_calls": 0,
+    "segment_crossing_calls": 26,
+    "calls_with_native_support_gap": 26,
+    "historical_end_differs_from_last_included_bout": 2136,
+    "clock_status": "Source rows and native VFI bound; existing clock evidence retained with its stated limits."
+  },
+  "runtime": {
+    "threads_requested": 2,
+    "thread_pools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 2,
+        "prefix": "libscipy_openblas",
+        "filepath": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/lib/python3.10/site-packages/numpy.libs/libscipy_openblas64_-56d6093b.so",
+        "version": "0.3.29",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      }
+    ],
+    "memory_cap_gib": 4.0,
+    "peak_rss_mib": 247.48828125,
+    "elapsed_sec": 0.9973963019438088,
+    "jax_loaded": false,
+    "model_fits": 0
+  },
+  "limits": [
+    "Replays detection using saved W AND saved H; does not independently re-infer activations or refit.",
+    "Historical frames/durations reproduced literally; match does not establish valid physical clocks/endpoints.",
+    "Reference is the raw-state branching model, not the unresolved unified-sniff quantitative slide.",
+    "No Karen model fitted, vocabulary selected, or biological interpretation accepted."
+  ]
+}

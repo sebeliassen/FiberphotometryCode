@@ -1,0 +1,88 @@
+{
+  "status": "METADATA_AND_CACHE_AVAILABILITY_CHECKED",
+  "source_root": "/home/fsp585/Desktop/FiberphotometryCode",
+  "reviewed_view": "/home/fsp585/Desktop/FiberphotometryCode/outputs/karen_reviewed_analysis_view_20261012/reviewed_boundaries",
+  "sessions": 99,
+  "animals": 21,
+  "groups": {
+    "Monomer": 9,
+    "PFF": 12
+  },
+  "splits": {
+    "train": [
+      "11",
+      "17",
+      "7",
+      "13",
+      "8",
+      "20",
+      "22",
+      "6",
+      "19",
+      "23",
+      "10",
+      "14"
+    ],
+    "validation": [
+      "2",
+      "4",
+      "9",
+      "5"
+    ],
+    "test": [
+      "15",
+      "18",
+      "21",
+      "12",
+      "16"
+    ],
+    "seed": 101
+  },
+  "exploration_recordings": 73,
+  "reserved_recordings": 26,
+  "condition_recordings": {
+    "3w_PI": 24,
+    "8w_PI": 23,
+    "16w_PI": 22,
+    "L_dopa": 21,
+    "24w_PI": 9
+  },
+  "native_fps": 60.0,
+  "cache_files": 99,
+  "recordings_with_exclusion_masks": 98,
+  "review_policy": {
+    "source_atlas": "/home/fsp585/Desktop/FiberphotometryCode/outputs/karen_behavior_atlas_20261011",
+    "policy": "/home/fsp585/Desktop/FiberphotometryCode/outputs/karen_handling_audit_20261012/reviewed_behavior_exclusions.csv",
+    "masked_recordings": 98,
+    "unmodified_linked_recordings": 1,
+    "removed_modelled_frames": 85727,
+    "scope": "analysis view only; reviewed intervals; no template cleaning or production changes",
+    "clock": "native frame indices preserved; labels invalidated and observations unsupported at exclusions"
+  },
+  "metadata_fingerprints": [
+    {
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/outputs/karen_reviewed_analysis_view_20261012/reviewed_boundaries/manifest.json",
+      "sha256": "7ed4e32ca31838450cdc65ef17171346184d8d19170eba922468c44a306087aa"
+    },
+    {
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/outputs/karen_reviewed_analysis_view_20261012/reviewed_boundaries/sessions.csv",
+      "sha256": "6cc8059d804e9cfa0606c47ca89a2a6acba0629b304d509c1f6a5ef00b29d37f"
+    },
+    {
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/outputs/karen_reviewed_analysis_view_20261012/reviewed_boundaries/reviewed_exclusions.csv",
+      "sha256": "3226844b4558699b1387bc7b225e28b7ff3ed03385d58afd7b17683e8fd0443a"
+    },
+    {
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/outputs/karen_reviewed_analysis_view_20261012/reviewed_boundaries/chains/animal_splits.json",
+      "sha256": "0c1419d78953694552b46e8ab9db30861ed1176461fef262c12bc7c28b9e7d02"
+    },
+    {
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/outputs/karen_behavior_atlas_20261011/input_paths.json",
+      "sha256": "e0ac7428830d825863ed359da352699e16ddf4c1168f2107d695bd0df7d233c4"
+    }
+  ],
+  "limits": [
+    "NPZ header/fps/presence checks only; no new full label/mask projection audit.",
+    "Existing reviewed exclusions and animal split preserved. No Karen vocabulary or model chosen."
+  ]
+}

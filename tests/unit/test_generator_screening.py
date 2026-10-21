@@ -38,3 +38,22 @@ def test_examples_preserve_ordinary_calls_and_animal_diversity_without_scores():
     assert result["panels"][2]["type_id"]=="b"
     singleton=choose_examples([calls[0]])[0]
     assert singleton["panels"][1:] == [None,None]
+
+
+@pytest.mark.parametrize("start,length", [(61, 169), (17003, 229), (200001, 731)])
+def test_exact_sixty_hz_native_frames_have_no_float_floor_repeats_or_phantom_tail(start, length):
+    clock = np.arange(start + length + 100) / 60
+    indexes, relative = sample_indexes(clock, start, start + length, fps=60, context=.5)
+    np.testing.assert_array_equal(indexes, np.arange(start - 30, start + length + 30))
+    np.testing.assert_allclose(relative, np.arange(length + 60) / 60 - .5, atol=1e-12)
+
+
+def test_irregular_clock_keeps_genuine_hold_before_future_frame():
+    indexes, _ = sample_indexes([0., .101, .201, .303, .401, .502], 1, 4, fps=10, context=0)
+    np.testing.assert_array_equal(indexes, [1, 2, 2])
+
+
+@pytest.mark.parametrize("fps,context", [(0, .5), (float("inf"), .5), (60, -.1)])
+def test_invalid_playback_settings_are_rejected(fps, context):
+    with pytest.raises(ValueError, match="fps"):
+        sample_indexes([0, 1, 2], 0, 1, fps=fps, context=context)

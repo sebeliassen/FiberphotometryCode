@@ -134,6 +134,15 @@ exclude = [
 select = ["E", "F", "W", "I"]
 ignore = ["E501"]
 
+[tool.ruff.lint.isort]
+# Historical data namespaces may be absent from clean worktrees because data/
+# directories are ignored. Keep their import classification independent of that.
+known-first-party = [
+    "studies.behavior.language_models.lib.data",
+    "studies.photometry.exploratory.data",
+    "studies.photometry_exploration.data",
+]
+
 # Initial interface check; expand this list after each contract is annotated.
 # Deliberately separate from the functional CPU CI gate until locally verified.
 [tool.mypy]
