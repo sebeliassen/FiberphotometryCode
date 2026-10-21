@@ -3,8 +3,8 @@
 ## Current source and Git layout
 
 The foundation and dependent migrations are merged into main through PRs #2–#6.
-The deep-research loading boundary is merged through PR #7; this revision repairs
-Jonathan contract imports and compatibility leaf identity. New work starts
+Deep-research loading and Jonathan contract/alias identity are merged through
+PRs #7/#8. This revision repairs the exporter utility leaf aliases. New work starts
 from current main, with one main-based branch/worktree per coherent change. On
 Woody, .worktrees/main-integration verifies main without switching the preserved
 primary modular or Karen delivery checkouts and their running review viewers.
@@ -18,6 +18,7 @@ Original research branches and source checkpoints remain recoverable.
 | [#5](https://github.com/sebeliassen/FiberphotometryCode/pull/5) | `1ceb47b` | `c053117` | `7399ad6` |
 | [#6](https://github.com/sebeliassen/FiberphotometryCode/pull/6) | `50a722c` | `1ceb47b` | `0c73ed3` |
 | [#7](https://github.com/sebeliassen/FiberphotometryCode/pull/7) | `46c2b35` | `50a722c` | `f000f4f` |
+| [#8](https://github.com/sebeliassen/FiberphotometryCode/pull/8) | `2ab0671` | `46c2b35` | `d4a3d18` |
 
 Every merge has two preserved parents and a tree identical to its passing head.
 The next candidate included current main before its checks. GitHub automatically
@@ -127,3 +128,20 @@ an absent config directory. Do not substitute generic settings without recoverin
 provenance. Jonathan's builder retains its obsolete enrichment import, and direct
 studies.behavior symlink import identity remains separate work. No empirical
 artifact/model was opened, cohort built, file converted or legacy path removed.
+
+## Export utility alias batch
+
+Three existing helper leaves now resolve directly to canonical sampling, result
+and placeholder modules through a structural parent; four registry rows agree.
+All canonical helper and driver source is unchanged. Sixteen focused synthetic/
+stubbed cases cover both-order identity, physical proxies, leading/internal/tail
+missing support, matching/flip/ambiguity policy, placeholder labels, first-row
+length policy and result-load/extraction requests. Full1007 CPU passes in both
+environments (six existing warnings each), architecture202/lint/maps/wheel and
+dependencies pass. The checkpoint records source/log hashes and exact limits.
+
+The loader can request result extraction with save_results=True when results.h5
+is absent. This behavior was preserved and tested only with a nonwriting stub,
+not executed against a model. Real VFI reconstruction, missing legacy_support,
+old driver inputs/outputs, import-time backends and empirical recovery remain
+separate gates. No full exporter, real pickle/model, fit, render or data move.

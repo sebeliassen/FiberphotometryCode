@@ -76,3 +76,16 @@ Direct studies.behavior directory-symlink identity, the obsolete builder enrichm
 route and the missing Karen/monoamine configuration owners remain obligations.
 See registry/checkpoints/jonathan_alias_identity_20261021.json. No symlink or legacy
 root was removed; this is a bounded import/identity repair, not full cohort delivery.
+
+## Export helper alias boundary
+
+Sampling, result and placeholder utility proxies now target the existing physical
+canonical study modules; their structural parent preserves leaf routing and four
+registry targets agree. Helper/driver source is unchanged. Both-order identity and
+physical execution are checked alongside independent sparse-frame masks, matching,
+placeholder and length expectations. Full1007 CPU passes in each environment.
+The result loader's historical extraction request includes save_results=True;
+tests use a nonwriting stub and do not execute a model. Full driver migration,
+missing legacy_support, named real artifact reconstruction and backup/feedback
+recovery still block retirement. No legacy root or empirical artifact was moved.
+See registry/checkpoints/export_utility_aliases_20261021.json.

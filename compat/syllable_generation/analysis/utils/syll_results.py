@@ -1,7 +1,7 @@
 """
 [DEPRECATED SHIM] syllable_generation/analysis/utils/syll_results.py
 ==================================================
-Relocated to: studies/behavior/misc/syllable_generation/analysis/utils/syll_results.py
+Relocated to: studies/session_model_exports/utils/syll_results.py
 """
 
 import importlib
@@ -9,12 +9,12 @@ import sys
 import warnings
 
 warnings.warn(
-    "syllable_generation.analysis.utils.syll_results is deprecated; import from studies.behavior.misc.syllable_generation.analysis.utils.syll_results instead",
+    "syllable_generation.analysis.utils.syll_results is deprecated; import from studies.session_model_exports.utils.syll_results instead",
     DeprecationWarning,
     stacklevel=2,
 )
 
-_real = importlib.import_module("studies.behavior.misc.syllable_generation.analysis.utils.syll_results")
+_real = importlib.import_module("studies.session_model_exports.utils.syll_results")
 sys.modules[__name__] = _real
 
 def __getattr__(name):

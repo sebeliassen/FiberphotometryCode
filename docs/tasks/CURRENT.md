@@ -1,3 +1,20 @@
+## Export utility alias candidate validated (2026-10-21)
+
+PR8 Jonathan alias repair is merged at2ab0671; confirm actual-main CI using primary
+promotion_20261021.json. Continue this next slice in .worktrees/export-utils-aliases
+on codex/export-utils-aliases, based on main2ab0671. Three physical exporter utility
+proxies now target their existing canonical study owners, with a structural parent
+and matching registry rows. All canonical helper implementations remain unchanged.
+All1007 CPU tests pass in lab and isolated pinned environments (six existing
+warnings each), with16 focused cases and architecture202/lint/maps/wheel/dependency
+gates passing. See registry/checkpoints/export_utility_aliases_20261021.json.
+The preserved result loader may request model extraction with save_results=True;
+only its calls were checked with a nonwriting backend stub. It is not a read-only
+empirical probe. Publication/exact-head checks and normal merge are next. Do not
+import the empirical exporter drivers or run models.
+Missing legacy_support, old driver paths, actual result writes, named real artifact
+support and empirical/feedback recovery remain separate gates. Legacy roots intact.
+
 ## Jonathan contract and alias identity candidate validated (2026-10-21)
 
 PR7 loader cleanup is merged at46c2b35; verify its actual-main CI in primary
