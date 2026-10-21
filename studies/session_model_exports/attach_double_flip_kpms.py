@@ -26,7 +26,7 @@ if str(REPO_ROOT) not in sys.path:
 import keypoint_moseq as kpms
 
 from syllable_generation.analysis.attach_kpms import _attach_kpms_full_to_sessions
-from syllable_generation.analysis.replications.datta_utils import build_aligned_moseq_phot
+from fpcode.photometry.alignment import build_aligned_moseq_phot
 from syllable_generation.analysis.utils.legacy_support import migrate_legacy_vfi
 from syllable_generation.analysis.utils.sampling import (
     build_aligned_dfs,
