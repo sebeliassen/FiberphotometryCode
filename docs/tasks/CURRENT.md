@@ -1,3 +1,12 @@
+## SeqNMF integration candidate assembled (2026-10-21)
+
+Local stacked candidate codex/main-seqnmf combines foundation6ff5162 and preserved
+delivery2c43b75. Consolidation notes below precede the authoritative delivery
+scientific record. Primary task-state details are also preserved at modular
+checkpoint31326cc and foundation6ff5162; source snapshots/Gitbundle remain in
+primary outputs/consolidation_20261021. No empirical artifacts/results changed.
+Integration checks and import-origin verification are pending before promotion.
+
 ## Clean-checkout source recovery validated for foundation (2026-10-21)
 
 Consolidation candidate is codex/main-foundation in .worktrees/main-foundation.
@@ -42,6 +51,19 @@ notes/workpreserved. NEXT if implementation requested: phase0 reviewed source
 checkpoints and dependency/recovery inventory only. Karen scientific currentstate
 remains in delivery worktree; planning does not alter its results/acceptance.
 
+## Delivery source preserved for consolidation (2026-10-21)
+
+User authorised staged integration and legacy retirement. This source checkpoint
+preserves the existing dirty/untracked delivery implementation, tests, galleries
+and reports; no model, statistic, ranking, media or scientific policy is changed.
+Primary source checkpoint31326cc and delivery source snapshots/check logs are in
+primary outputs/consolidation_20261021. Delivery CPU933/6warnings, architecture,
+lint, maps and package checks pass. Existing viewer remains running.
+Global consolidation state is primary docs/tasks/CONSOLIDATION_PROGRESS_20261021.md.
+GitHub publication currently lacks HTTPS credentials; prepare local candidates.
+All empirical outputs and human feedback remain separate and unchanged. Earlier
+entries below remain the scientific delivery record.
+
 ## Per-theme view retained within tab session (2026-10-21)
 
 User requested neighbourhood choice per theme when navigating away/back.
@@ -77,297 +99,817 @@ Authoritative worktree .worktrees/karen-seqnmf-delivery. Existing notes preserve
 
 ## Three-neighbourhood theme movies delivered (2026-10-21)
 
-Continue in .worktrees/karen-seqnmf-delivery; its CURRENT is authoritative.
-User approved corrected449D metric + multiple supported local anchors and
-requested videos. New served folder in delivery outputs/karen_pooled_p80_review_
-20261015/theme_showcases_20261021/:5nine-paneloverviews,15three-panelrows,
-45uniqueexecutions. Three differentmice/row, sixmice local support/anchor;
-separated local variations, not three establishedbiologicalclusters. Frozen
-7319cores/99recordings/21mice unchanged; nofits/search/newstats/featureweights.
-18previous reference tables hash-identical. Strictnativekeycrosswalk preserves
-different internalmedia/statistic occurrenceIDs. Allselection/native/media/
-actual20moviebrowserfeedback/HTTPchecks PASS; CPU933/6oldwarnings,lint/architecture/
-maps checked. Viewerexisting8766/local61695ifforwardactive, newpath
-http://localhost:61695/theme_showcases_20261021/. START_HERE.md givesMacSSHfallback;
-Macforward itself notverified. Overview73.77s/pass (~12m18sat10plays); separate
-rowsavailable. Newfeedbackisolated; oldworkintact. ZIPsiblingportablecopy.
-Allrenderjobsfinished. Methoddoc THEME_NEIGHBOURHOOD_SHOWCASES_20261021.md in
-delivery studyanalysis. Next humaninterpretation/coherence/variantfeedback.
+User approved current corrected similarity metric plus several supported local
+anchors, then explicitly requested rendering. New output within this worktree:
+outputs/karen_pooled_p80_review_20261015/theme_showcases_20261021/.
+Five3x3overviews,15three-panelrowmovies,45unique executions. Each row is an
+actual exemplar and two close neighbours from three different mice. Every local
+ball supported by six mice; anchors2/3 separated from previous local balls.
+Supported variations, not evidence for three biological clusters. All7319cores/
+99recordings/21mice and exact449D corrected descriptors preserved; no newfits,
+search, weighttuning or inferentialtests. Full-population assignments/plots show
+duration/speed/turning/proximity and distinguish local support from nearest-anchor
+partitions. Earlier definitions,18referenceoutputs/statisticaltables hash-identical.
 
-## Deadline exploratory theme atlas delivered (2026-10-21)
+Viewer uses existing8766server; oldMacforward61695 ifactive:
+http://localhost:61695/theme_showcases_20261021/. START_HERE.md givesfallbackSSH.
+Overviewdefault; View dropdown enlarges one row. Natural60Hz,onset-fixedcamera,
+sourcecolourdots/stages. Fiveoverviews73.77s/pass,12m18sat10passes; individual
+rows117.47s/pass. New isolatedfeedback autosave/JSONexport/import; oldnotes intact.
+ZIP sibling provides extracted offline gallery. ActualMacforward notverified.
 
-Continue in .worktrees/karen-seqnmf-delivery; its CURRENT is authoritative.
-Outputs/karen_theme_delivery_20261021:fiveprovisionalrefinedthemes/7319cores/
-99recordings21mice, no newfit/search. PortableHTMLreport/8PNG-PDFpairs/fulltables,
-15six-panelmovies90clips withp100/P80/random; P80total26.35sperpass. Servedpath
-outputs/karen_pooled_p80_review_20261015/theme_delivery_20261021/ usesexisting
-loopback8766/local61695ifforwardstillactive; START_HERE.md hasMacSSHcommand.
-Frozencores groupblind, wholecohortretrieval inclallrootcontinuations; intra/
-inter/context/null/primitive/movementreadouts completed. Coreunion8.57%validtime;
-inter299primarypairs sparse.8300finitetests/462nominal/146familyBH/0globalBH;
-144familyhitswithin-grouptimechanges,only2PFF-Mgroupdifferences. TravelratePFF
-.488vsM.705/min,p.014,qfamily.168,qglobal.511; earlygroomstage+1.039s,p.0007,
-qfamily.0308,qglobal.277. No corrected diseaseclaim;24wN3M/6P,Ldopaconfounded.
-Allnativecores/root/statisticalBH/exactMC/media/browserauditsPASS;CPU922/6old
-warnings,sourcechecksrecorded. Float60Hzsamplingbugfixed,newstreams1:1,ranks/
-selectionsunchanged. Oldlabels/workpreserved. Actualsharedlib importsprimary
-15df93d;dirty delivery736f3ca studycode/sourcecopiesandhashes inportablebundle.
-No empiricaljobsrunning. Narrowerdeadlinereportdelivered; generatoracceptance/
-qualitativeconfirmation remainopen. See deliveryEXPLORATORY_THEME_DELIVERY md.
+Independent selectionaudit exactall7319descriptorSHAs/nativekeys/distances/
+supports/physical summaries PASS. Frozenmedia IDs differ from measured-table
+boutoffset IDs: strict one-to-one native theme/session/start/end crosswalk saved,
+no missing/extras and no oldfilesrewritten.45coreidentities unique/nonoverlap9per
+theme. Mediaaudit all45components+20grids/sourceimages/allsourcecolourdots/
+native1:1/masks/order/panelpositions/darkfinishes PASS. ExactHTML isolatedChrome
+all20movies played; plots, feedbackpersistence/realJSONexport/import/atomicreject
+PASS. LinuxHTTPHEAD/ranges PASS. CPU933passed/6existingwarnings; lint no newdebt,
+architecture201/no violations/cycles, maps146 synchronized. Preview15.4s,fullrender
+80.4s,selectionaudit5.45s,mediaaudit52.6s/895MiB. Nohupjobsfinished; viewerunchanged.
 
-## Deadline-focused theme plan (2026-10-21)
+Methods: studies/karen_pff_vs_monomer/analysis/THEME_NEIGHBOURHOOD_SHOWCASES_20261021.md.
+Source/provenance/checks in output; dirtydelivery736f3ca retained. Next human
+review: coherent rows? useful variants or only pace? different behaviours mixed?
+Previous exploratory atlas remains statisticalreference; no generator acceptance.
 
-User requests concise PLAN FIRST: obtain useful exploratory Karen themes inspired
-by IFxDNpresentation; nominal effects that fail correction are welcome. Shift
-priority from broadgeneratoroptimisation/fullreview to a smallthemeatlas plus
-group/intra/inter/branching/contextreadouts, transparent rawp/familyq/broadq.
-Continue in .worktrees/karen-seqnmf-delivery; plan at studies/karen_pff_vs_monomer/
-analysis/SHORT_DELIVERY_THEME_PLAN_20261021.md and its CURRENT is authoritative.
-Read-only trace separates grouped14/K8/L5/.5 theme recipe from rawK10/L3/1
-branchreplay and unified20/K10/L3/.005 quantitative slide. Finalmovies used
-refined observedpaths/exemplars. ReusecurrentKarenfits/calls first; onebounded
-coarser recipe fallback, notanothersearch. Oldstatistics cannot beattachedto
-latestfits. Currentturnplanningonly; no newmodels/analysis/movies executed.
-Earliermediaandlabels preserved. Scientificgoalunmet; nextsmallthemeinventory.
+## Deadline-focused exploratory theme atlas delivered (2026-10-21)
 
-## Three/five-bout generator comparisons ready (2026-10-19)
+User authorized execution and reiterated proceed. Narrower deadline deliverable
+complete: five explicitly refined themes,7319complete overlapping occurrences,
+all99recordings/21mice; no new fit/search/KPMS. Frozen before group statistics:
+travel-turn-travel2614,orient-sniff-orient1539,sniff-observe-sniff616,
+rear-backoff1736,groom-reorient-groom814,each supported across21mice. Two sensory
+themes may be onebroaderfamily; backoff is not established descent. Fullfactor
+calls separate from refined core retrieval; all eligible roots enter branches.
 
-Continue in .worktrees/karen-seqnmf-delivery; its CURRENT is authoritative.
-Two pooledL5fits K10/K18 and81new six-panelgrids completed. Hub in delivery:
-outputs/karen_pooled_p80_review_20261015/length_comparison_20261019/.
-Same99recordings/21mice/grouped69/lambda.3/seed43/80updates/correctedranker;
-L3unchanged/reused. StartK10P80,3prompts,overallgeneratorfeedback; K18optional.
-Existingloopbackserver8766/local61695; START_HERE.md has MacSSHcommand.
-Separate storage and distinct K-scoped feedbackJSONfiles; earliernotes preserved.
-L5unioncoverageK10 9.32%vsL3 18.78%,K18 15.12%vs31.14%. This is a tradeoff,
-not behaviouralquality. Same detectionnumbers permit3/5vs2/3stage matches;
-not equal precision. K18L5onecallfactor explicitly unrendered, retainedintotals.
-All14234calls independent native/statisticaudit PASS;81grids/486clipmediaaudit
-PASS; bothlengthpages/capacitypage browserpersistence/import/playback PASS;
-334HTTP200routes/3ranges206. CPU885passed/6warnings; sourcechecks recorded
-in delivery. Bothfit/renderjobs finished; no continuing search. Mac tunnel
-not verified. Source report TEMPLATE_LENGTH_CONTRAST_20261019.md in studyanalysis.
-Next generator-level human feedback, then bounded sensitivity or membership/core
-changes. Scientific goal remains unmet. Earlier pending statements superseded.
+Output outputs/karen_theme_delivery_20261021; served portable report under
+outputs/karen_pooled_p80_review_20261015/theme_delivery_20261021/ (remote8766,
+existinglocal61695 ifstillforwarded). START_HERE.md gives MacSSHcommand.
+Report8PNG/PDFfigures,full12,160statisticalrows,provenance/source snapshot;
+15gridmovies/90components inmedia/,6panels2x3,preferred449Dranking,native60Hz/
+onsetcamera/colourdots. P80fivefiles26.35sonce/4m24sat10plays. Gallery ownnotes
+andJSONexport/import preserveolderlabels. ZIPportablecopy beside servedfolder.
 
-## Generator-level qualitative review ready (2026-10-19)
+Readouts: usage/unioncoverage(8.57%allvalidtime),whole/stageexecution,substitutions,
+same-raw-syllableinside/outside(block/300s/occupancy matched),rootbranching,
+exclusiveinter/repetition/transitions/returns/context,frequency+firstordercontrols,
+fixedprimitive/movementbaselines. Unknownframesretained in exposure and break
+interadjacency.6806exclusivecalls;only299primaryg1successorpairs/86recordings
+withany. Sparseinterestimates/censoredruns needcare; rawcalls/auditsretained.
 
-User clarified goal: choose which GENERATOR produces useful chains, rather than
-curate chains. Delivery is authoritative. New page in delivery:
+8300finiteprimarytests:462nominal,146familyBH,0globalBH.146comprise144within-
+group paired changes,2crosssectionalgroup differences,0changeinteractions.
+These include correlated/mirror/sensitivity endpoints. Two groupfamilyhits:
+3wfirstgroomstage PFF-M+1.039s,p.0007,qfamily.0308,qglobal.277(N8M/11P);
+16wfrequencyselfexcessg0 sensitivity,p.0078,qfamily.0468,qglobal.375.
+Pooleduntreatedtravelrate PFF.488vsM.705/min,delta-.217,CI[-.389,-.045],
+p.014,qfamily.168,qglobal.511(N9M/12P).24wonly3M/6P;Ldopaage/drugconfounded.
+No equivalentKarenDAclaimed; JonathanWTDA separateoptional, not executed here.
+
+Checks:native_audit independentall7319cores+everyroot/masks/stageclock/kinematics
+PASS;statistics_audit allBHindependent+293930exactmousepartitionsrepresentative
+ratep.014565vsMC.014PASS;baselines315608rawboutsconserveexposure;media/native/
+sourcecolour/encodingandbrowserfeedbackPASS;reportsearch/filters/allrows/8figures
+PASS. CPU922passed/6existingwarnings;lintrevieweddebtunchanged,architecture/
+maps checked. Native8ULPsampleboundaryfix removes oldfloatfloor repeats/skips:
+all90newstreams1:1;descriptors/ranks/selections unchanged. Initialdraft archived;
+oldermoviesleftuntouched. No empirical jobs continuing; existingviewer remains.
+
+Provenance: study code dirty delivery736f3ca; actualsharedfpcode editableimports
+fromprimary checkout15df93d, exactpaths/SHAs inruntime_library_sources.json and
+sourcecopies inreport. No claimclean deliverycommit alone reproduces outputs.
+Sources/sourceatlaunch/refreshlogs preserve actual versions; no env upgrades.
+Study report EXPLORATORY_THEME_DELIVERY_20261021.md has methods/reproduction.
+Deadlineatlas complete as exploratoryoutput; globalgeneratoracceptance and
+qualitative/independent confirmation remain open. Next optionaltinyP80feedback.
+
+## Deadline-focused theme plan requested (2026-10-21)
+
+User has little contract time remaining and requests PLAN FIRST for obtaining
+presentation-like themes on Karen, plus recruitment/intra/inter/other readouts,
+including nominal effects that fail correction. Prioritize a small exploratory
+theme atlas over broad generator optimisation/full qualitative labelling.
+Plan: studies/karen_pff_vs_monomer/analysis/SHORT_DELIVERY_THEME_PLAN_20261021.md.
+
+Read latest17page attachment chains(4), inspected embedded figures, and audited
+legacy lineage/readout owners with two read-only agents. Confirmed distinct
+IFxDN recipes: grouped14/K8/L5/lambda.5/100updates/seed42 (three-theme source);
+raw100/K10/L3/lambda1/80/42 (2136call replay,10salinemice); unified20/K10/L3/
+lambda.005/150/42 (quantitative slide source, exactartifact unresolved). Final
+movies use specified complete observed paths and exemplar/panel selection,
+not a random sample of factor calls. Page15 prose .21 vs embedded .0211 saline
+p mismatch; historical branching denominator350factorcalls vs307rootcalls.
+
+Proposed execution: reuse existing pooled cleanedKaren L3/L5fits first, derive
+few human-readable ordered cores/variants, retain provenance and all validroot
+opportunities. Single coarse-vocabulary K8/L5/.5 adaptation only if needed;
+preserve unknowns/barriers and all99recordings/21mice. Quantify usage, variants/
+kinematics/branching, repetition/transitions/returns and supported context/nulls;
+optionalJonathanWTDA does not delayKaren. Fullp/effect/N/uncertainty/familyq/
+broadq tables, no significance-dependenttheme selection. OldKarenOct11–14
+effects concern differentcatalogues; reusecode/recompute, don't transplantp/q.
+
+This turn only created plan/currentstate/navigation docs; no new fits, empirical
+analysis or movies. Prior fit/media work and labels preserved. Scientific goal
+unmet; next step on continuation is small theme proposal/occurrence inventory.
+
+## Controlled three/five-bout generator comparison ready (2026-10-19)
+
+LATEST: two new pooledL5fits K10/K18 COMPLETE;81newgrids/486components COMPLETE.
+Review hub: outputs/karen_pooled_p80_review_20261015/length_comparison_20261019/.
+START_HERE.md gives Mac/woody forwarding; reuse existing server8766/local61695.
+Separate length_review_K10_20261019 andlength_review_K18_20261019 pages compare
+A=L3,B=L5 at sameK; original capacity page remains available and unchanged media.
+Start K10 P80,3comparisonprompts (6files,40.60sonce/6m46sat10plays/file), then
+few catalogue witnesses/global GENERATOR judgements. K18 optional35.68sonce.
+Each page: p100/P80/random,6panels2x3,naturalpace,onsetcamera,sourcecolours;
+independent storage/model+movie identities and distinct K-scoped JSON exports.
+Earlier14notes/movieidentities preserved; no user/browser-storage data touched.
+
+Same cleaned99recordings/21mice/allwaves/grouped69/lambda.3/seed43/80updates.
+L5K10:5201calls/9.32%unioncoverage vsL3 18564/18.78%; L5K18:9033/15.12%
+vsL3 32749/31.14%. K18L5factor0 onecall/no sixuniqueexecution movie, explicit
+inUIandfullfittotals; other27families rendered. Frozen corrected449Dranker/
+scales retained. No new KPMS, ontology, phase alternatives or label training.
+Detection policy same numerically,error<=.68/support>=.5/stage>.15/radius2;
+L3canpass2/3,L5canpass3/5. Not equal precision/effective regularisation; longer
+means neither complete routines nor bettercoherence by definition. MostL5calls
+partial3/5. Descriptor resampling doesn't warp playback. Crop policy same,
+planned per family; not identical pixelzoom betweenfamilies orlengths.
+
+Evidence outputs/karen_template_length_20261019: quantitative_audit PASS all14234
+native calls independently float64,error maxdiscrep<1.58e-7,tol3e-7; media_audit
+all81grids/486clips hashes/H264/fps/counts/order/zerotracking/offscreenflags PASS.
+Eachlengthpage browser_validation PASS A/B/modes/persistence/import/export,
+wrongidentityatomicreject,catalogueguard,actual2160x1920playback. Existing
+capacity page rebuilt and browser-regressionpassed. HTTPaudit334uniqueHTML/
+movie/posterURLs200,3ranges206. Browserinteractionfileorigin; Mac tunnel untested.
+FullCPU885passed/6existingwarnings; finalsource lint/architecture/maps evidence
+recorded in final_checks.log. No sharedlibrary algorithm change or env upgrade.
+
+Both detached empiricaljobs finished with timeout1h/RSS8GiB/output6GiB/
+80GiBfreedisk guards; GPU25%prealloc,2threads; render4workersx2threads.
+No continuing search. Exactlaunchrenderer snapshot precedes importformatonly
+repair; manifesthashbinds that snapshot. Builder/template separatelyfingerprinted.
+Source report: studies/karen_pff_vs_monomer/analysis/TEMPLATE_LENGTH_CONTRAST_20261019.md.
+NEXT: collect generator feedback; if L5promising checkpenalty/seedsensitivity;
+if bothlengths mixsameactions prioritize membership/cores rather than another
+broad search. Single-seed descriptivefits; no heldout/robustness/behaviouracceptance.
+Scientific goal unmet. Earlier dated NOTRUN/INPROGRESS statements are superseded.
+
+## Generator-level qualitative comparison ready (2026-10-19)
+
+User clarified the target is WHICH GENERATOR yields useful chains, one level above
+curating individual chains. Authorized choosing the most informative qualitative
+workflow while away. New generator-oriented page, separate from prior core review:
 outputs/karen_pooled_p80_review_20261015/generator_review_20261019/.
-Existing server8766; START_HERE.md gives Mac/woody forwarding (old local61695
-if still active). Three comparative witness rounds + optional catalogue browsing
-and overall generator judgements; export karen_generator_feedback.json.
-A=K10,B=K18clean3bout/grouped69fits,same ranking;5bout NOT run. No refits/rendering.
-Comparison candidates use native overlap, not established semantic matches.
-Labels/evidence isolated from older pages;5unit tests/browser persistence/import/
-actualplayback/169HTTP routes PASS; original core HTML byte-identical.
-Scientific goal remains unmet. Next use generator feedback to prioritize changes.
+START_HERE.md includes Mac/woody forwarding; existing loopback server8766 reused.
+Previous local forwarded port61695 may be used if still active. No server restart.
 
-## Presentation-inspired next diagnosis (2026-10-16)
+A=clean pooledK10, B=clean pooledK18, both3bouts/grouped69/lambda.3/seed43/80updates,
+same99recordings/21mice and preferred corrected ranking. Five-bout contrast NOT run.
+Source build_core_review.py --view generator + generator_review.html; package
+karen-generator-review-20261019-v1; export karen_generator_feedback.json.
 
-Latest legacy inspection maps IFxDN themesA/B/C explicitly to clustered motifs7/4/1:
-14tokens/K8/L5/lambda.5/100iters/seed42, different from raw-state L3branch reference.
-Surviving summary matches5stage motifs; later displayed path definitions evolved.
-Sources snapshotted with blob identities on delivery. Proposed controlled Karen
-L3/L5 contrast needs fixed3bout/threshold audit first; NOT EXECUTED. Full evidence
-appended to presentation-inspired plan below; no fits or movies launched.
+Three recommended comparison witnesses: K10F09/K18F02, K10F02/K18F03,
+K10F01/K18F08; optional K10F02/K18F16 andK10F06/K18F07. Counterparts selected by
+exact native-time interval union Jaccard within recording, allowing many-to-one;
+some have weak overlap and are explicitly NOT established semantic matches.
+Third round probes a frequentK18family with weakest best overlap. No factor-ID
+equality, condition/DA selection or claim that diagnostic witnesses represent
+all families. Six distinct recommended random grids=36execution positions,
+60.78s once/~10m08sat10plays/file; P80total31.12s, p10027.03s. Modes optional.
 
-User abandoned Gemini consultation and supplied full three-theme presentation.
-Continue in delivery; its CURRENT is authoritative. Traced movie workflow uses
-specified complete paths + local/background density exemplar + selected neighbours,
-separate from saved seqNMF factor calls. Historical fitter already transferred.
-Full saved-call path audit953/1805factor-pathpairs, median top path9.8%/11.4%:
-do not forceexactstrings or onepath/factor. Four-witness core/variant diagnosis
-suggested with cleanedfits+preferred ranker fixed; no new fits/renders/assignments.
-Plan/evidence in delivery:
-outputs/karen_catalogue_feedback_20261016/PRESENTATION_INSPIRED_NEXT_STEP_20261016.md.
-No catalogue acceptance; Gemini brief below is a prior consultation artifact.
+Large single six-panel player A/Bswitch, unchanged native pace/onset camera/
+syllable colours. Comparative coherence/relation/preference notes; top10permodel
+catalogue browser(all28optional), theme/duplicate tags; OVERALL generator feedback
+on usefulness,breadth,coherence,granularity,within-familyvariants and final preference
+(A/B/bothdifferentresolutions/neither/tooearly). No averaged rating selects a winner.
+Played-movie identities tracked with explicit partial-viewing limitation.
 
-## Partial Karen catalogue feedback; goal not met (2026-10-16)
+Labels are own-package+manifest/movie/model bound, autosaved with JSONexport/import.
+Earlier catalogue/core labels untouched. Wrong imports rejected atomically; browsing
+an extra catalogue family disables comparison fields to prevent wrong-pair labels.
+No refits/rerenders/reassignments. Original core HTML rebuild is byte-identical.
 
-Gemini advice brief, with local source/evidence pointers, is on delivery:
+Checks completed:5new interval-estimand unit tests PASS; browserfile-origin PASS
+(A/B/mode/catalogue isolation, globalfeedbackreload, export/import, mismatchreject,
+real2160x1920 playback, oldstoragepreservation);169HTTP routes200 andrange206.
+Screenshot/JSON evidence and browser-check driver in new page directory. Mac tunnel
+unverified. Final lint PASS(3078revieweddebt/no newdiagnostics), architecture201modules/
+no violations,146foldermaps synchronized; git diff whitespace checks passed.
+No full numerical suite required for
+this outer review UI change; earlier fitting/media checks remain dated evidence.
+
+NEXT: collect GENERATOR-level feedback from this page, then use the identified
+generator failures to prioritize controlled L3/L5 or membership changes. Do not
+treat chain curation, earlier positive ranking preference, or UI readiness as
+achieving useful generator outputs. Scientific goal remains unmet.
+
+## Qualitative core-review labelling page finalized (2026-10-16)
+
+Page: outputs/karen_pooled_p80_review_20261015/qualitative_core_review_20261016/
+(built by studies/karen_pff_vs_monomer/analysis/build_core_review.py from
+core_review.html; template un-ignored in .gitignore). Existing three-bout corrected
+legacy-ranker movies only; five-bout comparison NOT run. Defaults to the 4 focused
+families' uniform-random six-panel movies (K10_F09, K10_F02, K18_F16, K10_F06).
+Per-panel group/action/boundary/tracking flags; labels isolated from earlier ones.
+
+Served by existing viewer on 127.0.0.1:8766 (PID running since 10-15); access via
+port forwarding, see START_HERE.md in that folder. Checks: 672 media/poster/clip URLs
+HTTP 200/206; headless-Chrome file:// run PASS (persistence, export/import,
+mismatch rejection, playback); folder-maps-check, lint, architecture and 14 unit
+tests passed. Mac tunnel/browser unverified. Labels are per browser origin+port.
+
+NEXT: user labels and exports karen_core_review_labels.json; use group structure
+per family to decide membership refinement vs longer-template test.
+
+## Presentation-inspired direction after Gemini consultation abandoned (2026-10-16)
+
+LATEST upstream legacy trace: episode_pilot_config explicitly maps IFxDN themes
+A/B/C to clustered motifs7/4/1. Clustered fitter is14tokens/K8/L5/lambda.5/100iters/
+seed42/firstupto60000macro-bouts, distinct from raw100/L3branch reference. Surviving
+summary CSV confirms five-stage motifs; later renderer modifies some paths before
+final raw/conservative examples. Source/config lineage is stronger, but not new
+clustered saved-model replay or proof every final movie is a factor detection.
+Exact3legacy source snapshots/blob IDs and CSV fingerprint saved under
+outputs/karen_catalogue_feedback_20261016/legacy_theme_lineage. Plan appended with
+this evidence. Controlled Karen L3/L5 contrast now merits priority alongside
+membership diagnosis; first audit/generalize fixed3bout assumptions and threshold
+geometry. NOT YET EXECUTED. Keep other settings fixed; don't copy IFxDN IDs/unknown
+lumping/40Hz/kinematic gates or confound ontology and length. No new workloads.
+
+User supplied full17page "What comes after the syllable_ (chains) (1).pdf" and
+asked us to proceed, inspired by the three themes. Extracted PDF and inspected
+traced A/C final renderer and B parent. They retrieve specified COMPLETE observed
+paths, filter durations/jumps, select local/background density exemplars in PCA
+latent+speed space, then nearby distinct-mouse examples and final selected panels.
+They do not load seqNMF W/H/calls. Presentation demonstrations therefore use a
+narrower candidate definition than the current broad partial-factor catalogue.
+Historical fitter already transferred; movie coherence is not evidence for all
+factor calls. No claim of newly recovering the automatic theme-discovery lineage.
+
+Read-only full51313call path audit:953(K10)/1805(K18)factor/path pairs; median
+largest-path fraction9.8%/11.4%. One path per factor discards many variants; one
+family per path fragments. Development prefix examples are supported across21mice:
+K10F02[10,11]1365/2492calls; K10F09[8,12]976/1119. No family acceptance inferred.
+Files and plan:
+outputs/karen_catalogue_feedback_20261016/PRESENTATION_INSPIRED_NEXT_STEP_20261016.md,
+observed_path_support_K10.csv,observed_path_support_K18.csv,
+observed_path_support_summary.csv,prefix_witness_support.json,PDF provenance JSON.
+
+Suggested next bounded comparison: keep cleanedfits+correctedlegacy ranker fixed;
+diagnose explicit ordered cores/observedvariants in K10F09(positive),K10F02(rest/
+wall),K18F16(rest/wall),K10F06(coherentcore/exceptions). Preserve meaningful ends,
+do not require3/3 or forceexactstrings/3themes. Measure support/unioncoverage/
+overlap and retain positive witnesses. Local-density exemplar change is a separate
+possible contrast, not confounded with membership/scales. Then small six-panel
+P80+fresh random comparison before next catalogue pass. No new fitting, detector
+change, reassignment or media render occurred while tracing/auditing. Current
+behavioural goal remains unmet. Gemini brief below is historical; no external reply.
+
+## Partial catalogue feedback: behavioural goal still unmet (2026-10-16)
+
+User requested a Gemini consultation with local file access. Advice brief:
 studies/karen_pff_vs_monomer/analysis/GEMINI_CHAIN_COHERENCE_BRIEF_20261016.md.
-User requested consultation; no new fits or source-method changes.
+Includes current evidence, code/data map, positive counterexamples and open
+membership/representation/template questions. Consultation only; no new workload.
 
-Continue in .worktrees/karen-seqnmf-delivery; its CURRENT.md is authoritative.
-User's labels(4) bind14entries/13families to exact current movies:2Similar/6Mixed/
-1Dissimilar/5comment-only,13P80+1p100,no random. Catalogue is PARTIALLY REVIEWED,
-NOT ACCEPTED. Ranking repair preference does not establish coherent assignments.
-Read-only diagnostics in delivery outputs/karen_catalogue_feedback_20261016/README.md.
-80/84 reviewed panels match2/3template stages. Universal3/3 and missing-stage
-splitting both discard human-positive examples; full-call cost quantified.
-Saved metric also fails to separate some explicit human distinctions(K10F02,
-K10F06). No explicitvelocity feature; no new fits/render/reassignment this turn.
-NEXT: targeted membership/ressemblance/boundary checks preserving positive cases,
-measure retained coverage/mouse support, then small comparison/fresh random review.
-User explicitly states behavioural goal is not met; no model acceptance inferred.
+User supplied karen_six_panel_labels (4).json and explicitly says the goal is not
+yet met. New package has14 exact movie-SHA-bound entries/13families:13P80+1p100;
+9 explicit ratings(2Similar/6Mixed/1Dissimilar),5comment-only. No new random review.
+Old/reference notes remain separate. Current cleaned-fit catalogue is PARTIALLY
+REVIEWED, NOT ACCEPTED; earlier unreviewed/ready statements below are checkpoints.
 
-## Ranking repair preferred; new catalogue ready (2026-10-16)
+Read-only diagnostic evidence under outputs/karen_catalogue_feedback_20261016:
+README.md, source JSON/SHA audit,84panel stage audit, full51313saved-call support
+audit, human-panel block distances and exact native boundary witness. Winning
+corrected legacy ranking is preserved; no new fit/render/reassignment/source edit.
 
-User rates ranking repair only best by far; phase/cleaned alternative no better
-than previous version. Exact feedback saved on delivery. Preferred method is
-corrected legacy32elapsedphase latent/displacement/heading/logduration ranking.
-Phase/whitening/semantic additions are not used in the new catalogue.
+80/84 reviewed panel positions have2/3 supported stages; different missing stages
+can admit different actions. K18F16 middle Dash can be absent; K18F14 p100/P80
+omit different stages. This is a mechanism, not proof of the sole cause. Strict
+3/3 filtering retains only1147/18564(K10),1480/32749(K18)existingcalls and5.30%/
+4.38%of existing union time. It also discards positive examples: all6K10F09 are
+2/3. Stage-pattern splitting would fragment the user's similar K18F13 subset.
 
-New catalogue: http://localhost:8766/rank_repaired_catalogue_20261016/ viaexisting
-Mac SSH tunnel. Applies that ranker to the already-cleaned K10/K18fits; no new
-fits. This new combination is HUMAN UNREVIEWED, with6exact preferred original-fit
-anchor references linked so cleanup is assessed with ranker held fixed.
-28supportedfamilies/84movies/504panels;top10/K default20P80files90.18sonce/~15min
-at10plays/file,plusnotes. Allfamilies/modes accessible. Package/storage separate;
-original labels/media intact. Media/native/rank/random/UI audits PASS;
-878CPUtests/architecture/lint/maps PASS. Delivery CURRENT is authoritative.
-Output within delivery worktree:
+Saved449D metric fails to separate K10F02 rest/wall subsets in the tiny labelled
+sample(between/within-rest distance .801); K10F06 exceptions/core ratio1.001;
+K18F16 rest/wall ratio3.001 but both modes remain one assigned family. No explicit
+velocity is in this ranker; velocity overweight is not established. Pair measures
+are descriptive development diagnostics, not held-out/full-family validation.
+
+K10F04P80panel3 has .5s pre-context and2.2s active[128747,128879)at60Hz; unmatched
+stage is middle. Which physical prefix the user meant remains unresolved. Historical
+detector is fixed3bouts, not general insertion/deletion alignment. No manual trim.
+
+NEXT: separate membership and resemblance diagnoses on these positive/negative
+witnesses; preserve legitimate variants, audit actual boundaries, test bounded
+refinements with coverage/mouse-support costs, then a SMALL targeted comparison
+and fresh random checks. Do not request another full catalogue pass or start a
+large weight/K search as the default. No family/model/K acceptance yet.
+Current Mac forwarded browser address observed in user context:
+http://localhost:61695/rank_repaired_catalogue_20261016/cleaned_ranking_correction/.
+No software changes this feedback turn; previous source checks below still apply.
+
+## User prefers ranking repair; refreshed catalogue ready (2026-10-16)
+
+User's qualitative feedback: ranking repair only is best by far; phase/cleaned
+alternative looks no better than the earlier version. Exact feedback saved in
+outputs/karen_coherence_repair_20261016/qualitative_preference_20261016.json.
+This endorses the corrected legacy ranker on the original fits in the small
+comparison, not every family or a new unreviewed combination.
+
+Preferred ranker retains32elapsed-time phase samples, latent/displacement/heading/
+logduration blocks and corrected scaling; no whitening/phase/semantic additions.
+The previous alternative changed both model and descriptor, so poor feedback does
+not isolate an adverse effect of handling cleanup. Restoring corrected legacy
+ranking on CLEANED K10/K18 models is the missing control and catalogue candidate;
+it awaits review. Six exact preferred original-fit anchor videos remain linked.
+
+No new fits. --catalogue render scope prepares all28supportedcleanedfamilies,
+84movies/504panels,top10/K default,allfamilies accessible. Separate package key:
+karen-ranking-repair-catalogue-20261016-v1. Output:
 outputs/karen_pooled_p80_review_20261015/rank_repaired_catalogue_20261016.
-Report:studies/karen_pff_vs_monomer/analysis/COHERENCE_REPAIR_20261016.md.
+Render is detached nohup/45min timeout,4workers×2threads,8GiB RSS guard,80GiB
+free disk floor/6GiB output cap; PID/log under coherence-repair analysis output:
+catalogue_render.pid,catalogue_render.log,catalogue_launch.json. Render COMPLETE;
+media/UI audits PASS. Original media/labels are untouched;
+previous renderer's exact source snapshot retained and matched to old manifest.
 
-## Karen coherence repair and small comparison ready (2026-10-16)
+Mac URL http://localhost:8766/rank_repaired_catalogue_20261016/ throughexisting
+SSH tunnel. Landing page links six exact preferred-view anchors against same
+ranker on cleanedfits, then fullcatalogue. Top10/K P80:20files/90.18sonce/15m02s
+at10plays eachbefore notes. All28P80:127.10s;allmodes424.85s. Newcombination
+remains HUMAN UNREVIEWED. Phase/semantic recipe is not the selected catalogue.
 
-Continue in .worktrees/karen-seqnmf-delivery; its CURRENT.md is authoritative.
-Steps1–2 complete: corrected ranking scale; versioned handling masks for two
-mid-recording episodes; two cleaned pooledK10/K18fits(all99/21mice/allwaves,
-lambda.3/seed43/80iters); fixed physical/semantic ranking contrasts and full-call
-audits. All51313newcalls audited PASS. These ranker features do not change the
-seqNMF grouped-syllable input. Spatial context remains unweighted without verified
-arena geometry. No broad search or new KPMS fit. Original artifacts/labels retained.
+Passed84grid/504component hashes/fullnative support/504dotcolourchecks(max45)/
+418darkpanelchecks;everyselectedrank/nativeidentityverifiedand28uniformrandom
+draws reproduced. Browser28families/top10default/allK18/modes/notes/movieSHA/
+referenceexport/originalstorage checks PASS;anchorlinksHTTP200/exactMP4Range206.
+878CPUtests(6existingwarnings),architecture/lint3078revieweddebt/no newdiagnostics,
+146maps passed. Recipe/audits in newcatalogue root;reportCOHERENCE_REPAIR_20261016.md
+latesthumanpreference section. NEXT:controlanchorcheckwithpreferredranker fixed,
+then newcatalogueP80pass;retain random checks before accepting families.
 
-Smallreview36movies/6anchors/2revisedversions/3modes is COMPLETE andmedia/UIaudited.
-Mac URL http://localhost:8766/coherence_repair_20261016/ viaexistingSSHforward.
-P80twosets72.37sonce/~12minat10plays/file,plusnotes. Userwants this checktoleadto
-a refreshed catalogue review, top10/K default; all28supported cleanedfamilies
-accessible. No coherence acceptance yet. 878CPUtests/architecture/lint/maps passed.
-Report:delivery studies/karen_pff_vs_monomer/analysis/COHERENCE_REPAIR_20261016.md.
-Evidence:delivery outputs/karen_coherence_repair_20261016; media under original
-delivery gallery root outputs/karen_pooled_p80_review_20261015/coherence_repair_20261016.
+## Karen coherence repair complete; small review ready (2026-10-16)
 
-## Karen six-panel feedback: confirmed ranking defect (2026-10-16)
+User authorized steps1–2 and a small review leading to a refreshed catalogue pass.
+Corrected native-unit latent IQR scaling in render_reference_review; substantive
+block-distance/unit invariance regressions pass. Added execution_similarity.py,
+run_coherence_repair.py and render_coherence_comparison.py. No broad K/optimizer
+search, group/DA selection or new KPMS fit. Existing source/media/labels retained.
 
-Authoritative details in delivery CURRENT.md and
-.worktrees/karen-seqnmf-delivery/studies/karen_pff_vs_monomer/analysis/SIX_PANEL_FEEDBACK_20261016.md.
-18newfeedbackentries hashbound. FoundlatentIQRunitsbug in galleryranking:
-latent99.61%ofsummedexemplardistance in306selectedpanels; intendedlatentblock
-normalizationcancelled(1280×squaredweightinflation). Fits/calls unaffected;rankfix
-not yetimplemented. Confirmedactive-core handling inK18_F13/randompanel2 atnative
-[82750,82850),session2026-03-15T09_51_36_top_left;notexcluded. Fullintervalunknown.
-K10_F03durationvariation1.85–14.53sisreal,notplaybackspeed. Evidence/labels saved
-in delivery outputs/karen_six_panel_feedback_20261016. Nextrepairranking/scoped
-handlingaudit,thenboundedK10/K18coherence contrasts andsmallreview;parkK22.
-No newfits,masks,ranks,movies or maintainedalgorithmedits thisturn.
+Two conservative mid-recording removal/empty/replacement masks added in a NEW
+input view for session2026-03-15T09_51_36_top_left: [56800,62893),[74166,83015).
+14942elapsed frames;1096previouslylabelledframes(18.27s)newlyremoved. Saved native
+sheets/provenance. Six other sampled confidence candidates show free mice at walls
+at inspected times; no automatic exclusions. Not exhaustive handling validation.
 
-## Karen six-panel review ready (2026-10-16)
+Two cleaned pooled grouped69 fits COMPLETE:K10/K18,L3bouts,lambda.3,seed43,80iters;
+all99recordings/21mice/all5waves. K10:18564calls,18.78%unionvalidtimecoverage;
+K18:32749calls,31.14%. All51313persistedcalls independently hash/token/native/
+duration/mask/NMS/error/threshold audited PASS(maxerror discrepancy1.59e-7).
+Templates Hungarian matched; median cosines~.9999, weaker matches remain explicit.
 
-Continue delivery work in .worktrees/karen-seqnmf-delivery. Its CURRENT.md is
-authoritative. New output: outputs/karen_pooled_p80_review_20261015/six_panel_20261016
-inside that worktree. All 147 movies (49 supported families × three sampling modes,
-six executions each) are complete and validated in a two-row, three-column layout.
+Frozen+cleaned models evaluated under corrected legacy and two bout-aligned views.
+Physical nominal45%posture/45%movement/10%tempo; semantic45/35/10/+upto10%known
+human categoryagreement, reduced by mutuallyknown support. Robust units, regularized
+within-posture whitening(.1shrinkage), native gap-safe signedkinematics and3landmarks
+per3bouts. Shared frozen equal-mouse calibration and8192crossmousepairs normalize
+typicalblock distances. Actual semantic-view posture contributions38.44–65.76%.
+No calibrated wall/corner distance available, so no spatial weight/proxy substituted.
+No speed regression, mirror folding or video warping. These views rank/evaluate
+executions; they do NOT replace seqNMF's grouped-syllable input or reassign calls.
 
-Mac viewer: http://localhost:8766/six_panel_20261016/ through the existing SSH
-forward to woody (10.209.3.161). Model/family/mode dropdowns and a default top-10
-filter are ready. Original three-panel movies and labels remain available; new
-ratings are separate by family and mode. Export karen_six_panel_labels.json.
+100138eligibleexecutionrows/300414ranks/168familyprofile rows saved; unavailable
+video endpoints explicit. Cross-mouse kNN5 with balanced family/mouse samples and
+overlapping-neighbour deduplication; physical familytimeoverlap separately. Fixed
+detector threshold sensitivity saved; no global stricter cutoff installed.
 
-Media/native/pixel/hash/dark-panel audits and browser controls/import/export passed.
-868 CPU tests, lint with accepted debt, and 146 folder maps passed. No new fits or
-family acceptance claims. See delivery SIX_PANEL_REVIEW_20261016.md for evidence.
+Small review COMPLETE:36newmovies/216executions, sixanchor families ×2versions
+×3modes. Open http://localhost:8766/coherence_repair_20261016/ viaexistingMacSSH
+tunnel. ranking_correction(originalfits) versus cleaned_semantic(newpooledfits);
+original P80links andread-onlysixpanelnotes. Newpackage/storage/movieSHA identities.
+Two P80sets72.37sonce/12m04sat10plays each; allnewmodes207.17sonce. Natural60Hz,
+2rows×3columns,fixedonsetcamera,rawsyllablecolour/orderedstrip,sharedcropperanchor.
+Freshuniformrandomseed. Viewer controls/export/import/originalstorage HTTP200/
+exactRange206 passed in isolatedChrome; no agent Maccontinuousplayback claim.
+All36grid/216component hashes/fullnative support/216colourpixels/178darkpanels
+audited PASS. First directory-creation preflight failure preserved; retry complete.
 
-## Karen P80 review ready; Mac browser access (2026-10-15)
+878CPUtests(6existingwarnings),architecture,lint3078revieweddebt/no newdiagnostics,
+146foldermaps passed. Report:analysis/COHERENCE_REPAIR_20261016.md. Analysis/evidence:
+outputs/karen_coherence_repair_20261016. Review/media under original gallery root:
+outputs/karen_pooled_p80_review_20261015/coherence_repair_20261016.
 
-Delivery worktree outputs/karen_pooled_p80_review_20261015 has49P80three-panel
-movies/147executions,257.37s once/~13min threeplays. Media audit PASS; all encoded
-frames decoded, native calls/hashes/dots checked. Human chain labels pending.
-Viewer uses existing range-aware Tornado server at127.0.0.1:8766; HTTP200/video
-Range206exactbytes PASS. Old8765viewer untouched. User is onMac/SSH toLinux:
-forward8766with VSCodePorts or Mac-side ssh-L, then open localbrowser. Legacy
-Studio launcher/guide confirmed same browser/SSH arrangement (port8000), optional
-native pywebview withDISPLAY. No Mac-side tunnel/browser verification claimed.
-See delivery CURRENT and output START_HERE.md. Labels browser-local; Export JSON.
+NEXT:smallP80comparisons; fresh random for retained families andp100whereuncertain.
+Then choose recipe and regenerate catalogue for a newreviewpass, top10perKdefault,
+all28supportedcleanedK10/K18families accessible. No automatic coherence acceptance
+or claim that improved galleryranking fixes full-family assignments.
 
-## Latest Karen delivery: capacity sweep complete (2026-10-15)
+## Six-panel feedback: ranking defect and handling witness (2026-10-16)
 
-Authoritative state remains in the delivery worktree:
-/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/docs/tasks/CURRENT.md
-All60K6/10/14/18/22 configurations complete,48new/12reused,840factors and862829calls
-hash/shape/native-duration audited PASS. Seven null models including supplementary
-groupedK18;19surrogates/type. No held-out/inferential claims. Human Karen syllable
-labels now support text-first theme inspection before movies; fixed L3bout length
-limits variable-length routine claims. Output:
-/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_pooled_capacity_20261015
-Earlier entries below retain their dated checkpoints; latest delivery CURRENT is
-authoritative. No new KPMS fit or completed chain video review implied.
+User supplied karen_six_panel_labels (1).json:18new entries/17families,
+12explicit coherence judgements(3Similar/6Mixed/3Dissimilar),sixcomment-only.
+Allpackage/trial/mode/panelcount/actualMP4SHA bindings verified; old3panellabels
+keptseparate. User notes favour pausingmorelabelling/K22 and fixingK10/K18coherence.
+
+Confirmed gallery ranking defect in render_reference_review.normalize_descriptors:
+latentIQR estimatedafter sqrt(4*320)blockdivision thenappliedtosamevalues cancels
+latentblocknormalization. Latent squared distances inflated1280×relative todeclared
+equalblockrobustscaling. Reconstructed306selectedpanels/305uniqueexecutions across
+17families/92hashverifiedcaches; maxsaved-distance discrepancy1.14e-13. Latent99.61%
+ofsummeddistance(median99.77%). Counterfactualfixedpairs16.78%aftermechanicalfactor
+correction,NOTnewranksorproofofbettercoherence. Generatorfits/calls unaffected;
+p100/P80exemplar/rankselection affected;uniformrandom selectionindependentofrank.
+Source correction and versionedreranking are NEXT, not implemented thisturn.
+
+K10_F03P80actualcores1.85–14.533s; fullnative support/durations PASS forall305checked
+executions. L3means3bouts,notseconds; all6F03examples includeraw87unassignedstage.
+K18_F14positivewallapproach/rear/descentanchor; all6positiveexamples2/3stage support,
+so blanket3/3detectorrequirement wouldalsodiscardthis reviewedpositiveexampleset.
+
+HandconfirmedK18_F13/randompanel2 inexistingcontactsheet duringactivecore:
+mouse7/session2026-03-15T09_51_36_top_left,frames[82750,82850),22:59.167–23:00.833.
+All100coreframeslabelled/nonexcluded;existing reviewed intervalonly[0,15707).
+Fullhandlingboundaries/prevalence NOT established. Nextdelimit sourceinterval and
+checkrelatedwithin-sessioncandidates;versionconfirmedmaskrepairs thenboundedK10/K18
+fits. Maskapplicationvalidationwasnotexhaustivehuman-presencedetection.
+
+Report:studies/karen_pff_vs_monomer/analysis/SIX_PANEL_FEEDBACK_20261016.md.
+PreservedJSON/provenance/audit.py/numericalevidence:
+outputs/karen_six_panel_feedback_20261016(audit_feedback.py,audit.json,
+selected_distance_blocks.csv,labels.original.json). No models/calls/masks/ranks/
+movies/browserlabels changed;no empiricalfit/re-render or maintainedalgorithm edit.
+Next:mechanicalrankrepair+handlingaudit,smallfixedK10/K18contrasts and targeted
+before/afterreviewwithfreshuniformrandomchecks;deferbroaderK/metricsearch.
+
+## Six-panel review complete: model and sampling-mode dropdowns (2026-10-16)
+
+All 147 movies are ready: 49 supported families across the three grouped K10,
+K18 and K22 models, three sampling modes, and six executions per movie. Layout
+is two rows by three columns, 2160 × 1920 at native 60 Hz. Open
+http://localhost:8766/six_panel_20261016/ through the existing Mac SSH tunnel to
+woody (10.209.3.161). Relative links in the original gallery preserve the user's
+browser origin. The original three-panel views remain available.
+
+The viewer has model, family and sampling-mode dropdowns. The top-10 filter is
+on by default (9 + 10 + 10 supported families); all 49 are accessible. Each movie
+uses one mode throughout: closest exemplar neighbours (p100), P80, or uniform
+random. Models, calls and original rankings are unchanged. All original P80
+examples remain panels 1–3 in their expanded grids. Camera transforms stay fixed
+at onset; all modes share each family's crop scale. Finished panels turn dark.
+
+Ratings are separate for each family and mode under the new browser key
+karen-pooled-six-panel-20261016-v1. Earlier three-panel ratings are displayed as
+read-only reference and exported separately; the original storage key is
+untouched. Both old and new JSON imports are supported. Export downloads
+karen_six_panel_labels.json. No reviewed family or model is automatically accepted.
+
+Final media audit passed: hashes for 147 grids and 882 components, selected native
+paths and full-core latent support, 882 source-colour pixel samples (maximum
+error 45, tolerance 65), and 734 finished-panel darkness checks. Every encoded
+frame was decoded during rendering; FPS, dimensions and longest-panel timing
+passed. There were no missing tracking or off-screen centroid frames.
+Browser model/mode switching, per-mode note separation, earlier-label preservation,
+reload, import and export passed in an isolated profile. HTTP 200 and exact-byte
+video Range 206 checks passed. Mac-side tunnel/playback was not tested by the agent.
+
+Single-play material: P80 4m44s, p100 5m46s, random 4m36s; total 15m7s. The
+most-common-first P80 subset takes about 3m8s, before replays and notes. Rendering
+completed with four CPU workers and two numerical/encoder threads each, an 8 GiB
+combined RSS guard, 80 GiB free-disk floor, 8 GiB output cap and three-hour timeout.
+
+Validation: 12 focused tests and 868 CPU tests passed (six existing warnings);
+lint passed with 3,078 reviewed diagnostics and no new debt; 146 folder maps are
+synchronized. Sources: render_six_panel_review.py, six_panel_gallery.html, and the
+backward-compatible six-panel extension to render_generator_review_grids.py.
+Report: SIX_PANEL_REVIEW_20261016.md. Next: user review and mode-specific JSON export.
+
+## Six-panel all-mode Karen review rendering (2026-10-16)
+
+User requested6executions/video in2rows×3columns, p100/P80/random dropdowns for
+any current review model. Scope all49supported families across groupedK10/18/22,
+147movies/882executions; top10default filter remains. No new fitting/ranking or
+physical-similarity optimisation. New output nested under existing8766root:
+outputs/karen_pooled_p80_review_20261015/six_panel_20261016.
+
+Original ranking/recipe/model/call hashes verified; six P80sets retain original
+first3examples in all49families.49families ×3modes ×6uniquecalls; random uniform
+fromfullrankedpool; animaldiversity onlyrankedselectionwithinpools. ActualP100
+90.91–100(smallpools),P80 74.55–83.64(six-call fallback),random0–100. Samecrop
+scale per family acrossall18examples; native60Hz/naturalspeed/onsetfixed camera,
+source-syllable dots/strip; finished panels dark. Allselected fullcores valid.
+
+Three-model/all-mode preview9grids/54panels PASSED decode/timing/no missing or
+offscreen dots;2x3poster inspected. Render remains nohup/timeout capped; current
+4workers×2threads (32CPUs/122GiB available), combinedRSSguard8GiB/freefloor80GiB/
+outputcap8GiB; launch.json records initial2worker preflight and adjustment.
+Currentrender PID in render.pid; progressrun.log; awaitfinalstatusCOMPLETE.
+
+New viewer model/family/mode dropdowns, top10default, six panel details/fullscreen,
+mode-specific ratings. Earlier3panel P80labels read-only reference from original
+browserkey, preserved/exported separately. Newpackagekeykaren-pooled-six-panel-
+20261016-v1; importaccepts old/new exports. Browser tests for all3models/modes,
+legacy preservation, per-mode notes, reload/import/export PASSED in isolatedprofile.
+Testharness removed. Rootindex/top10relative links added; older views preserved.
+
+Validation12focusedtests/868CPUtests(6existingwarnings), lint3078reviewed/no new
+debt,146maps passed. Newstudy render_six_panel_review.py +six_panel_gallery.html;
+existing render_generator_review_grids.py extends layout to6while preserving3.
+Next: finish rendering and media/pixel/hash audits, then user six-panel review.
+
+## Initial Karen P80 human feedback and common-family priority (2026-10-16)
+
+User supplied partial karen_p80_labels.json; original preserved/hash recorded in
+outputs/karen_p80_partial_labels_20261016.16entries:15explicit coherence labels
+(K10:3Similar/5Dissimilar;K18:2Similar/3Mixed/2Dissimilar),oneK18_F07comment-only
+positive,not silently scored. NoK22labels. Blankdistinctness/defaultfalsefollowup
+are not rejections. Family/trial/package bindings verified; no videos re-reviewed,
+models refitted, phenotype/DA comparisons or automated family deletions.
+
+Useful anchors K10_F03/F06/F07,K18_F02/F06. Wall-inspection comment and tolerated
+pause support theme+execution-variant distinction. K18_F03panels1and3 have identical
+raw53→15→96order despite commentfirsttwoSimilar/thirdnot; tokenorder cannot fully
+represent qualitative similarity. K10F07Similar/F02Dissimilar have essentially same
+~.555556medianmatchingerror. ThreeK10most-common ranks2/3/4areDissimilar:frequency
+prioritises review but does not establish coherence. Incomplete sequential sample
+cannot rankKsettings or establish full-family validity from3P80examples.
+
+User prefers up to10most-common components per setting. Added generated top10.html
+to SAME8766viewer with reciprocal relative link from49familyindex, same localStorage
+key/no movie regeneration/no lost labels.29supported families(9K10+10K18+10K22),
+12alreadyexplicitlyrated,17remaining;~4.4min at3plays each before notes. Top10counts
+retain81.7%ofK18calls/70.3%ofK22calls. Physicaluniontimecoverage25.5%vsfull31.2%
+(K18),27.0%vsfull35.0%(K22),retaining81.8%/77.2%ofmodel-coveredtime. Overlaps
+countedonce for time; counts are detections. K10tiny6callunsupportedF08excluded
+fromreview asbefore. Sourceinput/masks/models unchanged; JSsyntax andHTTP200for
+newviewpassed. Findings/CSVs/provenance in output PARTIAL_LABEL_FINDINGS.md.
+Next: common-family P80review; use small p100/random contrasts on clear positive/
+negative anchors to separate ranking/core problems from broaderheterogeneity.
+
+## Mac viewer access matched to legacy Studio (2026-10-15)
+
+Inspected codex/legacy-consolidation KPMS Studio launcher/guide: web backend8000,
+optional native pywebview withDISPLAY, documented SSH-L for remote browser.
+New review viewer now reuses existing ops/diagnostics/serve_local_viewer.py
+(Tornado static files/video byte ranges) at127.0.0.1:8766. Replaced only our simple
+http.server PID3757492.8765oldviewer untouched. Liveindex200 and MP4Range206/
+exactbytes checked; viewer_server_validation.json PASS. START_HERE.md in review
+output gives Mac VSCode RemoteSSH Ports8766or new local MacTerminal ssh-L command.
+User-side forwarding remains necessary; no Mac tunnel/playback verification claim.
+Labels persist in Macbrowser storage; exported JSON is downloaded on Mac.
+
+## Karen P80 review COMPLETE and ready for human labels (2026-10-15)
+
+Delivery output: outputs/karen_pooled_p80_review_20261015.49families/49P80grids/
+147executions from groupedK10(.3/s43,9supported),K18(.3/s43,18),K22(.3/s42,22).
+All models unchanged. Every grid has3different mice, actualP78.18–81.82, native
+60Hz natural pace/onset-fixed camera/source-syllable dot+strip. No trajectory inset
+or time warping. Full grid playback257.37s;3plays/file12min52s before notes.
+
+Viewer loopback http://127.0.0.1:8766/ ; forward8766overSSH/VSCode Ports.8765was
+occupied and untouched. index.html has browser-local notes, coherence/distinctness,
+related IDs, request-p100/random checkbox and Export labels JSON. labels.csv is
+blank alternative. p100/random not rendered yet; await flags from P80review.
+
+Preparation fingerprinted all99native sources, exact saved model/call hashes,
+raw→grouped paths and support.51videos have different row counts from caches;
+13calls lack encoded-video endpoints and are explicitly unavailable, not shifted
+or truncated.49families remain. All147selected full cores have finite latents/
+position/heading. final_media_audit.json PASS;147dot-colour pixel checks, allpanel/
+grid hashes and native paths, full encoded decoding; zero missing/offscreen dots.
+
+Ranking reuses established four-block latent/onset-relative displacement/heading/
+logduration descriptors,32time-phase samples for ranking only, common pooled
+animal-balanced scaling and actual medoid exemplar distances. It does not implement
+the newly discussed multi-view/elastic-alignment metric research.6focused tests,
+render doctor, lint3078reviewed/no newdebt and146maps passed. No shared algorithms
+changed; no human chain acceptance yet. Source/report: render_reference_review.py
+and P80_REVIEW_20261015.md. Next: user P80labelling, export JSON, then targeted
+p100/random where uncertain or possibly redundant.
+
+Browser UI persistence/export passed in isolated Chrome. Continuous browser video
+playback/seek was inconclusive under headless automation; all encoded frames
+decoded separately. Browser details in browser_validation.json.
+
+## Karen video review budget estimated (2026-10-15)
+
+Planning only; no new movies/ranks generated. Outputs under capacity root:
+VIDEO_REVIEW_BUDGET.md,video_budget_summary.csv,video_budget_per_family.csv,
+video_budget_assumptions.json,calculate_video_budget.py. Three-panel, three-mode
+review of supported groupedK10/18/22:49families/147movies/441execution panels,
+~13min one gridplay,~39min one focus replay per panel,~130min at10plays/file.
+GroupedK18+K22:40families/~10.4min once/~104min at10plays. Same empirical duration
+pool used for all modes pending final ranks; exact expected max of distinct
+uniform sampled durations, +0.5s context eachside. No notes/navigation included.
+
+## Karen capacity sweep COMPLETE; human-labelled theme inspection (2026-10-15)
+
+All60configurations (K6/10/14/18/22 × lambda.3/3 × seeds42/43/44 × two
+vocabularies) completed:48new fits/12K10reused. Final audit verified all model/
+call hashes, shapes/parameters, finite arrays and native durations for862829
+persisted calls/840factor rows. Seven targeted null models include the post-hoc
+intermediate groupedK18 check;19surrogates/type/model. Main status lists six
+original null candidates; final_audit.json includes the supplementary seventh.
+No refits for the supplement, no held-out or inferential p-value claim.
+
+Output root: outputs/karen_pooled_capacity_20261015. final_audit.json PASS;
+capacity curves, family distributions, adjacent-K split/merge edges and order-null
+summaries ready. Best time coverage perK rises from4.1%to18.0%in raw100states,
+and13.8%to35.0%in grouped69states; no clear plateau established byK22. Seeds vary;
+these maxima are candidate comparisons, not average method comparisons.
+First-order-preserving null bout coverage is often close to real: do not claim
+all detected families establish higher-order syntax. Fixed duration slots and
+non-uniform Euler trails limit interpretation; coherent chains can still be useful.
+
+User now asks which actual themes eachK creates and whether extraKfragments
+similar executions. Human Karen syllable annotations can support text-first
+inspection of actual observed paths/variants acrossK before movies. These are
+provisional labels, partly built into grouped input, not independent chain truth.
+All fits have L=3bout steps: increasingKcannot establish variable-length4/5step
+routines or insertion tolerance. Distinguish diverse catalogue from coherent
+within-family variants; no single entropy/interestingness score resolves both.
+Existing validation12focused/858CPU/lint/maps remains applicable; only output
+postprocessing and documentation changed after the committed sweep source.
 
 # Current task state
 
-## Pooled Karen fit panel completed on delivery branch (2026-10-15)
+Text-first exports completed: human_labelled_families.csv covers840factors and
+human_labelled_observed_variants.csv.gz covers74145distinct factor/path rows,
+with exact annotation paths/hashes in human_label_sources.json. HUMAN_LABELLED_THEMES.md
+shows all factors for coverage-leading settings at eachK/vocabulary. Most frequent
+paths are observations, not accepted theme names. Median supported grouped factor
+modal-path fraction is9–12%; this can reflect useful variation or broad two-of-three
+stage matching. Inspect variants and unknown-label fractions before selectingK.
 
-User explicitly changed delivery fitting to one pooled generator on the whole
-dataset. All99recordings/all21mice/all5waves includingL-DOPA were used. No animal
-split/subsampling in these new fits; former reserved mice ARE included. Historical
-split files remain unchanged as provenance. Do not claim held-out validation for
-this new pooled analysis; older entries below describe prior scope.
+## Intermediate-K capacity sweep and verification running (2026-10-15)
 
-Source/run report on codex/karen-seqnmf-delivery source commit43964d6:
-/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/studies/karen_pff_vs_monomer/analysis/REFERENCE_SEQNMF_POOLED_RUN_20261015.md
-Authoritative latest CURRENT is in that worktree. Original root remains refactor.
+User supplied detailed K/metrics suggestions, then explicitly authorised execution
+and subsequent verification. Implemented pooled K6/10/14/18/22,lambda.3/3,seeds42/43/44,
+both original100/grouped69state vocabularies.60configs,12existingK10reused,48new;
+same frozen all99recordings/all21mice/all5waves matrices/masks and L3/80iterations.
+No held-out claim, no group/DA selection. Lambda pair fixed before newfits: .3
+coverage-performing reference and3stronger competition contrast.
 
-30pooled fits COMPLETE/exit0: original100state and reviewed grouped69state with
-unknowns separate; K10,L3,80iterations,lambda0/.1/.3/1/3,seeds42/43/44. Detached
-nohup/setsid job3727659/driver3727660 has finished. No KPMS refits/notifications.
-Output/log:
-/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_pooled_reference_seqnmf_20261015/run.log
+New study source reference_capacity.py/run_reference_capacity.py. All fit params,
+base/source IDs, model/call hashes and directories saved. Post-fit pipeline:
+per-family accepted and pre-cutoff candidate-error distributions/support/effective
+mice; template AND physical execution-overlap redundancy; per-family seed matches
+with phase-locked and full-norm +/-1stage cosine; all adjacent-K split/merge edges
+with directional containment, no forced one-to-one acrossK. All seed traces and
+per-family distributions retained, not a single combined winner score.
 
-Frozen recipe/matrices/native refs/models/actual calls/result correspondence saved.
-All99reviewed masks verified, native gaps preserved, H unsupported onsets hardzero,
-correct half-open ends. CPU/GPU8update preflight passed; GPU RTX4090 selected from
-actual timing. All320307persisted calls across30fits passed independent token/
-native-boundary/duration/mask/threshold audit. Finaloutput45MiB.6focused tests
-passed; fullCPU852passed; lint3078reviewed/no new debt, architecture/maps passed.
+Targeted null candidates:coverage leader,stable-family leader,compactK10reference
+per vocabulary, deduped. Freeze W and originalthresholds; re-infer BOTH real/null H
+with same80updates/seed101.19paired surrogates/type shared across candidates.
+Frequency null preserves exact block token counts but may create adjacent repeats,
+no re-RLE. First-order null uses randomized Euler trails preserving exact directed
+transition counts, endpoints, token marginals and original no-self edges. Not
+uniform over trails; changed fractions recorded. Native support/duration slots
+fixed; null time coverage is conditional, not a duration/kinematic null. Diagnostic
+counts/ranges, no independent p-values. Not exceeding first-order is not a veto
+on otherwise coherent families. New tests verify these preservation statements.
 
-User asked whether10components enough and quantitative PCA-like capacity measures.
-Reconstruction/physical union coverage/multi-mouse distinctness/redundancy/seed
-stability are recorded. capacity_metrics_K10.csv adds uncentred1−relative_error²,
-NOT percent behaviour/PCA variance explained. Current panel allK10; cannot yet
-establish sufficient capacity. Proposed next: K20at selected lambda settings,
-then anotherKonlyif useful gains persist, followed by qualitative shortlist and
-p100/P80/random movies. K20follow-up was not launched in the completed30fitjob.
+Detached nohup/setsid/timeout PID/PGID3734761,driver3734762,worker3734794:
+/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_pooled_capacity_20261015
+Log command: tail -f /home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_pooled_capacity_20261015/run.log
+Status while fitting indexed60configs; follow log for subsequent diagnostics/null
+stages until status COMPLETE. This is a finite pipeline, not an unbounded search.
+2threads/8GiB RSSguard/25%GPU fraction/80GiB diskfloor/4GiB outputguard/3h timeout.
+Existing completed K10 panel remains immutable and separately auditable.
 
-## Karen delivery worktree active; low-input preparation completed (2026-10-15)
+Validation:12focused tests passed, fullCPU858passed/6warnings, lint3078reviewed/
+no new debt, maps2regenerated/146checked, CLI plan/help passed. Shared algorithms
+unchanged. Source/run definition:
+studies/karen_pff_vs_monomer/analysis/CAPACITY_SWEEP_20261015.md.
+Next: monitor finite pipeline, inspect generated Kcurves/per-family/null findings,
+audit persisted correspondence, retain tradeoff candidates, then targeted movies.
 
-Research source/config/docs preserved on refactor at
-6c179ae64e9da9c673605a9f45eb5626111efa75 (276 inventoried maintained files, no
-empirical payloads). Delivery branch codex/karen-seqnmf-delivery is active in:
-/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery
-Delivery commit25e19d7 binds/replays the September raw-state reference and records
-Karen input readiness. Continue delivery work THERE; this original checkout
-remains codex/modular-refactor for preserved broad research and the viewer.
-main/legacy unchanged, no push. This entry is a navigation/status pointer only.
+## All-data pooled Karen K10 panel complete (2026-10-15)
 
-Authoritative latest delivery state/report:
-.worktrees/karen-seqnmf-delivery/docs/tasks/CURRENT.md
-.worktrees/karen-seqnmf-delivery/studies/sequence_viz/baselines/seqnmf_sep14/REPLAY_20261015.md
-Persistent replay/input/check fingerprints are alongside that report; runtime
-CSVs are under that worktree's outputs/seqnmf_sep14_verified_replay_20261015.
+User authorised fitting/logging, then explicitly replaced train/validation design
+with ONE pooled generator over the whole dataset, like intended KPMS usage.
+All99recordings/all21mice/all5waves includingL-DOPA were used; every eligible bout,
+no subsampling/held-out animals. Original split files remain unchanged but are
+provenance only for this run. Do not claim prior reserved animals are untouched
+by this delivery fit, or label these diagnostics held-out validation.
 
-Saved W/H replay matches all2136episodes, tokens and animal count/duration
-summaries (max template error discrepancy2.22e-8). All169879historical bouts in
-30sessions bind to archived KPMS labels/native VFI. Original prefix includes only
-10saline sessions,50000bouts. Audit found26gap-crossing calls and next-bout
-endpoint overshoot; historical numbers retained, correction requirements explicit.
-This is saved-detector replay, not independent inference/refit or validation of
-the unmatched unified-sniff quantitative-slide version. No new fits/searches.
+New study reference_seqnmf.py/run_reference_seqnmf.py preserve recovered historical
+ratio updates/activation competition/per-lag Wnorm, add hard onset masks, native
+gap/exclusion barriers and corrected actual-final-bout half-open endpoints.
+This is distinct from newer shared SeqNMF's data-dependent regularizer. Metadata/
+help/plan do not initialize GPU or load cohort inputs. Six focused tests cover
+independent native-boundary expectations, masked activations, block independence,
+literal old CPU update identity and endpoint/gap detection checks.
 
-Karen metadata/cache availability checked:99recordings,21mice(12PFF/9monomer),
-native60Hz;12train+4validation+5reserved mice,73exploration/26reserved recordings.
-Existing98recording exclusion masks/split preserved; no new full mask audit.
-CPU suite846passed, architecture/lint/maps passed; delivery has a narrow isort
-classification fix for3historical data namespaces absent from clean worktrees.
-No lint-debt refresh or shared scientific algorithm changes. Details/check limits
-are in delivery repository_validation.json. Original ignored artifacts untouched.
+Finite panel: L1/100states and existing L3_unresolved_separate/69states (unknown/
+dump IDs stay distinct), K10/L3bouts/80iterations,lambda0/.1/.3/1/3,seeds42/43/44:
+30fits. All99reviewed masks checked against interval policy. Same physical support
+underlies both vocabularies, followed by within-block grouped RLE. All source
+array/mapping/code identities and packed matrices/refs frozen in recipe.json.
+Raw315035/grouped307651supported onsets. No new KPMS fitting/notifications.
 
-Next scientific input: primary Karen vocabulary/resolution and bounded
-parameter/stability scope before fresh fitting, then targeted qualitative review.
-Preservation/isolation/reference replay/input inventory are complete; the earlier
-in-progress entries below describe their prior checkpoint, not current status.
+Detached nohup/setsid job PID/PGID3727659,driver3727660 completedexit0,30/30. Output:
+/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_pooled_reference_seqnmf_20261015
+Absolute tail command: tail -f /home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_pooled_reference_seqnmf_20261015/run.log
+driver_status/status COMPLETE; finaloutput45MiB. Actual backend preflight8iterations
+on full raw matrix passed CPU/GPU atol3e-5,rtol3e-4(maxW1.20e-5,H5.97e-6); GPU
+selected from measured CPU16.75s/GPU.075s timed8updates. RTX4090,JAX.6.2,float32,
+highest matmul precision. Not universal backend equivalence/convergence evidence.
+2threads,8GiB RSSguard,25%GPU fraction,80GiB diskfloor,4GiB outputguard,3h timeout.
+
+Persisted-call audit PASS all320307calls/30fits: parameters complete, inputsource
+hashes, finite arrays, hard-zero unsupported H, actual saved thresholds, observed
+tokens, same native block, internal adjacency, corrected endpoints and60Hzduration.
+results.csv maps every parameter/seed to metrics; seed_stability.csv template
+matching; factor_catalogue.csv all300factors with actual observed variants and
+argmax-exact counts. capacity_metrics_K10.csv includes1−global_relative_error²,
+explicitly uncentred reconstruction score, not percent behaviour explained.
+
+User asked whetherK10sufficient and for PCA-like quantitative capacity measures.
+Discussed Kcurves for reconstruction, physical union time coverage, distinct
+multi-mouse supported families, redundancy and seed stability. Current30fits all
+K10: cannot infer sufficient capacity yet. Proposed K20at selected lambdas is a
+FOLLOW-UP, not launched here; anotherKonlyif useful gains remain substantial.
+Keep reconstruction curves separate per vocabulary; do not compare their raw
+errors as a common target. No selection by group effects or qualitative acceptance.
+
+Checks:6focused passed; fullCPU852passed/6warnings; lint3078reviewed/no new debt;
+architecture201/no violations/cycles; maps regenerated2and146dirs checked; help
+and dry plan passed. No shared numerical changes or debt refresh. Detailed report:
+studies/karen_pff_vs_monomer/analysis/REFERENCE_SEQNMF_POOLED_RUN_20261015.md.
+Next: bounded K20capacity comparison, choose quantitative shortlist, then agreed
+p100/P80/random qualitative review. Initial fit panel is COMPLETE, not still running.
+
+## Delivery isolated; raw-state reference replay matched (2026-10-15)
+
+Completed user-authorised minimal-human-input work. Refactor research preserved
+as commit6c179ae64e9da9c673605a9f45eb5626111efa75 (276 explicitly inventoried
+maintained source/config/docs files, about2.2MB, no empirical payload staging).
+Original checkout remains codex/modular-refactor. Created delivery branch
+codex/karen-seqnmf-delivery in the separate ignored nested worktree:
+/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery.
+main/legacy unchanged, no remote push. Existing viewer remains in original root.
+
+New study runner studies/sequence_viz/replay_sep14_reference.py verifies pinned
+input hashes, loads only the selected local saved W/H and bout bundle, compiles
+two inspected retrieval methods from the exact legacy blob, and never imports
+the old fitting/notification runner. Explicit --execute/input/output/native
+manifest required. Address-space cap4GiB,2threads; no JAX initialization/fits.
+
+Final outputs in this worktree:
+outputs/seqnmf_sep14_verified_replay_20261015/replay.json and episode/animal/native
+binding/boundary/order CSVs. All2136saved episodes match embedded and exported
+catalogues: exact factor/bout/frame identities and observed strings; floating
+atol1e-7/rtol1e-6, max template-error difference2.22e-8. Animal/factor counts and
+historical duration sums also match. This replays saved W AND H; no independent
+H inference or optimization reproduced. Training prefix is50000bouts from only
+10saline sessions/10mice, not balanced all30-session training.
+
+All169879historical bouts/30sessions bind exactly to archived KPMS labels and
+native VFI start/end coordinates; inclusive model-row durations match40Hz.
+H5/VFI freshly fingerprinted, existing Run12 native projection/rate evidence
+retained with its limited timestamp-validation scope. Historical bout end_frame
+is inclusive; initial unqualified positive coordinate-gap counter is superseded.
+Final native-aware audit:26episode calls cross segment/support gaps,0cross
+sessions. All2136exported end fields extend beyond the included last bout due
+to old next-bout formula (median36native frames,max2994). Bout-summed durations
+still match. Preserve literal reproduction separately from boundary/endpoint
+corrections in new Karen work; no repaired group inference was run.
+
+Karen readiness inventory in outputs/karen_delivery_input_inventory_20261015:
+all99caches/21mice present (12PFF/9monomer), declared60Hz;12train+4validation+5test
+mice;73exploration/26reserved recordings. Mask key present in98caches, matching
+the98recordings with reviewed exclusions; the other recording has no interval.
+Existing policy/exposure/split unchanged. Metadata/header checks only, no full
+new projection/mask audit and no cohort pickle load or behavioural evaluation.
+
+Persistent evidence/report under studies/sequence_viz/baselines/seqnmf_sep14:
+REPLAY_20261015.md, verified_replay.json, karen_input_readiness.json; initial
+reference_manifest.json retained as dated artifact inventory. Exact unified-sniff
+quantitative-slide version and final-movie interval manifests remain unresolved.
+
+Checks: CPU doctor passed; make test-cpu846passed/6deprecation warnings. Architecture
+passed (201modules/no violations/cycles); folder maps regenerated3maps and checked
+146directories. Focused runner lint passed. Fresh import introduces no numerical,
+data/backend modules (NumPy was already loaded at interpreter startup), no JAX;
+CLI help is metadata-only. Full worktree lint initially saw6import-order diagnostics
+in5unchanged files because ignored historical data namespaces are absent here.
+Narrow isort known-first-party entries for those3namespaces restore stable
+classification; no debt baseline refreshed and no unrelated scientific imports
+reordered. Final make lint passed:3078reviewed diagnostics/no new debt; baseline
+unchanged. Final maps check passed146directories. Validation evidence is saved
+alongside the baseline as repository_validation.json. No broader rerun required
+after documentation and lint-classification-only changes.
+
+Next requiring scientific input: choose primary Karen vocabulary/resolution and
+bounded fit/stability scope, then freeze the recipe. Targeted qualitative chain
+review and final intra/inter choices follow quantitative checks. No new fitting,
+search restart or scientific acceptance was inferred from this mechanical step.
 
 ## Delivery isolation and saved-model replay in progress (2026-10-15)
 

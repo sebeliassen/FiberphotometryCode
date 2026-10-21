@@ -62,6 +62,9 @@ data/
 *.pdf
 *.svg
 *.html
+!studies/karen_pff_vs_monomer/analysis/core_review.html
+!studies/karen_pff_vs_monomer/analysis/generator_review.html
+!studies/karen_pff_vs_monomer/analysis/theme_showcase_gallery.html
 
 # ------------------------------------------------------------------------------
 # 4. Compressed Archives, Backups & Logs

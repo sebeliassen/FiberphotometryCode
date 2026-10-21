@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>Karen chain review — six executions</title>
+<style>
+body{background:#16181d;color:#eee;font:17px system-ui;max-width:1900px;margin:20px auto;padding:0 18px}
+button,select,textarea,input{font:inherit;padding:7px;margin:4px}a{color:#9cd1ff}
+video{display:block;width:100%;max-height:77vh;background:#111;margin:12px 0}
+.panels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;font-size:14px}
+.panels p{background:#242831;padding:9px;margin:0}.muted{color:#bfc3cd}
+textarea{width:96%;height:90px}fieldset{border:1px solid #555;margin:14px 0}#legacy{white-space:pre-wrap}
+</style>
+<h1>Karen chain review — six executions</h1>
+<p>One family per movie, six executions in two rows of three. Every panel uses the selected p100, P80 or random setting.
+Natural pace; camera fixed at onset; current source-syllable colour and ordered labels.</p>
+<p class="muted">p100 means closest exemplar neighbours. P80 samples near the 80th percentile of exemplar proximity;
+it does not mean 80% behavioural correctness. Random is uniform over eligible occurrences.</p>
+<div><label>Model <select id="model"></select></label>
+<label><input id="top" type="checkbox" checked>Top 10 most common supported families</label></div>
+<button id="prev">Previous family</button><select id="family"></select><button id="next">Next family</button>
+<label>Examples <select id="mode"><option value="p80">P80</option><option value="p100">p100 — closest to exemplar</option>
+<option value="random">Uniform random</option></select></label>
+<button id="replay">Replay</button><button id="fullscreen">Fullscreen</button>
+<p id="progress" class="muted"></p><h2 id="title"></h2><p id="info"></p>
+<video id="player" controls preload="metadata"></video><div id="panels" class="panels"></div>
+<p><a id="direct">Open this grid MP4</a> · <a href="../index.html">Original three-panel P80 review</a></p>
+<fieldset><legend>Earlier three-panel P80 judgement</legend><div id="legacy"></div></fieldset>
+<fieldset id="referenceBox" hidden><legend>Original six-panel feedback — reference only</legend><pre id="reference"></pre></fieldset>
+<fieldset><legend>Judgement for this six-panel selection</legend>
+<label>Within-family similarity <select id="coherence"><option value="">Unreviewed</option><option>Similar</option>
+<option>Mixed / unclear</option><option>Dissimilar</option></select></label>
+<label>Distinct from other families <select id="distinct"><option value="">Unreviewed</option><option>Distinct</option>
+<option>Possible duplicate / variant</option><option>Unclear</option></select></label><br>
+<label><input id="follow" type="checkbox">Needs follow-up</label>
+<label>Related family IDs <input id="related" placeholder="e.g. K18_F04"></label>
+<textarea id="notes" placeholder="Theme, differences between executions, tracking problems…"></textarea>
+</fieldset>
+<button id="export">Export labels JSON</button><label>Import labels JSON <input id="import" type="file" accept=".json,application/json"></label>
+<span id="status"></span>
+<p class="muted">Notes save in this browser and address. Export regularly. Earlier three-panel labels are preserved separately;
+new labels identify the family, sampling mode and movie. <span id="description"></span></p>
+<script>
+const data=__REVIEW_DATA__,$=id=>document.getElementById(id);let bundle={labels:{},legacy:{}};
+function read(key,fallback){try{return JSON.parse(localStorage.getItem(key)||'null')||fallback}catch(e){return fallback}}
+bundle=read(data.package,bundle);bundle.labels=bundle.labels||{};
+bundle.legacy={...read(data.legacy_key,{}),...(bundle.legacy||{})};let visible=[];
+let sourceLabels=data.reference_labels||{};
+if(data.reference_key)sourceLabels={...sourceLabels,...(read(data.reference_key,{}).labels||{})};
+bundle.reference={...sourceLabels,...(bundle.reference||{})};$('description').textContent=data.description||'';
+function selected(){return visible[+$('family').value]}
+function persist(){try{localStorage.setItem(data.package,JSON.stringify(bundle));$('status').textContent='Saved locally'}
+catch(e){$('status').textContent='Local storage unavailable — export your labels'}}
+function save(){let f=selected();if(!f)return;let mode=$('mode').value,m=f.movies[mode];if(!m)return;
+bundle.labels[f.stem+'::'+mode]={family:f.stem,trial:f.trial,mode,panels:6,movie_sha256:m.sha256,
+coherence:$('coherence').value,distinct:$('distinct').value,followup:$('follow').checked,
+related:$('related').value,notes:$('notes').value};persist()}
+function show(){let f=selected();if(!f)return;let mode=$('mode').value,m=f.movies[mode],v=$('player');v.pause();
+$('title').textContent=f.stem+' — '+mode+' · six executions';
+$('info').textContent='Occurrence rank '+f.occurrence_rank+' · '+f.saved_calls+' saved detections · '+f.eligible_calls+
+' rankable executions / '+f.eligible_mice+' mice'+(m?' · '+m.playback_s.toFixed(2)+' seconds/play':' · Rendering this selection');
+if(m){v.src=m.filename;v.poster=m.filename.replace('.mp4','.png');$('direct').href=m.filename}
+else{v.removeAttribute('src');v.removeAttribute('poster');v.load();$('direct').removeAttribute('href')}
+$('panels').replaceChildren();f.examples_by_mode[mode].forEach(e=>{let p=document.createElement('p');
+p.textContent='Panel '+e.panel_number+' · Mouse '+e.subject+' · actual P'+e.actual_percentile.toFixed(1)+' · '+
+e.segments.map(s=>'S'+s.syllable_id+' '+(data.names[s.syllable_id]||'?')+' ('+s.duration_s.toFixed(2)+'s)').join(' → ');
+$('panels').appendChild(p)});
+let old=bundle.legacy[f.stem];$('legacy').textContent=old?
+('Similarity: '+(old.coherence||'Unrated')+'\nDistinctness: '+(old.distinct||'Unrated')+'\n'+(old.notes||'')):
+'No earlier judgement in this browser. You can import your original exported JSON.';
+let original=bundle.reference[(f.reference_family||f.stem)+'::'+mode];$('referenceBox').hidden=!original;
+$('reference').textContent=original?('Original '+original.family+' / '+original.mode+'\n'+
+(original.coherence||'Unrated')+'\n'+(original.notes||'')):'';
+let n=bundle.labels[f.stem+'::'+mode]||{};['coherence','distinct','related','notes'].forEach(id=>{$(id).value=n[id]||'';$(id).disabled=!m});
+$('follow').checked=!!n.followup;$('follow').disabled=!m;$('status').textContent='';}
+function filter(){let previous=selected()?.stem;visible=data.families.filter(f=>f.trial===$('model').value&&(!$('top').checked||f.occurrence_rank<=10));
+$('family').replaceChildren();visible.forEach((f,i)=>{let o=document.createElement('option');o.value=i;
+o.textContent='#'+f.occurrence_rank+' '+f.stem+' ('+f.saved_calls+' calls)';$('family').appendChild(o)});
+let own=visible.findIndex(f=>f.stem===previous);$('family').value=Math.max(0,own);show();}
+let models=[...new Map(data.families.map(f=>[f.trial,f])).values()].sort((a,b)=>a.K-b.K);
+models.forEach(f=>{let o=document.createElement('option');o.value=f.trial;o.textContent=f.model_label||('K'+f.K+' · lambda 0.3 · seed '+f.trial.split('_seed')[1]);$('model').appendChild(o)});
+$('progress').textContent=data.ready_movies+' / '+data.expected_movies+' movies ready'+(data.complete?'':' — refresh for newly rendered families');
+$('model').onchange=filter;$('top').onchange=filter;$('family').onchange=show;$('mode').onchange=show;
+$('prev').onclick=()=>{$('family').value=Math.max(0,+$('family').value-1);show()};
+$('next').onclick=()=>{$('family').value=Math.min(visible.length-1,+$('family').value+1);show()};
+$('replay').onclick=()=>{$('player').currentTime=0;$('player').play()};
+$('fullscreen').onclick=()=>{let v=$('player');if(v.requestFullscreen)v.requestFullscreen();else if(v.webkitEnterFullscreen)v.webkitEnterFullscreen()};
+['coherence','distinct','related','notes','follow'].forEach(id=>$(id).addEventListener('input',save));
+$('export').onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({package:data.package,
+labels:bundle.labels,legacy_package:data.legacy_key,legacy_labels:bundle.legacy,
+reference_package:data.reference_key,reference_labels:bundle.reference},null,2)],{type:'application/json'}));
+a.download='karen_six_panel_labels.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+$('import').onchange=async()=>{try{let file=$('import').files[0];if(!file)return;let incoming=JSON.parse(await file.text());
+if(incoming.package===data.legacy_key)bundle.legacy={...bundle.legacy,...incoming.labels};
+else if(incoming.package===data.package){bundle.labels={...bundle.labels,...incoming.labels};bundle.legacy={...bundle.legacy,...(incoming.legacy_labels||{})}}
+else if(incoming.package===data.reference_key)bundle.reference={...bundle.reference,...incoming.labels};
+else throw Error('This label file belongs to a different review package');persist();show();$('status').textContent='Imported labels; export to keep a backup';
+}catch(e){$('status').textContent=String(e)}};
+if(models.length)filter();
+</script></html>
