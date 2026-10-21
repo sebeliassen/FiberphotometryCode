@@ -1,3 +1,17 @@
+## Alignment restoration validated; resume photometry candidate (2026-10-21)
+
+Continue in .worktrees/photometry-consumers / codex/photometry-consumers, based on
+b146e21. Lostpublic build_aligned_moseq_phot recovered from pinnedpre-scaffolding
+source with exactfunctionAST parity. Sixstudyimports now usecanonicalalignment.
+Independentframeorder/unsupportedframes/missingphotometry/fallbackcolumns and
+historicalwrapper/alias checks PASS. FullCPU955/6warnings in lab AND cleanenv;
+architecture202/lint/maps/package/pipcheck PASS; installedrestoredmoduleorigin
+matchescandidate. Default470/historicalrowinterpolation policy unchanged; no
+actualexport/fitting/data conversion executed. Prior951checkpoint preserved.
+Read CONSOLIDATION_PROGRESS_20261021.md and alignment_restoration checkpointJSON.
+NEXT continue remainingloader/checkpoint imports and namedartifactidentity gates.
+Main67468c1/remote unchanged; GitHubcredentials pending; legacyroots intact.
+
 ## Consolidation: three local candidates validated (2026-10-21)
 
 Continue in .worktrees/legacy-consumers on codex/legacy-consumers. Read
