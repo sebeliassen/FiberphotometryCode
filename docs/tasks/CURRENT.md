@@ -1,3 +1,18 @@
+## Staged main promotion resumed; foundation review repaired (2026-10-21)
+
+User authorised sequential review and merges of PRs #2–#5. Foundation review
+found a missing historical alignment API (previously restored only by #5) and
+undocumented checkout compatibility activation. Fixes are now in the foundation
+candidate, with the pinned helper/reference, four substantive alignment tests,
+and a fresh-process setup regression. CPU855 passes in lab and isolated pinned
+environments; architecture/lint/maps/wheel/dependencies pass. No empirical run.
+Main is still67468c1 at this checkpoint. Current exact stages/merge SHAs and next
+step are logged after each remote operation in primary
+outputs/consolidation_20261021/promotion_20261021.json. Read that record before
+continuing if interrupted. Pending: publish repaired foundation, pass hosted CI,
+merge exact head, then update/validate each dependent candidate against new main.
+Do not retire legacy paths or move data during these promotion steps.
+
 ## Published consolidation stack: all GitHub checks pass (2026-10-21)
 
 Woody is authenticated as sebeliassen through GitHub CLI; Git HTTPS uses its
