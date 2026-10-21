@@ -33,6 +33,7 @@ dependencies = [
 
 [project.optional-dependencies]
 test = [
+    "psutil>=5.9.0",
     "tqdm>=4.0",
     "pytest>=7.0",
     "pytest-timeout",
