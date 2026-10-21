@@ -512,3 +512,4 @@ syllable_generation/videogen/grids/__init__.py	studies/behavior/videogen/__init_
 syllable_generation/analysis/replications/datta_utils.py	src/fpcode/photometry/alignment.py	CLASS_A_EXTRACTION	Extracted datta_utils to fpcode.photometry.alignment	SHIM
 configs/cohort_static_21kp.yml	configs/training/cohort_static_21kp.yml	CONFIG_MIGRATION	Unchanged legacy training manifest; original path retained	YES
 configs/tandem_cohort_50ar_200slds.yml	configs/training/tandem_cohort_50ar_200slds.yml	CONFIG_MIGRATION	Unchanged legacy training manifest; original path retained	YES
+archive/legacy/syllable_generation/analysis/utils/legacy_support.py	studies/session_model_exports/utils/legacy_support.py	RESTORED_ACTIVE_SOURCE	Recovered from 969c893b8b6ba7ddd42af178f36aff3406f84cea; preserve copy-only frame indices and original historical quarantine record; physical legacy proxy retained	NO

@@ -36,7 +36,7 @@ import keypoint_moseq as kpms
 
 from syllable_generation.analysis.attach_kpms import _attach_kpms_full_to_sessions
 from fpcode.photometry.alignment import build_aligned_moseq_phot
-from syllable_generation.analysis.utils.legacy_support import migrate_legacy_vfi
+from studies.session_model_exports.utils.legacy_support import migrate_legacy_vfi
 from syllable_generation.analysis.utils.sampling import (
     build_aligned_dfs,
     flatten_results_to_timeline,
