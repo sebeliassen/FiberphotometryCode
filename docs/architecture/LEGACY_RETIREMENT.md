@@ -59,3 +59,20 @@ Fourteen focused cases and972 CPU passes in each of two environments use synthet
 fixtures. They do not prove arbitrary historical pickle reconstruction or full PPE
 analysis execution; PPE output paths and optional plotting remain outstanding.
 See registry/checkpoints/deep_research_loading_20261021.json. Legacy roots remain.
+
+## Jonathan contract and leaf identity boundary
+
+Nine nonbuilder legacy leaf modules now resolve to physical canonical Jonathan
+owners; three parent bridges retain physical proxy paths. Config/context/tracking
+classes and parser functions share identity in both orders. The package defers
+build imports so these contracts do not require its broken enrichment namespace.
+Juvenile imports the canonical config class with its complete policy AST preserved.
+Three test-created historical class states reconstruct as canonical types; actual
+artifact-family reconstruction remains unverified. Full991 CPU passes in each
+environment and19 focused cases preserve independent chamber/timestamp/channel
+and synthetic discovery expectations. Scientific module source is unchanged.
+
+Direct studies.behavior directory-symlink identity, the obsolete builder enrichment
+route and the missing Karen/monoamine configuration owners remain obligations.
+See registry/checkpoints/jonathan_alias_identity_20261021.json. No symlink or legacy
+root was removed; this is a bounded import/identity repair, not full cohort delivery.

@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-21",
+  "base_commit": "46c2b35611f065e418d659dc0cf7a938d29ea210",
+  "scope": "Canonical Jonathan contracts independent of eager builder import; physical historical leaf proxies, juvenile canonical class import.",
+  "scientific_preservation": {
+    "byte_identical_modules": [
+      "studies/session_building/jonathan/build.py",
+      "studies/session_building/jonathan/config.py",
+      "studies/session_building/jonathan/context.py",
+      "studies/session_building/jonathan/steps/__init__.py",
+      "studies/session_building/jonathan/steps/events.py",
+      "studies/session_building/jonathan/steps/fiberphotometry.py",
+      "studies/session_building/jonathan/steps/tracking.py",
+      "studies/session_building/jonathan/steps/video.py",
+      "studies/session_building/jonathan/utils/__init__.py",
+      "studies/session_building/jonathan/utils/files.py",
+      "studies/session_building/jonathan/utils/photometry.py",
+      "studies/session_building/jonathan/utils/time.py"
+    ],
+    "juvenile_full_module_ast_identical_except_declared_class_import": true
+  },
+  "source_sha256": {
+    "studies/session_building/jonathan/build.py": "e1c0bb14f18c940122b57f81ac32e338afb29518a732bc5aff5e33d9291d9a33",
+    "studies/session_building/jonathan/config.py": "e00eab7f42f0f4bcd796e760927f4758cd2be769c2443309b16497530ee7bd5f",
+    "studies/session_building/jonathan/context.py": "6bcd174dec4e3a504b0e1c4a25968c3a357ebd42d368e5058c13d42eeeecf108",
+    "studies/session_building/jonathan/steps/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "studies/session_building/jonathan/steps/events.py": "f089666085e98e5032a83cbef155bbf0d544465c7cd33afbc51b3d20c05f8e8c",
+    "studies/session_building/jonathan/steps/fiberphotometry.py": "dd778e070a607b6d9b223d3e09af5f6de0272245bab2e071088974a639011b05",
+    "studies/session_building/jonathan/steps/tracking.py": "7755c02b8bae87923d648c649f810bb67b31d5ca09e1ac67b2acdb39ff00fdbb",
+    "studies/session_building/jonathan/steps/video.py": "550034a0fcc504b7b633ed22c9f7ec9dc8ba6972146ce5727e4568d3d75f8172",
+    "studies/session_building/jonathan/utils/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "studies/session_building/jonathan/utils/files.py": "5f4cd763332e0750fe9cb3291d8036a97dfc5d7b3736796134e68b5381c2fff8",
+    "studies/session_building/jonathan/utils/photometry.py": "4563a964c5a4bf25d1234ae236d225282b703be91791e46a83d3f7e90ad67bc3",
+    "studies/session_building/jonathan/utils/time.py": "fa4319b18cf8b6c06bc6f3032c5fd0908d4dfa8de538e818af92cedb82bb3b68",
+    "studies/session_building/jonathan/__init__.py": "5641aef01cba35cf9eb6bfd2b8fd9a21a27f2096dbc9a18747301457ecaaf7c6",
+    "studies/juvenile_intruder/config.py": "0ec84a4f09f9c445de24797e8df406751cf4070039952cb634469a66536ff278",
+    "tests/unit/test_jonathan_identity.py": "088e3f0650cc422ed3a4644d1cb3c46f86e14600a659dffac4cc1f50371055d5",
+    "registry/SHIMS.tsv": "33aabd6ed933015b426483271bd7ea122b1a848255a9c40f00014c371bbcbad0",
+    "compat/syllable_generation/loaders/jonathan/config.py": "1f3e06ca669e36c12be1513f62bd2825d2eb1a80479dbb623cc1e7a7170cb9ba",
+    "compat/syllable_generation/loaders/jonathan/context.py": "18bb4f70e9fed6da60210dfb6bc12380d8c1a5c90e657a7787a4677c24d4eb35",
+    "compat/syllable_generation/loaders/jonathan/build.py": "f55ff802d99259711fea1594e22f598a286525e4bc13528b66168ef86bfbd6ba",
+    "compat/syllable_generation/loaders/jonathan/__init__.py": "de88e543632208497be73af573098dd22d73facad0e59999c9ad4658b83bf22e",
+    "compat/syllable_generation/loaders/jonathan/steps/video.py": "f8d47e08ec9785b08df4f6f0eb9dae8adc2b97751017c207048644b23af890c7",
+    "compat/syllable_generation/loaders/jonathan/steps/fiberphotometry.py": "ab21d0f3903bece2a7941d850889ca48dbfaa1146ec48f1be0e76091ed9ee25f",
+    "compat/syllable_generation/loaders/jonathan/steps/__init__.py": "c7f72e545ca112c809bec9f6d0522ae7cdd8f4ea7bcfe24896d894331775b267",
+    "compat/syllable_generation/loaders/jonathan/steps/events.py": "f8c0b45422b8062058d9878cd069e0d1ad1924e5f96a4194780bac1d2f440720",
+    "compat/syllable_generation/loaders/jonathan/steps/tracking.py": "209be585095860d3aeee0d5b8b3017bbf0e7ba05d1061ace829a247e7079bef5",
+    "compat/syllable_generation/loaders/jonathan/utils/files.py": "c0815d25b24eec92330c2e3ea6ae420d4b89764925b234f56736094f94484aa0",
+    "compat/syllable_generation/loaders/jonathan/utils/photometry.py": "296af2bfbc84994642d77b01fbc98e8bf041405b4734fa333f6d2945f05f4e18",
+    "compat/syllable_generation/loaders/jonathan/utils/__init__.py": "1beb310ea720e4f5d39ed0eae62d80a6ea86698ba8d6a6ecc08887f35b435311",
+    "compat/syllable_generation/loaders/jonathan/utils/time.py": "38b5b3ec2d5f6cb8fe6fec8eb8e5f4bb75d9c8323102b1aec5a03b726c6f9fed"
+  },
+  "focused_cases": 19,
+  "validation": {
+    "scope": "Final dirty source/test candidate pinned by source_sha256; subsequent notes/inventory only.",
+    "lab_python": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "isolated_python": "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "OPENBLAS_NUM_THREADS": "2",
+      "OMP_NUM_THREADS": "2",
+      "MKL_NUM_THREADS": "2"
+    },
+    "focused_lab_passed": 19,
+    "cpu_passed_each": 991,
+    "warnings_each": 6,
+    "architecture_modules": 202,
+    "architecture": "PASS",
+    "lint": "PASS; 3071 accepted historical diagnostics, no baseline refresh",
+    "folder_maps": "PASS",
+    "installed_wheel_and_dependencies": "PASS in isolated CPU environment; lab environment unchanged",
+    "commands": [
+      "make test-cpu PYTHON=<selected-interpreter>",
+      "make architecture PYTHON=<lab-python>",
+      "make lint PYTHON=<lab-python>",
+      "make folder-maps-check PYTHON=<lab-python>",
+      "make package-check PYTHON=<isolated-python>",
+      "<isolated-python> -B -m pip check"
+    ],
+    "evidence_sha256": {
+      "jonathan_candidate_checks.json": "b0b620008902435f16df8ef71e20aaf8abd658d471f127c5056e0706305e8023",
+      "jonathan_candidate_test-cpu.log": "4ee33afdcdbd162618f0c14dcc87579d54ea4ee3f289578e479054f5222be470",
+      "jonathan_clean_cpu.json": "46c12c6c97a359286320437c12e1d22ba67f4eab6a42a4d4381d78a64bd2c0c4",
+      "jonathan_clean_functional.log": "9f219897f2ce3c249fdec6a49db714f5bad1bb67d748be87a7bc7a3f0ab4712c"
+    }
+  },
+  "limits": [
+    "Test-created synthetic class states only; no empirical pickle/model opened and no universal artifact compatibility claim.",
+    "Parent compatibility packages are structural; leaf module/class/function identity is covered in both orders. Direct studies.behavior symlink imports remain outside this identity guarantee.",
+    "The builder retains its obsolete project enrichment import and is deferred until explicitly requested; complete cohort building is not validated.",
+    "Karen configuration proxy points to absent fpcode.behavior.config, and monoamine references an absent jonathan_oft_baseline config directory. Do not infer replacement cohort settings.",
+    "No source symlink, legacy root, real recording, model, generated output or human feedback is moved."
+  ]
+}

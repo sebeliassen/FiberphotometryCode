@@ -1,4 +1,4 @@
-from syllable_generation.loaders.jonathan.config import JonathanConfig
+from studies.session_building.jonathan.config import JonathanConfig
 
 # Range to keep (everything outside this is pre-excluded)
 VALID_FRAME_RANGE = (50000, 250000)
