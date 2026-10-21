@@ -1,3 +1,43 @@
+## Main integration complete; resume legacy retirement from main (2026-10-21)
+
+Local and remote main now point to `50a722c6a129f21769d3b454f632729e8f2c0cca`.
+PRs #2–#6 were reviewed, validated and merged sequentially with normal merge
+commits; every actual main tree matched its passing reviewed head. GitHub marked
+older overlapping PR #1 merged automatically. Main was updated locally by a safe
+fast-forward, without switching any original runtime/viewer checkout.
+
+Use .worktrees/main-integration (codex/main-integration, tracking origin/main) to
+inspect the integrated source. Start further code changes from updated main on a
+fresh codex branch/worktree. This primary checkout remains on the preserved
+modular branch for its original runtime and viewers; do not continue code changes
+here or reset/clean/switch the preserved delivery worktree. Main now also contains
+current handoff/presentation, retirement ledger and detailed source/validation
+records. Main's CURRENT retains the complete historical scientific delivery notes.
+
+Full final CPU958 passes in lab and isolated pinned environments, six existing
+warnings each. Architecture/lint/maps/wheel/dependencies/source-origin checks pass;
+head and PR checks pass, with one hosted ffmpeg-dependent video skip covered in
+both local suites. Current final main workflow/merge URLs and exact state are in
+primary outputs/consolidation_20261021/promotion_20261021.json. Existing golden
+fixtures and lint baseline are unchanged. Six frozen runtime symbols across three
+modules retain their source hashes; no empirical rerun or acceptance is implied.
+
+Foundation review fixed the missing historical alignment helper before promotion
+and documented explicit checkout activation for legacy imports. Three additional
+checkpoint patch callers now use canonical imports; all17 runner function/class
+ASTs and import execution order remain intact. Read main's
+registry/checkpoints/main_promotion_20261021.json and
+checkpoint_consumer_imports_20261021.json for exact evidence and limits.
+
+Next: repair obsolete deep-research loader paths/bare imports, tracking's bare
+config/symlink identity and export utility alias/SHIMS.tsv disagreements. Then
+validate named trusted artifacts, physical entry points, backup coverage and
+exported feedback before deleting core/pipelines/compat/archive. Those roots,
+original empirical artifacts and both review viewers remain intact. Source
+snapshots, verified Git bundles and latest restore evidence are in the primary
+consolidation output directory. No fit, export, conversion, render or data move
+was performed during this consolidation. Earlier entries below are dated history.
+
 ## Staged main promotion resumed; foundation review repaired (2026-10-21)
 
 User authorised sequential review and merges of PRs #2–#5. Foundation review
