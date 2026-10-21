@@ -1,3 +1,37 @@
+## Published consolidation stack: all GitHub checks pass (2026-10-21)
+
+Woody is authenticated as sebeliassen through GitHub CLI; Git HTTPS uses its
+credential helper. Four stacked draft PRs are published and all current-head
+push/PR checks pass: [foundation #2](https://github.com/sebeliassen/FiberphotometryCode/pull/2)
+`ee29b03` -> [seqNMF #3](https://github.com/sebeliassen/FiberphotometryCode/pull/3)
+`73f51d2` -> [consumers #4](https://github.com/sebeliassen/FiberphotometryCode/pull/4)
+`7435843` -> [alignment #5](https://github.com/sebeliassen/FiberphotometryCode/pull/5)
+`618e4d8`. Main remains `67468c1`; older overlapping PR #1 is unchanged.
+
+Initial hosted runs exposed the scheduler fixtures' 0.2-second deadline as too
+close to the supervisor's 0.1-second poll interval. The identical fixture-only
+repair gives two seconds of headroom while retaining the deliberate five-second
+sleeper and every timeout/result/STOP/resume assertion. Production code, timeout
+policy, numerical goldens and lint baseline are unchanged. Foundation CPU850,
+lint/maps pass locally after repair. GitHub passes849/936/950/954 respectively,
+with one ffmpeg-dependent video test skipped and six existing warnings per run.
+The skipped test passed in both previously recorded local environments.
+
+Resume implementation in .worktrees/photometry-consumers on
+codex/photometry-consumers at `618e4d8`. Primary continuation notes supersede older
+worktree-local authentication/in-progress notes. See CONSOLIDATION_PROGRESS_20261021.md
+and registry/checkpoints/publication_20261021.json for exact heads, CI URLs and
+limits. NEXT: review foundation #2, then promote the stack in order with normal
+ancestry-preserving merges and checks of the actual merge candidates. Remaining
+loader/import, artifact identity and recovery gates still apply before retiring
+legacy paths. No main merge, legacy deletion, empirical execution or data move.
+GitHub reported no main protection/rulesets; settings were not changed.
+
+No Chrome/Chromium browser process remained on Woody when checked. The separate
+Chrome DevTools connector and both existing review viewers were preserved.
+Mac-side XQuartz application/window state cannot be inspected from Woody.
+Earlier entries below retain historical checkpoints, not current CI/auth status.
+
 ## Consolidation checkpoint ec8a27b; all worktrees ready to resume (2026-10-21)
 
 Continue code work in .worktrees/photometry-consumers / codex/photometry-consumers,

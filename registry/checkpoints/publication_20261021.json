@@ -1,0 +1,548 @@
+{
+  "date": "2026-10-21",
+  "repository": "https://github.com/sebeliassen/FiberphotometryCode",
+  "main_commit": "67468c199256a7642bcab535acc205f57b54a6e0",
+  "authenticated_account": "sebeliassen",
+  "publication": "Four candidate branches pushed atomically; four stacked draft PRs created; main unchanged.",
+  "merge_order": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "older_overlapping_pr": {
+    "number": 1,
+    "action": "Left unchanged; foundation PR describes overlap."
+  },
+  "branch_protection": "GitHub API reported main unprotected and no repository rulesets. No protection settings changed.",
+  "promotion_gate": "Review and passing GitHub checks on the current combined candidate before sequential promotion; preserve ancestry.",
+  "limits": [
+    "No main merge performed.",
+    "Legacy roots retained.",
+    "No empirical workloads, artifact conversions or physical storage moves.",
+    "Browser process check covers Woody only; XQuartz on the Mac cannot be inspected from Woody."
+  ],
+  "initial_publication_pull_requests": [
+    {
+      "baseRefName": "codex/legacy-consumers",
+      "headRefName": "codex/photometry-consumers",
+      "headRefOid": "ec8a27bde4ca734f5439ce456751d75379ed77a3",
+      "isDraft": true,
+      "number": 5,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630664367/job/119327717360",
+          "name": "functional",
+          "startedAt": "2026-10-21T15:59:20Z",
+          "status": "QUEUED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630584258/job/119327449999",
+          "name": "functional",
+          "startedAt": "2026-10-21T15:58:51Z",
+          "status": "IN_PROGRESS",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/5"
+    },
+    {
+      "baseRefName": "codex/main-seqnmf",
+      "headRefName": "codex/legacy-consumers",
+      "headRefOid": "b146e2137167c0f12a240705ffab6728bcd4514d",
+      "isDraft": true,
+      "number": 4,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630650532/job/119327669373",
+          "name": "functional",
+          "startedAt": "2026-10-21T15:59:15Z",
+          "status": "QUEUED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630585532/job/119327454604",
+          "name": "functional",
+          "startedAt": "2026-10-21T15:58:52Z",
+          "status": "IN_PROGRESS",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/4"
+    },
+    {
+      "baseRefName": "codex/main-foundation",
+      "headRefName": "codex/main-seqnmf",
+      "headRefOid": "525b589b9d3d45b0b64553cc78b164e7dbbf56d4",
+      "isDraft": true,
+      "number": 3,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630640981/job/119327639445",
+          "name": "functional",
+          "startedAt": "2026-10-21T15:59:11Z",
+          "status": "QUEUED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630584354/job/119327450071",
+          "name": "functional",
+          "startedAt": "2026-10-21T15:58:51Z",
+          "status": "IN_PROGRESS",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/3"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "codex/main-foundation",
+      "headRefOid": "f7c405680ceddd5ea231f0004204517355f5a11c",
+      "isDraft": true,
+      "number": 2,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630635170/job/119327619453",
+          "name": "functional",
+          "startedAt": "2026-10-21T15:59:12Z",
+          "status": "IN_PROGRESS",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630583502/job/119327447113",
+          "name": "functional",
+          "startedAt": "2026-10-21T15:58:51Z",
+          "status": "IN_PROGRESS",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/2"
+    }
+  ],
+  "initial_ci_runs": [
+    {
+      "conclusion": "",
+      "databaseId": 39630664367,
+      "event": "pull_request",
+      "headBranch": "codex/photometry-consumers",
+      "headSha": "ec8a27bde4ca734f5439ce456751d75379ed77a3",
+      "status": "queued",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630664367",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "",
+      "databaseId": 39630650532,
+      "event": "pull_request",
+      "headBranch": "codex/legacy-consumers",
+      "headSha": "b146e2137167c0f12a240705ffab6728bcd4514d",
+      "status": "queued",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630650532",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "",
+      "databaseId": 39630640981,
+      "event": "pull_request",
+      "headBranch": "codex/main-seqnmf",
+      "headSha": "525b589b9d3d45b0b64553cc78b164e7dbbf56d4",
+      "status": "queued",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630640981",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "",
+      "databaseId": 39630635170,
+      "event": "pull_request",
+      "headBranch": "codex/main-foundation",
+      "headSha": "f7c405680ceddd5ea231f0004204517355f5a11c",
+      "status": "in_progress",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630635170",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "",
+      "databaseId": 39630585532,
+      "event": "push",
+      "headBranch": "codex/legacy-consumers",
+      "headSha": "b146e2137167c0f12a240705ffab6728bcd4514d",
+      "status": "in_progress",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630585532",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "",
+      "databaseId": 39630584354,
+      "event": "push",
+      "headBranch": "codex/main-seqnmf",
+      "headSha": "525b589b9d3d45b0b64553cc78b164e7dbbf56d4",
+      "status": "in_progress",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630584354",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "",
+      "databaseId": 39630584258,
+      "event": "push",
+      "headBranch": "codex/photometry-consumers",
+      "headSha": "ec8a27bde4ca734f5439ce456751d75379ed77a3",
+      "status": "in_progress",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630584258",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "",
+      "databaseId": 39630583502,
+      "event": "push",
+      "headBranch": "codex/main-foundation",
+      "headSha": "f7c405680ceddd5ea231f0004204517355f5a11c",
+      "status": "in_progress",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39630583502",
+      "workflowName": "CPU checks"
+    }
+  ],
+  "fixture_repair": {
+    "commit": "ee29b03c00221c89555a06ace4b211c1b3e57864",
+    "reason": "Initial hosted runs intermittently marked trivial successful jobs TIMEOUT under the fixture deadline of 0.2 seconds; dispatch/result polling is included and polls every 0.1 seconds.",
+    "change": "Test fixture deadline is 2.0 seconds; deliberate timeout evaluator still sleeps 5 seconds; all outcome/ledger/STOP/resume assertions and production code retained.",
+    "local_validation": {
+      "cpu_passed": 850,
+      "warnings": 6,
+      "lint": "pass without baseline change",
+      "maps": "synchronized, no generated changes"
+    },
+    "branch_changes_since_original_validation": {
+      "codex/main-foundation": {
+        "previous_head": "f7c405680ceddd5ea231f0004204517355f5a11c",
+        "head": "ee29b03c00221c89555a06ace4b211c1b3e57864",
+        "changed_paths": [
+          "tests/unit/test_broad_search_scheduler.py"
+        ],
+        "fixture_sha256": "919e084e2fd69279a237dc8159df6f8f1ff0d94ac5af65fbfa4c112c52c88958"
+      },
+      "codex/main-seqnmf": {
+        "previous_head": "525b589b9d3d45b0b64553cc78b164e7dbbf56d4",
+        "head": "73f51d2b61d96be6783f73a38208d7a19362247d",
+        "changed_paths": [
+          "tests/unit/test_broad_search_scheduler.py"
+        ],
+        "fixture_sha256": "919e084e2fd69279a237dc8159df6f8f1ff0d94ac5af65fbfa4c112c52c88958"
+      },
+      "codex/legacy-consumers": {
+        "previous_head": "b146e2137167c0f12a240705ffab6728bcd4514d",
+        "head": "74358436af3a7f757ad127a669434692e1c22747",
+        "changed_paths": [
+          "tests/unit/test_broad_search_scheduler.py"
+        ],
+        "fixture_sha256": "919e084e2fd69279a237dc8159df6f8f1ff0d94ac5af65fbfa4c112c52c88958"
+      },
+      "codex/photometry-consumers": {
+        "previous_head": "ec8a27bde4ca734f5439ce456751d75379ed77a3",
+        "head": "618e4d8af7744475668c4962ecb9893ea819ae69",
+        "changed_paths": [
+          "tests/unit/test_broad_search_scheduler.py"
+        ],
+        "fixture_sha256": "919e084e2fd69279a237dc8159df6f8f1ff0d94ac5af65fbfa4c112c52c88958"
+      }
+    }
+  },
+  "pull_requests": [
+    {
+      "baseRefName": "codex/legacy-consumers",
+      "headRefName": "codex/photometry-consumers",
+      "headRefOid": "618e4d8af7744475668c4962ecb9893ea819ae69",
+      "isDraft": true,
+      "number": 5,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:05:51Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631414659/job/119330294460",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:04:20Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:08:55Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631415597/job/119330297480",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:06:36Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:06:27Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631407409/job/119330272332",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:04:17Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/5"
+    },
+    {
+      "baseRefName": "codex/main-seqnmf",
+      "headRefName": "codex/legacy-consumers",
+      "headRefOid": "74358436af3a7f757ad127a669434692e1c22747",
+      "isDraft": true,
+      "number": 4,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:08:09Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631414072/job/119330292737",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:05:54Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:08:39Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631414870/job/119330294721",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:06:23Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:06:36Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631407618/job/119330271817",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:04:17Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/4"
+    },
+    {
+      "baseRefName": "codex/main-foundation",
+      "headRefName": "codex/main-seqnmf",
+      "headRefOid": "73f51d2b61d96be6783f73a38208d7a19362247d",
+      "isDraft": true,
+      "number": 3,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:06:23Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631414210/job/119330293366",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:04:19Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:08:39Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631414919/job/119330295706",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:06:25Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:06:34Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631407469/job/119330269831",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:04:17Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/3"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "codex/main-foundation",
+      "headRefOid": "ee29b03c00221c89555a06ace4b211c1b3e57864",
+      "isDraft": true,
+      "number": 2,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:08:42Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631425102/job/119330331682",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:06:30Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:06:20Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631407481/job/119330268836",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:04:17Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/2"
+    }
+  ],
+  "current_head_ci_runs": [
+    {
+      "conclusion": "success",
+      "databaseId": 39631425102,
+      "event": "pull_request",
+      "headBranch": "codex/main-foundation",
+      "headSha": "ee29b03c00221c89555a06ace4b211c1b3e57864",
+      "status": "completed",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631425102",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39631415597,
+      "event": "pull_request",
+      "headBranch": "codex/photometry-consumers",
+      "headSha": "618e4d8af7744475668c4962ecb9893ea819ae69",
+      "status": "completed",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631415597",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39631414919,
+      "event": "pull_request",
+      "headBranch": "codex/main-seqnmf",
+      "headSha": "73f51d2b61d96be6783f73a38208d7a19362247d",
+      "status": "completed",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631414919",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39631414870,
+      "event": "pull_request",
+      "headBranch": "codex/legacy-consumers",
+      "headSha": "74358436af3a7f757ad127a669434692e1c22747",
+      "status": "completed",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631414870",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39631414659,
+      "event": "pull_request",
+      "headBranch": "codex/photometry-consumers",
+      "headSha": "618e4d8af7744475668c4962ecb9893ea819ae69",
+      "status": "completed",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631414659",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39631414210,
+      "event": "pull_request",
+      "headBranch": "codex/main-seqnmf",
+      "headSha": "73f51d2b61d96be6783f73a38208d7a19362247d",
+      "status": "completed",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631414210",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39631414072,
+      "event": "pull_request",
+      "headBranch": "codex/legacy-consumers",
+      "headSha": "74358436af3a7f757ad127a669434692e1c22747",
+      "status": "completed",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631414072",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39631407618,
+      "event": "push",
+      "headBranch": "codex/legacy-consumers",
+      "headSha": "74358436af3a7f757ad127a669434692e1c22747",
+      "status": "completed",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631407618",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39631407481,
+      "event": "push",
+      "headBranch": "codex/main-foundation",
+      "headSha": "ee29b03c00221c89555a06ace4b211c1b3e57864",
+      "status": "completed",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631407481",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39631407469,
+      "event": "push",
+      "headBranch": "codex/main-seqnmf",
+      "headSha": "73f51d2b61d96be6783f73a38208d7a19362247d",
+      "status": "completed",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631407469",
+      "workflowName": "CPU checks"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39631407409,
+      "event": "push",
+      "headBranch": "codex/photometry-consumers",
+      "headSha": "618e4d8af7744475668c4962ecb9893ea819ae69",
+      "status": "completed",
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39631407409",
+      "workflowName": "CPU checks"
+    }
+  ],
+  "all_current_checks_successful": true,
+  "hosted_cpu_counts": {
+    "foundation": 849,
+    "seqnmf": 936,
+    "consumers": 950,
+    "photometry": 954,
+    "skipped_each": 1,
+    "existing_warnings_each": 6,
+    "skip_reason": "Synthetic grid encoding requires ffmpeg; this test passed in the previously recorded lab and isolated CPU checks."
+  }
+}
