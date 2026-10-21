@@ -27,7 +27,7 @@ sys.path.insert(0, LM_DIR)
 sys.path.insert(0, os.path.join(ROOT_DIR, "syllable_generation", "analysis", "ulrik_kinematics"))
 sys.path.insert(0, ROOT_DIR)
 
-from pipelines.presentation.render_4_cohort_figures import js_divergence
+from fpcode.statistics.divergence import js_divergence
 
 CACHE_PATH = os.path.join(LM_DIR, "output", "strategies_extended", "post_injection_df_cache.pkl")
 OUT_DIR = os.path.join(LM_DIR, "output", "presentation", "figures", "cohort_comparisons")

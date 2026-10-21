@@ -1,0 +1,7 @@
+{
+  "source_path": "studies/language_models/pipelines/presentation/render_4_cohort_figures.py",
+  "source_sha256": "74059558650e1b10787673cfae2c927a93f323f1cb5098227cea1fd2382d43e0",
+  "source_revision": "525b589",
+  "function": "def js_divergence(P, Q, eps=1e-12):\n    P = np.clip(P, eps, None); Q = np.clip(Q, eps, None)\n    P = P / P.sum(axis=-1, keepdims=True); Q = Q / Q.sum(axis=-1, keepdims=True)\n    M = 0.5 * (P + Q)\n    return 0.5 * np.sum(P * np.log2(P / M), axis=-1) + 0.5 * np.sum(Q * np.log2(Q / M), axis=-1)",
+  "policy": "Preserved pre-extraction clipping, last-axis normalization and base-2 logarithms."
+}

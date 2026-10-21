@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""[FORWARDER] Relocated to pipelines/train.py --config configs/training/tandem_cohort_production_seed101.yaml"""
+"""[FORWARDER] Uses python -m fpcode.cli.train --config configs/training/tandem_cohort_production_seed101.yaml"""
 import subprocess
 import sys
 
@@ -18,4 +18,4 @@ SLDS_KAPPA = 7.5e12
 
 if __name__ == "__main__":
     cfg = REPO_ROOT / "configs/training/tandem_cohort_production_seed101.yaml"
-    sys.exit(subprocess.call([sys.executable, str(REPO_ROOT / "pipelines/train.py"), "--config", str(cfg)] + sys.argv[1:]))
+    sys.exit(subprocess.call([sys.executable, "-m", "fpcode.cli.train", "--config", str(cfg)] + sys.argv[1:]))

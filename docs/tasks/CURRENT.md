@@ -1,3 +1,19 @@
+## Consolidation: three local candidates validated (2026-10-21)
+
+Continue in .worktrees/legacy-consumers on codex/legacy-consumers. Read
+[CONSOLIDATION_PROGRESS_20261021.md](CONSOLIDATION_PROGRESS_20261021.md) first.
+Foundationf7c4056 and seqnmf525b589 are preserved beneath the current candidate.
+Recovered20 ignored source files, repaired CPU dependency declarations, migrated
+8CLI launchers and6statistic consumers; no scientific policies changed. Final
+CPU951/6warnings in lab AND clean environments; architecture202/lint/maps/package
+PASS. Installed library/study source origins match; frozen runtime-source hashes
+retained. Static retirement ledger and versioned check evidence are included.
+Main67468c1 and remote refs unchanged; GitHub publication lacks HTTPS credentials.
+Legacy roots/artifacts/viewers retained; large-artifact/feedback recovery coverage
+still needs review. No empirical fits/renders/conversions or data moves occurred.
+NEXT migrate remaining active imports per ledger, then named-artifact loading/
+identity checks before alias retirement. Earlier dated scientific notes preserved.
+
 ## SeqNMF integration candidate assembled (2026-10-21)
 
 Local stacked candidate codex/main-seqnmf combines foundation6ff5162 and preserved

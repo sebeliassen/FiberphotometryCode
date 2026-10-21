@@ -51,6 +51,25 @@ def test_shim_regeneration_preserves_independently_registered_paths(tmp_path, mo
     assert targets["core/camera_correspondence.py"] == "fpcode.tracking.camera_correspondence"
 
 
+def test_pipeline_aliases_keep_canonical_identity_in_both_import_orders(tmp_path):
+    for legacy_first in (True, False):
+        script = f"""
+import importlib
+import sys
+sys.path[:0] = [{str(ROOT / 'src')!r}, {str(ROOT)!r}]
+for verb in ('train', 'evaluate', 'fuse', 'render', 'export'):
+    legacy, canonical = 'pipelines.' + verb, 'fpcode.cli.' + verb
+    first, second = (legacy, canonical) if {legacy_first!r} else (canonical, legacy)
+    one = importlib.import_module(first)
+    two = importlib.import_module(second)
+    assert one is two, (first, second)
+assert not {{'jax', 'jaxlib', 'keypoint_moseq', 'torch'}} & set(sys.modules)
+"""
+        result = subprocess.run([sys.executable, "-I", "-B", "-c", script], cwd=tmp_path,
+                                capture_output=True, text=True, timeout=15)
+        assert result.returncode == 0, result.stderr
+
+
 def test_documented_checkout_paths_expose_legacy_aliases_outside_repo(tmp_path):
     environment = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
     environment["PYTHONPATH"] = os.pathsep.join(str(path) for path in (
