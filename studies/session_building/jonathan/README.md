@@ -2,10 +2,13 @@
 
 The physical owner is `studies.session_building.jonathan`. Configuration,
 BuildContext, filename parsers and tracking discovery can be imported without
-loading the builder's project enrichment. The public package still advertises
-`build`; accessing it explicitly imports its implementation. Its old enrichment
-namespace remains unresolved, so this change does not establish a working full
-cohort builder.
+loading the builder's project enrichment. The direct builder now imports the
+physical IFdN enrichment owner and its seven preserved source-policy override
+files. See [the policy boundary](../../oft_baseline/ifdn_policy/README.md).
+Use `from studies.session_building.jonathan.build import build`; the package-level
+`build` name can refer to a module or function depending on import order. That
+separate lazy-export issue remains unresolved, and a complete empirical cohort
+build has not been executed.
 
 Historical `syllable_generation.loaders.jonathan` leaf modules proxy to these
 physical owners. Their parent packages retain physical search paths so those
@@ -20,5 +23,7 @@ are byte-identical to the previous main. Tests independently check timestamp tex
 chambers, camera slots, chamber indices, effective channel indices and discovery
 rows using synthetic filenames. No actual H5/video contents are opened. Juvenile
 configuration now imports the canonical class; its own settings and functions are
-unchanged. Karen/monoamine policy recovery, enrichment/override input resolution,
-full builders and empirical artifact verification remain separate work.
+unchanged. The IFdN policy files match pinned969c893 exactly; no other cohort's
+overrides were substituted. Unified project/configuration lookup, other cohort
+policy recovery, full builders and empirical artifact verification remain
+separate work.

@@ -110,3 +110,30 @@ use explicit policy/parser owners; four function ASTs remain exact.19focused and
 1039fullCPU cases in both environments pass, with independent provenance review.
 Unified-builder dynamic imports/global config propagation and old study namespace
 identity remain separate gates. No empirical cohort discovery was performed.
+
+## Jonathan direct builder and source-policy boundary
+
+The direct builder and historical enrichment proxy target the physical IFdN owner.
+Seven original source-policy override files from pinned969c893 now accompany it,
+with all legacy copies retained. Source hashes and AST evidence preserve the exact
+historical metadata priority, eight-stage order and numerical implementation.
+Sixteen new focused synthetic/cold tests cover leaf identity, physical proxies,
+stage flow, discovery precedence and inclusive manual/automatic mask union;
+broader validation remains pending parent integration. See
+registry/checkpoints/jonathan_builder_policy_20261021.json.
+
+Use `from studies.session_building.jonathan.build import build`; package-level
+build-name ambiguity remains. Unified project discovery, bare imports and global
+config replacement, other cohort policy selection, ignored mask files and named
+real-artifact recovery remain separate gates. No legacy root or empirical input
+was removed, and no complete cohort build was executed.
+
+## Remaining unified-policy propagation gate
+
+The direct IFdN builder/import/default-source boundary is restored with1055CPU
+passes in each local environment. The unified entry remains separate: bare module
+reloads, project-directory assumptions and copied JCFG aliases can mix policy
+across stages; process workers require explicit selected configuration rather than
+parent-global patching. AMPH enrichment is not equivalent to IFdN and retains a
+historical index-based clock rule requiring separate provenance/policy review.
+No full cohort/AMPH execution or universal artifact support is established.

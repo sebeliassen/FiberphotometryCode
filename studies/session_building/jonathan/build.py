@@ -1,17 +1,16 @@
 # loaders/jonathan/build.py
-# NEW: import project enrich and locate its overrides dir
+# Import the physical owner of the preserved IFdN enrichment policy.
 from pathlib import Path
 
-from syllable_generation.projects.jonathan_openfield_example import enrich as project_enrich
-
 from fpcode.contracts.session_record import SessionRecord
+from studies.oft_baseline.ifdn_policy import enrich as project_enrich
 
 from .context import BuildContext
 from .steps import fiberphotometry, tracking, video
 
 
 def _project_overrides_dir() -> Path:
-    # points to .../projects/jonathan_openfield_example/overrides
+    # Source policy files live beside the canonical enrichment implementation.
     return Path(project_enrich.__file__).resolve().parent / "overrides"
 
 def _enrich_pre(ctx: BuildContext, sessions: list[SessionRecord]) -> list[SessionRecord]:

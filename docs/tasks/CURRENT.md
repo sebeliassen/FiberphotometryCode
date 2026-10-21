@@ -1,3 +1,31 @@
+## Direct Jonathan builder and IFdN source policy restored (2026-10-21)
+
+This revision incorporates actual PR11 maineb779c7 through a normal merge, retaining
+all preceding task/source records and additive tests. The direct builder imports
+its exact physical IFdN enrichment owner; seven historical override source files
+are copied byte-for-byte to that owner, with originals retained. Both-order builder/
+enrichment leaf identity and physical proxies are checked. Builder algorithms,
+eight stages, two enrichment boundaries and enrichment implementation are preserved.
+Use the explicit studies.session_building.jonathan.build leaf API; the package-level
+lazy build name still depends on import order and is not a universal alias guarantee.
+
+Final1055CPU tests pass in lab AND isolated pinned environments (6existing warnings
+each);16new+19existing focused cases, architecture202/lint/maps/wheel/dependencies
+pass. Synthetic CSV/NPZ cases independently check metadata precedence, inclusive
+manual intervals, mask unions and unchanged unrelated columns. Exact7source-policy
+hashes/AST proofs and review limits: registry/checkpoints/jonathan_builder_policy_20261021.json.
+Independent review found no production issue after documentation/hash corrections.
+No real sessions/models, video contents, empirical builds, exports or renders ran.
+
+The unified entry still needs explicit project selection and config propagation
+through ctx.cfg across shared stages and process workers: assigning one module's
+JCFG does not update cached aliases consistently. AMPH owns distinct enrichment/
+metadata and a historical clock heuristic; do not substitute IFdN policy or run
+that heuristic as part of an import repair. Physical old study symlink identity,
+PPE outputs, full drivers, named real artifacts and empirical/feedback recovery
+remain gates before removing any legacy root. Primary CURRENT and its live
+promotion record govern exact sequential Git state; original viewers are preserved.
+
 ## Original project tracking policies restored and validated (2026-10-21)
 
 Candidate .worktrees/project-tracking-policies / codex/project-tracking-policies

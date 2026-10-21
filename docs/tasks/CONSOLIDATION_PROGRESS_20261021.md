@@ -164,3 +164,25 @@ Candidate includes reviewed PR10 actual main via a normal merge; task records an
 all additive tests retained.19focused/1039fullCPU in both environments pass,
 6existing warnings each; architecture202/lint/maps/wheel/dependencies pass.
 Independent archive/Git/AST review found no issues. No empirical run or root move.
+
+## Jonathan direct builder and IFdN source-policy candidate
+
+The direct builder now imports the exact physical IFdN enrichment owner, and its
+historical project-enrich proxy and SHIMS row agree. Seven historical source-policy
+files are copied byte-for-byte from pinned969c893 into the canonical policy owner;
+legacy originals remain. The distinct monoamine overrides are not substituted.
+All builder nonimport ASTs, its eight-stage order and both enrichment boundaries
+are preserved. Enrichment source bytes match the baseline. Sixteen new focused
+cases supplement the existing nineteen identity cases, using synthetic CSV/NPZ
+fixtures and controlled stages only. See the builder-policy checkpoint for hashes,
+checks and pending broad integration. No empirical build or input decoding occurred.
+
+The package-level build-name ambiguity and unified dynamic project/configuration
+route remain separate API/input gates. Use the explicit canonical build leaf;
+retaining source policy does not validate other cohorts or historical artifacts.
+
+The direct-builder candidate now includes actual PR11 main through a normal merge.
+All source-policy/task ledgers and test additions survive; original main ledger
+line endings are restored. Final1055CPU/6existing warnings in both environments;
+architecture202/lint/maps/wheel/dependencies pass. The next unified/config/worker
+and AMPH clock-policy gates are recorded in the retirement note and primary audit.
