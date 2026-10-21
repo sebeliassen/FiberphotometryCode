@@ -21,6 +21,10 @@ from studies.sequence_viz.run_broad_search import (
     verify_snapshot,
 )
 
+# Trial deadlines include dispatch and result polling (0.1 s in execute_search).
+# Leave headroom for hosted runners while the deliberately blocked job sleeps 5 s.
+_TRIAL_TIMEOUT_S = 2.0
+
 
 def _fixture(tmp_path, *, recipes=3, folds=1):
     root = tmp_path / "code with spaces"
@@ -40,7 +44,7 @@ def _fixture(tmp_path, *, recipes=3, folds=1):
     output = tmp_path / "new output"
     plan = build_search_plan(manifest=manifest, output=output, code_root=root, recipes_per_cohort=recipes,
         folds=folds, replicates=1, workers=1, threads=1, per_animal=10, held_per_animal=5,
-        trial_timeout_s=.2, max_worker_rss_gb=.5, min_free_disk_gb=0, min_free_ram_gb=0,
+        trial_timeout_s=_TRIAL_TIMEOUT_S, max_worker_rss_gb=.5, min_free_disk_gb=0, min_free_ram_gb=0,
         cache_quota_gb=1, recipes=[dict(method="fixture", creator_seed=7, knob=i) for i in range(recipes)])
     return plan, root, manifest, output
 
@@ -73,7 +77,7 @@ def test_plan_is_finite_read_only_reproducible_and_uses_fixed_creator_seed(tmp_p
     assert {job["recipe"]["creator_seed"] for job in plan["jobs"]} == {7}
     repeated = build_search_plan(manifest=manifest, output=output, code_root=root, recipes_per_cohort=3,
         folds=3, replicates=1, workers=1, threads=1, per_animal=10, held_per_animal=5,
-        trial_timeout_s=.2, max_worker_rss_gb=.5, min_free_disk_gb=0, min_free_ram_gb=0,
+        trial_timeout_s=_TRIAL_TIMEOUT_S, max_worker_rss_gb=.5, min_free_disk_gb=0, min_free_ram_gb=0,
         cache_quota_gb=1, recipes=[dict(method="fixture", creator_seed=7, knob=i) for i in range(3)])
     assert repeated == plan
     assert not output.exists()
