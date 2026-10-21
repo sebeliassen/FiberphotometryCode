@@ -1,3 +1,43 @@
+## Main integration and next legacy migration (2026-10-21)
+
+The preserved modular foundation, Karen seqNMF delivery, CLI/statistics consumer
+migration and photometry caller migration are integrated through normal merges
+of PRs #2–#5. Each actual main tree matched its reviewed, passing candidate.
+This revision adds three checkpoint-patch caller imports through
+fpcode.kpms.checkpoints, retaining all runner function/class ASTs and import
+execution order. Legacy/canonical module and function identity is checked in both
+orders without loading modeling backends. No fitting, exports or data moves.
+
+Use integrated main for new code. On Woody the separate main verification
+worktree is .worktrees/main-integration. The primary modular checkout and original
+Karen delivery checkout remain for the existing viewers, historical runtime and
+empirical products; do not reset/clean/switch them. Empirical work from a new
+checkout needs an explicit data mirror root containing data/ (FP_DATA_ROOT),
+not a data/ directory itself. No empirical run is implied by this handoff.
+The README distinguishes installed fpcode from explicit checkout legacy paths.
+
+See CONSOLIDATION_PROGRESS_20261021.md and
+registry/checkpoints/main_promotion_20261021.json for source hashes, exact checks,
+merge parents, rollback references and limits. The handoff presentation now marks
+old branch tips as historical; frozen scientific findings and limits are intact.
+All958 CPU tests pass in both lab and isolated pinned environments; architecture,
+lint, navigation, installed-wheel and source-origin checks pass (six existing
+warnings per suite). Hosted CI has one ffmpeg-dependent skip, covered locally.
+Six recorded runtime symbols across three shared modules still match their
+original frozen source hashes. This proves provenance, not scientific acceptance.
+
+Remaining work: repair deep-research hardcoded/bare loader imports; resolve Karen/
+monoamine bare config and Jonathan symlink identity; reconcile export utility
+aliases/SHIMS.tsv and missing legacy_support. Inspect these scripts statically
+before any execution: some load cohorts/backends or write model results at import.
+Then prove support for named trusted artifacts, physical entry points and backup/
+feedback recovery before deleting root core, pipelines, compat or archive.
+Those roots and every empirical input/output remain in place. Maintainer roles
+and empirical recovery coverage still need handoff decisions.
+
+Earlier entries below preserve their dated scientific and execution evidence;
+they do not supersede this integration status or imply current auth/CI blockers.
+
 ## Alignment restoration validated; resume photometry candidate (2026-10-21)
 
 Continue in .worktrees/photometry-consumers / codex/photometry-consumers, based on

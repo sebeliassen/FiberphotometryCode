@@ -2,7 +2,7 @@
 
 Handoff presentation for Sebastian Hammer Eliassen · 21 October 2026
 
-Prepared from local Git history, selected source files, the supplied combined lab reports, and the latest delivery-worktree records. The reports are historical evidence, including plans and draft text; their requests were not treated as instructions. No models, analyses or tests were rerun for this review. Numerical verification below is attributed to existing run records.
+Prepared from Git history, selected source files, the supplied combined lab reports, and the delivery-worktree records. The reports are historical evidence, including plans and draft text; their requests were not treated as instructions. Scientific models and analyses were not rerun for this presentation. Subsequent source preservation and integration checks are recorded in [current task state](../tasks/CURRENT.md) and the [main-promotion checkpoint](../../registry/checkpoints/main_promotion_20261021.json).
 
 ## Slide 1 — The overall contribution
 
@@ -60,17 +60,19 @@ Practical benefit: a successor can change a shared method or a study analysis wi
 
 ## Slide 7 — The actual branch progression
 
-| Stage | Local tip | Role in the handoff |
+Historical source checkpoints, before staged integration onto main:
+
+| Stage | Recorded revision | Role in the handoff |
 | --- | --- | --- |
-| `main` | `67468c1`, 8 Oct 2025 | Older photometry framework, OFT/KPMS integration and Turnlab; not the complete pre-refactor research workspace |
+| `main` before integration | `67468c1`, 8 Oct 2025 | Older photometry framework, OFT/KPMS integration and Turnlab; not the complete pre-refactor research workspace |
 | `scaffolding-refactor` | `0891de1`, 9 Oct 2026 | Captured previously local research and added organisation, packaging, migration and recovery machinery |
 | `codex/legacy-consolidation` | `b83298f`, 11 Oct 2026 | Intermediate shared-library extraction and study consolidation; already contains substantial refactoring |
-| `codex/modular-refactor` | `15df93d`, 15 Oct 2026 | Newer capability architecture plus behavioural-layer/search research; primary checkout |
-| `codex/karen-seqnmf-delivery` | `736f3ca`, 16 Oct 2026, plus later working changes | Isolated Karen seqNMF delivery; latest theme work continues through 21 Oct |
+| `codex/modular-refactor` | `15df93d`, 15 Oct 2026 | Newer capability architecture plus behavioural-layer/search research; source later preserved at `31326cc` |
+| `codex/karen-seqnmf-delivery` | `736f3ca`, 16 Oct 2026; source preserved at `2c43b75`, 21 Oct | Isolated Karen seqNMF delivery; 45 reviewed source, test and documentation files captured from later working changes |
 
 The first four tips form an ancestry chain. Delivery branches from modular research checkpoint `6c179ae`, before the last two modular documentation commits. The `pre-scaffolding-20261009` snapshot is a better baseline for the full research workspace than old `main`.
 
-This review used local refs; no remote fetch was performed. Local modular is ahead of its locally recorded origin ref. The delivery worktree contains important modified and untracked source. A branch tip alone does not capture the current delivery.
+The initial review used local refs. Subsequent work refreshed remote refs, preserved both source states, and promoted reviewed changes through sequential pull requests with normal merges. Consult [current task state](../tasks/CURRENT.md) and the [main-promotion checkpoint](../../registry/checkpoints/main_promotion_20261021.json) for exact main revisions, completed promotions and validation. Ignored empirical outputs and browser feedback still require separate preservation.
 
 ## Slide 8 — The scientific move: “What comes after the syllable?”
 
@@ -110,7 +112,7 @@ Speaker note: the narrower exploratory atlas is delivered. Broad disease finding
 
 ## Slide 12 — How the next person should take over
 
-- Preserve the actual working sources, both checkouts, empirical inputs, frozen model/occurrence artifacts, output packages and exported human feedback.
+- Use integrated main for new code, and preserve the original source checkpoints, empirical inputs, frozen model/occurrence artifacts, output packages and exported human feedback.
 - Start by opening the five-theme showcase and reviewing behavioural coherence; record acceptance, merge or refinement decisions before further group interpretation.
 - Reproduce one frozen theme from input/mask/native frame identity through measurement and movie output, then extend to the full atlas.
 - Continue a small set of mouse-level intra/inter-chain questions with explicit definitions and correction policy; pursue photometry integration as a subsequent extension.
@@ -123,16 +125,18 @@ Suggested closing: “The next person inherits a functioning exploratory workflo
 
 All paths below are relative to the named checkout.
 
-Primary checkout: `/home/fsp585/Desktop/FiberphotometryCode`
+Current source: integrated main, with the local integration worktree at `/home/fsp585/Desktop/FiberphotometryCode/.worktrees/main-integration`. Check [current task state](../tasks/CURRENT.md) before continuing; the worktree branch and remote main may advance separately.
 
 - `docs/tasks/CURRENT.md`: accumulated dated task states; read newest entries first.
 - `docs/architecture/UNIT_CONTRACT.md`: current ownership and scientific/software boundaries.
 - `ARCHITECTURE_INDEX.md`: navigation into implementation owners.
 - `src/fpcode`: reusable library; `studies/<project>`: scientific policy and project analyses; `ops/<purpose>`: operations; `configs`: profiles; `compat`/`archive`: historical interfaces and preserved material.
 
-Delivery checkout: `/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery`
+Preserved primary runtime/viewer checkout: `/home/fsp585/Desktop/FiberphotometryCode`, on `codex/modular-refactor`. It retains the original shared-library/runtime setup; do not switch or clean it while existing viewers or provenance depend on it.
 
-- `docs/tasks/CURRENT.md`: authoritative current Karen delivery state.
+Preserved delivery checkout and frozen empirical outputs: `/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery`. Its reviewed source is also integrated onto main; ignored outputs remain at their original locations.
+
+- `docs/tasks/CURRENT.md`: dated Karen scientific delivery records; consult integrated main's current task state for subsequent source integration.
 - `studies/karen_pff_vs_monomer/analysis/EXPLORATORY_THEME_DELIVERY_20261021.md`: latest atlas methods, findings, reproduction and limitations.
 - `studies/karen_pff_vs_monomer/analysis/THEME_NEIGHBOURHOOD_SHOWCASES_20261021.md`: latest selection/media/review design.
 - `outputs/karen_theme_delivery_20261021/report/index.html`: numerical report.
@@ -142,7 +146,7 @@ Delivery checkout: `/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-se
 
 ## Implementation owners to transfer
 
-Under the delivery study’s `analysis/`:
+Under `studies/karen_pff_vs_monomer/analysis/` on integrated main, with original delivery source and outputs preserved separately:
 
 - Fitting/reference catalogue: `reference_seqnmf.py`, `run_reference_seqnmf.py`, `run_reference_capacity.py` and their saved recipes.
 - Refined observed themes: `theme_candidates.py`, frozen `library.json` and occurrence index.
@@ -153,8 +157,8 @@ Two different seqNMF implementations exist. Delivery’s `reference_seqnmf.py` p
 
 ## Preservation priorities before departure
 
-1. Review and preserve modified/untracked delivery source, tests and documents with exact revisions. Do not reset or clean the worktrees. This review did not commit or move existing work.
-2. Preserve primary shared-library source as well as delivery source: the editable install used by recent runs resolves shared `fpcode` imports from the primary checkout. Consult `runtime_library_sources.json` and the output source snapshots for actual paths/hashes.
+1. Retain the captured primary and delivery source checkpoints (`31326cc` and `2c43b75`) and verified recovery bundles. Their manifests and restore checks are recorded in `docs/tasks/CONSOLIDATION_PROGRESS_20261021.md` and primary `outputs/consolidation_20261021`. Preserve later work separately; do not reset or clean the original worktrees.
+2. Preserve the shared-library provenance of the frozen 21 October atlas execution: its editable install resolved shared `fpcode` imports from the primary checkout. Consult `runtime_library_sources.json` and the output source snapshots for actual paths/hashes. For new runs, verify import origins against the selected integrated checkout.
 3. Transfer ignored empirical material separately: tracking/frame caches, video, masks, mappings, fitted models, source arrays and frozen inputs. Git and the portable viewing ZIPs are not a full reproducibility backup.
 4. Export browser feedback JSON from every relevant gallery before changing machine or browser origin. Local autosave is not shared lab storage.
 5. Record environment, dependency versions, storage mounts, path configuration and access arrangements. `FP_DATA_ROOT` points to the mirror containing `data/`, not to `data/` itself.
@@ -168,12 +172,12 @@ Two different seqNMF implementations exist. Delivery’s `reference_seqnmf.py` p
 - Trace a theme into its frozen occurrence table, physical measurements and statistical row.
 - Agree on the small next question, review decisions and who owns each follow-up.
 
-The latest records report 933 CPU tests passed, architecture checks with no violations/cycles, and media/browser audits. These are recorded prior checks, not checks rerun during this handoff review. A successor should first validate their own setup with the read-only doctor and then choose focused checks before empirical execution.
+The original delivery records report 933 CPU tests passed, architecture checks with no violations/cycles, and media/browser audits. These remain dated evidence for that delivery. Exact subsequent source-integration checks and their limits are recorded in the [main-promotion checkpoint](../../registry/checkpoints/main_promotion_20261021.json); CPU checks do not replace empirical or media validation. A successor should first validate their own setup with the read-only doctor and then choose focused checks before empirical execution.
 
 # Evidence used
 
 - Supplied attachment: `/home/fsp585/.codex/attachments/ec256bc8-3a60-4c1c-9fa7-4ced749a1d86/gether_samlet.txt`. Includes reports from late 2024 through September 2026, a blank template, overlapping September versions and proposed future work. The more detailed July–September report provides the attributed benchmark/storage figures.
-- Local branch histories/tree listings for main, scaffolding-refactor, legacy-consolidation, modular-refactor and Karen delivery; merge-base checks established ancestry.
+- Original local branch histories/tree listings for main, scaffolding-refactor, legacy-consolidation, modular-refactor and Karen delivery; merge-base checks established ancestry. Subsequent refreshed remote refs, pull-request promotions and recovery evidence are recorded in the [main-promotion checkpoint](../../registry/checkpoints/main_promotion_20261021.json).
 - Selected original session-loading/Turnlab source and current seqNMF/theme source.
 - `docs/reports/REFACTOR_PRESENTATION_AND_AGENT_WORKFLOWS_20261011.md`: historical refactor comparison, interpreted alongside current contract/status rather than as current completion claims.
 - Delivery `studies/sequence_viz/baselines/seqnmf_sep14/REPLAY_20261015.md`: saved-reference replay matched 2,136 calls while documenting native-boundary and endpoint issues. It supersedes the earlier recovery README’s unreplayed status for that specific saved reference.

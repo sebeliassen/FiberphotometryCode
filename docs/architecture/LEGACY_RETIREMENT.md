@@ -1,6 +1,6 @@
 # Legacy retirement status
 
-21 October 2026. Current code is prepared on stacked local integration branches; main has not been promoted. See [execution state](../tasks/CONSOLIDATION_PROGRESS_20261021.md) and [the plan](../tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md).
+21 October 2026. The foundation, seqNMF delivery and first consumer migrations are integrated into main through reviewed normal merges. Legacy retirement remains in progress. See [execution state](../tasks/CONSOLIDATION_PROGRESS_20261021.md) and [the plan](../tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md).
 
 The canonical library is src/fpcode. Current study launchers should invoke fpcode.cli modules or installed commands; new study code should import the owning capability directly. Root core/pipelines/compat aliases remain supported while their consumers and artifact obligations are reviewed. A root directory is not retired merely because its imports are deprecated.
 
@@ -26,6 +26,21 @@ Root compat is distinct from src/fpcode/compat, which still owns historical poli
 3. Inventory named trusted session/model artifacts and prove a canonical loader, separate converter or retained small legacy component for each supported family.
 4. Update shim registries and historical shim-generation maps before deleting adapters so tooling cannot recreate retired paths. Preserve physical direct-script/runpy obligations where supported.
 5. Verify external archive/legacy links, large-artifact backups and human feedback exports before any physical relocation. Git/source bundles do not contain the ignored empirical products.
-6. Publish/review the tested integration branches through authenticated GitHub access before advancing remote main. No history rewrite is needed.
+6. Continue reviewed changes from integrated main. The foundation, seqNMF, CLI/statistics and photometry integration PRs #2–#5 are merged with preserved ancestry; retirement still requires the capability and artifact gates above.
 
 Legacy roots remain intact at this checkpoint. No migration of recordings, models, generated media or human feedback was performed.
+
+## Checkpoint callers and remaining implementation gaps
+
+Three training runners now import checkpoint patching from fpcode.kpms.checkpoints.
+Both import orders retain legacy/canonical module and apply/remove-function
+identity without initializing modeling backends. Runner algorithms and import
+execution order are preserved; their empirical workflows were not executed.
+See registry/checkpoints/checkpoint_consumer_imports_20261021.json for the AST audit.
+
+The README documents explicit checkout activation for historical namespaces;
+those paths are not installed by the canonical wheel. Known next repairs include
+deep-research hardcoded/bare loaders, tracking's bare config/symlink identity and
+session-export utility alias/registry disagreements. Some target implementations
+are missing. Alias files and a passing CPU suite do not establish executable
+historical cohort pipelines; repair and validate those named routes separately.

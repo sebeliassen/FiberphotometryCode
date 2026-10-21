@@ -61,8 +61,8 @@ KPMS_UTILS_DIR = REPO_ROOT / 'vendor/keypoint_moseq_syll'
 if str(KPMS_UTILS_DIR) not in sys.path:
     sys.path.insert(0, str(KPMS_UTILS_DIR))
 
-import utils.resample_batching as rb
-from syllable_generation.syllabizers.keypoint_moseq_syll.utils.patch_checkpoint import apply_kpms_checkpoint_patch
+import utils.resample_batching as rb  # noqa: I001 -- Preserve historical runner import order.
+from fpcode.kpms.checkpoints import apply_kpms_checkpoint_patch
 from utils.batch_init import batched_init_model_by_video
 
 # Configuration constants
