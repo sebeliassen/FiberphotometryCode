@@ -1,4 +1,5 @@
 path	kind	target_or_link	retirement_status
+compat/syllable_generation/analysis/utils/legacy_support.py	python	studies.session_model_exports.utils.legacy_support	retain_pending_consumer_and_artifact_review
 archive/compat	symlink	../compat	retain_pending_consumer_and_artifact_review
 compat/fiberphotometry/__init__.py	python	REVIEW_REQUIRED	retain_pending_consumer_and_artifact_review
 compat/fiberphotometry/analysis/performance_funcs.py	python	studies.photometry.exploratory.analysis.performance_funcs	retain_pending_consumer_and_artifact_review

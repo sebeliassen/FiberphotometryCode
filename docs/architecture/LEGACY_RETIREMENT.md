@@ -89,3 +89,14 @@ tests use a nonwriting stub and do not execute a model. Full driver migration,
 missing legacy_support, named real artifact reconstruction and backup/feedback
 recovery still block retirement. No legacy root or empirical artifact was moved.
 See registry/checkpoints/export_utility_aliases_20261021.json.
+
+## Restored absolute-frame compatibility helper
+
+The lost migrate_legacy_vfi helper is recovered from the latest pre-refactor source
+under studies.session_model_exports.utils. That version had already removed rate
+heuristics after a synchronization correction: it only copies arrays and preserves
+values/dtype. Canonical caller imports, physical legacy leaf identity and matching
+source/shim records are restored.13 focused and1020 full CPU cases in each local
+environment pass. No real exporter/model/artifact was executed. Driver paths,
+backend setup, write policy and real artifact support remain gates; old reports
+about automatic scaling do not describe this restored implementation.
