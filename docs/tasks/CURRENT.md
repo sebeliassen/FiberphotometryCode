@@ -1,3 +1,34 @@
+## Consolidation checkpoint ec8a27b; all worktrees ready to resume (2026-10-21)
+
+Continue code work in .worktrees/photometry-consumers / codex/photometry-consumers,
+commitec8a27b. Read CONSOLIDATION_PROGRESS_20261021.md. Priorb146e21 milestone is
+preserved. Stack: foundationf7c4056 -> seqnmf525b589 -> consumersb146e21 ->
+photometryec8a27b. Source history/recovery snapshots and restore-verified bundles
+are in primary outputs/consolidation_20261021. Original primary/delivery code
+and viewers remain intact. Main67468c1/remote unchanged; auth question pending.
+Additional6alignmentimports migrated; lost build_aligned_moseq_phot restoredfrom
+pinnedpre-scaffolding source with exactfunctionAST parity and independentframe/
+missingdata tests. Default470/historicalinterpolation policy preserved. Final
+955CPU/6warnings in lab AND cleanenv; architecture202/lint/maps/wheel/pipcheck
+PASS; installedrestoredmodule matchescandidate. No actualexport/fitting/conversion
+or data moves performed. Legacyroots retained. NEXT remainingloader/checkpoint
+imports and namedartifactidentity/recovery gates; publish4stackedPRs onceauthready.
+See progress doc and alignment_restoration checkpointJSON before any further work.
+Earlier dated entries below retain historical evidence; newest entry supersedes
+in-progress statements.
+
+## Additional alignment restoration in progress (2026-10-21)
+
+Next local slice is .worktrees/photometry-consumers / codex/photometry-consumers,
+based on validatedb146e21. Auditing6alignmentimports found4scripts referencing
+lostbuild_aligned_moseq_phot. Original helper recovered from pre-scaffolding Git
+source into historical libraryowner; original/restoredfunctionASTs match exactly.
+Siximports migrated;8focused independent/historical checks pass. Full lab/clean
+and package gates are RUNNING; changes not yet checkpointed. Check primary
+outputs/consolidation_20261021/PROGRESS.md and photometry_* logs before resuming.
+Do not discard this new worktree or assume previousb146e21 is the newest slice.
+Main/remote/empirical artifacts unchanged; credentials question remains pending.
+
 ## Consolidation checkpoint b146e21 ready to resume (2026-10-21)
 
 Implementation lives in .worktrees/legacy-consumers on codex/legacy-consumers,
