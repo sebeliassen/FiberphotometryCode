@@ -1,0 +1,196 @@
+{
+  "date": "2026-10-22",
+  "scope": "Three independently reviewed source-policy recovery milestones; whole legacy retirement remains in progress.",
+  "baseline_main": "a8ec522d45206713153bb2dcfe272d950f671e40",
+  "latest_main": "ff141959003e502ef6bd52d1b644854d8023c4c7",
+  "merges": [
+    {
+      "pr": 10,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/10",
+      "head": "45fce6078c8f0cb7dcc7eb56a28e995545a2139f",
+      "previous_main": "a8ec522d45206713153bb2dcfe272d950f671e40",
+      "head_checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T21:45:03Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39680915104/job/119502846172",
+          "name": "functional",
+          "startedAt": "2026-10-21T21:42:17Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T21:44:47Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39680908747/job/119502824857",
+          "name": "functional",
+          "startedAt": "2026-10-21T21:42:14Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "status": "Merged and actual tree verified",
+      "merge_commit": "3c2341e3988c1ae5db3b0f652ae1425c59531191",
+      "tree": "0240fc51aa12d11bbb856d95dd1f485bb1f4c623",
+      "normal_merge_parents": [
+        "a8ec522d45206713153bb2dcfe272d950f671e40",
+        "45fce6078c8f0cb7dcc7eb56a28e995545a2139f"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39681497282,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39681497282",
+          "head_sha": "3c2341e3988c1ae5db3b0f652ae1425c59531191",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "pr": 11,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/11",
+      "head": "417851691343d004a74fd1baee0ddcb2e08d1d3d",
+      "previous_main": "3c2341e3988c1ae5db3b0f652ae1425c59531191",
+      "head_checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T21:52:31Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39681994353/job/119506517629",
+          "name": "functional",
+          "startedAt": "2026-10-21T21:50:39Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T21:53:23Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39681986162/job/119506487704",
+          "name": "functional",
+          "startedAt": "2026-10-21T21:50:35Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "status": "Merged and actual tree verified",
+      "merge_commit": "eb779c7508b77d29d58b8fd48eefa56187b1af5d",
+      "tree": "f54377cd9bfb169372f2ffe9e2d8c18f7c453e03",
+      "normal_merge_parents": [
+        "3c2341e3988c1ae5db3b0f652ae1425c59531191",
+        "417851691343d004a74fd1baee0ddcb2e08d1d3d"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39682487433,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39682487433",
+          "head_sha": "eb779c7508b77d29d58b8fd48eefa56187b1af5d",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "pr": 12,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/12",
+      "head": "b8ca9de1ec1dccf88ffef03d492d07a14ad755b5",
+      "previous_main": "eb779c7508b77d29d58b8fd48eefa56187b1af5d",
+      "head_checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T22:02:57Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39683258893/job/119510821567",
+          "name": "functional",
+          "startedAt": "2026-10-21T22:00:36Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T22:02:13Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39683252006/job/119510798422",
+          "name": "functional",
+          "startedAt": "2026-10-21T22:00:33Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "status": "Merged and actual tree verified",
+      "merge_commit": "ff141959003e502ef6bd52d1b644854d8023c4c7",
+      "tree": "c3e5e5d6806de3c8031e895a0d81208c210a2beb",
+      "normal_merge_parents": [
+        "eb779c7508b77d29d58b8fd48eefa56187b1af5d",
+        "b8ca9de1ec1dccf88ffef03d492d07a14ad755b5"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39683673887,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39683673887",
+          "head_sha": "ff141959003e502ef6bd52d1b644854d8023c4c7",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "cpu": {
+    "lab_passed": 1055,
+    "isolated_passed": 1055,
+    "hosted_passed": 1054,
+    "hosted_skipped": 1,
+    "warnings_each": 6,
+    "added_functional_cases_since_a8ec522": 48,
+    "hosted_skip": "ffmpeg-dependent synthetic video encoding; passed in both local environments."
+  },
+  "architecture": "202modules;PASS",
+  "lint_maps_wheel_dependencies": "PASS; no lint inventory refresh or shared lab upgrade",
+  "source_preservation": {
+    "baseline_main": "a8ec522d45206713153bb2dcfe272d950f671e40",
+    "candidate": "b8ca9de1ec1dccf88ffef03d492d07a14ad755b5",
+    "shared_library_and_lint_inventory_byte_identical": true,
+    "all_preexisting_tests_and_goldens_unchanged": true,
+    "test_tree_changes_only": [
+      "tests/.folder-map.md",
+      "tests/unit/.folder-map.md",
+      "tests/unit/test_absolute_vfi_support.py",
+      "tests/unit/test_jonathan_builder_policy.py",
+      "tests/unit/test_project_tracking_policies.py"
+    ],
+    "added_functional_cases": 48,
+    "changed_Karen_python_only": [
+      "studies/karen_pff_vs_monomer/analysis/tracking.py",
+      "studies/karen_pff_vs_monomer/session_policy/config.py"
+    ],
+    "all_Karen_tracking_function_asts_unchanged": true,
+    "Karen_policy_provenance": "Exact archived272-byte policy; complete AST/class proof in project_tracking_policies checkpoint.",
+    "other_Karen_python_including_seqnmf_unchanged": true,
+    "no_model_recording_payloads_added_or_modified": true,
+    "scope": "Source provenance and synthetic functional evidence; no empirical build/inference or universal historical artifact validation.",
+    "integrated_main": "ff141959003e502ef6bd52d1b644854d8023c4c7",
+    "actual_main_tree_equals_tested_candidate": true
+  },
+  "checkpoint_sha256": {
+    "absolute_vfi_support_20261021.json": "f31e1c14e6780be7f5904d8a8abebc04a55f349f1a23d76e492405b8179d3e79",
+    "project_tracking_policies_20261021.json": "ff93ace86e4222d21707de97e116d29843c3c8438f30212441e1822be234dd35",
+    "jonathan_builder_policy_20261021.json": "0fcb57499f44e4bcbe26d8c49599bb951aee4c83df14dfdf6511d6807c410024"
+  },
+  "remaining": [
+    "Unified builder explicit project mapping and selected config propagation across cached stage aliases and process workers; old dynamic imports/global mutation remain. See unified_builder_audit_20261021.md.",
+    "AMPH enrichment is distinct from IFdN and retains a historical clock heuristic; original owner/policy review is separate. Flipped source provenance and package-level lazy build API remain unresolved.",
+    "Full exporter driver paths/import-time backends/global setup and extraction/write policies, PPE output selection and direct studies.behavior symlink identities remain separate routes.",
+    "Named trusted artifact-family reconstruction, physical script coverage, external archive links and ignored empirical/browser-feedback backup coverage still gate physical legacy root removal."
+  ],
+  "next_audit": {
+    "path": "outputs/consolidation_20261021/unified_builder_audit_20261021.md",
+    "sha256": "612648b8fbfe1c3390b96bd3d13383fac67fbe7957d15cf8d0356d2164602836"
+  },
+  "recovery": "After this clean primary source checkpoint run outputs/consolidation_20261021/save_policy_recovery_checkpoint.py; result policy_recovery_bundle_restore_check.json. Source/history only; ignored models/recordings/media/external links/browser feedback not backed up by Git.",
+  "empirical_execution": "None. Test-created fixtures and controlled workflow/backend stubs only."
+}

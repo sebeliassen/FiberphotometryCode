@@ -1,3 +1,40 @@
+## Source-policy recovery merged and CI verified; retirement continues (2026-10-22)
+
+Local/remote main isff141959003e502ef6bd52d1b644854d8023c4c7. PR10(copy-only VFI),
+PR11(original Karen/baseline policies) and PR12(direct IFdN builder/default-source
+inputs) are merged normally. All exact-head and actual-main workflows pass; every
+actual merge tree equals its tested head. Final1055CPU/6existing warnings pass in
+lab AND isolated pinned environments; hosted1054/1video skip/6warnings (video test
+passes locally).48added cases sincea8ec522. Architecture202/lint/maps/wheel and
+dependencies pass, with independent archive/Git/AST reviews. Shared library and
+pre-existing tests/goldens/lint inventory are unchanged. Karen algorithm ASTs and
+original source policies are preserved; other Karen/seqnmf Python remains unchanged.
+No empirical input/model/video content, cohort build, fit/export/render or data move.
+
+Use .worktrees/main-integration for current main; start further code in a fresh
+codex branch/worktree from fetched main. All three prepared candidates are merged;
+no new code candidate remains. Preserve original primary/delivery runtime/viewers
+and all core/pipelines/compat/archive roots and symlinks. Current exact source and
+merge proof: registry/checkpoints/policy_recovery_completed_20261022.json. Primary
+outputs/consolidation_20261021/promotion_20261021.json holds live remote state.
+Read policy_recovery_bundle_restore_check.json there for fresh initial+incremental
+source/history restore evidence; if absent, run save_policy_recovery_checkpoint.py
+before new work. Initial source snapshots/bundles remain. Git does not back up
+ignored empirical payloads, external symlink targets or browser-local feedback.
+
+NEXT: outputs/consolidation_20261021/NEXT_LEGACY_BATCH.md and
+unified_builder_audit_20261021.md describe bounded explicit project resolution and
+config propagation through existing ctx.cfg, shared stages and process workers.
+Avoid cached bare module/global policy leakage; preserve direct discovery choices.
+AMPH has distinct enrichment and a historical clock heuristic needing separate
+source/policy review; do not substitute IFdN or infer rates from index magnitude.
+Package-level lazy build-name ambiguity, direct old study aliases, full exporter/
+PPE routes, named trusted artifacts and empirical/feedback recovery remain gates
+before deleting legacy roots. The explicit IFdN leaf builder API is covered;
+fixture/source evidence is not full empirical or universal artifact acceptance.
+
+Earlier entries retain dated checkpoints; latest live/restore records govern.
+
 ## Import-boundary milestone complete; legacy retirement continues (2026-10-21)
 
 Local and remote main are a8ec522d45206713153bb2dcfe272d950f671e40. Reviewed normal
