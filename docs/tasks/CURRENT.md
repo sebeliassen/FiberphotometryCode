@@ -1,3 +1,29 @@
+## Jonathan builder source-policy candidate (2026-10-21)
+
+Continue in .worktrees/jonathan-builder-policy on codex/jonathan-builder-policy,
+based on integrated main a8ec522. The direct builder and historical project-enrich
+leaf proxy now use studies.oft_baseline.ifdn_policy.enrich. Seven exact source-policy
+files from pinned969c893 are copied beside that physical owner; all historical
+originals remain. Builder stage/function ASTs match the pinned source and the
+canonical enrichment implementation is byte-identical to the baseline. This
+restores the original metadata/exclusion defaults rather than substituting the
+separate monoamine schema in studies/oft_baseline/overrides.
+
+Sixteen new focused cases cover cold both-order builder/enrichment identity,
+physical proxy execution, controlled eight-stage flow and both enrichment calls,
+exact policy-file provenance, synthetic CSV precedence and inclusive manual/auto
+mask union with independent expected values. Existing nineteen Jonathan identity
+cases remain intact. All35 focused cases pass (3.52s), with focused/maintained lint
+and149-directory map synchronization passing. Results are recorded in
+registry/checkpoints/jonathan_builder_policy_20261021.json; parent integration and
+broader validation remain pending. No real cohort/build/model or artifact writes.
+
+Use `from studies.session_building.jonathan.build import build`. The package-level
+build name remains import-order-sensitive; its lazy export is unchanged. Unified
+builder project lookup/bare imports/singleton mutation, other cohort policy,
+ignored auto-mask inputs and real historical artifact reconstruction remain
+separate gates. No legacy directory, original policy file, symlink or viewer moved.
+
 ## Export utility alias candidate validated (2026-10-21)
 
 PR8 Jonathan alias repair is merged at2ab0671; confirm actual-main CI using primary

@@ -89,3 +89,20 @@ tests use a nonwriting stub and do not execute a model. Full driver migration,
 missing legacy_support, named real artifact reconstruction and backup/feedback
 recovery still block retirement. No legacy root or empirical artifact was moved.
 See registry/checkpoints/export_utility_aliases_20261021.json.
+
+## Jonathan direct builder and source-policy boundary
+
+The direct builder and historical enrichment proxy target the physical IFdN owner.
+Seven original source-policy override files from pinned969c893 now accompany it,
+with all legacy copies retained. Source hashes and AST evidence preserve the exact
+historical metadata priority, eight-stage order and numerical implementation.
+Sixteen new focused synthetic/cold tests cover leaf identity, physical proxies,
+stage flow, discovery precedence and inclusive manual/automatic mask union;
+broader validation remains pending parent integration. See
+registry/checkpoints/jonathan_builder_policy_20261021.json.
+
+Use `from studies.session_building.jonathan.build import build`; package-level
+build-name ambiguity remains. Unified project discovery, bare imports and global
+config replacement, other cohort policy selection, ignored mask files and named
+real-artifact recovery remain separate gates. No legacy root or empirical input
+was removed, and no complete cohort build was executed.

@@ -145,3 +145,19 @@ is absent. This behavior was preserved and tested only with a nonwriting stub,
 not executed against a model. Real VFI reconstruction, missing legacy_support,
 old driver inputs/outputs, import-time backends and empirical recovery remain
 separate gates. No full exporter, real pickle/model, fit, render or data move.
+
+## Jonathan direct builder and IFdN source-policy candidate
+
+The direct builder now imports the exact physical IFdN enrichment owner, and its
+historical project-enrich proxy and SHIMS row agree. Seven historical source-policy
+files are copied byte-for-byte from pinned969c893 into the canonical policy owner;
+legacy originals remain. The distinct monoamine overrides are not substituted.
+All builder nonimport ASTs, its eight-stage order and both enrichment boundaries
+are preserved. Enrichment source bytes match the baseline. Sixteen new focused
+cases supplement the existing nineteen identity cases, using synthetic CSV/NPZ
+fixtures and controlled stages only. See the builder-policy checkpoint for hashes,
+checks and pending broad integration. No empirical build or input decoding occurred.
+
+The package-level build-name ambiguity and unified dynamic project/configuration
+route remain separate API/input gates. Use the explicit canonical build leaf;
+retaining source policy does not validate other cohorts or historical artifacts.
