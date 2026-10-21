@@ -24,6 +24,68 @@ builder project lookup/bare imports/singleton mutation, other cohort policy,
 ignored auto-mask inputs and real historical artifact reconstruction remain
 separate gates. No legacy directory, original policy file, symlink or viewer moved.
 
+
+## Original project tracking policies restored and validated (2026-10-21)
+
+Candidate .worktrees/project-tracking-policies / codex/project-tracking-policies
+starts at maina8ec522. Karen session_policy/config.py is restored from the exact
+272-byte archived original, whose SHA matches the historical source inventory.
+Its frame range remains(0,999999) and its independent JCFG uses standard defaults.
+Baseline config is restored at studies/oft_baseline/config.py from pinned Git
+source195c169 and the matching archive member: range(50000,250000), optional
+video tokens and original Arena fallback. Both policies use the canonical
+JonathanConfig class; full policy ASTs match their originals after class-import
+normalization. The archive's complete JonathanConfig class AST matches current.
+
+Two tracking callers now import their explicit project policy and canonical
+filename parser. Obsolete sys.path injection and bare config imports are removed.
+All four discovery/helper function ASTs match both archived originals and base
+main.19focused synthetic tests pass: independent policies, four Arena mappings,
+explicit-token precedence, empty-animal filtering, timestamp/camera grouping,
+matching H5 references, and cold imports with foreign cached or current-directory
+config poisoning in both project import orders. Tests discover empty files only;
+no empirical contents, pickle/model, cohort fit, export or rendering was used.
+Maintained lint passes3067reviewed diagnostics/no new debt,12historical diagnostics
+resolved; its inventory is unchanged. See
+registry/checkpoints/project_tracking_policies_20261021.json for exact provenance.
+
+This revision incorporates actual PR10 main3c2341e through a normal merge,
+retaining both additive source/test sets and task records. Final1039CPU tests pass
+in lab AND isolated pinned environments (6existing warnings each); architecture202,
+lint/maps/wheel/dependencies pass. Independent review recomputed all source and
+AST proofs with no findings. Additive restoration records preserve the historical
+quarantine ledger. Source/checkpoint evidence pins this validated revision. Unified builder dynamic-import/global-policy mutation,
+direct old study symlink identity, named real artifact reconstruction and ignored
+empirical/browser-feedback recovery remain separate gates. Existing legacy roots,
+original primary/delivery checkouts and viewers remain intact. Exact remote state
+is owned by primary outputs/consolidation_20261021/promotion_20261021.json.
+
+
+## Copy-only absolute-frame support restored (2026-10-21)
+
+This source revision starts from the PR7–PR9 milestone at maina8ec522. The missing
+migrate_legacy_vfi helper is recovered from pinned969c893 under its canonical
+session-export utility owner. Its latest historical implementation copies arrays;
+it never infers/rescales rates or coerces dtype. Corrected documentation replaces
+stale heuristic claims; the executable function AST is identical after docstring
+removal. Two complete driver ASTs differ only in their explicit helper import.
+A physical old leaf proxy, shim target and additive restoration ledger agree.
+
+Full1020CPU tests pass in lab AND isolated pinned environments (6existing warnings
+each);13 focused cases preserve values/dtypes/independent storage even with short
+trimmed VFIs and scale arguments, both import orders and cold physical execution.
+CPU doctor/architecture202/lint/maps/wheel/dependencies pass. Exact source/check
+hashes and limits: registry/checkpoints/absolute_vfi_support_20261021.json.
+No empirical artifact/model was loaded and no exporter was run. Their old paths,
+backend/global setup and result-write semantics remain separate work; the helper
+name/log does not establish coordinate validity or actual legacy conversion.
+
+Project tracking configurations and Jonathan builder/default overrides are separate
+candidates being prepared from independently preserved source. Their evidence
+must not be inferred from this fixture pass. Legacy roots/symlinks/data remain.
+The primary checkout's CURRENT and outputs/consolidation_20261021/promotion_20261021.json
+record the live sequential review/merge state; preserve primary/delivery viewers.
+
 ## Export utility alias candidate validated (2026-10-21)
 
 PR8 Jonathan alias repair is merged at2ab0671; confirm actual-main CI using primary

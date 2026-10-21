@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-21",
+  "base_commit": "a8ec522d45206713153bb2dcfe272d950f671e40",
+  "scope": "Restore original project tracking configurations and explicit imports; preserve discovery algorithms.",
+  "archive": {
+    "path": "/home/fsp585/Desktop/FiberphotometryCode/archive/packages/fiberphotometry_code_review.zip",
+    "sha256": "594238c9c45aec3b347c6985269aceb9d76bf4b97d071cd1024f0f85b7d4c9b0",
+    "karen_member_inventory_reference": "registry/ARTIFACT_INVENTORY.tsv:806",
+    "karen_original_absent_from_pre_shim_git_tree": true
+  },
+  "policies": [
+    {
+      "project": "karen",
+      "original_member": "monoamine_interactions/projects/karen_project/config.py",
+      "original_bytes": 272,
+      "original_sha256": "1dd7c597c449f65598c7dd4223484e6c6061492baeb77f8655b30bdab2f4bf63",
+      "restored_path": "studies/karen_pff_vs_monomer/session_policy/config.py",
+      "restored_sha256": "863a5b74bdede91f9dc78245beeb642746a4cf17341ddb6457cc0eff8c6730ab",
+      "normalized_full_ast_sha256": "a4d354eddc5c97c7cafaa0bd3e539b1735da1677b181b40db9f0f2fcdbd313c1",
+      "complete_policy_ast_equal_after_only_class_import_normalization": true,
+      "formatting_only_in_baseline": false
+    },
+    {
+      "project": "baseline",
+      "original_member": "monoamine_interactions/projects/jonathan_oft_baseline/config.py",
+      "original_bytes": 2137,
+      "original_sha256": "2cef4d31e75925ec07849f08e6f0b62cae7c733ccc36de7cab54c36850dcb233",
+      "restored_path": "studies/oft_baseline/config.py",
+      "restored_sha256": "6ecc68474a262903ec1290f7b4ff10562d6579b777df97fdf39f996acbd7d47b",
+      "normalized_full_ast_sha256": "3a8432b7085327de1282578920bbe50c33da4be637a46a2e74375c627bfc9c69",
+      "complete_policy_ast_equal_after_only_class_import_normalization": true,
+      "formatting_only_in_baseline": true
+    }
+  ],
+  "historical_baseline_commit": "195c169c7759231cccbf0cc1167af45c2d6855d6",
+  "historical_baseline_path": "monoamine_interactions/projects/jonathan_oft_baseline/config.py",
+  "historical_baseline_archive_and_juvenile_bytes_equal": true,
+  "baseline_and_current_juvenile_normalized_policy_ast_equal": true,
+  "archived_JonathanConfig_class_ast_equals_current": true,
+  "JonathanConfig_class_ast_sha256": "504e580748f325bb6dbc07ee14727235cf489f5913f47ad108b7e90165785fc7",
+  "tracking": [
+    {
+      "original_member": "monoamine_interactions/projects/karen_project/tracking.py",
+      "original_sha256": "d7ef580fa3da34296cd9de6bc30db2e568722a35ee7b3d463dc27b0eb2095818",
+      "path": "studies/karen_pff_vs_monomer/analysis/tracking.py",
+      "candidate_sha256": "0681377b79862676bd52cb7e50435700ed197a2541fb980db644fd48bbab966c",
+      "archive_and_base_function_asts_equal": true,
+      "function_ast_sha256": {
+        "parse_ids_from_filename": "e18b80ca4475a152e62a833a3bb537a806a8af088bc8105a27dd193aff9c21a7",
+        "discover_sessions_hybrid": "d3ebe2ab501c1399c4749f90d813e78928109c96fc35aebd39a9a18d6e78127c"
+      }
+    },
+    {
+      "original_member": "monoamine_interactions/steps/tracking.py",
+      "original_sha256": "9b7fd4b2ffa910c77857fe58d2e1f3b801937e4357c2f533ebb4580b76ba4242",
+      "path": "studies/monoamine_interactions/steps/tracking.py",
+      "candidate_sha256": "80587b3a6a38aa693d0595b9ddd64d938cd06153b92203b58bf89b10690da731",
+      "archive_and_base_function_asts_equal": true,
+      "function_ast_sha256": {
+        "parse_ids_from_filename": "05742bd9f6b10792a8ced98ddf7beca4aa6b41388911bc2cda27c255f574665e",
+        "discover_sessions_hybrid": "8d4ac5dedfe39fe8b65b09135e7633795e0338796067d96dea6ad236dd7abee7"
+      }
+    }
+  ],
+  "validation": {
+    "interpreter": "3.10.19",
+    "focused_command": "PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 python -B -m pytest -q -p no:cacheprovider tests/unit/test_project_tracking_policies.py",
+    "focused_passed": 19,
+    "maintained_lint": "PASS:3067 reviewed diagnostics,no new debt,12 historical diagnostics resolved; inventory unchanged",
+    "test_source_sha256": "8276afba78a59300bee9edf429afb250fa2d5e89d1dfd45729891ca77c3251b3",
+    "full_functional_suite": "PASS in lab and isolated pinned CPU environment;1039 passed/6existing warnings each.",
+    "folder_maps_check": "PASS:149 directories synchronized after regeneration.",
+    "git_diff_check": "PASS",
+    "lab_python": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "isolated_python": "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "numerical_threads": 2,
+    "architecture": "PASS;202modules",
+    "installed_wheel_dependencies": "PASS in isolated environment;shared lab unchanged",
+    "evidence_sha256": {
+      "tracking_candidate_checks.json": "481d6da666a9fcd10637c064e5c2bd2ca37d3ce6eb8109a4fc058b685c9dcc81",
+      "tracking_candidate_test-cpu.log": "322c01b64eda42aa2687709c760c9dbe97f0cb9fb924a3b7542dda0372e6e06a",
+      "tracking_clean_cpu.json": "9a00475d13f1b829de3c7e986b7353682fe1384ef1876ccbcdb222fa8d4ba8ba",
+      "tracking_clean_functional.log": "25459f82590b5d0ea6bfcb1c0add0afe71d850881e1ead5962bb8adf166d5a1e"
+    }
+  },
+  "limits": [
+    "Only test-created empty video/H5 files were discovered; no empirical content or pickle/model was loaded.",
+    "Unified builder bare module reloads, global JCFG mutation and complete empirical execution remain separate gates.",
+    "Direct old studies.behavior symlink module identity and named trusted artifact reconstruction remain separate gates.",
+    "No fitting, export, rendering, data move, physical legacy removal, Git publication or main merge was performed in this slice.",
+    "Baseline and juvenile retain separate policy owners and independent instances despite identical historical values."
+  ],
+  "integration_main": "3c2341e3988c1ae5db3b0f652ae1425c59531191",
+  "integration_resolution": "Normal merge retained both task records and both additive test files; only CURRENT and derived unit map conflicted; regenerated map.",
+  "independent_review": "builder_provenance independently recomputed archive/member/Git/candidate hashes, complete policy and JonathanConfig class ASTs, all4 function ASTs and test hash; no actionable findings.",
+  "candidate_source_sha256": {
+    "studies/karen_pff_vs_monomer/session_policy/config.py": "863a5b74bdede91f9dc78245beeb642746a4cf17341ddb6457cc0eff8c6730ab",
+    "studies/oft_baseline/config.py": "6ecc68474a262903ec1290f7b4ff10562d6579b777df97fdf39f996acbd7d47b",
+    "studies/karen_pff_vs_monomer/analysis/tracking.py": "0681377b79862676bd52cb7e50435700ed197a2541fb980db644fd48bbab966c",
+    "studies/monoamine_interactions/steps/tracking.py": "80587b3a6a38aa693d0595b9ddd64d938cd06153b92203b58bf89b10690da731",
+    "tests/unit/test_project_tracking_policies.py": "8276afba78a59300bee9edf429afb250fa2d5e89d1dfd45729891ca77c3251b3",
+    "registry/MOVES.tsv": "c767b4979d1a497597757f76df48473376afb326d0b54198833c29e5283af254"
+  }
+}

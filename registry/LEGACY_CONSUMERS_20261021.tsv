@@ -1752,6 +1752,8 @@ compat/syllable_generation/analysis/ulrik_kinematics/run_analysis.py	12	literal_
 compat/syllable_generation/analysis/utils/__init__.py	7	literal_candidate	syllable_generation.analysis.utils	compatibility_adapter
 compat/syllable_generation/analysis/utils/frame_map_placeholder.py	2	literal_candidate	syllable_generation/analysis/utils/frame_map_placeholder.py	compatibility_adapter
 compat/syllable_generation/analysis/utils/frame_map_placeholder.py	12	literal_candidate	syllable_generation.analysis.utils.frame_map_placeholder	compatibility_adapter
+compat/syllable_generation/analysis/utils/legacy_support.py	2	literal_candidate	syllable_generation/analysis/utils/legacy_support.py	compatibility_adapter
+compat/syllable_generation/analysis/utils/legacy_support.py	12	literal_candidate	syllable_generation.analysis.utils.legacy_support	compatibility_adapter
 compat/syllable_generation/analysis/utils/sampling.py	2	literal_candidate	syllable_generation/analysis/utils/sampling.py	compatibility_adapter
 compat/syllable_generation/analysis/utils/sampling.py	12	literal_candidate	syllable_generation.analysis.utils.sampling	compatibility_adapter
 compat/syllable_generation/analysis/utils/syll_results.py	2	literal_candidate	syllable_generation/analysis/utils/syll_results.py	compatibility_adapter
@@ -2620,11 +2622,12 @@ docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	98	literal_candidate	pipeline
 docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	132	literal_candidate	archive/compat	documentation_or_history
 docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	132	literal_candidate	archive/legacy.	documentation_or_history
 docs/tasks/CONSOLIDATION_PROGRESS_20261021.md	73	literal_candidate	core/pipelines/compat/archive	documentation_or_history
-docs/tasks/CURRENT.md	66	literal_candidate	core/pipelines/compat/archive.	documentation_or_history
-docs/tasks/CURRENT.md	179	literal_candidate	core/pipelines/compat/archive	documentation_or_history
-docs/tasks/CURRENT.md	187	literal_candidate	pipelines/core	documentation_or_history
-docs/tasks/CURRENT.md	1098	literal_candidate	syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/	documentation_or_history
-docs/tasks/CURRENT.md	2080	literal_candidate	syllable_generation/analysis/sequence_viz/run12_human_labels.csv	documentation_or_history
+docs/tasks/CONSOLIDATION_PROGRESS_20261021.md	166	literal_candidate	archive/Git/AST	documentation_or_history
+docs/tasks/CURRENT.md	127	literal_candidate	core/pipelines/compat/archive.	documentation_or_history
+docs/tasks/CURRENT.md	240	literal_candidate	core/pipelines/compat/archive	documentation_or_history
+docs/tasks/CURRENT.md	248	literal_candidate	pipelines/core	documentation_or_history
+docs/tasks/CURRENT.md	1159	literal_candidate	syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/	documentation_or_history
+docs/tasks/CURRENT.md	2141	literal_candidate	syllable_generation/analysis/sequence_viz/run12_human_labels.csv	documentation_or_history
 ops/repo/build_triage.py	9	literal_candidate	archive/legacy/	repository_tool
 ops/repo/build_triage.py	92	literal_candidate	archive/legacy/	repository_tool
 ops/repo/build_triage.py	95	literal_candidate	syllable_generation/syllabizers/keypoint_moseq_syll/...	repository_tool
@@ -3373,8 +3376,6 @@ studies/karen_pff_vs_monomer/analysis/render_publication_figures.py	29	literal_c
 studies/karen_pff_vs_monomer/analysis/run_karen_pff_vs_monomer_master_pipeline.py	37	literal_candidate	syllable_generation/analysis/karen_pff_vs_monomer_longitudinal_master_study	study_or_active_source
 studies/karen_pff_vs_monomer/analysis/run_karen_pff_vs_monomer_master_pipeline.py	38	literal_candidate	syllable_generation/multiview_top_bot_experiments/sessions_karen_project_tandem_cohort_static_21kp_seed101.pkl	study_or_active_source
 studies/karen_pff_vs_monomer/analysis/run_karen_pff_vs_monomer_master_pipeline.py	39	literal_candidate	syllable_generation/metadata/karen_static_21kp_v2_syllable_labels.csv	study_or_active_source
-studies/karen_pff_vs_monomer/analysis/tracking.py	6	import	syllable_generation.loaders.jonathan.utils.files	study_or_active_source
-studies/karen_pff_vs_monomer/analysis/tracking.py	6	literal_candidate	syllable_generation.loaders.jonathan.utils.files	study_or_active_source
 studies/kinematics_ulrik/lib/loader.py	7	literal_candidate	syllable_generation.analysis.replications.panel_1z.lib.loader	study_or_active_source
 studies/kinematics_ulrik/lib/motifs.py	39	literal_candidate	syllable_generation/analysis/ulrik_kinematics/manual_labels.csv	study_or_active_source
 studies/kinematics_ulrik/lib/motifs.py	40	literal_candidate	syllable_generation/analysis/ulrik_kinematics/manual_labels.csv	study_or_active_source
@@ -3734,8 +3735,6 @@ studies/model_inspection/server.py	43	literal_candidate	syllable_generation/syll
 studies/monoamine_interactions/scripts/compare_pickles.py	6	literal_candidate	syllable_generation/data/jonathan_ifdn_sessions_dirty.pkl	study_or_active_source
 studies/monoamine_interactions/scripts/verify_exclusions.py	12	import	syllable_generation.loaders.jonathan.loader	study_or_active_source
 studies/monoamine_interactions/scripts/verify_exclusions.py	12	literal_candidate	syllable_generation.loaders.jonathan.loader	study_or_active_source
-studies/monoamine_interactions/steps/tracking.py	12	import	syllable_generation.loaders.jonathan.utils.files	study_or_active_source
-studies/monoamine_interactions/steps/tracking.py	12	literal_candidate	syllable_generation.loaders.jonathan.utils.files	study_or_active_source
 studies/multimodal_movies/composer.py	2	literal_candidate	syllable_generation/videogen/composer.py	study_or_active_source
 studies/multimodal_movies/config.py	2	literal_candidate	syllable_generation/videogen/config.py	study_or_active_source
 studies/multimodal_movies/grids/photometry.py	2	literal_candidate	syllable_generation/videogen/grids/photometry.py	study_or_active_source
@@ -4605,8 +4604,6 @@ studies/session_building/jonathan/steps/fiberphotometry.py	1	literal_candidate	s
 studies/session_building/jonathan/steps/fiberphotometry.py	2	literal_candidate	fiberphotometry.py	study_or_active_source
 studies/session_model_exports/attach_double_flip_kpms.py	28	import	syllable_generation.analysis.attach_kpms	study_or_active_source
 studies/session_model_exports/attach_double_flip_kpms.py	28	literal_candidate	syllable_generation.analysis.attach_kpms	study_or_active_source
-studies/session_model_exports/attach_double_flip_kpms.py	30	import	syllable_generation.analysis.utils.legacy_support	study_or_active_source
-studies/session_model_exports/attach_double_flip_kpms.py	30	literal_candidate	syllable_generation.analysis.utils.legacy_support	study_or_active_source
 studies/session_model_exports/attach_double_flip_kpms.py	31	import	syllable_generation.analysis.utils.sampling	study_or_active_source
 studies/session_model_exports/attach_double_flip_kpms.py	31	literal_candidate	syllable_generation.analysis.utils.sampling	study_or_active_source
 studies/session_model_exports/attach_double_flip_kpms.py	34	import	syllable_generation.analysis.utils.syll_results	study_or_active_source
@@ -4617,8 +4614,6 @@ studies/session_model_exports/attach_kpms.py	31	import	syllable_generation.analy
 studies/session_model_exports/attach_kpms.py	31	literal_candidate	syllable_generation.analysis.utils.syll_results	study_or_active_source
 studies/session_model_exports/attach_syllables_kpms.py	37	import	syllable_generation.analysis.attach_kpms	study_or_active_source
 studies/session_model_exports/attach_syllables_kpms.py	37	literal_candidate	syllable_generation.analysis.attach_kpms	study_or_active_source
-studies/session_model_exports/attach_syllables_kpms.py	39	import	syllable_generation.analysis.utils.legacy_support	study_or_active_source
-studies/session_model_exports/attach_syllables_kpms.py	39	literal_candidate	syllable_generation.analysis.utils.legacy_support	study_or_active_source
 studies/session_model_exports/attach_syllables_kpms.py	40	import	syllable_generation.analysis.utils.sampling	study_or_active_source
 studies/session_model_exports/attach_syllables_kpms.py	40	literal_candidate	syllable_generation.analysis.utils.sampling	study_or_active_source
 studies/session_model_exports/attach_syllables_kpms.py	44	import	syllable_generation.analysis.utils.syll_results	study_or_active_source
@@ -4674,6 +4669,9 @@ tests/regression/test_wired_modules.py	81	literal_candidate	syllable_generation.
 tests/regression/test_wired_modules.py	94	import	syllable_generation.syllabizers.keypoint_moseq_syll.utils.batch_init	test
 tests/regression/test_wired_modules.py	94	literal_candidate	syllable_generation.syllabizers.keypoint_moseq_syll.utils.batch_init	test
 tests/regression/test_wired_modules.py	101	literal_candidate	core.eval_artifacts	test
+tests/unit/test_absolute_vfi_support.py	15	literal_candidate	syllable_generation.analysis.utils.legacy_support	test
+tests/unit/test_absolute_vfi_support.py	86	literal_candidate	syllable_generation.analysis.utils	test
+tests/unit/test_absolute_vfi_support.py	93	literal_candidate	syllable_generation/analysis/utils/legacy_support.py	test
 tests/unit/test_aligned_photometry.py	77	literal_candidate	syllable_generation.analysis.replications.datta_utils	test
 tests/unit/test_backup_snapshot.py	244	literal_candidate	core.hooksPath	test
 tests/unit/test_behavior_reuse.py	77	literal_candidate	syllable_generation/analysis/ulrik_kinematics	test
