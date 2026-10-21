@@ -1,3 +1,32 @@
+## Deep-research loading boundary repaired (2026-10-21)
+
+Continue consolidation from integrated main. This batch replaces obsolete bare
+loader/processing imports with explicit study owners, resolves discovery through
+FP_DATA_ROOT (a mirror containing data/), and forwards an optional selected
+trusted pkl_path. Diagnostic imports no longer load cohorts or configure global
+logging; explicit execution retains their original reporting loops. Three legacy
+leaf proxies retain canonical module/function identity in both import orders.
+The physical compatibility parent remains structural, rather than identity-aliased.
+
+All972 CPU tests pass in both the lab and isolated pinned environments, with six
+existing warnings each;14 focused cases cover selection, ordering, cold imports,
+metadata/exclusions and physical diagnostic execution. Architecture202/lint/maps,
+installed-wheel and dependency checks pass. Numerical processing is byte-identical;
+AST evidence preserves the loader policies, diagnostic loops and PPE functions.
+See registry/checkpoints/deep_research_loading_20261021.json for exact evidence.
+No empirical inputs were opened and no cohort analysis was executed.
+
+Next: tracking's bare config/obsolete paths and Jonathan symlink identity, then
+export utility aliases/missing implementations. PPE still has a historical fixed
+output path and optional plotting dependencies; this import repair does not prove
+its complete workflow. Named trusted artifact reconstruction, physical entry-point
+coverage and empirical/feedback backup verification remain gates before removing
+core/pipelines/compat/archive. Preserve the original primary/delivery checkouts and
+viewers. Woody's exact heads, PR status and restore records live in primary
+outputs/consolidation_20261021/promotion_20261021.json and PROGRESS.md.
+
+Earlier entries below retain their dated execution and scientific evidence.
+
 ## Main integration and next legacy migration (2026-10-21)
 
 The preserved modular foundation, Karen seqNMF delivery, CLI/statistics consumer

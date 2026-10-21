@@ -1,16 +1,10 @@
 import argparse
 import os
-import sys
 
 import numpy as np
 import pandas as pd
 
-# Add repo root to path
-REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode"
-if REPO_ROOT not in sys.path:
-    sys.path.append(REPO_ROOT)
-
-from syllable_generation.analysis.deep_research_experiments.utils.loaders import load_sessions
+from studies.deep_research_experiments.utils.loaders import load_sessions
 
 
 def get_dls_signal_col(session):
@@ -389,7 +383,7 @@ def run_analysis(test_mode=False, use_history=False, use_kinematics=False, use_t
 
         # Plotting
         try:
-            from syllable_generation.analysis.deep_research_experiments.action_prediction_error.lib import plotting
+            from studies.deep_research_experiments.action_prediction_error.lib import plotting
 
             # 1. Plot Raw Metric (Variance or Mean Abs Slope)
             ylabel_raw = "Mean Absolute Slope (dF/F/s)" if metric == 'mean' else "Total Slope Variance"

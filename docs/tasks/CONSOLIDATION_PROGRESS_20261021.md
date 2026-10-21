@@ -2,8 +2,8 @@
 
 ## Current source and Git layout
 
-The original four-PR integration stack is merged into main. This revision adds the
-next three checkpoint import migrations and current handoff notes. New work starts
+The foundation and dependent migrations are merged into main through PRs #2–#6.
+This revision repairs the next deep-research loading boundary. New work starts
 from current main, with one main-based branch/worktree per coherent change. On
 Woody, .worktrees/main-integration verifies main without switching the preserved
 primary modular or Karen delivery checkouts and their running review viewers.
@@ -15,6 +15,7 @@ Original research branches and source checkpoints remain recoverable.
 | [#3](https://github.com/sebeliassen/FiberphotometryCode/pull/3) | `ecb9f67` | `41ec464` | `78e2dfd` |
 | [#4](https://github.com/sebeliassen/FiberphotometryCode/pull/4) | `c053117` | `ecb9f67` | `17d1381` |
 | [#5](https://github.com/sebeliassen/FiberphotometryCode/pull/5) | `1ceb47b` | `c053117` | `7399ad6` |
+| [#6](https://github.com/sebeliassen/FiberphotometryCode/pull/6) | `50a722c` | `1ceb47b` | `0c73ed3` |
 
 Every merge has two preserved parents and a tree identical to its passing head.
 The next candidate included current main before its checks. GitHub automatically
@@ -72,8 +73,9 @@ prove the absence of external callers or universal pickle compatibility.
 
 Next capabilities to review:
 
-1. Deep-research loaders: obsolete hardcoded directory paths and bare loader/processing
-   imports; diagnostic modules can load cohorts during import.
+1. Deep-research loading is repaired in this candidate: explicit study imports,
+   data-mirror discovery, optional selected pickle, guarded diagnostics and leaf
+   identity. Full PPE execution still needs explicit outputs and plotting setup.
 2. Karen/monoamine tracking: bare config and obsolete paths; Jonathan parser/config
    aliases require module/class identity checks across the directory symlinks.
 3. Session export utilities: reconcile shim targets and SHIMS.tsv, missing
@@ -84,3 +86,21 @@ Next capabilities to review:
 The code integration milestone is complete; the whole legacy retirement project
 is still in progress. Do not interpret a green CPU suite as authority to delete
 legacy roots, load arbitrary pickles or launch empirical maintenance workloads.
+
+## Deep-research loader batch
+
+The source boundary now uses studies.replications_datta.panel_1z.lib explicitly
+and resolve_data_path("data"). It retains historical discovery priority/fallback,
+metadata normalization, exclusions, enrichment, optional1Hz filtering and the
+five-minute AMPH delay. Optional pkl_path selects a trusted input without fallback
+for a missing explicit file. Importing diagnostics performs no cohort loading or
+root logging configuration; their explicit reporting loops are unchanged. Four
+SHIMS.tsv rows match the physical parent bridge and three canonical leaf proxies.
+
+Final lab/isolated CPU suites:972 passed,6 existing warnings each. Fourteen
+focused cases include both import orders, blocked backend/bare imports, outside-
+checkout mirror selection with synthetic trusted pickles, independent expected
+metadata/exclusions, controlled physical runpy diagnostics and cold PPE help.
+Architecture202 modules, lint, maps, installed wheel and dependencies pass.
+The checkpoint JSON records source hashes, policy AST comparisons and limits.
+No real pickle/model, fit, export, render, empirical analysis or data move occurred.

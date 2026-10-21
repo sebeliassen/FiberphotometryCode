@@ -40,7 +40,22 @@ See registry/checkpoints/checkpoint_consumer_imports_20261021.json for the AST a
 
 The README documents explicit checkout activation for historical namespaces;
 those paths are not installed by the canonical wheel. Known next repairs include
-deep-research hardcoded/bare loaders, tracking's bare config/symlink identity and
+tracking's bare config/symlink identity and
 session-export utility alias/registry disagreements. Some target implementations
 are missing. Alias files and a passing CPU suite do not establish executable
 historical cohort pipelines; repair and validate those named routes separately.
+
+## Deep-research loading boundary
+
+Explicit canonical study imports replace the obsolete loader/processing search
+path. Discovery now resolves the configured data mirror; optional pkl_path selects
+a trusted file. Named/newest/generic priority, valid-session exclusions, metadata
+normalization, enrichment, optional1Hz filter and five-minute AMPH delay retain
+their historical policies. Diagnostics now load only from guarded mains. Their
+physical legacy proxies and registry targets agree, with both-order leaf identity
+and controlled runpy checks; parent-package identity is not promised.
+
+Fourteen focused cases and972 CPU passes in each of two environments use synthetic
+fixtures. They do not prove arbitrary historical pickle reconstruction or full PPE
+analysis execution; PPE output paths and optional plotting remain outstanding.
+See registry/checkpoints/deep_research_loading_20261021.json. Legacy roots remain.

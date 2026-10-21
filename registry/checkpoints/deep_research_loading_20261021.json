@@ -1,0 +1,73 @@
+{
+  "date": "2026-10-21",
+  "base_commit": "50a722c6a129f21769d3b454f632729e8f2c0cca",
+  "interpreter": "3.10.19 | packaged by conda-forge | (main, Oct 22 2025, 22:29:10) [GCC 14.3.0]",
+  "changes": [
+    "Explicit project imports and data-mirror selection; optional explicit trusted pickle forwarded.",
+    "Guarded diagnostic mains and physical leaf proxies; leaf identity retained in both orders.",
+    "Logging configuration moved from API import to diagnostic execution; wrapper log no longer implies automatic selection for explicit input."
+  ],
+  "checks": {
+    "wrapper_policy_ast_equal_after_declared_input_and_log_normalization": true,
+    "base_loader_all_selection_filter_metadata_ast_unchanged_except_data_root_assignment": true,
+    "check_project_attr.py_diagnostic_loop_ast_unchanged": true,
+    "summarize_regions.py_diagnostic_loop_ast_unchanged": true,
+    "all_three_ppe_analysis_function_asts_unchanged_except_canonical_local_import": true,
+    "entire_processing_module_byte_identical": true
+  },
+  "source_sha256": {
+    "studies/deep_research_experiments/utils/loaders.py": "4b2817568f38cdd55e02738ea55cfb231ab220e5dfc36bce1a888ce404685310",
+    "studies/replications_datta/panel_1z/lib/loader.py": "8963e5fa340ef46b1604802dcc58b4d521285717190a4d8c4d0d6b5e4c888a45",
+    "studies/replications_datta/panel_1z/lib/processing.py": "686410ec7a1acca803ea7a5d30a21e5e1c17927432f8c554fa6d1bb2f0f5a209",
+    "studies/deep_research_experiments/utils/check_project_attr.py": "2eb35cf448aa1ce50d1c7d3fb5b3b0815314130247dd49279606aa7465424dc6",
+    "studies/deep_research_experiments/utils/summarize_regions.py": "1d2b03a1445e37c57429c7a3e28c509c986551373f86615d233f443db6becbec",
+    "studies/deep_research_experiments/action_prediction_error/run_ppe_analysis.py": "19a578c6a705783cac0b3391429fffbbe92cf8ba62097f3b2204d059087763b0",
+    "tests/unit/test_deep_research_loading.py": "dc672a9ad291cd0277c085a8ee1dbad44a6a7ccdceddcd7d8223c6501f196953",
+    "registry/SHIMS.tsv": "bb1a29610468032bfe2eb1682be99f1fa1d788c01731365dd8fe996d2ba24332",
+    "compat/syllable_generation/analysis/deep_research_experiments/utils/loaders.py": "1ecdbedb3b6feb51851083bb625901b63d8629b73c1cf7ed2544062cfd2e4c7d",
+    "compat/syllable_generation/analysis/deep_research_experiments/utils/check_project_attr.py": "8fb33e2516eda8d5953ff01d70755f92a85473f545e6b997d862cdd2a382e24b",
+    "compat/syllable_generation/analysis/deep_research_experiments/utils/__init__.py": "25193c1208d1e875318d506f99349028c6818d88b6a87dcd8b5c9de07ad96a54",
+    "compat/syllable_generation/analysis/deep_research_experiments/utils/summarize_regions.py": "b9ef466642bca03f4440630dce3111c07cb52b2e103fee18401416a16a85f4cd"
+  },
+  "focused_tests": 14,
+  "limits": [
+    "Synthetic trusted fixtures only; no empirical pickle/model or cohort processing executed.",
+    "Historical generic fallback and all metadata/filter policy preserved, not independently revalidated for scientific suitability.",
+    "PPE fixed output path/optional plotting dependencies, tracking config and exporter aliases remain separate work.",
+    "Parent compatibility package remains structural so its physical leaf proxies execute; no universal parent-package or historical artifact identity claim."
+  ],
+  "validation": {
+    "scope": "Final uncommitted candidate based on base_commit; hashes pin source/tests. Subsequent documentation/inventory updates do not change tested code.",
+    "environment": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "OPENBLAS_NUM_THREADS": "2",
+      "OMP_NUM_THREADS": "2",
+      "MKL_NUM_THREADS": "2"
+    },
+    "lab_python": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "isolated_python": "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+    "focused_passed_each": 14,
+    "full_cpu_passed_each": 972,
+    "full_cpu_warnings_each": 6,
+    "architecture_modules": 202,
+    "architecture": "PASS",
+    "lint": "PASS; no baseline refresh",
+    "folder_maps": "PASS; generated maps synchronized",
+    "installed_wheel_and_dependencies": "PASS; isolated environment only; lab environment unchanged",
+    "commands": [
+      "make test-cpu PYTHON=<selected-interpreter>",
+      "make architecture PYTHON=<lab-python>",
+      "make lint PYTHON=<lab-python>",
+      "make folder-maps-check PYTHON=<lab-python>",
+      "make package-check PYTHON=<isolated-python>",
+      "<isolated-python> -B -m pip check"
+    ],
+    "evidence_files": {
+      "deep_loader_final_checks.json": "a194d0eff91c2d01dba325ceffee81d37500df7a00d1aae458f832192da2845f",
+      "deep_loader_final_test-cpu.log": "81b90a820c98f4f8be685908f58bf3fc166b01499cdd86ce8c4d684fa0be3419",
+      "deep_loader_clean_final_functional.log": "089bb1e517ace2975ce843c04f461d1db0442efc1c586333a7cef4378f9be3ac",
+      "deep_loader_candidate_checks.json": "aabbe4e74f2f9a5cbda3a603b4e82421c5af5da5f814d2795d0e25b748d3dfaa",
+      "deep_loader_clean_cpu.json": "972be229fa14e625915631099a8ac8c9fd2e7c6da52e099a6edeccc91b06816e"
+    }
+  }
+}

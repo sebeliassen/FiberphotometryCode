@@ -1,28 +1,16 @@
-import logging
-import os
-import sys
+"""Project-owned loading/enrichment policy with explicit implementation owners."""
 
-# Setup Logging
-logging.basicConfig(level=logging.INFO)
+import logging
+
+from studies.replications_datta.panel_1z.lib import loader as base_loader
+from studies.replications_datta.panel_1z.lib import processing as base_processing
+
 logger = logging.getLogger("DeepResearch_Loader")
 
-# Add Panel 1z path to sys.path
-REPO_ROOT = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation"
-PANEL_1Z_LIB = os.path.join(REPO_ROOT, "analysis", "replications", "panel_1z", "lib")
-
-if PANEL_1Z_LIB not in sys.path:
-    sys.path.append(PANEL_1Z_LIB)
-
-try:
-    import loader as base_loader
-    import processing as base_processing
-except ImportError as e:
-    logger.error(f"Failed to import base loaders from {PANEL_1Z_LIB}: {e}")
-    raise
-
-def load_sessions(project_name: str, apply_filter: bool = True):
+def load_sessions(project_name: str, apply_filter: bool = True, *, pkl_path=None):
     """
     Load sessions for 'ifdn' or 'amph' using robust panel_1z logic.
+    pkl_path selects an explicit trusted pickle; otherwise retain historical discovery.
     - Standardizes regions
     - Enriches with kinematics & metadata
     - Filters AMPH post-injection (5 min default)
@@ -30,9 +18,9 @@ def load_sessions(project_name: str, apply_filter: bool = True):
     project_name = project_name.lower()
 
     # 1. Base Load
-    # base_loader automatically finds the latest pickle
-    logger.info(f"Loading latest pickle for project: {project_name}...")
-    sessions = base_loader.load_sessions(project=project_name)
+    # Retain discovery unless a trusted pickle is selected explicitly.
+    logger.info(f"Loading sessions for project: {project_name}...")
+    sessions = base_loader.load_sessions(project=project_name, pkl_path=pkl_path)
 
     # 2. Enrich (Metadata, Kinematics)
     logger.info("Enriching sessions...")
