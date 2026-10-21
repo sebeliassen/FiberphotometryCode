@@ -1,0 +1,35 @@
+{
+  "baseline_fused_verify": {
+    "status": "OK",
+    "passed": true
+  },
+  "invalidation_on_timestamp_csv_change": {
+    "status": "STALE",
+    "reasons": [
+      "input content changed: /tmp/tmphqg0yqhg/bot.csv"
+    ],
+    "cache_rejected": true
+  },
+  "invalidation_on_transform_change": {
+    "status": "STALE",
+    "reasons": [
+      "input content changed: /tmp/tmphqg0yqhg/transform.json"
+    ],
+    "cache_rejected": true
+  },
+  "invalidation_on_bodypart_reorder": {
+    "status": "STALE",
+    "reasons": [
+      "configuration differs from the one used to build this artifact"
+    ],
+    "cache_rejected": true
+  },
+  "unverified_cache_rejection": {
+    "status": "UNVERIFIED_NO_MANIFEST",
+    "reasons": [
+      "no manifest sidecar; artifact provenance unknown"
+    ],
+    "cache_rejected": true
+  },
+  "all_cache_invalidation_rules_verified": true
+}

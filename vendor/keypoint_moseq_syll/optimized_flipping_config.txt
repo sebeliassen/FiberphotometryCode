@@ -1,0 +1,43 @@
+OPTIMIZED FLIPPING CONFIGURATION
+================================
+
+GOAL: 
+- Maximize DLS alignment to ONE hemisphere (Left).
+- Maximize DMS alignment to ONE hemisphere (Right).
+- Maintain balanced n_flipped vs n_kept per Genotype (WT, KI).
+
+CONSTRAINTS:
+- WT total: 8. Target: 4 flip / 4 keep.
+- KI total: 9. Target: 4 flip / 5 keep.
+
+BEST SCORES (DLS, DMS, VS): (10, 10, 6)
+---------------------------------------
+- DLS: 10/10 Aligned to LEFT.
+- DMS: 10/10 Aligned to RIGHT.
+- VS : 6 Right, 5 Left.
+
+FLIP LIST (8 MICE):
+[728, 740, 1767, 1773, 1664, 1666, 1779, 1781]
+
+KEEP ORIGINAL (9 MICE):
+[1658, 1680, 1694, 1749, 1759, 1765, 1771, 1775, 1787]
+
+DIAGNOSTIC TABLE:
+ID   | Geno | Action | Virtual Left | Virtual Right
+728  | WT   | FLIP   | DLS          | VS
+740  | WT   | FLIP   | VS           | DMS
+1658 | KI   | KEEP   | DLS          | VS
+1664 | KI   | FLIP   | DLS          | DMS
+1666 | KI   | FLIP   | VS           | DMS
+1680 | WT   | KEEP   | DLS          | VS
+1694 | KI   | KEEP   | VS           | DMS
+1749 | KI   | KEEP   | DLS          | -
+1759 | WT   | KEEP   | DLS          | DMS
+1765 | WT   | KEEP   | -            | VS
+1767 | WT   | FLIP   | DLS          | VS
+1771 | KI   | KEEP   | -            | VS
+1773 | WT   | FLIP   | DLS          | DMS
+1775 | WT   | KEEP   | VS           | DMS
+1779 | KI   | FLIP   | DLS          | DMS
+1781 | KI   | FLIP   | DLS          | DMS
+1787 | KI   | KEEP   | VS           | DMS

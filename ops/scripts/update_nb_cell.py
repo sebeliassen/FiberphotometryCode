@@ -1,0 +1,21 @@
+"""Compatibility alias for ops.repo.update_nb_cell."""
+import importlib
+import runpy
+import sys
+import warnings
+from pathlib import Path
+
+warnings.warn("ops.scripts.update_nb_cell is deprecated; use ops.repo.update_nb_cell",
+              DeprecationWarning, stacklevel=2)
+
+if __name__ == "__main__":
+    runpy.run_path(str(Path(__file__).resolve().parents[1] / "repo/update_nb_cell.py"), run_name="__main__")
+else:
+    _real = importlib.import_module("ops.repo.update_nb_cell")
+    sys.modules[__name__] = _real
+
+    def __getattr__(name):
+        return getattr(_real, name)
+
+    def __dir__():
+        return dir(_real)

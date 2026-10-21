@@ -1,0 +1,25 @@
+SessionID,AnimalID,Injection,Cohort,Exclude,inarena_min,home_cage_min,juvenile_first_sniff_min,juvenile_removed_min,homecage_removed_min,Comments
+2026-01-14T16_39_31_bottom_left,3,saline,Juvenile_intruder_baseline,False,6.6,22.47,24.925,27.1125,29.31,
+2026-01-14T16_39_31_lower,3,saline,Juvenile_intruder_baseline,False,6.6,22.47,24.925,27.1125,29.31,
+2026-01-15T10_08_15_bottom_left,7,saline,Juvenile_intruder_baseline,False,8.1,38.7,41.213,43.2825,45.5625,
+2026-01-15T10_08_15_lower,7,saline,Juvenile_intruder_baseline,False,8.1,38.7,41.213,43.2825,45.5625,
+2026-01-15T11_03_48_bottom_left,5,saline,Juvenile_intruder_baseline,False,7.6,23.4,25.637,28.02,30.2475,
+2026-01-15T11_03_48_lower,5,saline,Juvenile_intruder_baseline,False,7.6,23.4,25.637,28.02,30.2475,
+2026-01-14T09_45_33_bottom_left,84,saline,Juvenile_intruder_baseline,False,8.3,40.15,42.6,44.9475,47.55,
+2026-01-14T09_45_33_lower,84,saline,Juvenile_intruder_baseline,False,8.3,40.15,42.6,44.9475,47.55,
+2026-01-14T10_44_31_bottom_left,85,saline,Juvenile_intruder_baseline,False,6.2,36.8,38.71,40.7475,43.125,
+2026-01-14T10_44_31_lower,85,saline,Juvenile_intruder_baseline,False,6.2,36.8,38.71,40.7475,43.125,
+2026-01-14T11_37_02_bottom_left,86,saline,Juvenile_intruder_baseline,False,8.5,39.9,42.125,44.325,46.395,
+2026-01-14T11_37_02_lower,86,saline,Juvenile_intruder_baseline,False,8.5,39.9,42.125,44.325,46.395,
+2026-01-14T12_33_27_bottom_left,2,saline,Juvenile_intruder_baseline,False,7.2,22.9,25.162,27.435,29.685,
+2026-01-14T12_33_27_lower,2,saline,Juvenile_intruder_baseline,False,7.2,22.9,25.162,27.435,29.685,
+2026-01-14T13_12_43_bottom_left,6,saline,Juvenile_intruder_baseline,False,6.8,23.2,25.56,27.495,29.85,"Likely no signal in the DRN (G4), if so skip it"
+2026-01-14T13_12_43_lower,6,saline,Juvenile_intruder_baseline,False,6.8,23.2,25.56,27.495,29.85,"Likely no signal in the DRN (G4), if so skip it"
+2026-01-14T13_53_32_bottom_left,10,saline,Juvenile_intruder_baseline,False,7.1,22.2,24.65,26.64,29.2725,"Likely no signal in the DRN (G4), if so skip it"
+2026-01-14T13_53_32_lower,10,saline,Juvenile_intruder_baseline,False,7.1,22.2,24.65,26.64,29.2725,"Likely no signal in the DRN (G4), if so skip it"
+2026-01-14T14_33_58_bottom_left,4,saline,Juvenile_intruder_baseline,False,6.8,23.0,25.187,27.2325,29.4225,
+2026-01-14T14_33_58_lower,4,saline,Juvenile_intruder_baseline,False,6.8,23.0,25.187,27.2325,29.4225,
+2026-01-14T15_15_19_bottom_left,8,saline,Juvenile_intruder_baseline,False,7.0,23.0,25.08,27.06,29.385,
+2026-01-14T15_15_19_lower,8,saline,Juvenile_intruder_baseline,False,7.0,23.0,25.08,27.06,29.385,
+2026-01-14T15_58_04_bottom_left,1,saline,Juvenile_intruder_baseline,False,7.1,22.6,25.112,27.1125,29.595,
+2026-01-14T15_58_04_lower,1,saline,Juvenile_intruder_baseline,False,7.1,22.6,25.112,27.1125,29.595,

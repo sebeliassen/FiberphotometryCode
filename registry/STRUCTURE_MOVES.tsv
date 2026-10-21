@@ -1,0 +1,38 @@
+old_path	new_path	kind	verification
+archive/compat	compat	live_adapters	same inode; temporary old directory alias
+studies/behavior/kinematics_ulrik	studies/kinematics_ulrik	study_source	same inode; transitional path alias
+studies/behavior/language_models	studies/language_models	study_source	same inode; transitional path alias
+studies/behavior/sequence_viz	studies/sequence_viz	study_source	same inode; transitional path alias
+studies/behavior/multiview_experiments	studies/multiview_experiments	study_source	entry inodes preserved; transitional path alias
+studies/behavior/deep_research_experiments	studies/deep_research_experiments	study_source	entry inodes preserved; transitional path alias
+studies/behavior/shmoseq	studies/shmoseq	study_source	entry inodes preserved; transitional path alias
+studies/behavior/replications_datta	studies/replications_datta	study_source	entry inodes preserved; transitional path alias
+studies/behavior/karen_studies	studies/karen_pff_vs_monomer/analysis	study_source	entry inodes preserved; transitional path alias
+studies/photometry/exploratory	studies/photometry_exploration	study_source	entry inodes preserved; transitional path alias
+studies/photometry/turnlab	studies/turnlab	study_source	entry inodes preserved; transitional path alias
+studies/photometry/notebooks	studies/photometry_exploration/notebooks/historical	study_source	entry inodes preserved; transitional path alias
+studies/karen_pff_vs_monomer/video_files	data/raw/karen_pff_vs_monomer/video_files	empirical_assets	same inode; transitional old path alias
+studies/karen_pff_vs_monomer/botcam_video_files	data/raw/karen_pff_vs_monomer/botcam_video_files	empirical_assets	same inode; transitional old path alias
+studies/karen_pff_vs_monomer/h5_files	data/raw/karen_pff_vs_monomer/h5_files	empirical_assets	same inode; transitional old path alias
+studies/oft_baseline/jonathan_full	data/raw/oft_baseline/jonathan_full	empirical_assets	same inode; transitional old path alias
+studies/oft_baseline/.DS_Store	data/raw/oft_baseline/.DS_Store	empirical_assets	same inode; transitional old path alias
+studies/oft_baseline/soeren	data/raw/oft_baseline/soeren	empirical_assets	same inode; transitional old path alias
+studies/oft_baseline/jonathan_amph_workspace	data/raw/oft_baseline/jonathan_amph_workspace	empirical_assets	same inode; transitional old path alias
+studies/oft_baseline/jonathan	data/raw/oft_baseline/jonathan	empirical_assets	same inode; transitional old path alias
+studies/oft_baseline/jonathan_amph	data/raw/oft_baseline/jonathan_amph	empirical_assets	same inode; transitional old path alias
+studies/oft_baseline/amph_vids_ssd	data/raw/oft_baseline/amph_vids_ssd	empirical_assets	same inode; transitional old path alias
+studies/mono_inter_juvenile_intruder	data/raw/juvenile_intruder	empirical_assets	same inode; transitional old path alias
+studies/monoamine_interactions/data	data/sessions/monoamine_interactions	empirical_assets	same inode; transitional old path alias
+studies/monoamine_interactions/outputs	outputs/monoamine_interactions/legacy	empirical_assets	same inode; transitional old path alias
+studies/monoamine_interactions/logs	outputs/monoamine_interactions/legacy/logs	empirical_assets	same inode; transitional old path alias
+studies/kinematics_ulrik/output	outputs/kinematics_ulrik/legacy	empirical_assets	same inode; transitional old path alias
+studies/monoamine_interactions/projects/jonathan_oft_baseline	studies/oft_baseline	study_policy	entry inodes preserved; transitional path alias
+studies/monoamine_interactions/projects/jonathan_juvenile_intruder	studies/juvenile_intruder	study_policy	entry inodes preserved; transitional path alias
+studies/monoamine_interactions/projects/karen_project	studies/karen_pff_vs_monomer/session_policy	study_policy	entry inodes preserved; transitional path alias
+studies/behavior/projects	studies/oft_baseline/ifdn_policy	study_policy	entry inodes preserved; transitional path alias
+studies/behavior/loaders	studies/session_building	study_policy	entry inodes preserved; transitional path alias
+studies/behavior/videogen	studies/multimodal_movies	study_policy	entry inodes preserved; transitional path alias
+studies/behavior/misc/syllable_generation/analysis/syllable_chains	studies/sequence_viz/chain_analysis	study_policy	entry inodes preserved; transitional path alias
+studies/behavior/misc/syllable_generation/analysis/name_syllables	studies/syllable_annotation	study_policy	entry inodes preserved; transitional path alias
+studies/behavior/misc/syllable_generation/analysis	studies/session_model_exports	study_policy	entry inodes preserved; transitional path alias
+studies/behavior/misc/syllable_generation/kpms_studio	studies/model_inspection	study_policy	entry inodes preserved; transitional path alias

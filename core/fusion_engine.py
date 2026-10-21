@@ -1,0 +1,24 @@
+"""
+[DEPRECATED SHIM] core/fusion_engine.py
+==========================================
+Relocated to: fpcode.tracking.fusion
+"""
+
+import importlib
+import sys
+import warnings
+
+warnings.warn(
+    "core.fusion_engine is deprecated; import from fpcode.tracking.fusion instead",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+_real = importlib.import_module("fpcode.tracking.fusion")
+sys.modules[__name__] = _real
+
+def __getattr__(name):
+    return getattr(_real, name)
+
+def __dir__():
+    return dir(_real)

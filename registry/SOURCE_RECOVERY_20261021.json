@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "studies/language_models/lib/data/__init__.py",
+      "original_sha256": "04370095633fab5281f4d61748fda963b1cf947b8246408e95ff7e28d7cfdce6",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "2e1ffa59718a7c062f3e5a19703f9068ea24643594da29cbd053ef86114bdf4c",
+      "recovered_sha256": "04370095633fab5281f4d61748fda963b1cf947b8246408e95ff7e28d7cfdce6"
+    },
+    {
+      "path": "studies/language_models/lib/data/dataset.py",
+      "original_sha256": "f3fe6e4278a3427d3ec493512f69645e52da2f7a8ac53109a2e7db0a6d4515b1",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "fa97e9583b63790792af72af8497a734bb8b4fd52faac2fa21cea1a944169240",
+      "recovered_sha256": "2c266fe8d7ffb00a25ff889f99d4f5799b74b5c1e6c877e30ab10e5f1f53fdd7"
+    },
+    {
+      "path": "studies/language_models/lib/models/__init__.py",
+      "original_sha256": "1d6a09066ca294874b4894bc01bfd936edd7e56d84f0ecbc8fd94e2cf963f33a",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "2e1ffa59718a7c062f3e5a19703f9068ea24643594da29cbd053ef86114bdf4c",
+      "recovered_sha256": "1d6a09066ca294874b4894bc01bfd936edd7e56d84f0ecbc8fd94e2cf963f33a"
+    },
+    {
+      "path": "studies/language_models/lib/models/action2vec.py",
+      "original_sha256": "b1e1aa2920d23aaa38c5ee72163f23b485da292f4eb1e50a436d9380c7223887",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "c59cc87ac9cbb10588478589e22c663c9227c61e47bca464ec34c98d4c9503f5",
+      "recovered_sha256": "21b40d569aa002ebdb3cec088fb879038ec85da6d7d67ebd161ee434f34375dc"
+    },
+    {
+      "path": "studies/language_models/lib/models/action_transformer.py",
+      "original_sha256": "7b9700f2b16c909e6393050daec518134067d60d1e29e13a13fd069bb8f20cb9",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "1be72c87bbfe96d72a494c66600abb7134c3d3c94a838924b4dad41a123503e7",
+      "recovered_sha256": "4675e11c6375848c613768927db1f0af6a2b26ae8de258a256aa007c346724e2"
+    },
+    {
+      "path": "studies/language_models/lib/models/benchmark_models.py",
+      "original_sha256": "2b8e212ff317648193b130163c2ada334da0ce31c5603d878614273c99d9aaab",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "473f8c8b1567b79be2ce1f16d6e68786f2730d83d4e762e18db9619468366b17",
+      "recovered_sha256": "bd31fc1f90b522b15d1d65a899ed87ca8f7c307fed23c5e1eb1e405ab48d0c83"
+    },
+    {
+      "path": "studies/language_models/lib/models/continuous.py",
+      "original_sha256": "0c82be9abb1f126c3fc6535bc339c5b2f4ec1bcb5f1a0745c644c90072a5e484",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "c776dd11a89732abc5b8bf9f7019218854ce78aeda437b047aebe3c2005df989",
+      "recovered_sha256": "3cffc173f7556c0d95489873ecbe4da79ffbdcb48f8f187a5e87423920a4e2b7"
+    },
+    {
+      "path": "studies/language_models/lib/models/discrete.py",
+      "original_sha256": "ae0082c8f23f46d5acd7a161a75a477f2da6829263599dbd36c9666cf8916958",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "4e524a08c4ebd9739089b01730dd01ef257f4e21e79470a990c7f1d2ad5e9f91",
+      "recovered_sha256": "5e18d683e593c3af0ba7bcaa699b613a8ee8180b6f2902c6913e9b227c56e2fb"
+    },
+    {
+      "path": "studies/language_models/lib/models/embeddings.py",
+      "original_sha256": "eafdcb663296e52f4efe0eda18a20a9abd19aa5f43879bcd9944dd7c9914ee3f",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "2d33354a93cc8d0db8dc0ea6363070642009d53958a64533de915ff01c67dd96",
+      "recovered_sha256": "6ce4b88c53fc7c8d7a3015d45dbfbaae13296cbbb9b8a1b4b9584e0cf44c8e40"
+    },
+    {
+      "path": "studies/language_models/lib/models/hsmm_duration.py",
+      "original_sha256": "b161ad4dda4292449139c7d9f51e3b71579c7b28164d067218ec6a694cf429c7",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "df8363752ee3475477205faea659bb5283f8f855ecfbe25dc899ae7731c594c0",
+      "recovered_sha256": "003a4cb85f9eb849bb282d570bb2c61cd03d46c81937a6155b15d810882a1c5c"
+    },
+    {
+      "path": "studies/language_models/lib/models/selective_ssm.py",
+      "original_sha256": "d1851eb79943a78a56bdaac5010950735c02a5b62d7f976dc18069550b06a70d",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "8b307340068522952796571cc92e7eb70b0188b745fed1ae005c59aa2d3bbb7d",
+      "recovered_sha256": "8b78db74e23fe62e8ef8cd268bb24a1295217aa8b617bc141a8fcf280c056d9d"
+    },
+    {
+      "path": "studies/language_models/lib/models/vomm_pst.py",
+      "original_sha256": "5967f2ba690fe9925d0d445a7717cade5d6d96dbdf98b8006ce322304065bbb0",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "aaae0449f1ae8c0aeb3cbdc6d44db99cb2b0fe303297906f69742a61c5fb2b21",
+      "recovered_sha256": "1c3c3e464f810b65b47513112b7b57bf374a2ef6e897b3ac13eb3749148cb2e7"
+    },
+    {
+      "path": "studies/photometry_exploration/data/data_loading.py",
+      "original_sha256": "8091bdf363ede5cf7331e11a734234114c1b8c6ec96cf4a572d369dfec38ef16",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "61f2c2e0bc2ea698382bbf347ddf30908cae7b7247efc16d83c098ffa3be4e50",
+      "recovered_sha256": "8091bdf363ede5cf7331e11a734234114c1b8c6ec96cf4a572d369dfec38ef16"
+    },
+    {
+      "path": "studies/photometry_exploration/data/handlers.py",
+      "original_sha256": "1f034dc9f7c4a9a2cf5f9d58d718b9d351d76b895e5357b43313e60155c36350",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "6dc840e79bc363ba17381547198b892e431f6613434a8398b55b7ac201b5236c",
+      "recovered_sha256": "1f034dc9f7c4a9a2cf5f9d58d718b9d351d76b895e5357b43313e60155c36350"
+    },
+    {
+      "path": "studies/photometry_exploration/data/mouse.py",
+      "original_sha256": "497e0ec8acac44507044d13ca588b4aa679c6f56f2c6ae203641a7dff8d6965b",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "dbd0fc679ec90b80b6c4b01662a4e1959b1f3f68247a08b0d8585f3c16af878b",
+      "recovered_sha256": "497e0ec8acac44507044d13ca588b4aa679c6f56f2c6ae203641a7dff8d6965b"
+    },
+    {
+      "path": "studies/photometry_exploration/data/oft_session_loading.py",
+      "original_sha256": "3f5a952c1e31252b1523b010f0198ea12f7193cc4ccf847b67c7b7724d105777",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "d04d4c60a3a0b9195c026c7494fd3823e72c9755af3cadb9f139af927fdf0829",
+      "recovered_sha256": "3f5a952c1e31252b1523b010f0198ea12f7193cc4ccf847b67c7b7724d105777"
+    },
+    {
+      "path": "studies/photometry_exploration/data/session_loading.py",
+      "original_sha256": "2bd4da27c285a311636517f174899f7c8a18a962754fff5d7f4207de48972618",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "ff3a7c3c39bd872df45b7ea9af0f42f04b52a5f78248d85a7fa0121dee96be21",
+      "recovered_sha256": "2bd4da27c285a311636517f174899f7c8a18a962754fff5d7f4207de48972618"
+    },
+    {
+      "path": "studies/photometry_exploration/data/session_synchronization.py",
+      "original_sha256": "566f310d0bbe0da9986e5850b7a0b55ac6d5a07b5721437f8b14306539487f61",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "ce26959081bc92634f2c17159c82717c8ec807992267e85e8b3ab3d880c36b01",
+      "recovered_sha256": "566f310d0bbe0da9986e5850b7a0b55ac6d5a07b5721437f8b14306539487f61"
+    },
+    {
+      "path": "studies/photometry_exploration/data/syncer.py",
+      "original_sha256": "bba1cff08fd5ce8a3b9523c1442306cb723a6c28132fab1942c780547f32f02f",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "68b052d081d997970d2dc07090993a24126703ad193d14fc4b59330ab7e6ff5c",
+      "recovered_sha256": "bba1cff08fd5ce8a3b9523c1442306cb723a6c28132fab1942c780547f32f02f"
+    },
+    {
+      "path": "studies/photometry_exploration/data/timepoint_processing.py",
+      "original_sha256": "801f039f25e899e1fe57626fb5914b129dd830816e030bf95745d67eb1b8729f",
+      "origin_snapshot": "primary_source_before_checkpoints.tar.gz",
+      "policy": "Original imports and numerical definitions unchanged; only import order, whitespace and explicit historical-attribute lint annotations differ.",
+      "definition_ast_sha256": "41ef473269f8ff69735e96380a20bbfbb501c703ce5d2a0da13f80a43fc4254d",
+      "recovered_sha256": "801f039f25e899e1fe57626fb5914b129dd830816e030bf95745d67eb1b8729f"
+    }
+  ],
+  "excluded_from_recovery": "scratch, local diagnostics and generated HTML remain in source snapshot pending classification",
+  "definition_hash_encoding": "Sorted JSON of function/class AST fields, excluding imports, documentation string statements and Python 3.12 type_params metadata; non-JSON constants use repr."
+}

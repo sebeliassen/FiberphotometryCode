@@ -1,0 +1,47 @@
+{
+  "baseline_name": "eml_baseline_118sess_legacy_tandem",
+  "provenance": {
+    "source_file": "syllable_generation/multiview_top_bot_experiments/tandem_cohort_eml_model_rankings.csv",
+    "description": "Legacy 118-session uncalibrated tandem cohort production rankings across 5 seeds (50 AR iters, 200 SLDS iters)",
+    "date_recorded": "2026-09-30",
+    "dataset_sessions": 118,
+    "latent_dim": 10
+  },
+  "rankings": [
+    {
+      "rank": 1,
+      "seed": 101,
+      "model_name": "tandem_cohort_118sess_50ar_200slds_seed101",
+      "eml_score": 267583571.5480,
+      "is_winner": true
+    },
+    {
+      "rank": 2,
+      "seed": 404,
+      "model_name": "tandem_cohort_118sess_50ar_200slds_seed404",
+      "eml_score": 267557436.1043,
+      "is_winner": false
+    },
+    {
+      "rank": 3,
+      "seed": 202,
+      "model_name": "tandem_cohort_118sess_50ar_200slds_seed202",
+      "eml_score": 267520112.8912,
+      "is_winner": false
+    },
+    {
+      "rank": 4,
+      "seed": 303,
+      "model_name": "tandem_cohort_118sess_50ar_200slds_seed303",
+      "eml_score": 267498201.4421,
+      "is_winner": false
+    },
+    {
+      "rank": 5,
+      "seed": 505,
+      "model_name": "tandem_cohort_118sess_50ar_200slds_seed505",
+      "eml_score": 267451298.1105,
+      "is_winner": false
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "status": "ACCEPTED_FUNCTIONAL_CHECKPOINT",
+  "baseline_commit": "0891de1b1c288f16c42d23d7e4b4cbdb020f8cee",
+  "baseline_tag": "pre-codex-modularization-20261009",
+  "branch": "codex/modular-refactor",
+  "test_command": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python -B -m pytest -q -p no:cacheprovider --basetemp=/tmp/fpcode_checkpoint_tests",
+  "tests_passed": 232,
+  "duration_seconds": 3.49,
+  "warnings": 8,
+  "syntax_undefined_name_check": "ruff check src/fpcode --select E9,F63,F7,F82: PASS",
+  "numerical_extraction_baseline_checks": 85,
+  "architecture_module_count": 115,
+  "architecture_violations": 0,
+  "architecture_cycles": 0,
+  "existing_tier_a_backup": "/mnt/hdd/backups/TierA_backup_20261009",
+  "existing_tier_a_expected_files": 509,
+  "existing_tier_a_expected_bytes": 47480759461,
+  "tier_a_verification": "size/type/path coverage and 10 full SHA256 spot checks <=1 MiB; not full-content verification",
+  "code_baseline": "/mnt/hdd/backups/FiberphotometryCode/20261009_153903-baseline/code_baseline.json",
+  "not_run": [
+    "GPU kernels or real fitting",
+    "empirical scientific reproduction",
+    "full Tier-A rehash",
+    "empirical pickle reconstruction",
+    "real recording movie encoding"
+  ]
+}

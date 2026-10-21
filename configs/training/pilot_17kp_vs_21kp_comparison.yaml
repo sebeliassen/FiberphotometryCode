@@ -1,0 +1,19 @@
+# configs/training/pilot_17kp_vs_21kp_comparison.yaml
+model_name: "pilot_17kp_vs_21kp_comparison"
+project_dir: "syllable_generation/multiview_top_bot_experiments/pilot_comparison_21kp_static"
+data_dir: "syllable_generation/multiview_top_bot_experiments/data"
+seed: 404
+
+hyperparameters:
+  num_ar_iters: 50
+  num_slds_iters: 150
+  total_iters: 200
+  save_every_n_iters: 25
+  init_kappa: 1.0e6
+  slds_kappa: 1.5e12
+  target_fps: 60
+  min_segment_frames: 180
+
+keypoints:
+  num_keypoints: 21
+  layout: "pilot_21kp"

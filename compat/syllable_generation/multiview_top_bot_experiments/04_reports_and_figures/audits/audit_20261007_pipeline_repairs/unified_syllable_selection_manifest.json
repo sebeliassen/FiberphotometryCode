@@ -1,0 +1,419 @@
+{
+  "model_name": "model_21kp_static_50ar_200slds_seed101",
+  "results_path": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/cohort_static_21kp/model_21kp_static_50ar_200slds_seed101/results.h5",
+  "checkpoint_iter": 250,
+  "sampling_mode": "trajectory_density",
+  "num_samples": 10,
+  "syllables": {
+    "3": [
+      {
+        "segment_name": "2025-12-03T09_51_05_bottom_left_seg001",
+        "onset_segment_frame": 76399,
+        "offset_segment_frame": 76410,
+        "duration_frames": 11,
+        "source_top_onset": 155517,
+        "source_top_offset": 155528
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_right_seg002",
+        "onset_segment_frame": 20806,
+        "offset_segment_frame": 20839,
+        "duration_frames": 33,
+        "source_top_onset": 102587,
+        "source_top_offset": 102620
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_bottom_right_seg001",
+        "onset_segment_frame": 99105,
+        "offset_segment_frame": 99123,
+        "duration_frames": 18,
+        "source_top_onset": 192569,
+        "source_top_offset": 192587
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_bottom_right_seg003",
+        "onset_segment_frame": 41265,
+        "offset_segment_frame": 41283,
+        "duration_frames": 18,
+        "source_top_onset": 126543,
+        "source_top_offset": 126561
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_left_seg000",
+        "onset_segment_frame": 49902,
+        "offset_segment_frame": 49912,
+        "duration_frames": 10,
+        "source_top_onset": 75314,
+        "source_top_offset": 75324
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_top_left_seg001",
+        "onset_segment_frame": 30003,
+        "offset_segment_frame": 30012,
+        "duration_frames": 9,
+        "source_top_onset": 63658,
+        "source_top_offset": 63667
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_left_seg000",
+        "onset_segment_frame": 55614,
+        "offset_segment_frame": 55651,
+        "duration_frames": 37,
+        "source_top_onset": 81026,
+        "source_top_offset": 81063
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_right_seg000",
+        "onset_segment_frame": 10991,
+        "offset_segment_frame": 11009,
+        "duration_frames": 18,
+        "source_top_onset": 56631,
+        "source_top_offset": 56649
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_left_seg000",
+        "onset_segment_frame": 75452,
+        "offset_segment_frame": 75476,
+        "duration_frames": 24,
+        "source_top_onset": 100864,
+        "source_top_offset": 100888
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_bottom_right_seg003",
+        "onset_segment_frame": 93462,
+        "offset_segment_frame": 93476,
+        "duration_frames": 14,
+        "source_top_onset": 178740,
+        "source_top_offset": 178754
+      }
+    ],
+    "14": [
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_right_seg001",
+        "onset_segment_frame": 3649,
+        "offset_segment_frame": 3665,
+        "duration_frames": 16,
+        "source_top_onset": 60320,
+        "source_top_offset": 60336
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_top_left_seg001",
+        "onset_segment_frame": 25496,
+        "offset_segment_frame": 25520,
+        "duration_frames": 24,
+        "source_top_onset": 156221,
+        "source_top_offset": 156245
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_bottom_left_seg001",
+        "onset_segment_frame": 15483,
+        "offset_segment_frame": 15494,
+        "duration_frames": 11,
+        "source_top_onset": 55310,
+        "source_top_offset": 55321
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_bottom_right_seg001",
+        "onset_segment_frame": 109598,
+        "offset_segment_frame": 109613,
+        "duration_frames": 15,
+        "source_top_onset": 203062,
+        "source_top_offset": 203077
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_right_seg003",
+        "onset_segment_frame": 12554,
+        "offset_segment_frame": 12635,
+        "duration_frames": 81,
+        "source_top_onset": 209255,
+        "source_top_offset": 209336
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_bottom_right_seg003",
+        "onset_segment_frame": 31727,
+        "offset_segment_frame": 31743,
+        "duration_frames": 16,
+        "source_top_onset": 117005,
+        "source_top_offset": 117021
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_top_left_seg000",
+        "onset_segment_frame": 70729,
+        "offset_segment_frame": 70743,
+        "duration_frames": 14,
+        "source_top_onset": 79612,
+        "source_top_offset": 79626
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_top_left_seg000",
+        "onset_segment_frame": 6490,
+        "offset_segment_frame": 6563,
+        "duration_frames": 73,
+        "source_top_onset": 16943,
+        "source_top_offset": 17016
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_left_seg003",
+        "onset_segment_frame": 33135,
+        "offset_segment_frame": 33145,
+        "duration_frames": 10,
+        "source_top_onset": 195467,
+        "source_top_offset": 195477
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_right_seg002",
+        "onset_segment_frame": 38595,
+        "offset_segment_frame": 38606,
+        "duration_frames": 11,
+        "source_top_onset": 120376,
+        "source_top_offset": 120387
+      }
+    ],
+    "37": [
+      {
+        "segment_name": "2025-12-03T14_06_45_bottom_left_seg000",
+        "onset_segment_frame": 86777,
+        "offset_segment_frame": 86890,
+        "duration_frames": 113,
+        "source_top_onset": 99691,
+        "source_top_offset": 99804
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_bottom_left_seg003",
+        "onset_segment_frame": 33961,
+        "offset_segment_frame": 34038,
+        "duration_frames": 77,
+        "source_top_onset": 140739,
+        "source_top_offset": 140816
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_bottom_right_seg003",
+        "onset_segment_frame": 109172,
+        "offset_segment_frame": 109241,
+        "duration_frames": 69,
+        "source_top_onset": 194450,
+        "source_top_offset": 194519
+      },
+      {
+        "segment_name": "2025-12-03T14_06_45_bottom_left_seg000",
+        "onset_segment_frame": 67304,
+        "offset_segment_frame": 67407,
+        "duration_frames": 103,
+        "source_top_onset": 80218,
+        "source_top_offset": 80321
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_bottom_left_seg003",
+        "onset_segment_frame": 74948,
+        "offset_segment_frame": 74969,
+        "duration_frames": 21,
+        "source_top_onset": 181726,
+        "source_top_offset": 181747
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_top_left_seg000",
+        "onset_segment_frame": 94781,
+        "offset_segment_frame": 94833,
+        "duration_frames": 52,
+        "source_top_onset": 103664,
+        "source_top_offset": 103716
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_top_left_seg001",
+        "onset_segment_frame": 27345,
+        "offset_segment_frame": 27382,
+        "duration_frames": 37,
+        "source_top_onset": 158070,
+        "source_top_offset": 158107
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_top_left_seg000",
+        "onset_segment_frame": 64664,
+        "offset_segment_frame": 64754,
+        "duration_frames": 90,
+        "source_top_onset": 73547,
+        "source_top_offset": 73637
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_bottom_left_seg002",
+        "onset_segment_frame": 36056,
+        "offset_segment_frame": 36084,
+        "duration_frames": 28,
+        "source_top_onset": 96897,
+        "source_top_offset": 96925
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_bottom_right_seg001",
+        "onset_segment_frame": 102515,
+        "offset_segment_frame": 102728,
+        "duration_frames": 213,
+        "source_top_onset": 195979,
+        "source_top_offset": 196192
+      }
+    ],
+    "45": [
+      {
+        "segment_name": "2025-12-03T13_02_27_top_left_seg000",
+        "onset_segment_frame": 49917,
+        "offset_segment_frame": 49950,
+        "duration_frames": 33,
+        "source_top_onset": 60370,
+        "source_top_offset": 60403
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_right_seg002",
+        "onset_segment_frame": 113124,
+        "offset_segment_frame": 113147,
+        "duration_frames": 23,
+        "source_top_onset": 194905,
+        "source_top_offset": 194928
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_bottom_right_seg001",
+        "onset_segment_frame": 23173,
+        "offset_segment_frame": 23192,
+        "duration_frames": 19,
+        "source_top_onset": 79594,
+        "source_top_offset": 79613
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_bottom_left_seg001",
+        "onset_segment_frame": 89203,
+        "offset_segment_frame": 89219,
+        "duration_frames": 16,
+        "source_top_onset": 168321,
+        "source_top_offset": 168337
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_top_left_seg000",
+        "onset_segment_frame": 73975,
+        "offset_segment_frame": 73991,
+        "duration_frames": 16,
+        "source_top_onset": 84428,
+        "source_top_offset": 84444
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_top_left_seg001",
+        "onset_segment_frame": 49403,
+        "offset_segment_frame": 49486,
+        "duration_frames": 83,
+        "source_top_onset": 134845,
+        "source_top_offset": 134928
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_right_seg002",
+        "onset_segment_frame": 4296,
+        "offset_segment_frame": 4307,
+        "duration_frames": 11,
+        "source_top_onset": 86077,
+        "source_top_offset": 86088
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_top_left_seg000",
+        "onset_segment_frame": 56928,
+        "offset_segment_frame": 56947,
+        "duration_frames": 19,
+        "source_top_onset": 65811,
+        "source_top_offset": 65830
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_right_seg002",
+        "onset_segment_frame": 105834,
+        "offset_segment_frame": 105848,
+        "duration_frames": 14,
+        "source_top_onset": 187615,
+        "source_top_offset": 187629
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_top_left_seg000",
+        "onset_segment_frame": 88882,
+        "offset_segment_frame": 88929,
+        "duration_frames": 47,
+        "source_top_onset": 97765,
+        "source_top_offset": 97812
+      }
+    ],
+    "95": [
+      {
+        "segment_name": "2025-12-03T13_02_27_top_left_seg000",
+        "onset_segment_frame": 2574,
+        "offset_segment_frame": 2596,
+        "duration_frames": 22,
+        "source_top_onset": 13027,
+        "source_top_offset": 13049
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_left_seg000",
+        "onset_segment_frame": 59785,
+        "offset_segment_frame": 59820,
+        "duration_frames": 35,
+        "source_top_onset": 85197,
+        "source_top_offset": 85232
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_bottom_left_seg003",
+        "onset_segment_frame": 47082,
+        "offset_segment_frame": 47144,
+        "duration_frames": 62,
+        "source_top_onset": 153860,
+        "source_top_offset": 153922
+      },
+      {
+        "segment_name": "2025-12-03T10_58_48_bottom_right_seg002",
+        "onset_segment_frame": 8767,
+        "offset_segment_frame": 8779,
+        "duration_frames": 12,
+        "source_top_onset": 90548,
+        "source_top_offset": 90560
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_bottom_left_seg002",
+        "onset_segment_frame": 19286,
+        "offset_segment_frame": 19312,
+        "duration_frames": 26,
+        "source_top_onset": 80127,
+        "source_top_offset": 80153
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_top_left_seg001",
+        "onset_segment_frame": 44915,
+        "offset_segment_frame": 44970,
+        "duration_frames": 55,
+        "source_top_onset": 130357,
+        "source_top_offset": 130412
+      },
+      {
+        "segment_name": "2025-12-03T13_02_27_bottom_left_seg003",
+        "onset_segment_frame": 40395,
+        "offset_segment_frame": 40428,
+        "duration_frames": 33,
+        "source_top_onset": 147173,
+        "source_top_offset": 147206
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_bottom_left_seg001",
+        "onset_segment_frame": 54237,
+        "offset_segment_frame": 54293,
+        "duration_frames": 56,
+        "source_top_onset": 133355,
+        "source_top_offset": 133411
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_top_left_seg000",
+        "onset_segment_frame": 2226,
+        "offset_segment_frame": 2259,
+        "duration_frames": 33,
+        "source_top_onset": 11109,
+        "source_top_offset": 11142
+      },
+      {
+        "segment_name": "2025-12-03T09_51_05_bottom_right_seg001",
+        "onset_segment_frame": 20731,
+        "offset_segment_frame": 20795,
+        "duration_frames": 64,
+        "source_top_onset": 114195,
+        "source_top_offset": 114259
+      }
+    ]
+  }
+}

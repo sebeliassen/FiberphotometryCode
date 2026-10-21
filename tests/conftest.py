@@ -1,25 +1,110 @@
-# tests/conftest.py
+"""
+Pytest configuration and global fixtures for FiberphotometryCode.
+Provides `require_artifact` fixture to gracefully skip tests when running on
+trimmed mirrors or placeholder-only environments.
+"""
 
-import sys, os
-
-# 1) Add project root (where `fiberphotometry/` lives) to sys.path
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.insert(0, PROJECT_ROOT)
+import sys
+from pathlib import Path
 
 import pytest
-from pathlib import Path
-import fiberphotometry.data.session_loading as sl
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+compat_dir = REPO_ROOT / "compat"
+if compat_dir.exists() and str(compat_dir) not in sys.path:
+    sys.path.insert(0, str(compat_dir))
+
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--num-sources",
-        action="store",
-        default=3,
-        type=int,
-        help="How many source folders to sample for testing"
+        "--empirical",
+        action="store_true",
+        help="Collect empirical tests; select needs_data/gpu/slow markers explicitly to run them.",
     )
 
-@pytest.fixture(scope="module")
-def num_sources(request):
-    return request.config.getoption("--num-sources")
 
+def pytest_ignore_collect(collection_path, config):
+    # Marker filtering happens after importing test modules. Ignore this directory
+    # before import so normal discovery requires no datasets or modeling backend.
+    empirical = REPO_ROOT / "tests/empirical"
+    return (collection_path == empirical or empirical in collection_path.parents) and not config.getoption("empirical")
+
+
+def pytest_configure(config):
+    # Explicit file arguments can bypass ignore-collection hooks in pytest.
+    # Require the same opt-in before those modules are imported as well.
+    if config.getoption("empirical"):
+        return
+    empirical = REPO_ROOT / "tests/empirical"
+    for argument in config.args:
+        path = Path(argument.split("::", 1)[0]).resolve()
+        if path == empirical or empirical in path.parents:
+            raise pytest.UsageError("Collect empirical tests with --empirical, then choose their runtime markers explicitly.")
+
+
+def is_placeholder(path: Path) -> bool:
+    """Check if a path points to a lightweight metadata placeholder rather than real binary data."""
+    if not path.exists():
+        # Check if an original.ext.txt placeholder exists
+        txt_companion = path.with_name(path.name + ".txt")
+        if txt_companion.exists():
+            return True
+        return False
+
+    # Check if the file itself is a text placeholder
+    try:
+        if path.is_file() and path.stat().st_size < 8192:
+            with open(path, "r", encoding="utf-8", errors="ignore") as f:
+                header = f.read(512)
+                if "[PLACEHOLDER FILE" in header or "PLACEHOLDER FILE" in header:
+                    return True
+    except Exception:
+        pass
+
+    return False
+
+
+@pytest.fixture
+def require_artifact():
+    """
+    Fixture that verifies required data files exist in full binary form.
+    Gracefully skips tests when executed on trimmed/placeholder archives.
+
+    Usage:
+        def test_heavy_fitting(require_artifact):
+            require_artifact('path/to/checkpoint.h5')
+            ...
+    """
+    def _check(path_or_paths):
+        if isinstance(path_or_paths, (str, Path)):
+            paths = [Path(path_or_paths)]
+        else:
+            paths = [Path(p) for p in path_or_paths]
+
+        for p in paths:
+            # Resolve relative to repo root if not absolute
+            resolved = p if p.is_absolute() else (REPO_ROOT / p)
+            if not resolved.exists() or is_placeholder(resolved):
+                pytest.skip(
+                    f"Test skipped: Required artifact '{p.name}' is missing or a trimmed placeholder on this machine."
+                )
+        return True
+
+    return _check
+
+
+@pytest.fixture
+def repo_root():
+    """Return the absolute Path to the repository root."""
+    return REPO_ROOT
+
+
+@pytest.fixture
+def golden_dir(repo_root):
+    """Return the absolute Path to tests/golden."""
+    return repo_root / "tests" / "golden"
+
+
+# --empirical changes collection only. Existing marker selection remains explicit.

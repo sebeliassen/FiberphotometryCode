@@ -1,0 +1,9 @@
+# Explicit policy example for event_photometry(signal, events, offsets, **alignment).
+# Not a cohort-specific runner or a replacement for historical PETH settings.
+time:
+  unit: s
+  clock: FP3002
+offsets: [-1.0, -0.5, 0.0, 0.5, 1.0]
+alignment:
+  method: linear
+  max_gap: 0.10

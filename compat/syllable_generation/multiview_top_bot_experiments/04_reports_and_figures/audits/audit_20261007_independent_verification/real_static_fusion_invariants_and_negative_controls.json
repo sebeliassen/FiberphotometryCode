@@ -1,0 +1,102 @@
+[
+  {
+    "sid": "2025-12-03T09_51_05_bottom_left",
+    "max_dorsal_err_px": 0.0,
+    "max_paw_err_px": 0.0,
+    "anchor_perturbation_diff_px": 0.0,
+    "negative_control_paw_swap_diff_px": 11.146263122558594,
+    "negative_control_1frame_shift_diff_px": 14.711654663085938,
+    "real_audit_passed": true,
+    "negative_controls_caught": true
+  },
+  {
+    "sid": "2025-12-03T09_51_05_bottom_right",
+    "max_dorsal_err_px": 0.0,
+    "max_paw_err_px": 0.0,
+    "anchor_perturbation_diff_px": 0.0,
+    "negative_control_paw_swap_diff_px": 10.460102081298828,
+    "negative_control_1frame_shift_diff_px": 14.95599365234375,
+    "real_audit_passed": true,
+    "negative_controls_caught": true
+  },
+  {
+    "sid": "2025-12-03T09_51_05_top_left",
+    "max_dorsal_err_px": 0.0,
+    "max_paw_err_px": 0.0,
+    "anchor_perturbation_diff_px": 0.0,
+    "negative_control_paw_swap_diff_px": 11.175384521484375,
+    "negative_control_1frame_shift_diff_px": 12.975456237792969,
+    "real_audit_passed": true,
+    "negative_controls_caught": true
+  },
+  {
+    "sid": "2025-12-03T10_58_48_bottom_left",
+    "max_dorsal_err_px": 0.0,
+    "max_paw_err_px": 0.0,
+    "anchor_perturbation_diff_px": 0.0,
+    "negative_control_paw_swap_diff_px": 12.515426635742188,
+    "negative_control_1frame_shift_diff_px": 13.957794189453125,
+    "real_audit_passed": true,
+    "negative_controls_caught": true
+  },
+  {
+    "sid": "2025-12-03T10_58_48_bottom_right",
+    "max_dorsal_err_px": 0.0,
+    "max_paw_err_px": 0.0,
+    "anchor_perturbation_diff_px": 0.0,
+    "negative_control_paw_swap_diff_px": 12.018699645996094,
+    "negative_control_1frame_shift_diff_px": 16.936487197875977,
+    "real_audit_passed": true,
+    "negative_controls_caught": true
+  },
+  {
+    "sid": "2025-12-03T10_58_48_top_left",
+    "max_dorsal_err_px": 0.0,
+    "max_paw_err_px": 0.0,
+    "anchor_perturbation_diff_px": 0.0,
+    "negative_control_paw_swap_diff_px": 16.717025756835938,
+    "negative_control_1frame_shift_diff_px": 0.1339111328125,
+    "real_audit_passed": true,
+    "negative_controls_caught": true
+  },
+  {
+    "sid": "2025-12-03T13_02_27_bottom_left",
+    "max_dorsal_err_px": 0.0,
+    "max_paw_err_px": 0.0,
+    "anchor_perturbation_diff_px": 0.0,
+    "negative_control_paw_swap_diff_px": 12.365425109863281,
+    "negative_control_1frame_shift_diff_px": 13.818944931030273,
+    "real_audit_passed": true,
+    "negative_controls_caught": true
+  },
+  {
+    "sid": "2025-12-03T13_02_27_bottom_right",
+    "max_dorsal_err_px": 0.0,
+    "max_paw_err_px": 0.0,
+    "anchor_perturbation_diff_px": 0.0,
+    "negative_control_paw_swap_diff_px": 15.84136962890625,
+    "negative_control_1frame_shift_diff_px": 15.731069564819336,
+    "real_audit_passed": true,
+    "negative_controls_caught": true
+  },
+  {
+    "sid": "2025-12-03T13_02_27_top_left",
+    "max_dorsal_err_px": 0.0,
+    "max_paw_err_px": 0.0,
+    "anchor_perturbation_diff_px": 0.0,
+    "negative_control_paw_swap_diff_px": 12.395427703857422,
+    "negative_control_1frame_shift_diff_px": 12.615432739257812,
+    "real_audit_passed": true,
+    "negative_controls_caught": true
+  },
+  {
+    "sid": "2025-12-03T14_06_45_bottom_left",
+    "max_dorsal_err_px": 0.0,
+    "max_paw_err_px": 0.0,
+    "anchor_perturbation_diff_px": 0.0,
+    "negative_control_paw_swap_diff_px": 14.389781951904297,
+    "negative_control_1frame_shift_diff_px": 18.335037231445312,
+    "real_audit_passed": true,
+    "negative_controls_caught": true
+  }
+]

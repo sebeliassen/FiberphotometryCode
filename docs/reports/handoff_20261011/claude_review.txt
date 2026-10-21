@@ -1,0 +1,57 @@
+Reading through the refactor report; next I'll inspect the actual tree and the architecture checks against it.
+
+Still going: I've read the report and the first half of the handoff, and I'm now reading its open-tasks section and the rest of the tree for structural problems.
+
+Almost done reading. Last checks are CI, agent rules, and docs duplication, then I'll write up the review.
+
+The `src/fpcode` work is solid: the architecture audit passes clean on my run (I couldn't run the tests, since the data and environment aren't in the zip). The weak spots are the legacy-consolidation side and several claims in the report that the tree doesn't back up. I'm assuming Codex owns `src/fpcode` and Antigravity owns legacy/studies/ops cleanup, based on the branch name and the handoff.
+
+## Fix first (Antigravity)
+
+1. **`syllable_generation/` retirement probably broke about 390 study files.**
+   - They build string paths like `ROOT_DIR/"syllable_generation/data/…pkl"` or `…/analysis/language_models`, with `ROOT_DIR` hardcoded to `/home/fsp585/...`.
+   - The directory is gone from the root, and the tests can't catch it. `pytest`'s `pythonpath` adds `archive/compat`, which only rescues imports, not path strings.
+   - Ask for a static audit: extract every `syllable_generation/...` string literal and check that it resolves, then smoke-run a sample of study scripts.
+   - I can't see symlinks in the zip, so this is "very likely", not certain.
+2. **The `ops/` relocation is inverted.** The organized files in `ops/{monitoring,dlc,compaction,repo}/` are 28-line shims pointing at `ops/scripts/`, where the real code (66–434 lines each) still lives. Move the implementations into the organized directories and make `ops/scripts` the shim, or delete it.
+3. **`archive/compat/` is a live runtime dependency**, since it's on pytest's path and the studies' `sys.path`. Rename it (`compat/` or `legacy/`) so `archive/` stays dead storage.
+4. **Data still sits inside `studies/`**: videos and h5 files in `karen_pff_vs_monomer`, `oft_baseline` and `monoamine_interactions/{data,logs,outputs}`. That contradicts the data-separation claim.
+5. **`tests/` root is a mess.**
+   - It holds about 20 loose `test_*.py` files plus 24 notebooks, logs and scripts.
+   - `pyproject` lists 11 of those files individually in `testpaths`.
+   - Move them into `unit/`, `integration/` or `regression/`, and set `testpaths = ["tests"]` with markers.
+6. **Docs are stale.**
+   - `docs/ARCHITECTURE.md` still describes `core/` and `syllable_generation/` with `file:///home/fsp585` links, and 23 docs share those problems.
+   - The README still calls `core` and `pipelines` live paths.
+   - Duplicate content: `REFACTOR_REPORT.md` is byte-identical to `docs/reports/refactor_report.md`.
+
+## Design points (Codex)
+
+1. **Compat code lives inside the canonical library**: `viz/v2.py`, `viz/geometry.py`, `viz/legacy_*.py`, `photometry/metrics.py`, `statistics/summary.py`, `common/schemas.py`.
+   - Move these into one `fpcode.compat` subpackage and add an audit rule that nothing outside it imports it.
+   - `schemas.py` still has `PathConfig` with hardcoded `/home/fsp585` defaults. That is the one hardcoded path inside `src`, and the report says there are none.
+2. **The layer matrix is more permissive than the real graph.**
+   - `viz→kpms` and `kpms→photometry` are allowed but unused. Tighten `LAYERS` to the actual edges so new ones fail.
+   - `tracking.fusion` imports `behavior.kinematics`, which is the wrong direction. Push kinematics primitives down.
+   - `kpms.export` forwards up to `workflows.session_export` through a whitelist. Pick one owner and delete the exception, because "zero upward dependencies" isn't strictly true today.
+3. **Misplaced or overlapping modules.**
+   - `common/io.py` holds `compact_kpms_checkpoint`, which is domain logic. It belongs in `kpms/checkpoints.py`.
+   - `kpms/metrics.py` is syllable-frequency statistics, so it belongs in `behavior` or `statistics`.
+   - `photometry/alignment.py` is a DataFrame merge that collides with the real `alignment/` package, so rename it.
+   - Several modules still carry stale docstrings from the migration (`tracking/clock_sync.py` says "core.ttl_sync").
+4. **Cohort calibration JSON ships inside `tracking/`.** Your own contract says studies own cohort choices, so these belong in `configs/` and should be passed in explicitly.
+5. **Replace the ~650 generated shim files with one `sys.meta_path` finder** driven by `SHIMS.tsv`. That gives a single source of truth, one place for telemetry, and a removal that is just a deleted table row.
+6. **Typing, CI and packaging.**
+   - There is no `.github/` CI and no `py.typed`.
+   - `make lint` doesn't cover `studies` or `tests`.
+   - The distribution is `fiberphotometry-suite` but the import name is `fpcode`.
+   - The `all` extra duplicates `kpms`.
+
+## Report claims to correct
+
+- "Clean 12-dir root": `core/` and `pipelines/` still exist.
+- "5 canonical CLI verbs in `pipelines/`": four are 8-line forwarders to `fpcode.cli`. `pipelines/export.py` is 127 lines of real logic with no installed entry point.
+- "Hardcoded paths only in `archive/compat`": 316 `studies` files, 10 `ops` files and 5 `tests` files still have them.
+- 326 `studies` files still use `sys.path` hacks, so the handoff's warning about imports working only through pytest's extra paths still applies.
+
+I can turn this into two ready-to-paste prompts, one for each agent, if you want.

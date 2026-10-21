@@ -1,0 +1,23 @@
+{
+  "status": "quantitatively_optimized",
+  "timestamp": "2026-09-10 12:22:36",
+  "hardware_accelerator": "NVIDIA GeForce RTX 4090 (JAX GPU)",
+  "optimal_hyperparameters": {
+    "K": 10,
+    "L": 3,
+    "lambda_ortho": 1.0,
+    "max_iter": 80,
+    "random_seed": 42
+  },
+  "quantitative_metrics": {
+    "validation_relative_error": 0.8895030135274765,
+    "factor_redundancy": 0.033821928004423775,
+    "multi_seed_stability": 0.18505031367142996
+  },
+  "legacy_comparison": {
+    "legacy_K": 6,
+    "legacy_L": 5,
+    "legacy_lambda": 0.5,
+    "notes": "Optimal settings calibrated on stratified cross-animal generalization and cross-orthogonality elbow."
+  }
+}

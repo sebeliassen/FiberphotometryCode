@@ -1,0 +1,122 @@
+[
+  {
+    "sid": "2026-03-06T13_32_37_bottom_right_seg011",
+    "start": 6259,
+    "end": 6265,
+    "len": 6,
+    "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T5_18.17.19_060326_Arena1234_CenterTopCamVid_2026-03-06T13_32_37_bottom_right.avi",
+    "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/16w_PI_T5_18.17.19_060326_active_Arena3_BotCamVid_2026-03-06T13_32_37.avi",
+    "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T5_18.17.19_060326_Arena1234_CenterTopCamVid_2026-03-06T13_32_37_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+    "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/16w_PI_T5_18_17_19_060326_active_Arena3_BotCamVid_2026-03-06T13_32_37/16w_PI_T5_18_17_19_060326_active_Arena3_BotCamVid_2026-03-06T13_32_37DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5"
+  },
+  {
+    "sid": "2026-03-06T13_32_37_bottom_right_seg011",
+    "start": 2649,
+    "end": 2655,
+    "len": 6,
+    "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T5_18.17.19_060326_Arena1234_CenterTopCamVid_2026-03-06T13_32_37_bottom_right.avi",
+    "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/16w_PI_T5_18.17.19_060326_active_Arena3_BotCamVid_2026-03-06T13_32_37.avi",
+    "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T5_18.17.19_060326_Arena1234_CenterTopCamVid_2026-03-06T13_32_37_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+    "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/16w_PI_T5_18_17_19_060326_active_Arena3_BotCamVid_2026-03-06T13_32_37/16w_PI_T5_18_17_19_060326_active_Arena3_BotCamVid_2026-03-06T13_32_37DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5"
+  },
+  {
+    "sid": "2026-05-17T15_13_17_top_left_seg008",
+    "start": 1047,
+    "end": 1053,
+    "len": 6,
+    "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T7_23.15.16_17.05.2026_Arena1234_CenterTopCamVid_2026-05-17T15_13_17_top_left.avi",
+    "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/L_dopa_T7_23.15.16_17.05.2026_active_Arena1_BotCamVid_2026-05-17T15_13_17.avi",
+    "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T7_23.15.16_17.05.2026_Arena1234_CenterTopCamVid_2026-05-17T15_13_17_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+    "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/L_dopa_T7_23_15_16_17_05_2026_active_Arena1_BotCamVid_2026-05-17T15_13_17/L_dopa_T7_23_15_16_17_05_2026_active_Arena1_BotCamVid_2026-05-17T15_13_17DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5"
+  },
+  {
+    "sid": "2025-12-03T16_38_48_bottom_right_seg001",
+    "start": 12674,
+    "end": 12680,
+    "len": 6,
+    "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T6_19.17.23_03122025_Arena1234_CenterTopCamVid_2025-12-03T16_38_48_bottom_right.avi",
+    "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/3_week_PI_T6_19.17.23_03122025_active_Arena3_BotCamVid_2025-12-03T16_38_48.avi",
+    "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T6_19.17.23_03122025_Arena1234_CenterTopCamVid_2025-12-03T16_38_48_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+    "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/3_week_PI_T6_19_17_23_03122025_active_Arena3_BotCamVid_2025-12-03T16_38_48/3_week_PI_T6_19_17_23_03122025_active_Arena3_BotCamVid_2025-12-03T16_38_48DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5"
+  },
+  {
+    "sid": "2026-03-06T16_15_25_bottom_right_seg003",
+    "start": 36653,
+    "end": 36659,
+    "len": 6,
+    "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T7_21.22_060326_Arena1234_CenterTopCamVid_2026-03-06T16_15_25_bottom_right.avi",
+    "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/16w_PI_T7_21.22_060326_active_Arena3_BotCamVid_2026-03-06T16_15_25.avi",
+    "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T7_21.22_060326_Arena1234_CenterTopCamVid_2026-03-06T16_15_25_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+    "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/16w_PI_T7_21_22_060326_active_Arena3_BotCamVid_2026-03-06T16_15_25/16w_PI_T7_21_22_060326_active_Arena3_BotCamVid_2026-03-06T16_15_25DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5"
+  },
+  {
+    "sid": "2026-03-06T16_15_25_bottom_right_seg003",
+    "start": 22301,
+    "end": 22307,
+    "len": 6,
+    "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T7_21.22_060326_Arena1234_CenterTopCamVid_2026-03-06T16_15_25_bottom_right.avi",
+    "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/16w_PI_T7_21.22_060326_active_Arena3_BotCamVid_2026-03-06T16_15_25.avi",
+    "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T7_21.22_060326_Arena1234_CenterTopCamVid_2026-03-06T16_15_25_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+    "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/16w_PI_T7_21_22_060326_active_Arena3_BotCamVid_2026-03-06T16_15_25/16w_PI_T7_21_22_060326_active_Arena3_BotCamVid_2026-03-06T16_15_25DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5"
+  },
+  {
+    "sid": "2026-03-06T16_15_25_bottom_right_seg001",
+    "start": 2188,
+    "end": 2194,
+    "len": 6,
+    "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T7_21.22_060326_Arena1234_CenterTopCamVid_2026-03-06T16_15_25_bottom_right.avi",
+    "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/16w_PI_T7_21.22_060326_active_Arena3_BotCamVid_2026-03-06T16_15_25.avi",
+    "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T7_21.22_060326_Arena1234_CenterTopCamVid_2026-03-06T16_15_25_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+    "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/16w_PI_T7_21_22_060326_active_Arena3_BotCamVid_2026-03-06T16_15_25/16w_PI_T7_21_22_060326_active_Arena3_BotCamVid_2026-03-06T16_15_25DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5"
+  },
+  {
+    "sid": "2026-03-06T11_14_44_bottom_left_seg008",
+    "start": 1373,
+    "end": 1379,
+    "len": 6,
+    "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T4_13.14.15_060326_Arena1234_CenterTopCamVid_2026-03-06T11_14_44_bottom_left.avi",
+    "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/16w_PI_T4_13.14.15_060326_active_Arena2_BotCamVid_2026-03-06T11_14_44.avi",
+    "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T4_13.14.15_060326_Arena1234_CenterTopCamVid_2026-03-06T11_14_44_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+    "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/16w_PI_T4_13_14_15_060326_active_Arena2_BotCamVid_2026-03-06T11_14_44/16w_PI_T4_13_14_15_060326_active_Arena2_BotCamVid_2026-03-06T11_14_44DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5"
+  },
+  {
+    "sid": "2026-03-06T11_14_44_bottom_left_seg002",
+    "start": 1708,
+    "end": 1714,
+    "len": 6,
+    "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T4_13.14.15_060326_Arena1234_CenterTopCamVid_2026-03-06T11_14_44_bottom_left.avi",
+    "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/16w_PI_T4_13.14.15_060326_active_Arena2_BotCamVid_2026-03-06T11_14_44.avi",
+    "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T4_13.14.15_060326_Arena1234_CenterTopCamVid_2026-03-06T11_14_44_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+    "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/16w_PI_T4_13_14_15_060326_active_Arena2_BotCamVid_2026-03-06T11_14_44/16w_PI_T4_13_14_15_060326_active_Arena2_BotCamVid_2026-03-06T11_14_44DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5"
+  },
+  {
+    "sid": "2026-05-16T12_28_03_top_left_seg001",
+    "start": 1011,
+    "end": 1017,
+    "len": 6,
+    "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T2_5.11.12_16.05.2026_Arena1234_CenterTopCamVid_2026-05-16T12_28_03_top_left.avi",
+    "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/L_dopa_T2_5.11.12_16.05.2026_active_Arena1_BotCamVid_2026-05-16T12_28_03.avi",
+    "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T2_5.11.12_16.05.2026_Arena1234_CenterTopCamVid_2026-05-16T12_28_03_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+    "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/L_dopa_T2_5_11_12_16_05_2026_active_Arena1_BotCamVid_2026-05-16T12_28_03/L_dopa_T2_5_11_12_16_05_2026_active_Arena1_BotCamVid_2026-05-16T12_28_03DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5"
+  },
+  {
+    "sid": "2026-05-16T12_28_03_bottom_right_seg017",
+    "start": 5107,
+    "end": 5113,
+    "len": 6,
+    "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T2_5.11.12_16.05.2026_Arena1234_CenterTopCamVid_2026-05-16T12_28_03_bottom_right.avi",
+    "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/L_dopa_T2_5.11.12_16.05.2026_active_Arena3_BotCamVid_2026-05-16T12_28_03.avi",
+    "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T2_5.11.12_16.05.2026_Arena1234_CenterTopCamVid_2026-05-16T12_28_03_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+    "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/L_dopa_T2_5_11_12_16_05_2026_active_Arena3_BotCamVid_2026-05-16T12_28_03/L_dopa_T2_5_11_12_16_05_2026_active_Arena3_BotCamVid_2026-05-16T12_28_03DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5"
+  },
+  {
+    "sid": "2025-12-03T16_38_48_bottom_right_seg008",
+    "start": 4026,
+    "end": 4032,
+    "len": 6,
+    "top_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/video_files/T6_19.17.23_03122025_Arena1234_CenterTopCamVid_2025-12-03T16_38_48_bottom_right.avi",
+    "bot_vid": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/botcam_video_files/3_week_PI_T6_19.17.23_03122025_active_Arena3_BotCamVid_2025-12-03T16_38_48.avi",
+    "top_h5": "/home/fsp585/Desktop/FiberphotometryCode/karen_project/h5_files/T6_19.17.23_03122025_Arena1234_CenterTopCamVid_2025-12-03T16_38_48_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020.h5",
+    "bot_h5": "/home/fsp585/Desktop/production_analysis_arm_B_seed_123_20260922/predictions/3_week_PI_T6_19_17_23_03122025_active_Arena3_BotCamVid_2025-12-03T16_38_48/3_week_PI_T6_19_17_23_03122025_active_Arena3_BotCamVid_2025-12-03T16_38_48DLC_HrnetW32_karen_bottom_modelSep14shuffle9_snapshot_best-180.h5"
+  }
+]

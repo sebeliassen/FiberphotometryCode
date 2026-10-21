@@ -1,0 +1,122 @@
+{
+  "Arena1_2025-12": {
+    "n_sessions": 8,
+    "is_cal_count": 0,
+    "mean_session_median_px": 4.008271279530524,
+    "mean_session_p95_px": 16.266812431530617,
+    "mean_signed_dx": -0.3174996219945416,
+    "mean_signed_dy": -0.5425438534484173
+  },
+  "Arena1_2026-01": {
+    "n_sessions": 8,
+    "is_cal_count": 0,
+    "mean_session_median_px": 4.412552468369045,
+    "mean_session_p95_px": 15.78804687469647,
+    "mean_signed_dx": 2.7485780648046223,
+    "mean_signed_dy": -1.3075576465227374
+  },
+  "Arena1_2026-03": {
+    "n_sessions": 10,
+    "is_cal_count": 8,
+    "mean_session_median_px": 5.000691756901331,
+    "mean_session_p95_px": 14.479558931746215,
+    "mean_signed_dx": -0.1765070455996071,
+    "mean_signed_dy": -0.2974359702650142
+  },
+  "Arena1_2026-04": {
+    "n_sessions": 7,
+    "is_cal_count": 0,
+    "mean_session_median_px": 21.443081543572482,
+    "mean_session_p95_px": 29.964558848567382,
+    "mean_signed_dx": 5.763748748159521,
+    "mean_signed_dy": 20.404456472562398
+  },
+  "Arena1_2026-05": {
+    "n_sessions": 7,
+    "is_cal_count": 0,
+    "mean_session_median_px": 21.520364896267598,
+    "mean_session_p95_px": 29.460102914820563,
+    "mean_signed_dx": 3.968967843402962,
+    "mean_signed_dy": 20.82043759206146
+  },
+  "Arena2_2025-12": {
+    "n_sessions": 8,
+    "is_cal_count": 0,
+    "mean_session_median_px": 3.7384707134056874,
+    "mean_session_p95_px": 16.855846782098332,
+    "mean_signed_dx": -1.479073300622685,
+    "mean_signed_dy": 0.37451592386232885
+  },
+  "Arena2_2026-01": {
+    "n_sessions": 8,
+    "is_cal_count": 0,
+    "mean_session_median_px": 4.314887266787583,
+    "mean_session_p95_px": 16.371163698876458,
+    "mean_signed_dx": 0.04309080286101905,
+    "mean_signed_dy": 1.0040601711300896
+  },
+  "Arena2_2026-03": {
+    "n_sessions": 10,
+    "is_cal_count": 7,
+    "mean_session_median_px": 4.255306884750665,
+    "mean_session_p95_px": 13.58012368111046,
+    "mean_signed_dx": 0.15716045524830258,
+    "mean_signed_dy": -0.14434331890509466
+  },
+  "Arena2_2026-04": {
+    "n_sessions": 3,
+    "is_cal_count": 0,
+    "mean_session_median_px": 20.632030184878825,
+    "mean_session_p95_px": 29.028215607900105,
+    "mean_signed_dx": 3.7164284412461814,
+    "mean_signed_dy": 20.231502146989072
+  },
+  "Arena2_2026-05": {
+    "n_sessions": 7,
+    "is_cal_count": 0,
+    "mean_session_median_px": 21.193440139206984,
+    "mean_session_p95_px": 28.662969199928344,
+    "mean_signed_dx": 3.1930626552036423,
+    "mean_signed_dy": 21.054690599837052
+  },
+  "Arena3_2025-12": {
+    "n_sessions": 8,
+    "is_cal_count": 0,
+    "mean_session_median_px": 3.7795027664932617,
+    "mean_session_p95_px": 14.09127592544823,
+    "mean_signed_dx": -0.22942482602509867,
+    "mean_signed_dy": 0.5970953170151105
+  },
+  "Arena3_2026-01": {
+    "n_sessions": 7,
+    "is_cal_count": 0,
+    "mean_session_median_px": 5.317354926607919,
+    "mean_session_p95_px": 16.020966637081695,
+    "mean_signed_dx": -0.414485515473693,
+    "mean_signed_dy": 0.8257339151704103
+  },
+  "Arena3_2026-03": {
+    "n_sessions": 11,
+    "is_cal_count": 8,
+    "mean_session_median_px": 4.387865764260038,
+    "mean_session_p95_px": 13.403664575497748,
+    "mean_signed_dx": 0.0011153322756437848,
+    "mean_signed_dy": -0.22057362643098957
+  },
+  "Arena3_2026-04": {
+    "n_sessions": 3,
+    "is_cal_count": 0,
+    "mean_session_median_px": 20.382818273412408,
+    "mean_session_p95_px": 27.70015949444118,
+    "mean_signed_dx": 3.457177140079573,
+    "mean_signed_dy": 19.86178013677039
+  },
+  "Arena3_2026-05": {
+    "n_sessions": 7,
+    "is_cal_count": 0,
+    "mean_session_median_px": 20.118506624588527,
+    "mean_session_p95_px": 26.781768927772273,
+    "mean_signed_dx": 3.04476059601861,
+    "mean_signed_dy": 19.892599248199954
+  }
+}

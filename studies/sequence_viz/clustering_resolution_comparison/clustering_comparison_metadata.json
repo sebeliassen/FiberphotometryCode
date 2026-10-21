@@ -1,0 +1,338 @@
+[
+  {
+    "level_id": 1,
+    "level_name": "Level 1: Original Syllables",
+    "vocab_size": 100,
+    "theme_id": "theme_A_rear_descent",
+    "theme_title": "Theme A: Wall-Rear & Descent Locomotion",
+    "sequence": "Sniff_Up -> Wall_Rear -> Desc_L -> Walk_L",
+    "n_population": 62,
+    "n_animals": 11,
+    "mean_dur_sec": 1.7326612903225806,
+    "std_dur_sec": 0.6666990892436669,
+    "mean_speed_px": 74.31245751210172,
+    "std_speed_px": 18.595408111855054,
+    "mean_net_disp": 42.152037951028106,
+    "mean_turn_deg": -66.63059353227149,
+    "std_turn_deg": 69.7379618348257,
+    "exemplar_animals": [
+      "1694",
+      "1658",
+      "1680"
+    ],
+    "ordinary_animals": [
+      "1666",
+      "1773",
+      "1694"
+    ],
+    "exemplar_density_ratio": 1.5825684179230766
+  },
+  {
+    "level_id": 1,
+    "level_name": "Level 1: Original Syllables",
+    "vocab_size": 100,
+    "theme_id": "theme_B_turn_slalom",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "sequence": "Turn_R -> Run_R -> Dash -> Turn_L",
+    "n_population": 155,
+    "n_animals": 15,
+    "mean_dur_sec": 1.6293548387096775,
+    "std_dur_sec": 0.686906038951147,
+    "mean_speed_px": 115.47449001719302,
+    "std_speed_px": 39.099145337581746,
+    "mean_net_disp": 135.14610258390456,
+    "mean_turn_deg": 43.02207164542404,
+    "std_turn_deg": 53.52204786557333,
+    "exemplar_animals": [
+      "1771",
+      "1749",
+      "1658"
+    ],
+    "ordinary_animals": [
+      "1771",
+      "740",
+      "728"
+    ],
+    "exemplar_density_ratio": 1.8321750974576754
+  },
+  {
+    "level_id": 1,
+    "level_name": "Level 1: Original Syllables",
+    "vocab_size": 100,
+    "theme_id": "theme_C_sensory_rest",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "sequence": "Sniff -> Rest -> Sniff -> Rest",
+    "n_population": 111,
+    "n_animals": 14,
+    "mean_dur_sec": 3.124774774774775,
+    "std_dur_sec": 1.1423684081347087,
+    "mean_speed_px": 52.01530130444202,
+    "std_speed_px": 3.421299556820337,
+    "mean_net_disp": 8.510806337577488,
+    "mean_turn_deg": -22.50542457001971,
+    "std_turn_deg": 34.35518053199904,
+    "exemplar_animals": [
+      "740",
+      "1775",
+      "728"
+    ],
+    "ordinary_animals": [
+      "1680",
+      "728",
+      "1765"
+    ],
+    "exemplar_density_ratio": 2.338869622809769
+  },
+  {
+    "level_id": 2,
+    "level_name": "Level 2: Conservative Synonym Merging",
+    "vocab_size": 93,
+    "theme_id": "theme_A_rear_descent",
+    "theme_title": "Theme A: Wall-Rear & Descent Locomotion",
+    "sequence": "Sniff_Up -> Wall_Rear -> Desc_L -> Walk_L_syn",
+    "n_population": 74,
+    "n_animals": 13,
+    "mean_dur_sec": 1.7716216216216218,
+    "std_dur_sec": 0.6742153137256934,
+    "mean_speed_px": 79.51718895630799,
+    "std_speed_px": 22.68877673008301,
+    "mean_net_disp": 52.52453301544044,
+    "mean_turn_deg": -73.96343589786467,
+    "std_turn_deg": 68.4637524357746,
+    "exemplar_animals": [
+      "1694",
+      "1664",
+      "1658"
+    ],
+    "ordinary_animals": [
+      "1664",
+      "1694",
+      "1658"
+    ],
+    "exemplar_density_ratio": 1.731823939059556
+  },
+  {
+    "level_id": 2,
+    "level_name": "Level 2: Conservative Synonym Merging",
+    "vocab_size": 93,
+    "theme_id": "theme_B_turn_slalom",
+    "theme_title": "Theme B: Sprint & Turning Redirection",
+    "sequence": "Turn_R -> Run_R -> Dash -> Turn_L",
+    "n_population": 155,
+    "n_animals": 15,
+    "mean_dur_sec": 1.6293548387096775,
+    "std_dur_sec": 0.686906038951147,
+    "mean_speed_px": 115.47449001719302,
+    "std_speed_px": 39.099145337581746,
+    "mean_net_disp": 135.14610258390456,
+    "mean_turn_deg": 43.02207164542404,
+    "std_turn_deg": 53.52204786557333,
+    "exemplar_animals": [
+      "1771",
+      "1749",
+      "1658"
+    ],
+    "ordinary_animals": [
+      "1658",
+      "728",
+      "1775"
+    ],
+    "exemplar_density_ratio": 1.8321750974576754
+  },
+  {
+    "level_id": 2,
+    "level_name": "Level 2: Conservative Synonym Merging",
+    "vocab_size": 93,
+    "theme_id": "theme_C_sensory_rest",
+    "theme_title": "Theme C: Olfactory Inspection & Rest",
+    "sequence": "Sniff_syn -> Rest_syn -> Sniff_syn -> Rest_syn",
+    "n_population": 121,
+    "n_animals": 14,
+    "mean_dur_sec": 3.2896694214876034,
+    "std_dur_sec": 1.2289831070827242,
+    "mean_speed_px": 52.07001167147962,
+    "std_speed_px": 3.2700626125774814,
+    "mean_net_disp": 8.659906692709784,
+    "mean_turn_deg": -21.314237184587377,
+    "std_turn_deg": 35.08934374727531,
+    "exemplar_animals": [
+      "740",
+      "1775",
+      "728"
+    ],
+    "ordinary_animals": [
+      "1775",
+      "1658",
+      "728"
+    ],
+    "exemplar_density_ratio": 2.3367158808622115
+  },
+  {
+    "level_id": 3,
+    "level_name": "Level 3: Functional Families with Distinctions Preserved",
+    "vocab_size": 22,
+    "theme_id": "theme_A_rear_descent",
+    "theme_title": "Theme A: Wall-Rear & Descent Launch",
+    "sequence": "Turn_R -> Rear -> Desc_L -> Walk_L -> Sprint",
+    "n_population": 45,
+    "n_animals": 15,
+    "mean_dur_sec": 2.2755555555555556,
+    "std_dur_sec": 0.7711011046420871,
+    "mean_speed_px": 116.68221800096093,
+    "std_speed_px": 36.80402933613661,
+    "mean_net_disp": 172.9203958645351,
+    "mean_turn_deg": -77.00242213055336,
+    "std_turn_deg": 45.777162306316484,
+    "exemplar_animals": [
+      "1666",
+      "1658",
+      "1771"
+    ],
+    "ordinary_animals": [
+      "1767",
+      "1680",
+      "1658"
+    ],
+    "exemplar_density_ratio": 1.6911780972610424
+  },
+  {
+    "level_id": 3,
+    "level_name": "Level 3: Functional Families with Distinctions Preserved",
+    "vocab_size": 22,
+    "theme_id": "theme_B_turn_slalom",
+    "theme_title": "Theme B: High-Speed Slalom Alternation",
+    "sequence": "Walk_R -> Sprint -> Turn_L -> Sprint -> Turn_R",
+    "n_population": 18,
+    "n_animals": 7,
+    "mean_dur_sec": 2.279166666666667,
+    "std_dur_sec": 0.8804690195824293,
+    "mean_speed_px": 118.65735861073047,
+    "std_speed_px": 23.72333784046257,
+    "mean_net_disp": 187.64312038087803,
+    "mean_turn_deg": 27.008675935026126,
+    "std_turn_deg": 78.5043439813789,
+    "exemplar_animals": [
+      "1771",
+      "1749",
+      "1658"
+    ],
+    "ordinary_animals": [
+      "1771",
+      "1658",
+      "1664"
+    ],
+    "exemplar_density_ratio": 0.9591197327791731
+  },
+  {
+    "level_id": 3,
+    "level_name": "Level 3: Functional Families with Distinctions Preserved",
+    "vocab_size": 22,
+    "theme_id": "theme_C_sensory_rest",
+    "theme_title": "Theme C: Active Sensory Scanning Loop",
+    "sequence": "Sniff -> Look_L -> Sniff -> Look_R -> Sniff",
+    "n_population": 18,
+    "n_animals": 9,
+    "mean_dur_sec": 3.529166666666667,
+    "std_dur_sec": 1.3546024939688641,
+    "mean_speed_px": 62.10847435219367,
+    "std_speed_px": 14.34850967237972,
+    "mean_net_disp": 59.13808875741953,
+    "mean_turn_deg": 49.25768989723456,
+    "std_turn_deg": 94.53725011360783,
+    "exemplar_animals": [
+      "1680",
+      "740",
+      "1765"
+    ],
+    "ordinary_animals": [
+      "740",
+      "1680",
+      "728"
+    ],
+    "exemplar_density_ratio": 0.646810662086853
+  },
+  {
+    "level_id": 4,
+    "level_name": "Level 4: Broad Functional Families",
+    "vocab_size": 14,
+    "theme_id": "theme_A_rear_descent",
+    "theme_title": "Theme A: Wall-Rear & Sprint Loop",
+    "sequence": "Sprint -> Turn_R -> Rear -> Descent -> Sprint",
+    "n_population": 455,
+    "n_animals": 15,
+    "mean_dur_sec": 2.5798351648351643,
+    "std_dur_sec": 0.9193142602467912,
+    "mean_speed_px": 124.55981467408148,
+    "std_speed_px": 40.376850147002884,
+    "mean_net_disp": 183.65350522084162,
+    "mean_turn_deg": -16.004646323506098,
+    "std_turn_deg": 100.00964742200958,
+    "exemplar_animals": [
+      "1658",
+      "1694",
+      "1666"
+    ],
+    "ordinary_animals": [
+      "1749",
+      "1759",
+      "1771"
+    ],
+    "exemplar_density_ratio": 2.662350420663268
+  },
+  {
+    "level_id": 4,
+    "level_name": "Level 4: Broad Functional Families",
+    "vocab_size": 14,
+    "theme_id": "theme_B_turn_slalom",
+    "theme_title": "Theme B: High-Speed Slalom Burst",
+    "sequence": "Sniff -> Sprint -> Turn_L -> Sprint",
+    "n_population": 94,
+    "n_animals": 14,
+    "mean_dur_sec": 2.3779255319148938,
+    "std_dur_sec": 0.681546820785329,
+    "mean_speed_px": 108.58076479645062,
+    "std_speed_px": 30.14255468754922,
+    "mean_net_disp": 168.14318852461724,
+    "mean_turn_deg": -17.702148528018107,
+    "std_turn_deg": 79.03997431300425,
+    "exemplar_animals": [
+      "728",
+      "1666",
+      "1680"
+    ],
+    "ordinary_animals": [
+      "1767",
+      "1765",
+      "728"
+    ],
+    "exemplar_density_ratio": 1.6621534405214249
+  },
+  {
+    "level_id": 4,
+    "level_name": "Level 4: Broad Functional Families",
+    "vocab_size": 14,
+    "theme_id": "theme_C_sensory_rest",
+    "theme_title": "Theme C: Rest & Maintenance Cycle",
+    "sequence": "Sniff -> Rest -> Sniff -> Rest -> Sniff",
+    "n_population": 224,
+    "n_animals": 14,
+    "mean_dur_sec": 4.8428571428571425,
+    "std_dur_sec": 1.612195183577032,
+    "mean_speed_px": 52.292911210670376,
+    "std_speed_px": 3.3203356958945043,
+    "mean_net_disp": 11.330631961118158,
+    "mean_turn_deg": -8.10450328977568,
+    "std_turn_deg": 40.39611023024245,
+    "exemplar_animals": [
+      "740",
+      "728",
+      "1771"
+    ],
+    "ordinary_animals": [
+      "1765",
+      "728",
+      "1694"
+    ],
+    "exemplar_density_ratio": 2.863131952446164
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "total_sessions_audited": 118,
+  "total_frames_audited": 49794211,
+  "total_dropped_frames": 3,
+  "dropped_frame_rate_pct": 6.024796737917988e-06,
+  "total_non_monotonic_frames": 0,
+  "mean_top_frame_interval_ms": 16.667807491525423,
+  "mean_bot_frame_interval_ms": 16.667788271186435,
+  "mean_crystal_ppm_drift": 1.2096561742995857,
+  "max_abs_crystal_ppm_drift": 3.4269219553184627,
+  "mean_fp3002_duplicate_pct": 7.93238877015267,
+  "calib_status_counts": {
+    "VALID_CRYSTAL": 118
+  },
+  "hardware_sync_conclusion": {
+    "fp3002_nature": "Asynchronously polled host stream (mean duplicate rate 7.93%), NOT camera exposure trigger",
+    "crystal_clocks": "Extremely stable FPGA crystals (mean PPM drift = 1.210 ppm)",
+    "phase_uncertainty": "In the absence of a shared GPIO hardware trigger or optical pulse, absolute sub-frame phase correspondence has +/- 1 frame uncertainty (16.67 ms)."
+  }
+}
