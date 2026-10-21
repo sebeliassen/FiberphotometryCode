@@ -154,3 +154,13 @@ differ only in the helper import. Added old leaf proxy, matching shim target and
 additive source-restoration record; historical quarantine history is retained.
 Full1020CPU/6existing warnings in both environments;13 focused, doctorCPU,
 architecture202/lint/maps/wheel/dependencies pass. No exporter/model executed.
+
+## Tracking configuration provenance and imports
+
+Recovered Karen and baseline source policies with original complete ASTs and
+canonical class imports. Distinct ranges/regex/chamber policies and instances are
+preserved, with four unchanged tracking function ASTs and explicit owner imports.
+Candidate includes reviewed PR10 actual main via a normal merge; task records and
+all additive tests retained.19focused/1039fullCPU in both environments pass,
+6existing warnings each; architecture202/lint/maps/wheel/dependencies pass.
+Independent archive/Git/AST review found no issues. No empirical run or root move.

@@ -69,9 +69,21 @@
     "focused_passed": 19,
     "maintained_lint": "PASS:3067 reviewed diagnostics,no new debt,12 historical diagnostics resolved; inventory unchanged",
     "test_source_sha256": "8276afba78a59300bee9edf429afb250fa2d5e89d1dfd45729891ca77c3251b3",
-    "full_functional_suite": "Not run in this bounded slice; integration owner batches final broad checks.",
+    "full_functional_suite": "PASS in lab and isolated pinned CPU environment;1039 passed/6existing warnings each.",
     "folder_maps_check": "PASS:149 directories synchronized after regeneration.",
-    "git_diff_check": "PASS"
+    "git_diff_check": "PASS",
+    "lab_python": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "isolated_python": "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "numerical_threads": 2,
+    "architecture": "PASS;202modules",
+    "installed_wheel_dependencies": "PASS in isolated environment;shared lab unchanged",
+    "evidence_sha256": {
+      "tracking_candidate_checks.json": "481d6da666a9fcd10637c064e5c2bd2ca37d3ce6eb8109a4fc058b685c9dcc81",
+      "tracking_candidate_test-cpu.log": "322c01b64eda42aa2687709c760c9dbe97f0cb9fb924a3b7542dda0372e6e06a",
+      "tracking_clean_cpu.json": "9a00475d13f1b829de3c7e986b7353682fe1384ef1876ccbcdb222fa8d4ba8ba",
+      "tracking_clean_functional.log": "25459f82590b5d0ea6bfcb1c0add0afe71d850881e1ead5962bb8adf166d5a1e"
+    }
   },
   "limits": [
     "Only test-created empty video/H5 files were discovered; no empirical content or pickle/model was loaded.",
@@ -79,5 +91,16 @@
     "Direct old studies.behavior symlink module identity and named trusted artifact reconstruction remain separate gates.",
     "No fitting, export, rendering, data move, physical legacy removal, Git publication or main merge was performed in this slice.",
     "Baseline and juvenile retain separate policy owners and independent instances despite identical historical values."
-  ]
+  ],
+  "integration_main": "3c2341e3988c1ae5db3b0f652ae1425c59531191",
+  "integration_resolution": "Normal merge retained both task records and both additive test files; only CURRENT and derived unit map conflicted; regenerated map.",
+  "independent_review": "builder_provenance independently recomputed archive/member/Git/candidate hashes, complete policy and JonathanConfig class ASTs, all4 function ASTs and test hash; no actionable findings.",
+  "candidate_source_sha256": {
+    "studies/karen_pff_vs_monomer/session_policy/config.py": "863a5b74bdede91f9dc78245beeb642746a4cf17341ddb6457cc0eff8c6730ab",
+    "studies/oft_baseline/config.py": "6ecc68474a262903ec1290f7b4ff10562d6579b777df97fdf39f996acbd7d47b",
+    "studies/karen_pff_vs_monomer/analysis/tracking.py": "0681377b79862676bd52cb7e50435700ed197a2541fb980db644fd48bbab966c",
+    "studies/monoamine_interactions/steps/tracking.py": "80587b3a6a38aa693d0595b9ddd64d938cd06153b92203b58bf89b10690da731",
+    "tests/unit/test_project_tracking_policies.py": "8276afba78a59300bee9edf429afb250fa2d5e89d1dfd45729891ca77c3251b3",
+    "registry/MOVES.tsv": "c767b4979d1a497597757f76df48473376afb326d0b54198833c29e5283af254"
+  }
 }

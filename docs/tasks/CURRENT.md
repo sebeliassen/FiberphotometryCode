@@ -1,4 +1,4 @@
-## Project tracking policy candidate validated in focused scope (2026-10-21)
+## Original project tracking policies restored and validated (2026-10-21)
 
 Candidate .worktrees/project-tracking-policies / codex/project-tracking-policies
 starts at maina8ec522. Karen session_policy/config.py is restored from the exact
@@ -22,10 +22,12 @@ Maintained lint passes3067reviewed diagnostics/no new debt,12historical diagnost
 resolved; its inventory is unchanged. See
 registry/checkpoints/project_tracking_policies_20261021.json for exact provenance.
 
-NEXT: integration owner batches final functional/architecture/isolated checks and
-source-only inventory after integrating the preceding main slice, then reviews
-and publishes this bounded candidate. No commits/network/main merge were made
-for this focused slice. Unified builder dynamic-import/global-policy mutation,
+This revision incorporates actual PR10 main3c2341e through a normal merge,
+retaining both additive source/test sets and task records. Final1039CPU tests pass
+in lab AND isolated pinned environments (6existing warnings each); architecture202,
+lint/maps/wheel/dependencies pass. Independent review recomputed all source and
+AST proofs with no findings. Additive restoration records preserve the historical
+quarantine ledger. Source/checkpoint evidence pins this validated revision. Unified builder dynamic-import/global-policy mutation,
 direct old study symlink identity, named real artifact reconstruction and ignored
 empirical/browser-feedback recovery remain separate gates. Existing legacy roots,
 original primary/delivery checkouts and viewers remain intact. Exact remote state
