@@ -100,3 +100,13 @@ source/shim records are restored.13 focused and1020 full CPU cases in each local
 environment pass. No real exporter/model/artifact was executed. Driver paths,
 backend setup, write policy and real artifact support remain gates; old reports
 about automatic scaling do not describe this restored implementation.
+
+## Original cohort policy recovery
+
+Karen's272-byte project config is restored from a checksum-verified source archive;
+baseline config is restored from pinned Git and identical archived source. They
+retain different ranges/rules and independent instances. Two tracking callers now
+use explicit policy/parser owners; four function ASTs remain exact.19focused and
+1039fullCPU cases in both environments pass, with independent provenance review.
+Unified-builder dynamic imports/global config propagation and old study namespace
+identity remain separate gates. No empirical cohort discovery was performed.

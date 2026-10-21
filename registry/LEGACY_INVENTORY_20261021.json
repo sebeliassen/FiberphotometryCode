@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "source_commit": "a8ec522d45206713153bb2dcfe272d950f671e40",
+  "source_commit": "4d45215641e076c687d260c9cb6fb2874fb7494b",
   "legacy_paths": 618,
-  "static_references": 4734,
+  "static_references": 4731,
   "parse_or_budget_limits": [
     [
       "compat/syllable_generation/analysis/replications/datta_orig/panels/1f/1f.ipynb",
@@ -906,7 +906,7 @@
     "docs/architecture/BROAD_SEARCH_EXECUTION_PLAN.md": "d224bc47d8998ba5586f5579f02cdade49c2157f2032aa8d3572cc720c47df1b",
     "docs/architecture/CHAIN_GENERATOR_QUANTITATIVE_PANEL_20261014.md": "221a1f78a21fe074ed02cb73de0dc64e25d7039f85935f0846491fc40494d5d3",
     "docs/architecture/CHAIN_VIDEO_LEGACY_FEATURE_AUDIT_20261014.md": "86bafa18988e0204342f7c144a3d1e878d245f1686d67a63a8ef21e37d2e87ee",
-    "docs/architecture/LEGACY_RETIREMENT.md": "dc1abadc2af07571dfe71f813724c87c620d61b6561f4664a0508c1ef30c0946",
+    "docs/architecture/LEGACY_RETIREMENT.md": "3f4874b961d09a1a946c4fd0dfc55215e4cbaf22ecbb4cb03023e1152107015e",
     "docs/reports/ANTIGRAVITY_HANDOFF_20261011.md": "901c0c450bece7cc939cf116e4ae305c07bf9cb21eeb18e68bbce9e35cd0f0cb",
     "docs/reports/KPMS_8KP_VS_17KP_CONTROLLED_COMPARISON_REPORT.md": "1ba58df346f1b795b05e25bd1e79ac44a55038421f731735fdaef8ba3809a639",
     "docs/reports/KPMS_MONKEYPATCHING_AND_MEMORY_SCALING_GUIDE.md": "9b30e6aa0b9fd9023407515236083f60187914a8987133b99a41e42abae5ba97",
@@ -925,8 +925,8 @@
     "docs/reports/refactor_report.md": "669b54acb36d832a7e6b6be303ee757be02c8a7f3e9216a37ec99dd8630dc2dc",
     "docs/tasks/BROAD_SEARCH_HANDOFF_20261013.md": "11e397af9a90de96520e23a9ada10598bfb35e220d2fadb9f59236a9c2697782",
     "docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md": "c54f53c37149a527322c5c92fdec722c9eebc5b92046277f32d172e4d7477d14",
-    "docs/tasks/CONSOLIDATION_PROGRESS_20261021.md": "ab18f1afaa804ba1cf07ee847b3a4aea60aa16352469e5533f44b01fc2e01c57",
-    "docs/tasks/CURRENT.md": "eb73ac8993e0481f27c942cff1d70d8061c6c56cdd4aea2fc4f008ad5c77af74",
+    "docs/tasks/CONSOLIDATION_PROGRESS_20261021.md": "9d9d5d78d91291bd16d8af7099c3978a6f500e66eeeec48136936434775b8b57",
+    "docs/tasks/CURRENT.md": "f0423ef5dfd5317d82367f9f4505f7c514a01c819023d06c9d2682932b5fef9f",
     "ops/repo/build_triage.py": "3529c2ecabf640aaa2a48b5e1fe9436b6a5bcaed6a9f9a36dbf21a0f32d25e58",
     "ops/repo/generate_folder_maps.py": "0f6c8b8b6e6f70fe4ff8e2e62b9e5d168a2dbd4b3d5b6360165a1432cc045b4c",
     "ops/repo/metrics.py": "d78e6fad0a463d888dd2c0f06b5197d78d12e49ae988eab1cd7b09fc555c0df9",
@@ -974,7 +974,6 @@
     "studies/karen_pff_vs_monomer/analysis/package_karen_zips.py": "d0e6108b5b5c9fbc8eec24ddfb9c445219bd30aa77eee42947bbb28bc5673d30",
     "studies/karen_pff_vs_monomer/analysis/render_publication_figures.py": "df7e8f0a4d6928ed7860d4e58289efb61c8a2bc706f1fbc81602b762c56a73f4",
     "studies/karen_pff_vs_monomer/analysis/run_karen_pff_vs_monomer_master_pipeline.py": "c6077de92e29e184467b8e18a0f5a804988d6f72ede7e353de24e5c3f6c181ee",
-    "studies/karen_pff_vs_monomer/analysis/tracking.py": "2a0930ef5f58131de71e932276931d400818f064e72634e5594feb8471fa13c1",
     "studies/kinematics_ulrik/lib/loader.py": "e0a74ca0efa7c02e78e1319769e6db6679f634642d6326183719765d1144c19f",
     "studies/kinematics_ulrik/lib/motifs.py": "0d6b812db3599691a8c7da962c58d9bbeb2411c77ae471e938d132f16077662c",
     "studies/kinematics_ulrik/lib/quantitative_viz.py": "769506d2c30caaab8508ca4a6522622cd5b3bc389659c9bc3ecb1aa64b9a2edf",
@@ -1101,7 +1100,6 @@
     "studies/model_inspection/server.py": "8838e5bfe272849ff33d47853d4a084741863768eeae83910d40ba0175f578c0",
     "studies/monoamine_interactions/scripts/compare_pickles.py": "bc5b13f0016822cfc3772e2c0ad76f9c1d0c02dc099f39af8e9ca5cda2e5ac9f",
     "studies/monoamine_interactions/scripts/verify_exclusions.py": "8c7734a2ae53ea64fbf4f4fc0ad7aa9a93c1a1b26ed9c40d041bfa0515dc3f2a",
-    "studies/monoamine_interactions/steps/tracking.py": "20850584064fe6399fa243794fb051e50d1a60b23877bef97764c9064ab10ea5",
     "studies/multimodal_movies/composer.py": "9eff284eea88665ddd123e91709beb5eb557911c10656b79a5af02de2f588767",
     "studies/multimodal_movies/config.py": "38183bb15472b589380514824ac3e0051609638e3d98adaa19ae5233615c2132",
     "studies/multimodal_movies/grids/photometry.py": "8c5430fa201e47e5b101272ec6c871f286ce5833abf1dc1442300ffae9c3106b",
@@ -1298,14 +1296,7 @@
     "registry/LEGACY_CONSUMERS_20261021.tsv",
     "registry/LEGACY_PATHS_20261021.tsv",
     "registry/MOVES.tsv",
-    "registry/SHIMS.tsv",
-    "studies/session_model_exports/.folder-map.md",
-    "studies/session_model_exports/README.md",
-    "studies/session_model_exports/attach_double_flip_kpms.py",
-    "studies/session_model_exports/attach_syllables_kpms.py",
-    "studies/session_model_exports/utils/.folder-map.md",
-    "tests/.folder-map.md",
-    "tests/unit/.folder-map.md"
+    "registry/checkpoints/project_tracking_policies_20261021.json"
   ],
   "interpretation": "Static references are candidates for review, not proof of live use; unknown external consumers and stored-object names remain retirement gates."
 }

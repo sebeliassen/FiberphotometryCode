@@ -1,13 +1,18 @@
 from __future__ import annotations
-import pandas as pd
-from pathlib import Path
+
 import re
 
-from syllable_generation.loaders.jonathan.utils.files import (
-    parse_video_path, parse_h5_path, group_by_session_id, sort_parsed_h5_key
-)
+import pandas as pd
+
 from fpcode.contracts.session_record import SessionRecord
-from config import JCFG
+from studies.karen_pff_vs_monomer.session_policy.config import JCFG
+from studies.session_building.jonathan.utils.files import (
+    group_by_session_id,
+    parse_h5_path,
+    parse_video_path,
+    sort_parsed_h5_key,
+)
+
 
 def parse_ids_from_filename(filename: str):
     parts = filename.split("_")
