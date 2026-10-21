@@ -9,8 +9,9 @@ The reusable implementation is in `src/fpcode`, organized into contracts,
 adapters, alignment, tracking, photometry, behavior, KPMS, statistics,
 visualization, workflows and installed CLI modules. Study-specific analyses
 live in `studies/<project>`, with methods and cohort policy kept alongside their
-project. Historical `core`, `pipelines`, `syllable_generation` and photometry
-imports are retained in `compat`; `archive` contains preserved historical material.
+project. Physical `core` and `pipelines` adapters remain at the repository root.
+Historical `syllable_generation` and `fiberphotometry` namespaces live under
+`compat`; `archive` contains preserved historical material.
 
 Start with the [documentation index](docs/README.md) for current guidance and
 preserved historical reports. The agreed architecture is documented in
@@ -37,6 +38,22 @@ fpcode-evaluate --help
 fpcode-fuse --help
 fpcode-render --help
 ```
+
+The installed wheel provides `fpcode` and its CLI commands. Historical namespaces
+under `compat` require the source checkout because some aliases target study or
+vendor modules. For old notebooks/scripts or named historical loaders, activate
+these paths from the repository directory before starting Python:
+
+```bash
+export PYTHONPATH="$PWD/src:$PWD:$PWD/compat:$PWD/vendor/keypoint_moseq_syll${PYTHONPATH:+:$PYTHONPATH}"
+```
+
+The paths expand to this checkout and remain valid after changing directories.
+Use a fresh Python process when switching checkouts. This exposes retained
+aliases; their presence does not prove that every historical artifact or script
+works with current dependencies. Prefer `fpcode` imports and CLI commands for
+new work. Tests explicitly exercise this checkout setup in a separate process;
+pytest's own path configuration is not an installation mechanism.
 
 The default test suite uses tiny functional fixtures. Empirical scientific
 reproduction and GPU model fitting are separate checks. Existing models, videos,
