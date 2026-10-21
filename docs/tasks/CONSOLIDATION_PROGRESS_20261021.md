@@ -1,24 +1,48 @@
 # Consolidation execution state — 21 October 2026
 
-## Scope and recovery
+## Resume here
 
-Executing [the staged plan](CONSOLIDATION_AND_MAIN_PLAN_20261021.md). Primary branch is codex/modular-refactor; delivery worktree is .worktrees/karen-seqnmf-delivery. Do not reset, clean or switch either original worktree. Preserve running viewer processes 3693918 and 3768245.
+Validated implementation checkpoint: `b146e21` on `codex/legacy-consumers`.
 
-Source-only snapshots, per-file SHA256 manifests, source restore evidence, initial artifact inventory and detailed check logs are in outputs/consolidation_20261021 in the primary checkout. Snapshots include 58 ignored potential source files from the primary checkout for recovery only; these files have not been added to active source. They need individual classification. No empirical artifact has moved, and backup coverage for large artifacts/browser feedback remains unverified.
+Continue in `/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers`, branch `codex/legacy-consumers`. This contains all current integration and caller-migration work. The primary checkout remains on codex/modular-refactor for the original viewer/library setup; do not switch/reset/clean it or the original delivery worktree. No merge is left unresolved.
 
-## Completed checks
+## Captured and tested branches
 
-- Refreshed origin refs: main67468c1, modular3ec30fb, legacyb83298f; local history relationships unchanged.
-- Primary CPU846passed/6warnings; delivery CPU933passed/6warnings.
-- Architecture, maintained lint and installed-wheel checks passed in both worktrees.
-- Delivery maps passed; primary had two stale ops maps, regenerated and rechecked successfully. No numerical source changed for that repair.
-- Interpreter: /home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python; numerical pools limited to two threads. See baseline_checks.json and logs for exact commands.
-- Source restore exercise passed for named regular files in both snapshots; directory symlinks were not followed.
+| Branch | Role | Evidence |
+| --- | --- | --- |
+| codex/modular-refactor | Original source checkpoint31326cc, later continuation notes | Original source snapshot and preservation tag |
+| codex/karen-seqnmf-delivery | Source checkpoint2c43b75 | 45 reviewed source/test/doc files preserved; original empirical outputs unchanged |
+| codex/main-foundation | Foundation candidatef7c4056, based on origin/main and captured modular history | 850 CPU tests in lab and clean environments; architecture/lint/maps/package gates |
+| codex/main-seqnmf | Combined candidate525b589 | 937 CPU tests in lab and clean environments; all gates; installed source-origin checks |
+| codex/legacy-consumers | Current stacked caller-migration candidate | 951 CPU tests in lab and clean environments; all gates; exact extracted-statistic parity |
 
-## Remote publication limitation
+main remains67468c1 and no remote ref has changed. Scaffolding and legacy branches are already ancestors, not separate integrations still to apply.
 
-Git fetch works. A dry-run push failed because GitHub HTTPS credentials are unavailable: could not read Username. No remote refs changed. Continue preparing tested local integration branches; publication/PR creation and remote main promotion need an authenticated route. Do not work around branch protection or rewrite remote history.
+## Completed work
 
-## Next operation
+- Source-only tar snapshots with per-file SHA256 and representative restore checks cover both original worktrees, including58 ignored potential source files in primary.
+- Preservation tags codex/pre-main-20261021, codex/modular-preserved-20261021 and codex/seqnmf-preserved-20261021 restore from the verified703830120-byte all-refs Gitbundle.
+- Recovered20 ignored photometry/language-model source files; exact numerical-definition/import parity retained. Narrow Git exceptions admit source while excluding payloads. Navigation now includes explicitly named source data packages without traversing empirical trees/symlinks.
+- Declared tqdm/psutil in CPU test dependencies and pinned CI requirements. A temporary CPU environment without shared site packages passes the full suites and pip check; the shared lab environment was not upgraded.
+- Merged preserved seqNMF source into a local candidate. Preserved complete delivery task history and regenerated conflict-affected maps.
+- Verified installed fpcode modules and candidate study modules have matching candidate source hashes, with no modeling-backend initialization. All six functions recorded by the frozen atlas runtime manifest retain their original hashes across three modules. This is source provenance, not an empirical rerun.
+- Migrated8 study launchers to canonical CLI modules with preserved configs/argv/failure status. Moved orchestration tests to canonical imports and kept explicit historical alias identity tests.
+- Extracted the presentation Jensen-Shannon helper into fpcode.statistics.divergence;6 active consumers use it. Analytical bit-unit tests and exact float32/float64 parity use a new frozen pre-extraction reference. No existing numerical goldens or lint inventory changed.
+- Added a hashed static legacy ledger with617 paths and recorded scan limitations. Review bundles/historical notebooks are classified separately from current source.
 
-Checkpoint explicitly reviewed source files in the original branches, create preservation tags and a verified all-refs Git bundle, then prepare codex/main-foundation in a separate worktree from origin/main. Keep main unchanged until the integration candidate has passed its gates and can be reviewed/published. Later local candidates can be stacked while remote publication remains unavailable.
+## Validation and recovery locations
+
+Versioned evidence: `registry/checkpoints/consolidation_20261021.json`, `registry/SOURCE_RECOVERY_20261021.json`, `registry/LEGACY_*_20261021.*`, and `docs/architecture/LEGACY_RETIREMENT.md`.
+
+Detailed logs, manifests, snapshots and recovery bundles are in the primary checkout's `outputs/consolidation_20261021`. Lab interpreter: `/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python`. Clean environment path is recorded in `clean_cpu_environment.json`; do not assume a temporary environment survives another machine/session. Numerical pools were limited to two threads. Six existing warnings remain. Final gates:951 CPU tests pass in both environments; architecture202modules/no violations or cycles; lint has no new debt; maps and outside-checkout package checks pass. Run relevant checks again only after relevant changes or for a new merge candidate.
+
+## Outstanding gates
+
+- Git fetch works; dry-run push fails because HTTPS GitHub credentials are unavailable. Remote PR publication/main promotion awaits an authenticated route; do not bypass protection or force push. Local candidates are reviewable meanwhile.
+- Root core/pipelines/compat/archive are retained. Stored-object names, remaining project imports, external launchers and filesystem obligations need per-capability review before removal.
+- Large empirical artifact backups and browser feedback exports are not fully verified. No data/model/media move, refit, new render or artifact conversion has occurred. Existing viewer processes were preserved.
+- Local diagnostic/scratch/generated HTML files among the remaining ignored source candidates are preserved in the source snapshot; classification is still needed.
+
+## Exact next step
+
+Read docs/architecture/LEGACY_RETIREMENT.md and the legacy ledger. Migrate the next small set of active project imports with focused tests, then prove loader/identity support for named trusted artifacts before retiring an adapter. If GitHub authentication becomes available, publish the foundation, seqNMF and consumer candidates as sequential PRs (bases main, foundation, then seqNMF), preserve ancestry, require their checks, and promote in that order. Refresh remote refs before publishing. Do not independently merge the ancestor scaffolding/legacy branches.

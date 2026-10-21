@@ -1,3 +1,20 @@
+## Consolidation checkpoint b146e21 ready to resume (2026-10-21)
+
+Implementation lives in .worktrees/legacy-consumers on codex/legacy-consumers,
+commitb146e21. Start with CONSOLIDATION_PROGRESS_20261021.md; do not continue code
+changes in this original primary checkout. Three stacked local candidates:
+foundationf7c4056 -> seqnmf525b589 -> consumersb146e21. All original source is
+checkpointed; main67468c1 and remote refs unchanged. Publication needs GitHub auth.
+Recovered20 ignored source files; migrated8CLI and6statistic consumers; added
+retirement ledger and independent parity/import checks. Final951CPU/6warnings in
+lab AND isolated clean CPU environments; architecture202/lint/maps/wheel PASS.
+All6frozen-runtime function hashes retained across3sharedmodules; no empirical
+rerun implied. Legacy roots, recordings/models/media/feedback/viewers intact.
+NEXT follow remaining imports/artifact-family gates before retiring aliases;
+publication/PRs when authenticated. Primary outputs/consolidation_20261021 holds
+source snapshots, restore-verified Gitbundle, exact logs and initial inventories.
+Earlier notes below retain dated evidence; delivery CURRENT owns science status.
+
 ## Consolidation execution started; recovery snapshots ready (2026-10-21)
 
 User authorised executing the staged consolidation plan with resumable checkpoints.
