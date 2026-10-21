@@ -1,3 +1,291 @@
+## Consolidation execution started; recovery snapshots ready (2026-10-21)
+
+User authorised executing the staged consolidation plan with resumable checkpoints.
+Execution state: [CONSOLIDATION_PROGRESS_20261021.md](CONSOLIDATION_PROGRESS_20261021.md).
+Original primary/delivery source snapshots and SHA manifests are in primary
+outputs/consolidation_20261021; representative restores passed. Primary CPU846/
+delivery CPU933 pass (6warnings each); architecture/lint/package pass in both.
+Two stale primary ops maps regenerated and mapscheck now passes; no numerical edits.
+Fetch succeeded. Dry-run GitHub push lacks HTTPS credentials; no remote changes.
+Continue local reviewable integration candidates; remote promotion remains pending.
+Large artifact/browser-feedback recovery not yet verified: no physical data moves.
+NEXT: explicit source checkpoints/tags/Gitbundle, then isolated foundation worktree.
+Existing scientific notes and running viewers preserved; delivery CURRENT still
+owns Karen scientific status. See execution state before resuming.
+
+## Consolidation and staged main integration planned (2026-10-21)
+
+User requests a safe, incremental plan to bring current work onto main and retire
+root core/pipelines/compat/archive dependencies. Plan:
+[CONSOLIDATION_AND_MAIN_PLAN_20261021.md](CONSOLIDATION_AND_MAIN_PLAN_20261021.md).
+Local main67468c1 is ancestor of modular15df93d (61commits); scaffolding and
+legacy are already ancestors. Delivery736f3ca diverges at6c179ae (2modular-only/
+8delivery-only commits) and has important dirty/untracked source. No remote fetch.
+Sequence: preserve source/artifact state; validate/merge modular foundation with
+legacy support retained; integrate captured delivery with candidate import origins;
+migrate callers and retire adapters per capability; externalise archive only with
+verified recovery. Active launchers/tests still use pipelines/core; archive links
+livecompat and externallegacy. Shared fpcode currently imports primary checkout.
+Read-only CPUdoctor passes (Python3.10.19; installed0.1.0 vs source0.2.0); no suite,
+models, commits/tags/branches/merges, removals or data moves performed. Existing
+notes/workpreserved. NEXT if implementation requested: phase0 reviewed source
+checkpoints and dependency/recovery inventory only. Karen scientific currentstate
+remains in delivery worktree; planning does not alter its results/acceptance.
+
+## Per-theme view retained within tab session (2026-10-21)
+
+User requested neighbourhood choice per theme when navigating away/back.
+Showcase template and both servedpages now remember View by theme in
+sessionStorage (memory fallback), including dropdown and Watch-row selection.
+Previous/Next/theme-dropdown restore each choice; reload within tab also works.
+Newtab/session defaults to independentrows. Labelstorage/identity unchanged.
+Node syntax and isolatedChrome navigation/reload/storage checks PASS; see
+tab_view_memory_validation.json. Existing localMacforward port may vary.
+
+## Fresh viewer URL after stale-page report (2026-10-21)
+
+User still saw oldlayout. ServerHTTP bytes verified identical to corrected disk
+HTML (new rows default). Added fresh named same-origin page
+/theme_showcases_20261021/independent_rows_v2.html with visible heading
+"Five themes · independent row players (v2)". HTTP200/newheading/rowsdefault
+verified. No feedbacknamespace/manifest/mediachanges. Rootindex also hasv2heading.
+If newfilename404 onMac, investigateactual local8766tunneldestination; Linux8766
+server serves the correctdeliveryroot. No Mac-sidebrowserstateverified.
+
+## Theme viewer corrected to independent rows (2026-10-21)
+
+User rejected the default3x3combined player and wide side padding. Delivery
+showcasegallery now defaults to three separate three-panel row players with
+independent native controls/Replay/Fullscreen; starting one pauses others.
+Intrinsic2160x960rowaspect removes CSSletterboxing. View can isolate a row;
+combinedoverviewoptional. Same45clips/selection/manifest feedbackidentity; no
+rerender/fit/stat changes. New UIrevision recorded separately from frozenrender
+manifest; oldtemplateSHA remains its historicalcheckpoint. New browsercheck
+independent_rows_browser_validation.json; source/provenance/ZIP updated.
+Viewer path http://localhost:8766/theme_showcases_20261021/ through Mac SSHforward.
+Authoritative worktree .worktrees/karen-seqnmf-delivery. Existing notes preserved.
+
+## Three-neighbourhood theme movies delivered (2026-10-21)
+
+Continue in .worktrees/karen-seqnmf-delivery; its CURRENT is authoritative.
+User approved corrected449D metric + multiple supported local anchors and
+requested videos. New served folder in delivery outputs/karen_pooled_p80_review_
+20261015/theme_showcases_20261021/:5nine-paneloverviews,15three-panelrows,
+45uniqueexecutions. Three differentmice/row, sixmice local support/anchor;
+separated local variations, not three establishedbiologicalclusters. Frozen
+7319cores/99recordings/21mice unchanged; nofits/search/newstats/featureweights.
+18previous reference tables hash-identical. Strictnativekeycrosswalk preserves
+different internalmedia/statistic occurrenceIDs. Allselection/native/media/
+actual20moviebrowserfeedback/HTTPchecks PASS; CPU933/6oldwarnings,lint/architecture/
+maps checked. Viewerexisting8766/local61695ifforwardactive, newpath
+http://localhost:61695/theme_showcases_20261021/. START_HERE.md givesMacSSHfallback;
+Macforward itself notverified. Overview73.77s/pass (~12m18sat10plays); separate
+rowsavailable. Newfeedbackisolated; oldworkintact. ZIPsiblingportablecopy.
+Allrenderjobsfinished. Methoddoc THEME_NEIGHBOURHOOD_SHOWCASES_20261021.md in
+delivery studyanalysis. Next humaninterpretation/coherence/variantfeedback.
+
+## Deadline exploratory theme atlas delivered (2026-10-21)
+
+Continue in .worktrees/karen-seqnmf-delivery; its CURRENT is authoritative.
+Outputs/karen_theme_delivery_20261021:fiveprovisionalrefinedthemes/7319cores/
+99recordings21mice, no newfit/search. PortableHTMLreport/8PNG-PDFpairs/fulltables,
+15six-panelmovies90clips withp100/P80/random; P80total26.35sperpass. Servedpath
+outputs/karen_pooled_p80_review_20261015/theme_delivery_20261021/ usesexisting
+loopback8766/local61695ifforwardstillactive; START_HERE.md hasMacSSHcommand.
+Frozencores groupblind, wholecohortretrieval inclallrootcontinuations; intra/
+inter/context/null/primitive/movementreadouts completed. Coreunion8.57%validtime;
+inter299primarypairs sparse.8300finitetests/462nominal/146familyBH/0globalBH;
+144familyhitswithin-grouptimechanges,only2PFF-Mgroupdifferences. TravelratePFF
+.488vsM.705/min,p.014,qfamily.168,qglobal.511; earlygroomstage+1.039s,p.0007,
+qfamily.0308,qglobal.277. No corrected diseaseclaim;24wN3M/6P,Ldopaconfounded.
+Allnativecores/root/statisticalBH/exactMC/media/browserauditsPASS;CPU922/6old
+warnings,sourcechecksrecorded. Float60Hzsamplingbugfixed,newstreams1:1,ranks/
+selectionsunchanged. Oldlabels/workpreserved. Actualsharedlib importsprimary
+15df93d;dirty delivery736f3ca studycode/sourcecopiesandhashes inportablebundle.
+No empiricaljobsrunning. Narrowerdeadlinereportdelivered; generatoracceptance/
+qualitativeconfirmation remainopen. See deliveryEXPLORATORY_THEME_DELIVERY md.
+
+## Deadline-focused theme plan (2026-10-21)
+
+User requests concise PLAN FIRST: obtain useful exploratory Karen themes inspired
+by IFxDNpresentation; nominal effects that fail correction are welcome. Shift
+priority from broadgeneratoroptimisation/fullreview to a smallthemeatlas plus
+group/intra/inter/branching/contextreadouts, transparent rawp/familyq/broadq.
+Continue in .worktrees/karen-seqnmf-delivery; plan at studies/karen_pff_vs_monomer/
+analysis/SHORT_DELIVERY_THEME_PLAN_20261021.md and its CURRENT is authoritative.
+Read-only trace separates grouped14/K8/L5/.5 theme recipe from rawK10/L3/1
+branchreplay and unified20/K10/L3/.005 quantitative slide. Finalmovies used
+refined observedpaths/exemplars. ReusecurrentKarenfits/calls first; onebounded
+coarser recipe fallback, notanothersearch. Oldstatistics cannot beattachedto
+latestfits. Currentturnplanningonly; no newmodels/analysis/movies executed.
+Earliermediaandlabels preserved. Scientificgoalunmet; nextsmallthemeinventory.
+
+## Three/five-bout generator comparisons ready (2026-10-19)
+
+Continue in .worktrees/karen-seqnmf-delivery; its CURRENT is authoritative.
+Two pooledL5fits K10/K18 and81new six-panelgrids completed. Hub in delivery:
+outputs/karen_pooled_p80_review_20261015/length_comparison_20261019/.
+Same99recordings/21mice/grouped69/lambda.3/seed43/80updates/correctedranker;
+L3unchanged/reused. StartK10P80,3prompts,overallgeneratorfeedback; K18optional.
+Existingloopbackserver8766/local61695; START_HERE.md has MacSSHcommand.
+Separate storage and distinct K-scoped feedbackJSONfiles; earliernotes preserved.
+L5unioncoverageK10 9.32%vsL3 18.78%,K18 15.12%vs31.14%. This is a tradeoff,
+not behaviouralquality. Same detectionnumbers permit3/5vs2/3stage matches;
+not equal precision. K18L5onecallfactor explicitly unrendered, retainedintotals.
+All14234calls independent native/statisticaudit PASS;81grids/486clipmediaaudit
+PASS; bothlengthpages/capacitypage browserpersistence/import/playback PASS;
+334HTTP200routes/3ranges206. CPU885passed/6warnings; sourcechecks recorded
+in delivery. Bothfit/renderjobs finished; no continuing search. Mac tunnel
+not verified. Source report TEMPLATE_LENGTH_CONTRAST_20261019.md in studyanalysis.
+Next generator-level human feedback, then bounded sensitivity or membership/core
+changes. Scientific goal remains unmet. Earlier pending statements superseded.
+
+## Generator-level qualitative review ready (2026-10-19)
+
+User clarified goal: choose which GENERATOR produces useful chains, rather than
+curate chains. Delivery is authoritative. New page in delivery:
+outputs/karen_pooled_p80_review_20261015/generator_review_20261019/.
+Existing server8766; START_HERE.md gives Mac/woody forwarding (old local61695
+if still active). Three comparative witness rounds + optional catalogue browsing
+and overall generator judgements; export karen_generator_feedback.json.
+A=K10,B=K18clean3bout/grouped69fits,same ranking;5bout NOT run. No refits/rendering.
+Comparison candidates use native overlap, not established semantic matches.
+Labels/evidence isolated from older pages;5unit tests/browser persistence/import/
+actualplayback/169HTTP routes PASS; original core HTML byte-identical.
+Scientific goal remains unmet. Next use generator feedback to prioritize changes.
+
+## Presentation-inspired next diagnosis (2026-10-16)
+
+Latest legacy inspection maps IFxDN themesA/B/C explicitly to clustered motifs7/4/1:
+14tokens/K8/L5/lambda.5/100iters/seed42, different from raw-state L3branch reference.
+Surviving summary matches5stage motifs; later displayed path definitions evolved.
+Sources snapshotted with blob identities on delivery. Proposed controlled Karen
+L3/L5 contrast needs fixed3bout/threshold audit first; NOT EXECUTED. Full evidence
+appended to presentation-inspired plan below; no fits or movies launched.
+
+User abandoned Gemini consultation and supplied full three-theme presentation.
+Continue in delivery; its CURRENT is authoritative. Traced movie workflow uses
+specified complete paths + local/background density exemplar + selected neighbours,
+separate from saved seqNMF factor calls. Historical fitter already transferred.
+Full saved-call path audit953/1805factor-pathpairs, median top path9.8%/11.4%:
+do not forceexactstrings or onepath/factor. Four-witness core/variant diagnosis
+suggested with cleanedfits+preferred ranker fixed; no new fits/renders/assignments.
+Plan/evidence in delivery:
+outputs/karen_catalogue_feedback_20261016/PRESENTATION_INSPIRED_NEXT_STEP_20261016.md.
+No catalogue acceptance; Gemini brief below is a prior consultation artifact.
+
+## Partial Karen catalogue feedback; goal not met (2026-10-16)
+
+Gemini advice brief, with local source/evidence pointers, is on delivery:
+studies/karen_pff_vs_monomer/analysis/GEMINI_CHAIN_COHERENCE_BRIEF_20261016.md.
+User requested consultation; no new fits or source-method changes.
+
+Continue in .worktrees/karen-seqnmf-delivery; its CURRENT.md is authoritative.
+User's labels(4) bind14entries/13families to exact current movies:2Similar/6Mixed/
+1Dissimilar/5comment-only,13P80+1p100,no random. Catalogue is PARTIALLY REVIEWED,
+NOT ACCEPTED. Ranking repair preference does not establish coherent assignments.
+Read-only diagnostics in delivery outputs/karen_catalogue_feedback_20261016/README.md.
+80/84 reviewed panels match2/3template stages. Universal3/3 and missing-stage
+splitting both discard human-positive examples; full-call cost quantified.
+Saved metric also fails to separate some explicit human distinctions(K10F02,
+K10F06). No explicitvelocity feature; no new fits/render/reassignment this turn.
+NEXT: targeted membership/ressemblance/boundary checks preserving positive cases,
+measure retained coverage/mouse support, then small comparison/fresh random review.
+User explicitly states behavioural goal is not met; no model acceptance inferred.
+
+## Ranking repair preferred; new catalogue ready (2026-10-16)
+
+User rates ranking repair only best by far; phase/cleaned alternative no better
+than previous version. Exact feedback saved on delivery. Preferred method is
+corrected legacy32elapsedphase latent/displacement/heading/logduration ranking.
+Phase/whitening/semantic additions are not used in the new catalogue.
+
+New catalogue: http://localhost:8766/rank_repaired_catalogue_20261016/ viaexisting
+Mac SSH tunnel. Applies that ranker to the already-cleaned K10/K18fits; no new
+fits. This new combination is HUMAN UNREVIEWED, with6exact preferred original-fit
+anchor references linked so cleanup is assessed with ranker held fixed.
+28supportedfamilies/84movies/504panels;top10/K default20P80files90.18sonce/~15min
+at10plays/file,plusnotes. Allfamilies/modes accessible. Package/storage separate;
+original labels/media intact. Media/native/rank/random/UI audits PASS;
+878CPUtests/architecture/lint/maps PASS. Delivery CURRENT is authoritative.
+Output within delivery worktree:
+outputs/karen_pooled_p80_review_20261015/rank_repaired_catalogue_20261016.
+Report:studies/karen_pff_vs_monomer/analysis/COHERENCE_REPAIR_20261016.md.
+
+## Karen coherence repair and small comparison ready (2026-10-16)
+
+Continue in .worktrees/karen-seqnmf-delivery; its CURRENT.md is authoritative.
+Steps1–2 complete: corrected ranking scale; versioned handling masks for two
+mid-recording episodes; two cleaned pooledK10/K18fits(all99/21mice/allwaves,
+lambda.3/seed43/80iters); fixed physical/semantic ranking contrasts and full-call
+audits. All51313newcalls audited PASS. These ranker features do not change the
+seqNMF grouped-syllable input. Spatial context remains unweighted without verified
+arena geometry. No broad search or new KPMS fit. Original artifacts/labels retained.
+
+Smallreview36movies/6anchors/2revisedversions/3modes is COMPLETE andmedia/UIaudited.
+Mac URL http://localhost:8766/coherence_repair_20261016/ viaexistingSSHforward.
+P80twosets72.37sonce/~12minat10plays/file,plusnotes. Userwants this checktoleadto
+a refreshed catalogue review, top10/K default; all28supported cleanedfamilies
+accessible. No coherence acceptance yet. 878CPUtests/architecture/lint/maps passed.
+Report:delivery studies/karen_pff_vs_monomer/analysis/COHERENCE_REPAIR_20261016.md.
+Evidence:delivery outputs/karen_coherence_repair_20261016; media under original
+delivery gallery root outputs/karen_pooled_p80_review_20261015/coherence_repair_20261016.
+
+## Karen six-panel feedback: confirmed ranking defect (2026-10-16)
+
+Authoritative details in delivery CURRENT.md and
+.worktrees/karen-seqnmf-delivery/studies/karen_pff_vs_monomer/analysis/SIX_PANEL_FEEDBACK_20261016.md.
+18newfeedbackentries hashbound. FoundlatentIQRunitsbug in galleryranking:
+latent99.61%ofsummedexemplardistance in306selectedpanels; intendedlatentblock
+normalizationcancelled(1280×squaredweightinflation). Fits/calls unaffected;rankfix
+not yetimplemented. Confirmedactive-core handling inK18_F13/randompanel2 atnative
+[82750,82850),session2026-03-15T09_51_36_top_left;notexcluded. Fullintervalunknown.
+K10_F03durationvariation1.85–14.53sisreal,notplaybackspeed. Evidence/labels saved
+in delivery outputs/karen_six_panel_feedback_20261016. Nextrepairranking/scoped
+handlingaudit,thenboundedK10/K18coherence contrasts andsmallreview;parkK22.
+No newfits,masks,ranks,movies or maintainedalgorithmedits thisturn.
+
+## Karen six-panel review ready (2026-10-16)
+
+Continue delivery work in .worktrees/karen-seqnmf-delivery. Its CURRENT.md is
+authoritative. New output: outputs/karen_pooled_p80_review_20261015/six_panel_20261016
+inside that worktree. All 147 movies (49 supported families × three sampling modes,
+six executions each) are complete and validated in a two-row, three-column layout.
+
+Mac viewer: http://localhost:8766/six_panel_20261016/ through the existing SSH
+forward to woody (10.209.3.161). Model/family/mode dropdowns and a default top-10
+filter are ready. Original three-panel movies and labels remain available; new
+ratings are separate by family and mode. Export karen_six_panel_labels.json.
+
+Media/native/pixel/hash/dark-panel audits and browser controls/import/export passed.
+868 CPU tests, lint with accepted debt, and 146 folder maps passed. No new fits or
+family acceptance claims. See delivery SIX_PANEL_REVIEW_20261016.md for evidence.
+
+## Karen P80 review ready; Mac browser access (2026-10-15)
+
+Delivery worktree outputs/karen_pooled_p80_review_20261015 has49P80three-panel
+movies/147executions,257.37s once/~13min threeplays. Media audit PASS; all encoded
+frames decoded, native calls/hashes/dots checked. Human chain labels pending.
+Viewer uses existing range-aware Tornado server at127.0.0.1:8766; HTTP200/video
+Range206exactbytes PASS. Old8765viewer untouched. User is onMac/SSH toLinux:
+forward8766with VSCodePorts or Mac-side ssh-L, then open localbrowser. Legacy
+Studio launcher/guide confirmed same browser/SSH arrangement (port8000), optional
+native pywebview withDISPLAY. No Mac-side tunnel/browser verification claimed.
+See delivery CURRENT and output START_HERE.md. Labels browser-local; Export JSON.
+
+## Latest Karen delivery: capacity sweep complete (2026-10-15)
+
+Authoritative state remains in the delivery worktree:
+/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/docs/tasks/CURRENT.md
+All60K6/10/14/18/22 configurations complete,48new/12reused,840factors and862829calls
+hash/shape/native-duration audited PASS. Seven null models including supplementary
+groupedK18;19surrogates/type. No held-out/inferential claims. Human Karen syllable
+labels now support text-first theme inspection before movies; fixed L3bout length
+limits variable-length routine claims. Output:
+/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_pooled_capacity_20261015
+Earlier entries below retain their dated checkpoints; latest delivery CURRENT is
+authoritative. No new KPMS fit or completed chain video review implied.
+
 # Current task state
 
 ## Pooled Karen fit panel completed on delivery branch (2026-10-15)
