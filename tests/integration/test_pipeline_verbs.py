@@ -13,10 +13,10 @@ from unittest.mock import patch
 import pytest
 import yaml
 
-from pipelines.evaluate import run_evaluation
-from pipelines.fuse import run_fusion
-from pipelines.render import run_render
-from pipelines.train import run_training
+from fpcode.cli.evaluate import run_evaluation
+from fpcode.cli.fuse import run_fusion
+from fpcode.cli.render import run_render
+from fpcode.cli.train import run_training
 
 
 @pytest.fixture
@@ -44,7 +44,7 @@ def test_train_not_wired_fails_and_no_success(mock_train_config, tmp_path):
         no_notify=True,
     )
 
-    with patch("pipelines.train.send_ntfy") as mock_notify:
+    with patch("fpcode.cli.train.send_ntfy") as mock_notify:
         ret = run_training(args)
         assert ret != 0, "Unwired train verb must exit non-zero"
         mock_notify.assert_not_called()
@@ -72,8 +72,8 @@ def test_train_mocked_library_records_success(mock_train_config, tmp_path):
     mock_ckpt = tmp_path / "mock_checkpoint.h5"
     mock_ckpt.touch()
 
-    with patch("pipelines.train.fit_model", return_value=mock_ckpt) as mock_fit, \
-         patch("pipelines.train.send_ntfy") as mock_notify:
+    with patch("fpcode.cli.train.fit_model", return_value=mock_ckpt) as mock_fit, \
+         patch("fpcode.cli.train.send_ntfy") as mock_notify:
         ret = run_training(args)
         assert ret == 0
         mock_fit.assert_called_once()
@@ -100,7 +100,7 @@ def test_evaluate_not_wired_fails_and_no_success(tmp_path):
         no_notify=True,
     )
 
-    with patch("pipelines.evaluate.read_checkpoint_identity", return_value={
+    with patch("fpcode.cli.evaluate.read_checkpoint_identity", return_value={
         "path": str(ckpt), "iteration": 250, "n_recordings": 10, "metadata_hash": "abc"
     }):
         ret = run_evaluation(args)
@@ -119,10 +119,10 @@ def test_evaluate_mocked_library_records_success(tmp_path):
         no_notify=False,
     )
 
-    with patch("pipelines.evaluate.read_checkpoint_identity", return_value={
+    with patch("fpcode.cli.evaluate.read_checkpoint_identity", return_value={
         "path": str(ckpt), "iteration": 250, "n_recordings": 10, "metadata_hash": "abc"
-    }), patch("pipelines.evaluate.evaluate_model_checkpoints", return_value={"best_seed": 101}) as mock_eval, \
-       patch("pipelines.evaluate.send_ntfy") as mock_notify:
+    }), patch("fpcode.cli.evaluate.evaluate_model_checkpoints", return_value={"best_seed": 101}) as mock_eval, \
+       patch("fpcode.cli.evaluate.send_ntfy") as mock_notify:
         ret = run_evaluation(args)
         assert ret == 0
         mock_eval.assert_called_once()
@@ -161,8 +161,8 @@ def test_render_mocked_library_records_success(tmp_path):
         no_notify=False,
     )
 
-    with patch("pipelines.render.render_model_visualizations", return_value={"rendered": 16}) as mock_rend, \
-         patch("pipelines.render.send_ntfy") as mock_notify:
+    with patch("fpcode.cli.render.render_model_visualizations", return_value={"rendered": 16}) as mock_rend, \
+         patch("fpcode.cli.render.send_ntfy") as mock_notify:
         ret = run_render(args)
         assert ret == 0
         mock_rend.assert_called_once()
@@ -194,9 +194,9 @@ def test_fuse_pipeline_calls_library_and_records_success(tmp_path):
     )
 
     mock_pair = {"sid": "sess_1", "top_h5": "top.h5", "bot_h5": "bot.h5"}
-    with patch("pipelines.fuse.find_matched_pairs", return_value=[mock_pair]), \
-         patch("pipelines.fuse.fuse_single_pair_static", return_value={"status": "FUSED"}) as mock_fuse, \
-         patch("pipelines.fuse.send_ntfy") as mock_notify:
+    with patch("fpcode.cli.fuse.find_matched_pairs", return_value=[mock_pair]), \
+         patch("fpcode.cli.fuse.fuse_single_pair_static", return_value={"status": "FUSED"}) as mock_fuse, \
+         patch("fpcode.cli.fuse.send_ntfy") as mock_notify:
         ret = run_fusion(args)
         assert ret == 0
         mock_fuse.assert_called_once()

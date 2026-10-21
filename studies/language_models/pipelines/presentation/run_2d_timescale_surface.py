@@ -27,7 +27,7 @@ ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
 sys.path.insert(0, ROOT_DIR)
 sys.path.insert(0, LM_DIR)
-from pipelines.presentation.render_4_cohort_figures import js_divergence
+from fpcode.statistics.divergence import js_divergence
 
 CACHE_PATH = os.path.join(LM_DIR, "output", "strategies_extended", "continuous_bout_cache.pkl")
 RAW_PATH = os.path.join(ROOT_DIR, "syllable_generation/data/jonathan_amph_sessions_v2_w_sylls.pkl")

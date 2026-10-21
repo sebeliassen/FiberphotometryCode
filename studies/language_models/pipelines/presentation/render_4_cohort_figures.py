@@ -34,6 +34,8 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 from sklearn.decomposition import NMF
 
+from fpcode.statistics.divergence import js_divergence
+
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
 sys.path.insert(0, os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models"))
@@ -81,11 +83,6 @@ plt.rcParams['axes.linewidth'] = 1.1
 
 W_GRID_ALL = [2.0, 6.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 68.3, 90.0, 120.0, 160.0, 200.0, 240.0, 300.0, 360.0]
 
-def js_divergence(P, Q, eps=1e-12):
-    P = np.clip(P, eps, None); Q = np.clip(Q, eps, None)
-    P = P / P.sum(axis=-1, keepdims=True); Q = Q / Q.sum(axis=-1, keepdims=True)
-    M = 0.5 * (P + Q)
-    return 0.5 * np.sum(P * np.log2(P / M), axis=-1) + 0.5 * np.sum(Q * np.log2(Q / M), axis=-1)
 
 def load_data():
     print("Loading data for figure generation...")

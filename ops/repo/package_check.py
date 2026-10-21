@@ -63,6 +63,8 @@ def main() -> int:
             "import json, sys, fpcode",
             f"assert Path(fpcode.__file__).is_relative_to(Path({str(installation)!r}))",
             "from fpcode.tracking.geometry import rot2d",
+            "from fpcode.statistics.divergence import js_divergence",
+            "assert abs(js_divergence([.25, .75], [.75, .25]) - .18872187554086717) < 1e-15",
             "assert rot2d(0).shape == (2, 2)",
             "from fpcode.contracts import FrameSpan, SessionKey, UnitOccurrence, UnitStream, UnitType",
             "from fpcode.behavior.analysis.unit_views import measure_unit_organisation",

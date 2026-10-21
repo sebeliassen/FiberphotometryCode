@@ -48,3 +48,22 @@ def test_shim_regeneration_preserves_independently_registered_paths(tmp_path, mo
     assert targets["core/fusion_engine.py"] == "fpcode.tracking.fusion"
     assert targets["core/static_fusion_engine.py"] == "fpcode.tracking.static_fusion"
     assert targets["core/camera_correspondence.py"] == "fpcode.tracking.camera_correspondence"
+
+
+def test_pipeline_aliases_keep_canonical_identity_in_both_import_orders(tmp_path):
+    for legacy_first in (True, False):
+        script = f"""
+import importlib
+import sys
+sys.path[:0] = [{str(ROOT / 'src')!r}, {str(ROOT)!r}]
+for verb in ('train', 'evaluate', 'fuse', 'render', 'export'):
+    legacy, canonical = 'pipelines.' + verb, 'fpcode.cli.' + verb
+    first, second = (legacy, canonical) if {legacy_first!r} else (canonical, legacy)
+    one = importlib.import_module(first)
+    two = importlib.import_module(second)
+    assert one is two, (first, second)
+assert not {{'jax', 'jaxlib', 'keypoint_moseq', 'torch'}} & set(sys.modules)
+"""
+        result = subprocess.run([sys.executable, "-I", "-B", "-c", script], cwd=tmp_path,
+                                capture_output=True, text=True, timeout=15)
+        assert result.returncode == 0, result.stderr

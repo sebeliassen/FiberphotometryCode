@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-21",
+  "foundation_ref": "codex/main-foundation",
+  "foundation_commit": "f7c405680ceddd5ea231f0004204517355f5a11c",
+  "seqnmf_ref": "codex/main-seqnmf",
+  "seqnmf_commit": "525b589b9d3d45b0b64553cc78b164e7dbbf56d4",
+  "candidate_ref": "codex/legacy-consumers",
+  "tested_base_commit": "525b589b9d3d45b0b64553cc78b164e7dbbf56d4",
+  "tested_working_source_sha256": {
+    "ops/repo/package_check.py": "d3a609590b5a6b53accb43e3774bc4e507c72fc8192110c1f03b4bd9de97c2a6",
+    "studies/language_models/pipelines/presentation/render_4_cohort_figures.py": "3c6420fb0caf27f962f964c93dfa4530ee323de4aca930675c118df9dbff8c77",
+    "studies/language_models/pipelines/presentation/run_2d_timescale_surface.py": "f8f68d768f3a3a4a1affc0bf38e938edf9bdcf706ced2d18b6ad6ed192f4651f",
+    "studies/language_models/pipelines/presentation/run_4d_behavioral_characterization.py": "024355a84268f2e1e4d0b59b9f747501b8e7a48802227123fe332a0502d5e255",
+    "studies/language_models/pipelines/presentation/run_extended_nmf_retention_sweep.py": "38886a66210dcb879756e463c0827d9f12df1fd896e0f25a47accb1bda747a8b",
+    "studies/language_models/pipelines/presentation/run_group_confound_audit.py": "eb3f13be48aba0e9b5aa1a5ee61a39e42643e3ea16bb6ab2135eda3cb4766bc7",
+    "studies/language_models/pipelines/presentation/run_nmf_adversarial_audits.py": "d9ab752f03f8a836795715b3dca64eae31e8ad5f977e8f3359dbee005beabf2f",
+    "studies/language_models/pipelines/presentation/test_nmf_dense_retention.py": "8fb18ca019a711689feb4b10fd28bfeb25956adc9a0c2f0d1a7d93e5acc67861",
+    "studies/multiview_experiments/01_data_and_fusion/fuse_all_tandem_cohort.py": "1236ba081c4fb8392b78f5fea4c82dbaa49aeaa8d78d68cac795abc14d46091a",
+    "studies/multiview_experiments/01_data_and_fusion/fuse_cohort_static_v2.py": "7e400bc24a7e2c9809adb30efbad2d9ec9c12666ceb66022b03dd2bc045528eb",
+    "studies/multiview_experiments/01_data_and_fusion/fuse_pilot_static.py": "ae69f44d2788c73970624361e6e054e0268c57383fd8da067edce89311a4ea8c",
+    "studies/multiview_experiments/02_training_runners/run_cohort_calibrated_retrain_seed101.py": "f2b344adb29c45650775d9f035a2be6e64b5982a2ed7f0db9db9fa60a4afead1",
+    "studies/multiview_experiments/02_training_runners/run_cohort_static_21kp_v2_production.py": "39819dbf3f124496d17ada354f4fdca129a80d74e77c369a847b28a0e257590f",
+    "studies/multiview_experiments/02_training_runners/run_pilot_17kp_vs_21kp_comparison.py": "36ca7803f5534857e4f181a54fcf4f414502609143a264608bf9e324be532beb",
+    "studies/multiview_experiments/02_training_runners/run_pilot_static_comparison.py": "75ee4e116b72360a1dc18cb9a047d4725fc53405d739c7fd462f69409e2ca387",
+    "studies/multiview_experiments/02_training_runners/run_tandem_cohort_production_50ar_200slds.py": "a8aafe56d6c84bdcbc5c46a9480a81b35d976d4f8561d7eed9a5c53b5c75fa29",
+    "tests/architecture/test_legacy_imports.py": "c3c8e3ec4da40857c06b5bc54549d87c4eb6db6d379fa7e54916f04d0695a6bc",
+    "tests/integration/test_pipeline_verbs.py": "628dfd6b35bf216c460c544b20dcdddb089288e591bcc9de5b1c300b272be544",
+    "src/fpcode/statistics/divergence.py": "0d4ab545750d6b837abed0680ae57bb8535f81dc3d1ce3b3b8087cab7370758d",
+    "tests/integration/test_study_cli_launchers.py": "c83b62db5a555f62e85b7e53774fb1c7e724e1d59a36ad2e0e946626bee96b7f",
+    "tests/unit/test_divergence.py": "3a470fa8d4168a86a18149ee1f8486bb901b6601d89d7c9f3680a27091018a6e"
+  },
+  "cpu_tests": {
+    "foundation_lab": 850,
+    "foundation_clean": 850,
+    "integrated_lab": 937,
+    "integrated_clean": 937,
+    "consumer_lab": 951,
+    "consumer_clean": 951,
+    "existing_warnings_each": 6
+  },
+  "checks": {
+    "consumer_migration_checks.json": {
+      "head": "525b589b9d3d45b0b64553cc78b164e7dbbf56d4",
+      "results": [
+        {
+          "cwd": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers",
+          "command": [
+            "make",
+            "test-cpu",
+            "PYTHON=/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python"
+          ],
+          "returncode": 0,
+          "seconds": 22.189,
+          "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consumer_migration_test-cpu.log"
+        },
+        {
+          "cwd": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers",
+          "command": [
+            "make",
+            "architecture",
+            "PYTHON=/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python"
+          ],
+          "returncode": 0,
+          "seconds": 0.365,
+          "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consumer_migration_architecture.log"
+        },
+        {
+          "cwd": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers",
+          "command": [
+            "make",
+            "lint",
+            "PYTHON=/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python"
+          ],
+          "returncode": 0,
+          "seconds": 0.265,
+          "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consumer_migration_lint.log"
+        },
+        {
+          "cwd": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers",
+          "command": [
+            "make",
+            "folder-maps-check",
+            "PYTHON=/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python"
+          ],
+          "returncode": 0,
+          "seconds": 1.872,
+          "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consumer_migration_folder-maps-check.log"
+        },
+        {
+          "cwd": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers",
+          "command": [
+            "make",
+            "package-check",
+            "PYTHON=/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python"
+          ],
+          "returncode": 0,
+          "seconds": 3.978,
+          "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consumer_migration_package-check.log"
+        }
+      ]
+    },
+    "consumer_clean_cpu.json": {
+      "environment": "/tmp/fpcode-clean-cpu-sr5b37il",
+      "candidate": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers",
+      "system_site_packages": false,
+      "steps": [
+        {
+          "command": [
+            "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+            "-B",
+            "-m",
+            "pip",
+            "install",
+            "--force-reinstall",
+            "--no-deps",
+            "--no-build-isolation",
+            "/tmp/fpcode-consumer-build-iccixqxf"
+          ],
+          "returncode": 0,
+          "seconds": 0.565,
+          "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consumer_clean_install.log"
+        },
+        {
+          "command": [
+            "make",
+            "test-cpu",
+            "PYTHON=/tmp/fpcode-clean-cpu-sr5b37il/bin/python"
+          ],
+          "returncode": 0,
+          "seconds": 20.574,
+          "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consumer_clean_functional.log"
+        },
+        {
+          "command": [
+            "make",
+            "package-check",
+            "PYTHON=/tmp/fpcode-clean-cpu-sr5b37il/bin/python"
+          ],
+          "returncode": 0,
+          "seconds": 3.073,
+          "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consumer_clean_package.log"
+        },
+        {
+          "command": [
+            "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+            "-B",
+            "-m",
+            "pip",
+            "check"
+          ],
+          "returncode": 0,
+          "seconds": 0.315,
+          "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consumer_clean_dependencies.log"
+        }
+      ],
+      "ok": true
+    },
+    "consumer_origin_check.json": {
+      "ok": true,
+      "modules": {
+        "fpcode.common.paths": {
+          "path": "/tmp/fpcode-clean-cpu-sr5b37il/lib/python3.10/site-packages/fpcode/common/paths.py",
+          "sha256": "060a23cce7921049571b6ef642bee79871971a8a0101de94938c61cf06a7b0ed"
+        },
+        "fpcode.statistics.divergence": {
+          "path": "/tmp/fpcode-clean-cpu-sr5b37il/lib/python3.10/site-packages/fpcode/statistics/divergence.py",
+          "sha256": "0d4ab545750d6b837abed0680ae57bb8535f81dc3d1ce3b3b8087cab7370758d"
+        },
+        "fpcode.behavior.episodes.seqnmf": {
+          "path": "/tmp/fpcode-clean-cpu-sr5b37il/lib/python3.10/site-packages/fpcode/behavior/episodes/seqnmf.py",
+          "sha256": "a18461f7063012b296e63ff31eac3a37e348eca21cf24844f865804d3c930d44"
+        },
+        "fpcode.behavior.analysis.unit_views": {
+          "path": "/tmp/fpcode-clean-cpu-sr5b37il/lib/python3.10/site-packages/fpcode/behavior/analysis/unit_views.py",
+          "sha256": "66dff60b9fb858924ab66d70c28febaee01e42755b1b4a497304350692e3a67b"
+        },
+        "studies.karen_pff_vs_monomer.analysis.reference_seqnmf": {
+          "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers/studies/karen_pff_vs_monomer/analysis/reference_seqnmf.py",
+          "sha256": "b21f2eb338be40299b22e919fa38c99eea85d0fed291914fcb6a1c69a47b1f5a"
+        },
+        "studies.karen_pff_vs_monomer.analysis.run_theme_delivery": {
+          "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers/studies/karen_pff_vs_monomer/analysis/run_theme_delivery.py",
+          "sha256": "b6088b1f1b8d073b520fcc03aeb2285f1fbc416e7bc427a00b04a677e2393e8c"
+        },
+        "studies.karen_pff_vs_monomer.analysis.theme_measurements": {
+          "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers/studies/karen_pff_vs_monomer/analysis/theme_measurements.py",
+          "sha256": "2e8d607183f5deb418ed1c857b8ae3d0295561a0bddee5c7a3756b7bd880688c"
+        },
+        "studies.karen_pff_vs_monomer.analysis.theme_statistics": {
+          "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers/studies/karen_pff_vs_monomer/analysis/theme_statistics.py",
+          "sha256": "f4ad278f458cda3adcd1d82eb41bb21e825fbf12cb5d54f5763274c02507cbfb"
+        },
+        "studies.karen_pff_vs_monomer.analysis.theme_organisation": {
+          "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers/studies/karen_pff_vs_monomer/analysis/theme_organisation.py",
+          "sha256": "6bf6be4b5c6cf9a9a1d0bf641797a685ac2b7af7e8de2c5ade39c05242731709"
+        },
+        "studies.karen_pff_vs_monomer.analysis.execution_similarity": {
+          "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers/studies/karen_pff_vs_monomer/analysis/execution_similarity.py",
+          "sha256": "b47348e9b457fe21aaa8c115fe6e17abaf29938de1b11b69c2fe431f24743bb1"
+        },
+        "studies.karen_pff_vs_monomer.analysis.theme_neighbourhoods": {
+          "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers/studies/karen_pff_vs_monomer/analysis/theme_neighbourhoods.py",
+          "sha256": "579d2f20545ae961e881359f631aa360bda019c9ec9b2d5d85a52c37afad7e46"
+        }
+      },
+      "model_backends_loaded": false,
+      "writes_in_test_cwd": [],
+      "head": "525b589b9d3d45b0b64553cc78b164e7dbbf56d4"
+    },
+    "git_bundle_restore_check.json": {
+      "ok": true,
+      "bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/preserved_all_refs.bundle",
+      "bytes": 703830120,
+      "sha256": "a278389bbc17dcf30f12b397b692745b1a89564ba38d57f7c7671af8a7f47f21",
+      "restored_bare_repository": "/tmp/fpcode-git-restore-q1gcwgbu/repository.git",
+      "checked_refs": {
+        "codex/modular-preserved-20261021": {
+          "path": "docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md",
+          "sha256": "c54f53c37149a527322c5c92fdec722c9eebc5b92046277f32d172e4d7477d14",
+          "commit": "31326cccc8bd78322be0de113446a3f9d521deb3"
+        },
+        "codex/seqnmf-preserved-20261021": {
+          "path": "studies/karen_pff_vs_monomer/analysis/run_theme_delivery.py",
+          "sha256": "b6088b1f1b8d073b520fcc03aeb2285f1fbc416e7bc427a00b04a677e2393e8c",
+          "commit": "2c43b75f59b1ee8f340f64c0ef691b600aca55ab"
+        },
+        "codex/pre-main-20261021": {
+          "path": "README.md",
+          "sha256": "d36dbac1ee8b6e638a33efa0b68dc3c1ada174d950108be02c2d3f87dbf2a9a0",
+          "commit": "67468c199256a7642bcab535acc205f57b54a6e0"
+        }
+      }
+    },
+    "frozen_library_parity.json": {
+      "ok": true,
+      "scope": "source hashes for all six recorded runtime functions across three shared modules; no empirical rerun",
+      "functions": [
+        {
+          "function": "fpcode.behavior.analysis.organisation.exclusive_timeline",
+          "path": "src/fpcode/behavior/analysis/organisation.py",
+          "sha256": "7c320f41693dde1ab546f15250710da1027fdefbb8e3bf997ff5afd3a60e0088"
+        },
+        {
+          "function": "fpcode.behavior.analysis.organisation.organisation_arrays",
+          "path": "src/fpcode/behavior/analysis/organisation.py",
+          "sha256": "7c320f41693dde1ab546f15250710da1027fdefbb8e3bf997ff5afd3a60e0088"
+        },
+        {
+          "function": "fpcode.behavior.analysis.organisation.organisation_metrics",
+          "path": "src/fpcode/behavior/analysis/organisation.py",
+          "sha256": "7c320f41693dde1ab546f15250710da1027fdefbb8e3bf997ff5afd3a60e0088"
+        },
+        {
+          "function": "fpcode.statistics.chain_nulls.frequency_expectations",
+          "path": "src/fpcode/statistics/chain_nulls.py",
+          "sha256": "061b9bea55f4b9f2e8b8595871529b4a5fab75c24a4c59d787ca11f94f2bfd89"
+        },
+        {
+          "function": "fpcode.statistics.chain_nulls.simulate_chain_null",
+          "path": "src/fpcode/statistics/chain_nulls.py",
+          "sha256": "061b9bea55f4b9f2e8b8595871529b4a5fab75c24a4c59d787ca11f94f2bfd89"
+        },
+        {
+          "function": "fpcode.statistics.behavior_comparisons.adjust_fdr",
+          "path": "src/fpcode/statistics/behavior_comparisons.py",
+          "sha256": "c2f953f4a45000acb4d91d47854b2554b09e342af9f4d910f925c4b37da0fd83"
+        }
+      ]
+    }
+  },
+  "limits": [
+    "No empirical refits, renders, data moves or artifact conversions.",
+    "Source-hash parity is not a full empirical reproduction.",
+    "Current wheel/study origin verified in isolated CPU environment without system site packages.",
+    "Legacy aliases retained pending external caller and stored-artifact review.",
+    "GitHub remote publication unavailable due to missing HTTPS credentials; main unchanged.",
+    "Large artifact and browser feedback recovery coverage remains incomplete."
+  ]
+}

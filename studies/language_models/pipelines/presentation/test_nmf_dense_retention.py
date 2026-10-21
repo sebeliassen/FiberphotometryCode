@@ -8,13 +8,15 @@ import numpy as np
 import pandas as pd
 from sklearn.decomposition import NMF
 
+from fpcode.statistics.divergence import js_divergence
+
 ROOT_DIR = "/home/fsp585/Desktop/FiberphotometryCode"
 LM_DIR = os.path.join(ROOT_DIR, "syllable_generation", "analysis", "language_models")
 sys.path.insert(0, LM_DIR)
 sys.path.insert(0, os.path.join(ROOT_DIR, "syllable_generation", "analysis", "ulrik_kinematics"))
 sys.path.insert(0, ROOT_DIR)
 
-from pipelines.presentation.render_4_cohort_figures import js_divergence, load_data
+from studies.language_models.pipelines.presentation.render_4_cohort_figures import load_data
 
 CACHE_PATH = os.path.join(LM_DIR, "output", "strategies_extended", "post_injection_df_cache.pkl")
 
