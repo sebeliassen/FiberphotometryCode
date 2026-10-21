@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "source_commit": "4d45215641e076c687d260c9cb6fb2874fb7494b",
+  "source_commit": "eea314588e8c370172c70630dfed9a76e59532d6",
   "legacy_paths": 618,
-  "static_references": 4731,
+  "static_references": 4735,
   "parse_or_budget_limits": [
     [
       "compat/syllable_generation/analysis/replications/datta_orig/panels/1f/1f.ipynb",
@@ -835,7 +835,7 @@
     "compat/syllable_generation/projects/jonathan_openfield_amph/cleaning_gui.ipynb": "4252d422c738125941dba17a2bf41f19e4411ad0bcbddc36d6c059cdd5a261ec",
     "compat/syllable_generation/projects/jonathan_openfield_amph/enrich.py": "bc3874b7efa38717f338947647e3201815fda3351ab77b6afb2da8fb7bc7a7a5",
     "compat/syllable_generation/projects/jonathan_openfield_example/cleaning_gui.ipynb": "da2c7c1b3a518a90b43d4706000bc294bb4131092929b59325a88befd210bcc0",
-    "compat/syllable_generation/projects/jonathan_openfield_example/enrich.py": "9da0e256416c2bc72b40dabfb9d8eabfc7e5351957b7129486172d8821c02fc4",
+    "compat/syllable_generation/projects/jonathan_openfield_example/enrich.py": "39952587be53a857a994b6b76b35542396c83d485c03a9d30529021b9960d71b",
     "compat/syllable_generation/rerun_all_plots.sh": "3a1ac9f479078b11d902c2d1231f08f8d39a8f8ba2cfd42cdc4b44c732b5b142",
     "compat/syllable_generation/syllabizers/keypoint_moseq_syll/__init__.py": "affff210dd0b6ba48aed667043aca6444d5d69d4b04e6adb3bd6e5aca2755c1b",
     "compat/syllable_generation/syllabizers/keypoint_moseq_syll/kpms_pipeline.py": "1581f2d24f02d945fd1c51f8768d307e2bdad6aab0c3b356b6754dbc7db38655",
@@ -906,7 +906,7 @@
     "docs/architecture/BROAD_SEARCH_EXECUTION_PLAN.md": "d224bc47d8998ba5586f5579f02cdade49c2157f2032aa8d3572cc720c47df1b",
     "docs/architecture/CHAIN_GENERATOR_QUANTITATIVE_PANEL_20261014.md": "221a1f78a21fe074ed02cb73de0dc64e25d7039f85935f0846491fc40494d5d3",
     "docs/architecture/CHAIN_VIDEO_LEGACY_FEATURE_AUDIT_20261014.md": "86bafa18988e0204342f7c144a3d1e878d245f1686d67a63a8ef21e37d2e87ee",
-    "docs/architecture/LEGACY_RETIREMENT.md": "3f4874b961d09a1a946c4fd0dfc55215e4cbaf22ecbb4cb03023e1152107015e",
+    "docs/architecture/LEGACY_RETIREMENT.md": "d28e9c246a02d7548298fbf4dcbeaed8b33f066dc4609c7d49000cb4dacb7df1",
     "docs/reports/ANTIGRAVITY_HANDOFF_20261011.md": "901c0c450bece7cc939cf116e4ae305c07bf9cb21eeb18e68bbce9e35cd0f0cb",
     "docs/reports/KPMS_8KP_VS_17KP_CONTROLLED_COMPARISON_REPORT.md": "1ba58df346f1b795b05e25bd1e79ac44a55038421f731735fdaef8ba3809a639",
     "docs/reports/KPMS_MONKEYPATCHING_AND_MEMORY_SCALING_GUIDE.md": "9b30e6aa0b9fd9023407515236083f60187914a8987133b99a41e42abae5ba97",
@@ -925,8 +925,8 @@
     "docs/reports/refactor_report.md": "669b54acb36d832a7e6b6be303ee757be02c8a7f3e9216a37ec99dd8630dc2dc",
     "docs/tasks/BROAD_SEARCH_HANDOFF_20261013.md": "11e397af9a90de96520e23a9ada10598bfb35e220d2fadb9f59236a9c2697782",
     "docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md": "c54f53c37149a527322c5c92fdec722c9eebc5b92046277f32d172e4d7477d14",
-    "docs/tasks/CONSOLIDATION_PROGRESS_20261021.md": "9d9d5d78d91291bd16d8af7099c3978a6f500e66eeeec48136936434775b8b57",
-    "docs/tasks/CURRENT.md": "f0423ef5dfd5317d82367f9f4505f7c514a01c819023d06c9d2682932b5fef9f",
+    "docs/tasks/CONSOLIDATION_PROGRESS_20261021.md": "4000c9356253cf51fc0cf5993243aa26216f49c3f9eed19161f388253dfbec54",
+    "docs/tasks/CURRENT.md": "cbb800335bf7f104f6af6e75733ffdd8f2bf8161a3b1d01977a979bcde8a9146",
     "ops/repo/build_triage.py": "3529c2ecabf640aaa2a48b5e1fe9436b6a5bcaed6a9f9a36dbf21a0f32d25e58",
     "ops/repo/generate_folder_maps.py": "0f6c8b8b6e6f70fe4ff8e2e62b9e5d168a2dbd4b3d5b6360165a1432cc045b4c",
     "ops/repo/metrics.py": "d78e6fad0a463d888dd2c0f06b5197d78d12e49ae988eab1cd7b09fc555c0df9",
@@ -1121,6 +1121,7 @@
     "studies/multiview_experiments/rebuild_expert_package_clean.py": "25020d4d6ffdf151aa71de0bc0eafc04045b0d9071cdd42715c4771841d7a782",
     "studies/multiview_experiments/serialize_cohort_static_21kp_v2_seed101_sessions.py": "9000dc1dc342bcc7f3c636e703a280f3d19bad1adbddb54c045a7b4ba77fbbf3",
     "studies/oft_baseline/cleaning_gui.ipynb": "294605afea0ed773d0e194fd3b7d12371d735119f0bd4c2fe545b760aacc6431",
+    "studies/oft_baseline/ifdn_policy/README.md": "116683b9feb8a3d4b9796e4ce757d32f41532352e1314e09797fb2d66bcf3638",
     "studies/photometry_exploration/data/syncer.py": "bba1cff08fd5ce8a3b9523c1442306cb723a6c28132fab1942c780547f32f02f",
     "studies/photometry_exploration/kpms/create_session_state_2.py": "8b14d854f1945e3df898a8e210209b28fd2cd7cd7aabac6aee20bd144d175e69",
     "studies/photometry_exploration/kpms/syllable_appender.py": "e932619a45a76b8852f486df6a59f32c492f41079c868c68c2e75aae85181128",
@@ -1219,8 +1220,8 @@
     "studies/sequence_viz/run_multimethod_diagnostic_movies.py": "4c41010c604fd9f8366125e39bf00fcb8b31aeb0a225a65451e1bb66d6acbf1b",
     "studies/sequence_viz/run_prioritized_additions_pilot.py": "3fd0b526ead5db9533e13e6054ad7f10e62e8312d7960e5d59c33132a25693de",
     "studies/sequence_viz/run_relational_topology_and_heading_reset_movies.py": "94b9a13be26a28e0f2053568fc63dd67576da708d2576df19f7dd375f04f3419",
-    "studies/session_building/jonathan/README.md": "9cc364d31f406a403a84e4363c3b5cf78359f7fba8c3ed4b1087026924678a7f",
-    "studies/session_building/jonathan/build.py": "e1c0bb14f18c940122b57f81ac32e338afb29518a732bc5aff5e33d9291d9a33",
+    "studies/session_building/jonathan/README.md": "5c8952ea0cf05f1b49d7a8feb1f279635589a41832f60e37bdbeb26a924ebbd5",
+    "studies/session_building/jonathan/build.py": "6ce5ddb7cb96b3ae7f6db60c533c4adb820d16dd532d02fcaa0a292b8c2f7e28",
     "studies/session_building/jonathan/steps/.folder-map.md": "e2df9015df5839fec2f60b706e8218bf8de2c29fe8f6e429727d98e43e725b2c",
     "studies/session_building/jonathan/steps/fiberphotometry.py": "dd778e070a607b6d9b223d3e09af5f6de0272245bab2e071088974a639011b05",
     "studies/session_model_exports/attach_double_flip_kpms.py": "ad07452b3158ba45df90f5e683527a86b87117b29831eac95bc19e505ec2bda6",
@@ -1258,6 +1259,7 @@
     "tests/unit/test_deep_research_loading.py": "dc672a9ad291cd0277c085a8ee1dbad44a6a7ccdceddcd7d8223c6501f196953",
     "tests/unit/test_export_utility_aliases.py": "8c8bdbfada699b8968ccaebc63b27c766d03989dc0c497dd88c55638a5ce095d",
     "tests/unit/test_io_utils_hardening.py": "0e6843e4965ba3c754a3db63577767ad77640be5ba9e3b5e6a9053ab2424f3e1",
+    "tests/unit/test_jonathan_builder_policy.py": "a938f22c4e56a8723330cef2e98fe0aa6a08eface93fab37743ebe6f07cc20e5",
     "tests/unit/test_jonathan_identity.py": "088e3f0650cc422ed3a4644d1cb3c46f86e14600a659dffac4cc1f50371055d5",
     "tests/unit/test_npz_component_cache.py": "dc6e63ee5edc4b87cc926476bb81650dde3544cbcc154f52cfae402708ffb577",
     "vendor/keypoint_moseq_syll/BUG_REPORT_AND_PARITY_RESOLUTION.md": "4ffa6e08f91447c23e1d834128df2bf6f8a6619d6f0e0ee8554731bf06a8b310",
@@ -1295,8 +1297,7 @@
     "docs/tasks/CURRENT.md",
     "registry/LEGACY_CONSUMERS_20261021.tsv",
     "registry/LEGACY_PATHS_20261021.tsv",
-    "registry/MOVES.tsv",
-    "registry/checkpoints/project_tracking_policies_20261021.json"
+    "registry/checkpoints/jonathan_builder_policy_20261021.json"
   ],
   "interpretation": "Static references are candidates for review, not proof of live use; unknown external consumers and stored-object names remain retirement gates."
 }

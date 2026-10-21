@@ -45,8 +45,8 @@
     "studies/oft_baseline/ifdn_policy/enrich.py": "6a59c7e0666d88c645a390e1326ea162ff2080ea008fa7a7bad4b8887a8880ff",
     "compat/syllable_generation/projects/jonathan_openfield_example/enrich.py": "39952587be53a857a994b6b76b35542396c83d485c03a9d30529021b9960d71b",
     "tests/unit/test_jonathan_builder_policy.py": "a938f22c4e56a8723330cef2e98fe0aa6a08eface93fab37743ebe6f07cc20e5",
-    "registry/MOVES.tsv": "c65550b8da6581b8158fbd61be0b0b6b70316f931c2b44040b28f34e79107628",
-    "registry/SHIMS.tsv": "0ede68beafdf04755ec1f9be1adce4da1b42f2ea2ace650e41666d161a023172"
+    "registry/MOVES.tsv": "0ee3b7a3bf5a42d8784523a3d3daca83769fd152188d33c9b4e355cda6d2bb54",
+    "registry/SHIMS.tsv": "5eac51968e234867374936ff7209490d4d5deef71fefdcbe8b14cf2bb469ca73"
   },
   "preservation": {
     "builder_nonimport_AST_equal_pinned": true,
@@ -77,7 +77,7 @@
     "focused_status": "PASS",
     "new_focused_cases": 16,
     "existing_identity_cases": 19,
-    "broader_validation": "pending parent integration; not run by this bounded implementation task",
+    "broader_validation": "PASS after normal preceding-main integration;1055CPU/6existing warnings each in lab and isolated pinned environments.",
     "focused_passed": 35,
     "focused_elapsed_seconds": 3.52,
     "existing_identity_tests_unchanged": true,
@@ -87,7 +87,18 @@
     "focused_ruff": "PASS",
     "maintained_lint": "PASS;3071 reviewed diagnostics,no new debt;inventory not refreshed",
     "folder_maps": "PASS;149 directories synchronized",
-    "git_diff_check": "PASS"
+    "git_diff_check": "PASS",
+    "lab_python": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "isolated_python": "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+    "architecture": "PASS;202modules",
+    "lint_maps": "PASS;no new debt or lint inventory refresh",
+    "wheel_dependencies": "PASS;isolated environment only,shared lab unchanged",
+    "evidence_sha256": {
+      "builder_candidate_checks.json": "0d07c55607b18f4b3ac36e837d35c022078d790f97bda55edce4969edfaec75b",
+      "builder_candidate_test-cpu.log": "8580956642db5c5f81a52e8d2d20a05b11e7bde05ae9c5a32ed3fe544757dae4",
+      "builder_clean_cpu.json": "12f29727aa372824b2a0f60ee54852a15bc0dcb2ba80086dc43b2ea2b55dd927",
+      "builder_clean_functional.log": "7d1f76eecb30d4545ae9c554e8b3a76cd2c9cae5430e4036a4043e6bb5b34fda"
+    }
   },
   "limits": [
     "Synthetic CSV/NPZ fixtures only; no empirical build, pickle/model load, video probing or result write.",
@@ -96,5 +107,13 @@
     "Unified builder dynamic project resolution, bare imports and global singleton mutation remain separate work.",
     "AMPH and monoamine configuration selection, ignored auto-mask artifacts and arbitrary historical artifact reconstruction remain unverified.",
     "No legacy root, original policy file, symlink or empirical artifact was removed."
+  ],
+  "integration_main": "eb779c7508b77d29d58b8fd48eefa56187b1af5d",
+  "integration_resolution": "Normal merge preserves all three task/source histories and additive tests; regenerated unit map. Restored original main MOVES prefix/29CRLF rows after prepared-branch normalization; retained all7 copy records plus all prior restoration rows.",
+  "independent_review": "config_provenance verified7 complete pinned blobs and source visibility, nonimport builder AST, IFdN/baseline separation and synthetic cold/stage/policy tests. Stale README and test hash corrected before source checkpoint.",
+  "remaining_policy_gates": [
+    "Unified project resolution and ctx.cfg propagation across all stages/process workers; global JCFG reassignment does not update cached aliases reliably.",
+    "AMPH original enrichment is distinct from IFdN; current historical routing and max-index-based clock heuristics need a separate source/policy review.",
+    "Explicit leaf build API is stable; package-level lazy build name remains import-order-sensitive."
   ]
 }

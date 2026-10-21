@@ -1,29 +1,30 @@
-## Jonathan builder source-policy candidate (2026-10-21)
+## Direct Jonathan builder and IFdN source policy restored (2026-10-21)
 
-Continue in .worktrees/jonathan-builder-policy on codex/jonathan-builder-policy,
-based on integrated main a8ec522. The direct builder and historical project-enrich
-leaf proxy now use studies.oft_baseline.ifdn_policy.enrich. Seven exact source-policy
-files from pinned969c893 are copied beside that physical owner; all historical
-originals remain. Builder stage/function ASTs match the pinned source and the
-canonical enrichment implementation is byte-identical to the baseline. This
-restores the original metadata/exclusion defaults rather than substituting the
-separate monoamine schema in studies/oft_baseline/overrides.
+This revision incorporates actual PR11 maineb779c7 through a normal merge, retaining
+all preceding task/source records and additive tests. The direct builder imports
+its exact physical IFdN enrichment owner; seven historical override source files
+are copied byte-for-byte to that owner, with originals retained. Both-order builder/
+enrichment leaf identity and physical proxies are checked. Builder algorithms,
+eight stages, two enrichment boundaries and enrichment implementation are preserved.
+Use the explicit studies.session_building.jonathan.build leaf API; the package-level
+lazy build name still depends on import order and is not a universal alias guarantee.
 
-Sixteen new focused cases cover cold both-order builder/enrichment identity,
-physical proxy execution, controlled eight-stage flow and both enrichment calls,
-exact policy-file provenance, synthetic CSV precedence and inclusive manual/auto
-mask union with independent expected values. Existing nineteen Jonathan identity
-cases remain intact. All35 focused cases pass (3.52s), with focused/maintained lint
-and149-directory map synchronization passing. Results are recorded in
-registry/checkpoints/jonathan_builder_policy_20261021.json; parent integration and
-broader validation remain pending. No real cohort/build/model or artifact writes.
+Final1055CPU tests pass in lab AND isolated pinned environments (6existing warnings
+each);16new+19existing focused cases, architecture202/lint/maps/wheel/dependencies
+pass. Synthetic CSV/NPZ cases independently check metadata precedence, inclusive
+manual intervals, mask unions and unchanged unrelated columns. Exact7source-policy
+hashes/AST proofs and review limits: registry/checkpoints/jonathan_builder_policy_20261021.json.
+Independent review found no production issue after documentation/hash corrections.
+No real sessions/models, video contents, empirical builds, exports or renders ran.
 
-Use `from studies.session_building.jonathan.build import build`. The package-level
-build name remains import-order-sensitive; its lazy export is unchanged. Unified
-builder project lookup/bare imports/singleton mutation, other cohort policy,
-ignored auto-mask inputs and real historical artifact reconstruction remain
-separate gates. No legacy directory, original policy file, symlink or viewer moved.
-
+The unified entry still needs explicit project selection and config propagation
+through ctx.cfg across shared stages and process workers: assigning one module's
+JCFG does not update cached aliases consistently. AMPH owns distinct enrichment/
+metadata and a historical clock heuristic; do not substitute IFdN policy or run
+that heuristic as part of an import repair. Physical old study symlink identity,
+PPE outputs, full drivers, named real artifacts and empirical/feedback recovery
+remain gates before removing any legacy root. Primary CURRENT and its live
+promotion record govern exact sequential Git state; original viewers are preserved.
 
 ## Original project tracking policies restored and validated (2026-10-21)
 

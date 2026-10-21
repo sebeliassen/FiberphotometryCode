@@ -180,3 +180,9 @@ checks and pending broad integration. No empirical build or input decoding occur
 The package-level build-name ambiguity and unified dynamic project/configuration
 route remain separate API/input gates. Use the explicit canonical build leaf;
 retaining source policy does not validate other cohorts or historical artifacts.
+
+The direct-builder candidate now includes actual PR11 main through a normal merge.
+All source-policy/task ledgers and test additions survive; original main ledger
+line endings are restored. Final1055CPU/6existing warnings in both environments;
+architecture202/lint/maps/wheel/dependencies pass. The next unified/config/worker
+and AMPH clock-policy gates are recorded in the retirement note and primary audit.
