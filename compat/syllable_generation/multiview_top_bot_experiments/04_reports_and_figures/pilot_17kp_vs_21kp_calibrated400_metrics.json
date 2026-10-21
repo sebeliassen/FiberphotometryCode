@@ -1,0 +1,305 @@
+{
+  "17kp": {
+    "arm": "17kp",
+    "model_dir": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/pilot_comparison_17kp/model_17kp_calibrated400_seed404",
+    "bout_statistics": {
+      "total_frames": 1735420,
+      "total_bouts": 41762,
+      "active_syllable_count": 39,
+      "entropy_bits": 4.3944596561842655,
+      "median_bout_ms": 500.0,
+      "mean_bout_ms": 692.5833692511533,
+      "p10_bout_ms": 33.333333333333336,
+      "p90_bout_ms": 1533.3333333333335,
+      "median_bout_frames": 30.0
+    },
+    "convergence": {
+      "snapshots": [
+        0,
+        25,
+        50,
+        75,
+        100,
+        125,
+        150,
+        175,
+        200
+      ],
+      "consecutive": [
+        {
+          "from_iter": 0,
+          "to_iter": 25,
+          "ari": 0.0030400334451339017,
+          "ami": 0.0357034407239672,
+          "label_change_pct": 97.34305287810822
+        },
+        {
+          "from_iter": 25,
+          "to_iter": 50,
+          "ari": 0.4561923079025057,
+          "ami": 0.5791227285380791,
+          "label_change_pct": 32.999089272152005
+        },
+        {
+          "from_iter": 50,
+          "to_iter": 75,
+          "ari": 0.3661555186708546,
+          "ami": 0.49239316482368295,
+          "label_change_pct": 38.37545221309059
+        },
+        {
+          "from_iter": 75,
+          "to_iter": 100,
+          "ari": 0.6504236107823049,
+          "ami": 0.7048613763834122,
+          "label_change_pct": 19.09837943048275
+        },
+        {
+          "from_iter": 100,
+          "to_iter": 125,
+          "ari": 0.7289246770245682,
+          "ami": 0.7596635258078651,
+          "label_change_pct": 14.412788767032309
+        },
+        {
+          "from_iter": 125,
+          "to_iter": 150,
+          "ari": 0.7732669616853058,
+          "ami": 0.7905593136295579,
+          "label_change_pct": 12.646404159319289
+        },
+        {
+          "from_iter": 150,
+          "to_iter": 175,
+          "ari": 0.8020827641454308,
+          "ami": 0.8103746417565487,
+          "label_change_pct": 11.24425589370239
+        },
+        {
+          "from_iter": 175,
+          "to_iter": 200,
+          "ari": 0.81628651423498,
+          "ami": 0.8167089194626755,
+          "label_change_pct": 10.548990253787302
+        }
+      ],
+      "late_stage_ari": 0.7801402292725712,
+      "late_stage_flip_pct": 12.213109768460322
+    },
+    "pca_variance": {
+      "abs_dorsal_variance_px2": 407.9496912815803,
+      "abs_paw_variance_px2": 0.0,
+      "dorsal_pct_share": 100.0,
+      "paw_pct_share": 0.0
+    },
+    "dorsal_r2": {
+      "n_snippets": 17398,
+      "k_syllables": 42,
+      "r2_labels": 0.23977654510109103,
+      "r2_kmeans": 0.683305249331054,
+      "r2_ratio": 0.350906926788326
+    }
+  },
+  "21kp_static": {
+    "arm": "21kp_static",
+    "model_dir": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/pilot_comparison_21kp_static/model_21kp_static_calibrated400_seed404",
+    "bout_statistics": {
+      "total_frames": 1735420,
+      "total_bouts": 33261,
+      "active_syllable_count": 57,
+      "entropy_bits": 5.296492094839188,
+      "median_bout_ms": 683.3333333333334,
+      "mean_bout_ms": 869.5970255454337,
+      "p10_bout_ms": 250.0,
+      "p90_bout_ms": 1633.3333333333333,
+      "median_bout_frames": 41.0
+    },
+    "convergence": {
+      "snapshots": [
+        0,
+        25,
+        50,
+        75,
+        100,
+        125,
+        150,
+        175,
+        200
+      ],
+      "consecutive": [
+        {
+          "from_iter": 0,
+          "to_iter": 25,
+          "ari": 0.006556577193201977,
+          "ami": 0.05685332322268174,
+          "label_change_pct": 97.2797074273089
+        },
+        {
+          "from_iter": 25,
+          "to_iter": 50,
+          "ari": 0.5172058463910509,
+          "ami": 0.6206567857409842,
+          "label_change_pct": 33.720383535881695
+        },
+        {
+          "from_iter": 50,
+          "to_iter": 75,
+          "ari": 0.2082835385056951,
+          "ami": 0.32943794368964047,
+          "label_change_pct": 69.78937089638197
+        },
+        {
+          "from_iter": 75,
+          "to_iter": 100,
+          "ari": 0.850270591817856,
+          "ami": 0.8449705986074779,
+          "label_change_pct": 9.54850475145678
+        },
+        {
+          "from_iter": 100,
+          "to_iter": 125,
+          "ari": 0.8934329883393144,
+          "ami": 0.8861603189946816,
+          "label_change_pct": 6.196949554883134
+        },
+        {
+          "from_iter": 125,
+          "to_iter": 150,
+          "ari": 0.9133326536768603,
+          "ami": 0.9041969345947,
+          "label_change_pct": 5.040182715459468
+        },
+        {
+          "from_iter": 150,
+          "to_iter": 175,
+          "ari": 0.9255329218516668,
+          "ami": 0.9168692291086962,
+          "label_change_pct": 4.22595256543596
+        },
+        {
+          "from_iter": 175,
+          "to_iter": 200,
+          "ari": 0.929196800475124,
+          "ami": 0.9205806322215793,
+          "label_change_pct": 4.006435371749025
+        }
+      ],
+      "late_stage_ari": 0.9153738410857414,
+      "late_stage_flip_pct": 4.867380051881897
+    },
+    "pca_variance": {
+      "abs_dorsal_variance_px2": 329.33357322823,
+      "abs_paw_variance_px2": 762.2749791125295,
+      "dorsal_pct_share": 30.169566968125434,
+      "paw_pct_share": 69.83043303187456
+    },
+    "dorsal_r2": {
+      "n_snippets": 27998,
+      "k_syllables": 68,
+      "r2_labels": 0.1348619027375667,
+      "r2_kmeans": 0.7109621587338071,
+      "r2_ratio": 0.18968928385408013
+    }
+  },
+  "21kp_dynamic": {
+    "arm": "21kp_dynamic",
+    "model_dir": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/multiview_top_bot_experiments/pilot_comparison_21kp_dynamic/model_21kp_dynamic_calibrated400_seed404",
+    "bout_statistics": {
+      "total_frames": 639601,
+      "total_bouts": 19001,
+      "active_syllable_count": 47,
+      "entropy_bits": 4.713790043261048,
+      "median_bout_ms": 383.33333333333337,
+      "mean_bout_ms": 561.0239811939722,
+      "p10_bout_ms": 133.33333333333334,
+      "p90_bout_ms": 1183.3333333333333,
+      "median_bout_frames": 23.0
+    },
+    "convergence": {
+      "snapshots": [
+        0,
+        25,
+        50,
+        75,
+        100,
+        125,
+        150,
+        175,
+        200
+      ],
+      "consecutive": [
+        {
+          "from_iter": 0,
+          "to_iter": 25,
+          "ari": 0.010771806525374277,
+          "ami": 0.08122475510997895,
+          "label_change_pct": 97.29511163099426
+        },
+        {
+          "from_iter": 25,
+          "to_iter": 50,
+          "ari": 0.37269485652086337,
+          "ami": 0.4822623159366668,
+          "label_change_pct": 45.07595572836715
+        },
+        {
+          "from_iter": 50,
+          "to_iter": 75,
+          "ari": 0.2186557109655253,
+          "ami": 0.3197613596685483,
+          "label_change_pct": 65.38058476563236
+        },
+        {
+          "from_iter": 75,
+          "to_iter": 100,
+          "ari": 0.8808712408037997,
+          "ami": 0.8857097635707291,
+          "label_change_pct": 6.639201285681698
+        },
+        {
+          "from_iter": 100,
+          "to_iter": 125,
+          "ari": 0.9258734232040743,
+          "ami": 0.9270538736753852,
+          "label_change_pct": 3.817767997571338
+        },
+        {
+          "from_iter": 125,
+          "to_iter": 150,
+          "ari": 0.9395451115705046,
+          "ami": 0.9403182354241795,
+          "label_change_pct": 3.0119872323711876
+        },
+        {
+          "from_iter": 150,
+          "to_iter": 175,
+          "ari": 0.9500456189837,
+          "ami": 0.9504734268786584,
+          "label_change_pct": 2.4316638566677584
+        },
+        {
+          "from_iter": 175,
+          "to_iter": 200,
+          "ari": 0.955184717439453,
+          "ami": 0.9558863266424295,
+          "label_change_pct": 2.1267946974205754
+        }
+      ],
+      "late_stage_ari": 0.942662217799433,
+      "late_stage_flip_pct": 2.847053446007715
+    },
+    "pca_variance": {
+      "abs_dorsal_variance_px2": 213.1397481665203,
+      "abs_paw_variance_px2": 433.368221959066,
+      "dorsal_pct_share": 32.96784541188521,
+      "paw_pct_share": 67.03215458811479
+    },
+    "dorsal_r2": {
+      "n_snippets": 16052,
+      "k_syllables": 51,
+      "r2_labels": 0.12076886274890053,
+      "r2_kmeans": 0.688771913943355,
+      "r2_ratio": 0.17533941251680107
+    }
+  }
+}

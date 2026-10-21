@@ -1,0 +1,16 @@
+Pickle modified time: Fri Feb  6 16:27:56 2026
+Loaded 2 sessions.
+
+Session 0: 2026-01-20T15_07_45_unknown_chamber
+Animal ID: None
+Genotype Keys: []
+Genotype Value: None
+Signal 0 Value: None
+
+Session 1: 2026-01-23T10_36_39_top_left
+Animal ID: 2
+Genotype Keys: ['genotype']
+Genotype Value: WT
+Signal 0 Value: VTA_NE
+FULL METADATA: {'timestamp': '2026-01-23T10_36_39', 'chamber': 'top_left', 'camsets_present': ['BotCamVid', 'CenterTopCamVid', 'LeftTopCamVid', 'RightTopCamVid'], 'cam_slots_present': ['BotCamVid', 'center_cam', 'left_cam', 'right_cam'], 'arenas_present': ['Arena1', 'Arena1234', 'Arena1and2', 'Arena2', 'Arena3', 'Arena3and4'], 'chamber_index': 0, 'original_video_path': '/home/fsp585/Desktop/FiberphotometryCode/src_mono_inter/jonathan_oft_baseline/video_files/T2_2.6.10.e_Arena1234_CenterTopCamVid_2026-01-23T10_36_39.avi', 'trial_id': 'T2_2.6.10.e', 'animal_id': '2', 'n_chambers': 4, 'photometry_ts_csv': '2026-01-23T10:36:39', 'photometry_csv_path': '/home/fsp585/Desktop/FiberphotometryCode/src_mono_inter/jonathan_oft_baseline/csvs/T2_2.6.10.e/photometry_data_combined_2026-01-23T10.36.39.csv', 'photometry_source': 'csv_combined', 'genotype': 'WT', 'signal_0': 'VTA_NE', 'signal_1': 'VTA_NE', 'signal_2': 'NAc_DA', 'signal_3': 'NAc_DA', 'fiber_indices_auto': [0, 1, 2, 3], 'fiber_select_mode': 'auto_pair', 'effective_indices': [0, 1, 2, 3], 'signal_meta': {'signal_0': {'orig_fiber': 'G0', 'orig_letter': 'G', 'fiber_num': '0', 'hemisphere': 'VTA', 'brain_reg': 'NE'}, 'signal_1': {'orig_fiber': 'R1', 'orig_letter': 'R', 'fiber_num': '1', 'hemisphere': 'VTA', 'brain_reg': 'NE'}, 'signal_2': {'orig_fiber': 'G2', 'orig_letter': 'G', 'fiber_num': '2', 'hemisphere': 'NAC', 'brain_reg': 'DA'}, 'signal_3': {'orig_fiber': 'R3', 'orig_letter': 'R', 'fiber_num': '3', 'hemisphere': 'NAC', 'brain_reg': 'DA'}}, 'alltimestamps_csv_path': '/home/fsp585/Desktop/FiberphotometryCode/src_mono_inter/jonathan_oft_baseline/csvs/T2_2.6.10.e/BotCam3_AllTimestampsCombined2026-01-23T10_36_39.csv', 'alltimestamps_camera': 'BotCam3', 'photometry_non_fiber_cols': ['FrameCounter', 'SystemTimestamp', 'LedState', 'ComputerTimestamp'], 'signal_keys': ['signal_0', 'signal_1', 'signal_2', 'signal_3'], 'led_col_name': 'LedState', 'photometry_channels': ['415', '470'], 'dff_iso_channel': '415', 'dff_computed_channels': ['470', '560'], 'datta_replication_enabled': True, 'reference_interpolation': True}
+

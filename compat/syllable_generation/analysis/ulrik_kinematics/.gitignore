@@ -1,0 +1,13 @@
+# Byte-compiled
+__pycache__/
+*.pyc
+
+# Run logs (redirect stdout yourself, don't commit)
+*.log
+
+# Result snapshots
+*.zip
+
+# Heavy data
+cache/
+output/

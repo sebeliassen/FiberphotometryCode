@@ -1,0 +1,1172 @@
+# Python bundle generated on Thu Sep 11 05:06:23 PM CEST 2025
+# Source directory: /home/fsp585/Desktop/FiberphotometryCode/fiberphotometry/turnlab
+
+===== FILE: __init__.py =====
+```python
+from .context import set_context, get_sessions, get_project_dir
+from .linking import add_session_idx
+from .detect import make_turn_syllable_series
+from .cache_index import build_or_load_turn_index, slice_by_percentile, onset_mask_from_slice
+from .peth_plot import compute_turn_peths_from_merged
+from .experiments import exp, run_turn_experiment, run_turn_experiments
+
+```
+
+===== FILE: cache_index.py =====
+```python
+from .utils import _ensure_dir
+from .config import PROJECT_DIR_FULL
+from .detect import make_turn_syllable_series
+
+def _param_hash(d: dict) -> str:
+    import json, hashlib
+    whitelist = [
+        'method','fps','turn_start_pct','stop_ratio','min_bout_ms','merge_gap_ms',
+        'smooth_win','clip_hi_pct','speed_floor',
+        'session_idx_col','frame_col','omega_col','speed_col'
+    ]
+    dd = {k: d.get(k) for k in whitelist}
+    s = json.dumps(dd, sort_keys=True, ensure_ascii=False)
+    return hashlib.md5(s.encode('utf-8')).hexdigest()[:10]
+
+def build_or_load_turn_index(
+    df, dataset_tag: str, detector_kwargs: dict,
+    cache_dir=None
+):
+    """
+    Run detection (non-percentile params), extract per-bout rows with peak |omega| & |kappa|,
+    attach argsort ranks for fast binning, and cache to disk.
+    """
+    import os, time
+    import numpy as np
+    import pandas as pd
+
+    cache_dir = cache_dir or os.path.join((PROJECT_DIR_FULL or '.'), 'turn_cache')
+    _ensure_dir(cache_dir)
+
+    # identity key
+    h = _param_hash(detector_kwargs)
+    fname = f"turnindex__{dataset_tag}__{h}.pkl"
+    fpath = os.path.join(cache_dir, fname)
+
+    # try load
+    if os.path.isfile(fpath):
+        obj = pd.read_pickle(fpath)
+        # sanity minimal schema
+        required_cols = {'onset_df_idx','session_idx','start_i','end_i','dir',
+                         'peak_abs_omega','peak_abs_kappa','rank_omega','rank_kappa'}
+        if required_cols.issubset(set(obj['turn_index'].columns)):
+            print(f"📦 Loaded turn index cache: {fpath}")
+            return obj
+        else:
+            print(f"⚠️ Cache schema changed; rebuilding: {fpath}")
+
+    # --- build fresh ---
+    # 1) run detector to get per-frame labels & onsets
+    turn_syll, turn_on = make_turn_syllable_series(df, **detector_kwargs)
+
+    # 2) ensure sorted & aligned
+    work = df.sort_values(['session_idx','frame_index']).reset_index()
+    # keep original df index to map back later
+    work.rename(columns={'index':'orig_index'}, inplace=True)
+    # align detector outputs to this sorted view
+    # (assumes your detector used the same ordering or returned Series aligned to df index)
+    if getattr(turn_on, 'index', None) is not None and not turn_on.index.equals(df.index):
+        # align by original index
+        turn_on = turn_on.reindex(df.index)
+        turn_syll = turn_syll.reindex(df.index)
+
+    turn_on_sorted   = turn_on.loc[work['orig_index']].to_numpy()
+    turn_syll_sorted = turn_syll.loc[work['orig_index']].astype('object').to_numpy()
+
+    sess  = work['session_idx'].to_numpy()
+    omega = np.abs(work['angular_velocity'].to_numpy(dtype='float64'))
+    speed = work['velocity_px_s'].to_numpy(dtype='float64')
+    # curvature κ ≈ dθ/ds = ω / speed (guard with speed_floor)
+    speed_floor = float(detector_kwargs.get('speed_floor', 2.0 if detector_kwargs.get('method','omega')=='omega' else 10.0))
+    denom = np.maximum(speed, speed_floor)
+    kappa = np.abs(omega / denom)
+
+    n = len(work)
+    rows = []
+    i = 0
+    while i < n:
+        if not turn_on_sorted[i]:
+            i += 1
+            continue
+        # start of bout
+        s_i = i
+        lab = turn_syll_sorted[i]
+        # robust direction parse
+        d = None
+        if isinstance(lab, str):
+            lo = lab.lower()
+            if lo.startswith('left'):  d = 'left'
+            elif lo.startswith('right'): d = 'right'
+        # walk until label changes or session boundary
+        j = i + 1
+        while j < n and (sess[j] == sess[i]) and (turn_syll_sorted[j] == lab):
+            j += 1
+        e_i = j  # exclusive end
+
+        # peaks within bout [s_i:e_i)
+        peak_w = float(np.nanmax(omega[s_i:e_i])) if e_i > s_i else float('nan')
+        peak_k = float(np.nanmax(kappa[s_i:e_i])) if e_i > s_i else float('nan')
+
+        rows.append({
+            'onset_df_idx': int(work.at[s_i, 'orig_index']),  # index in the original df
+            'onset_sorted_i': int(s_i),                       # position in sorted view
+            'session_idx': int(sess[s_i]),
+            'start_i': int(s_i),
+            'end_i': int(e_i),
+            'dir': d,  # 'left'/'right'/None
+            'label': lab if isinstance(lab, str) else None,
+            'peak_abs_omega': peak_w,
+            'peak_abs_kappa': peak_k,
+        })
+        i = j
+
+    turn_index = pd.DataFrame(rows)
+    if turn_index.empty:
+        raise RuntimeError("No bouts detected; check detector params or inputs.")
+
+    # 3) attach argsort ranks (ascending; higher ranks = stronger turns)
+    order_w = np.argsort(turn_index['peak_abs_omega'].to_numpy())
+    order_k = np.argsort(turn_index['peak_abs_kappa'].to_numpy())
+
+    rank_w = np.empty(len(turn_index), dtype='int32'); rank_w[order_w] = np.arange(len(turn_index), dtype='int32')
+    rank_k = np.empty(len(turn_index), dtype='int32'); rank_k[order_k] = np.arange(len(turn_index), dtype='int32')
+
+    turn_index['rank_omega'] = rank_w
+    turn_index['rank_kappa'] = rank_k
+
+    meta = {
+        'dataset_tag': dataset_tag,
+        'detector_hash': h,
+        'detector_kwargs': {k: detector_kwargs.get(k) for k in detector_kwargs},
+        'n_bouts': int(len(turn_index)),
+        'n_frames': int(len(df)),
+        'version': 1,
+        'time': time.strftime('%Y-%m-%d %H:%M:%S')
+    }
+
+    out = {'turn_index': turn_index, 'meta': meta}
+    pd.to_pickle(out, fpath)
+    print(f"💾 Built & saved turn index: {fpath}  | bouts={len(turn_index)}")
+    return out
+
+def slice_by_percentile(turn_index, metric='omega', p_lo=80, p_hi=85):
+    """
+    Return a view (DataFrame) of bouts whose rank is within [p_lo, p_hi) *by rank*.
+    """
+    import numpy as np
+    mcol = 'rank_omega' if metric == 'omega' else 'rank_kappa'
+    N = len(turn_index)
+    lo = int(np.floor(p_lo/100.0 * N))
+    hi = int(np.floor(p_hi/100.0 * N))  # exclusive
+    lo = max(0, min(N, lo))
+    hi = max(lo, min(N, hi))
+    return turn_index.nsmallest(hi, mcol).iloc[lo:hi]
+
+def onset_mask_from_slice(df, slice_df, onset_col='turn_onset_cache'):
+    """
+    Build a boolean mask Series aligned to df.index with True at selected onsets.
+    """
+    import pandas as pd
+    mask = pd.Series(False, index=df.index)
+    idxs = slice_df['onset_df_idx'].to_numpy()
+    mask.loc[idxs] = True
+    df[onset_col] = mask
+    return onset_col
+```
+
+===== FILE: config.py =====
+```python
+SAMPLING_RATE = 80
+WINDOW_SECONDS = 10
+SMOOTHING_WINDOW = 25
+SMOOTHING_POLY_ORDER = 3
+CONFIDENCE_LEVEL = 1.96
+SIGNAL_COLS = ['signal_0_470_dff_z', 'signal_1_470_dff_z']
+MIN_TRACES_PER_SYLLABLE = 10
+DEFAULT_PETH_DIR = 'peth_turns'
+DEFAULT_CACHE_DIR = 'turn_cache'
+PROJECT_DIR_FULL = '/home/fsp585/Desktop/FiberphotometryCode/tests/kpms_all_sessions_frac_1_ld10_jn24'
+
+```
+
+===== FILE: context.py =====
+```python
+_SESSIONS = None
+_PROJECT_DIR = None
+
+def set_context(sessions, project_dir_full=None):
+    global _SESSIONS, _PROJECT_DIR
+    _SESSIONS = sessions
+    _PROJECT_DIR = project_dir_full
+
+def get_sessions():
+    return _SESSIONS
+
+def get_project_dir():
+    return _PROJECT_DIR
+
+```
+
+===== FILE: detect.py =====
+```python
+def make_turn_syllable_series(
+    df,
+    session_idx_col='session_idx',
+    frame_col='frame_index',
+    omega_col='angular_velocity',
+    speed_col='velocity_px_s',
+    method='omega',                 # 'omega' or 'kappa'
+    granularity_percentiles=None,   # e.g., [50] or [50, 90]; default [50]
+    fps=80,
+    # hysteresis / bout rules
+    turn_start_pct=90,              # percentile of metric to start a turn
+    stop_ratio=0.6,                 # stop = start * stop_ratio
+    min_bout_ms=120,
+    merge_gap_ms=120,
+    # denoising / outlier handling
+    smooth_win=5,                   # moving average window (frames); 1=off
+    clip_hi_pct=99.5,               # winsorize high spikes per session; None to disable
+    # curvature specifics
+    speed_floor=2.0,                # px/s (or your units); below this, use |omega| to avoid kappa blow-up
+    eps=1e-6
+):
+    """
+    Returns:
+      turn_syllable : pd.Series of str (e.g., 'left_50', 'right_90', NaN outside bouts)
+      turn_onset    : pd.Series of bool (True at bout start, else False)
+    """
+    if granularity_percentiles is None:
+        granularity_percentiles = [50]
+    granularity_percentiles = sorted(granularity_percentiles)
+
+    n = len(df)
+    out_label = [None] * n
+    out_onset = [False] * n
+
+    # convenience
+    def moving_avg(x, k):
+        if k <= 1:
+            return list(x)
+        pad = k // 2
+        seq = [x[0]]*pad + list(x) + [x[-1]]*pad
+        sm = []
+        for i in range(len(x)):
+            sm.append(sum(seq[i:i+k]) / float(k))
+        return sm
+
+    def percentile(vals, p):
+        s = sorted(vals)
+        if not s:
+            return 0.0
+        idx = int(round((p/100.0)*(len(s)-1)))
+        if idx < 0: idx = 0
+        if idx >= len(s): idx = len(s)-1
+        return s[idx]
+
+    def to_frames(ms): 
+        return int(round((ms * fps) / 1000.0))
+
+    min_bout_frames = to_frames(min_bout_ms)
+    merge_gap_frames = to_frames(merge_gap_ms)
+
+    # ensure processing is in session order then frame order
+    # (doesn't modify df; we work with indices)
+    order = df.sort_values([session_idx_col, frame_col]).index.tolist()
+
+    # prepare easy access columns
+    sess_ids = df[session_idx_col].values
+    omega_raw = df[omega_col].values
+    speed_raw = df[speed_col].values if speed_col in df.columns else [None]*n
+
+    # iterate by session
+    i0 = 0
+    while i0 < n:
+        sid = sess_ids[order[i0]]
+        # find contiguous block with same session_idx
+        j = i0
+        while j < n and sess_ids[order[j]] == sid:
+            j += 1
+        idxs = order[i0:j]                 # row indices for this session in order
+        m = len(idxs)
+
+        # pull series for this session
+        omega = [float(omega_raw[k]) for k in idxs]
+        speed = [float(speed_raw[k]) if speed_raw[k] is not None else 0.0 for k in idxs]
+
+        # denoise: smooth
+        omega_sm = moving_avg(omega, smooth_win)
+
+        # denoise: winsorize high spikes (per session)
+        if clip_hi_pct is not None:
+            hi = percentile([abs(x) for x in omega_sm], clip_hi_pct)
+            if hi > 0:
+                omega_sm = [min(max(v, -hi), hi) for v in omega_sm]
+
+        # build metric M for turn detection
+        #  - omega-based: M = |omega_sm|
+        #  - kappa-based: M = |omega_sm|/v for v >= speed_floor, else |omega_sm|
+        absw = [abs(v) for v in omega_sm]
+        if method == 'kappa':
+            M = []
+            for v_abs, v in zip(absw, speed):
+                if v >= speed_floor:
+                    M.append(v_abs / (v if v > eps else eps))
+                else:
+                    M.append(v_abs)  # in-place: fall back to |omega|
+        else:
+            M = absw
+
+        # compute start/stop thresholds from session distribution
+        start_thr = percentile([x for x in M], turn_start_pct)
+        stop_thr = start_thr * stop_ratio
+
+        # optional: turn granularity thresholds (percentiles of M)
+        gran_cuts = [percentile(M, p) for p in granularity_percentiles]
+
+        # hysteresis pass to label turning frames (state machine)
+        turning = [False] * m
+        on = False
+        for t in range(m):
+            if not on and M[t] >= start_thr:
+                on = True
+            elif on and M[t] <= stop_thr:
+                on = False
+            turning[t] = on
+
+        # collect contiguous bouts
+        bouts = []
+        t = 0
+        while t < m:
+            if not turning[t]:
+                t += 1
+                continue
+            s = t
+            while t < m and turning[t]:
+                t += 1
+            e = t - 1
+            bouts.append([s, e])
+
+        # merge tiny gaps
+        merged = []
+        for b in bouts:
+            if not merged:
+                merged.append(b)
+            else:
+                if b[0] - merged[-1][1] - 1 <= merge_gap_frames:
+                    merged[-1][1] = b[1]
+                else:
+                    merged.append(b)
+
+        # drop short bouts
+        bouts = [b for b in merged if (b[1] - b[0] + 1) >= min_bout_frames]
+
+        # label bouts
+        for s, e in bouts:
+            # pick peak within bout on metric M
+            peak_rel = max(range(e - s + 1), key=lambda k: M[s + k])
+            peak = s + peak_rel
+            # direction from smoothed omega at peak
+            sign = 1 if omega_sm[peak] >= 0 else -1
+            dir_str = 'right' if sign >= 0 else 'left'
+
+            # assign granularity bin by peak metric
+            peak_val = M[peak]
+            chosen_p = None
+            for p, thr in zip(granularity_percentiles[::-1], gran_cuts[::-1]):  # high->low
+                if peak_val >= thr:
+                    chosen_p = p
+                    break
+            if chosen_p is None:
+                # if it passed start_thr it should usually exceed the lowest granularity cut;
+                # but just in case, fall back to the lowest provided percentile
+                chosen_p = granularity_percentiles[0]
+
+            label = f"{dir_str}_{int(chosen_p)}"
+
+            # write label across the whole bout; mark onset at s
+            for t in range(s, e + 1):
+                out_label[idxs[t]] = label
+            out_onset[idxs[s]] = True
+
+        # advance to next session block
+        i0 = j
+
+    # build Series with original index order
+    turn_syllable = df[session_idx_col].copy()
+    turn_syllable[:] = out_label
+    turn_syllable.name = 'turn_syllable'
+
+    turn_onset = df[session_idx_col].copy()
+    turn_onset[:] = out_onset
+    turn_onset = turn_onset.astype(bool)
+    turn_onset.name = 'turn_onset'
+
+    return turn_syllable, turn_onset
+
+```
+
+===== FILE: experiments.py =====
+```python
+# turnlab/experiments.py
+
+from typing import Dict, List, Optional, Set, Tuple
+import os
+import numpy as np
+import pandas as pd
+
+from .detect import make_turn_syllable_series
+from .peth_plot import compute_turn_peths_from_merged
+from .cache_index import build_or_load_turn_index, slice_by_percentile, onset_mask_from_slice
+
+def exp(name, method, bins, start_pct,
+        min_bout_ms, merge_gap_ms,
+        smooth_win, speed_floor,
+        stop_ratio=0.6, desired_labels=None, dataset_tag=None):
+    """
+    Return a dict describing one detection+plot configuration.
+    dataset_tag: optional string used to name the cache file (e.g., 'merged_all', 'merged_wt')
+    """
+    return {
+        'name': name,
+        'dataset_tag': dataset_tag,  # optional; runner will infer if None
+        'detector_kwargs': dict(
+            session_idx_col='session_idx',
+            frame_col='frame_index',
+            omega_col='angular_velocity',
+            speed_col='velocity_px_s',
+            method=method,                           # 'omega' or 'kappa' (also selects cache metric)
+            granularity_percentiles=bins,            # thresholds like [90] or [90,97]
+            fps=80,
+            turn_start_pct=start_pct,
+            stop_ratio=stop_ratio,
+            min_bout_ms=min_bout_ms,
+            merge_gap_ms=merge_gap_ms,
+            smooth_win=smooth_win,
+            clip_hi_pct=99.5,
+            speed_floor=speed_floor
+        ),
+        'desired_labels': desired_labels,  # None -> inferred from bins
+        'save': True
+    }
+
+def _bins_to_ranges(sorted_bins: List[int]) -> List[Tuple[int, int]]:
+    """
+    Convert thresholds [b1, b2, ..., bk] into half-open percentile ranges:
+    [(b1, b2), (b2, b3), ..., (bk, 100)]
+    """
+    b = sorted(set(int(x) for x in sorted_bins))
+    if not b:
+        return []
+    ranges = [(b[i], b[i+1]) for i in range(len(b)-1)]
+    ranges.append((b[-1], 100))
+    return ranges
+
+def _labels_from_bins(bins: List[int]) -> Set[str]:
+    """Return {'left_X','right_X', ...} where X are the *starts* of each bin."""
+    return {f"{d}_{int(p)}" for d in ('left','right') for p in sorted(set(bins))}
+
+def _infer_dataset_tag(df, fallback='df'):
+    # best-effort tag based on columns present
+    if 'group' in df.columns:
+        # common split pattern in your notebooks
+        if str(getattr(df['group'], 'cat', df['group'])).find('WT') >= 0 and df['group'].nunique() == 1:
+            return 'merged_wt'
+    return fallback
+
+def run_turn_experiment(
+    merged_all: pd.DataFrame,
+    detector_kwargs: Dict,
+    desired_labels: Optional[Set[str]] = None,
+    label_col: str = 'turn_syllable',
+    canonize: bool = False,               # kept for API compat; cache path ignores it
+    save: bool = False,
+    out_dir: Optional[str] = None,
+    plot_kwargs: Optional[Dict] = None,
+    tag: Optional[str] = None,
+    use_cache: bool = True,
+    dataset_tag: Optional[str] = None,
+    verbose=False,
+):
+    """
+    Run one experiment.
+    - If use_cache=True (default): build/load turn-index cache and create onsets/labels from ranks.
+    - Else: call detector directly (legacy path).
+    """
+    plot_kwargs = dict(plot_kwargs or {})
+
+    # Compose output directory suffix for clarity
+    if out_dir is not None:
+        base = out_dir
+    else:
+        base = plot_kwargs.get('out_dir')  # peth_plot will default if not provided
+    if tag:
+        base = (base or '').rstrip('/\\')
+        base = f"{base}_{tag}"
+    if base:
+        plot_kwargs['out_dir'] = base
+
+    # ---- DEDUPE: pop keys that we also pass positionally
+    if 'save' in plot_kwargs:
+        save = plot_kwargs.pop('save')
+    if 'label_col' in plot_kwargs:
+        plot_kwargs.pop('label_col')
+    if 'onset_col' in plot_kwargs:
+        plot_kwargs.pop('onset_col')
+
+    # Decide labels if not provided (mirrors original behavior)
+    bins = detector_kwargs.get('granularity_percentiles', [90])
+    if desired_labels is None:
+        desired_labels = _labels_from_bins(bins)
+
+    if not use_cache:
+        # ----- Legacy path: recompute turns now -----
+        turn_syll, turn_on = make_turn_syllable_series(merged_all, **detector_kwargs)
+        df = merged_all.copy()
+        df['turn_syllable'] = turn_syll
+        df['turn_onset']    = turn_on
+        use_label_col = label_col
+        res = compute_turn_peths_from_merged(
+            df,
+            desired_labels=desired_labels,
+            label_col=use_label_col,
+            save=save,
+            **plot_kwargs
+        )
+        onset_counts = {lbl: int(((df['turn_onset']) & (df[use_label_col] == lbl)).sum()) for lbl in desired_labels}
+        return {
+            'onset_counts': onset_counts,
+            'plot_result': res,
+            'label_col': use_label_col,
+            'desired_labels': desired_labels,
+            'out_dir': res['out_dir'],
+            'detector_kwargs': detector_kwargs,
+            'used_cache': False
+        }
+
+    # ----- Cache path: build/load index and slice bins from ranks -----
+    metric = 'omega' if detector_kwargs.get('method','omega') == 'omega' else 'kappa'
+    ds_tag = dataset_tag or _infer_dataset_tag(merged_all, 'df')
+
+    cache_obj = build_or_load_turn_index(merged_all, dataset_tag=ds_tag, detector_kwargs=detector_kwargs)
+    turn_ix = cache_obj['turn_index']
+
+    # Build target percentile ranges that mirror "choose the highest bin exceeded"
+    # e.g. [90,97] -> bins: (90,97], (97,100]
+    ranges = _bins_to_ranges(sorted(detector_kwargs.get('granularity_percentiles', [90])))
+
+    # If user passed explicit desired_labels (e.g., {'left_90','right_97'}), limit to those bin starts
+    keep_starts = sorted({int(lbl.split('_')[-1]) for lbl in desired_labels})
+    ranges = [r for r in ranges if r[0] in keep_starts]
+
+    if verbose:
+        total_bouts = len(turn_ix)
+        print(f"[run_turn_experiment] metric={metric} | cache bouts={total_bouts} | ranges={ranges}")
+
+    if not ranges:
+        return {
+            'onset_counts': {},
+            'plot_result': {'out_dir': plot_kwargs.get('out_dir')},
+            'label_col': 'turn_syllable_bin',
+            'desired_labels': desired_labels,
+            'out_dir': plot_kwargs.get('out_dir'),
+            'detector_kwargs': detector_kwargs,
+            'used_cache': True,
+            'note': 'No percentile ranges matched the requested labels.'
+        }
+
+    # Build one combined onset mask + per-onset labels from cached direction
+    df = merged_all.copy()
+    df['turn_onset_sel'] = False
+    df['turn_syllable_bin'] = None
+
+    dirmap = dict(zip(turn_ix['onset_df_idx'], turn_ix['dir']))
+
+    total_counts = {}
+    selected_idx_all = []
+    for (lo, hi) in ranges:
+        sl = slice_by_percentile(turn_ix, metric=metric, p_lo=lo, p_hi=hi)
+        idxs = sl['onset_df_idx'].to_numpy()
+        total_counts[f'bin_{lo}'] = int(len(idxs))
+        selected_idx_all.extend(idxs.tolist())
+        if verbose:
+            dirs = [dirmap.get(i, None) for i in idxs]
+            n_left  = sum(1 for d in dirs if d == 'left')
+            n_right = sum(1 for d in dirs if d == 'right')
+            n_none  = sum(1 for d in dirs if d not in ('left','right'))
+            print(f"  bin [{lo},{hi}): n={len(idxs)} | L={n_left}, R={n_right}, dir=None={n_none}")
+
+        df.loc[idxs, 'turn_onset_sel'] = True
+        labels = [f"{dirmap.get(i)}_{int(lo)}" if dirmap.get(i) in ('left','right') else None for i in idxs]
+        df.loc[idxs, 'turn_syllable_bin'] = labels
+
+    # Final pre-plot summary
+    if verbose:
+        sel_n = int(df['turn_onset_sel'].sum())
+        vc = df.loc[df['turn_onset_sel'], 'turn_syllable_bin'].value_counts(dropna=False)
+        print(f"  total selected onsets: {sel_n}")
+        print("  labels among selected:\n", vc.to_string())
+
+    # Decide which labels to plot
+    desired_labels = {f'left_{int(lo)}' for (lo, _) in ranges} | {f'right_{int(lo)}' for (lo, _) in ranges}
+
+    # Plot (relative/absolute handled inside)
+    res = compute_turn_peths_from_merged(
+        df,
+        desired_labels=desired_labels,
+        label_col='turn_syllable_bin',
+        onset_col='turn_onset_sel',
+        save=save,
+        **plot_kwargs
+    )
+
+    # Counts for sanity
+    onset_counts = {lbl: int(((df['turn_onset_sel']) & (df['turn_syllable_bin'] == lbl)).sum()) for lbl in desired_labels}
+    if verbose:
+        print("  onset_counts (actually passed to plotter):", onset_counts)
+
+    return {
+        'onset_counts': onset_counts,
+        'bin_counts': total_counts,
+        'plot_result': res,
+        'label_col': 'turn_syllable_bin',
+        'desired_labels': desired_labels,
+        'out_dir': res['out_dir'],
+        'detector_kwargs': detector_kwargs,
+        'used_cache': True,
+        'cache_meta': cache_obj.get('meta', {})
+    }
+
+def run_turn_experiments(
+    merged_all: pd.DataFrame,
+    experiments: List[Dict],
+    common_plot: Optional[Dict] = None,
+    use_cache: bool = True,
+    dataset_tag: Optional[str] = None,
+    verbose: bool = True
+):
+    """
+    Run a list of experiments; by default uses the cached turn index.
+    You can pass dataset_tag to label the cache files ('merged_all', 'merged_wt', ...).
+    """
+    from tqdm.notebook import tqdm
+
+    results = {}
+    for exp_cfg in tqdm(experiments, desc="Experiments", leave=False):
+        name = exp_cfg.get('name', 'exp')
+        dk   = exp_cfg['detector_kwargs']
+        dl   = exp_cfg.get('desired_labels')
+        sv   = exp_cfg.get('save', False)
+        od   = exp_cfg.get('out_dir')
+        pk   = dict(common_plot or {})
+        pk.update(exp_cfg.get('plot_kwargs', {}))
+        ds_tag = exp_cfg.get('dataset_tag', dataset_tag)
+
+        # derive a default tag if none provided
+        bins = dk.get('granularity_percentiles', [90])
+        method = dk.get('method', 'omega')
+        default_tag = f"{name}_{method}_{'-'.join(str(int(b)) for b in bins)}"
+        tag = exp_cfg.get('tag', default_tag)
+
+        # single progress update per experiment
+        from tqdm.notebook import tqdm as _tqdm
+        with _tqdm(total=1, desc=f"{name}", leave=False) as pbar:
+            res = run_turn_experiment(
+                merged_all,
+                detector_kwargs=dk,
+                desired_labels=dl,
+                save=sv,
+                out_dir=od,
+                plot_kwargs=pk,
+                tag=tag,
+                use_cache=use_cache,
+                dataset_tag=ds_tag,
+                verbose=verbose
+            )
+            results[name] = res
+            pbar.update(1)
+
+        print(f"✅ Finished: {name} (cache={'on' if use_cache else 'off'}) → {res['out_dir']}")
+        print("   onsets per label:", res.get('onset_counts', {}))
+    return results
+
+```
+
+===== FILE: linking.py =====
+```python
+def add_session_idx(merged_all, sessions, session_base_col='session_base', h5_attr='kpms_h5_path',
+                    strict=True, use_fallback=True):
+    """
+    Add a 'session_idx' column to merged_all by matching session_base to the stem of sessions[i].kpms_h5_path.
+    - session_base_col: column in merged_all containing the expected stem (basename without '.h5')
+    - h5_attr: attribute on each session that holds the full .h5 path
+    - strict: if True, assert that all rows were matched (bijective assumption)
+    - use_fallback: if True, try a light substring fallback for any unmatched stems
+
+    Returns: merged_all (same object) with 'session_idx' added.
+    """
+    # 1) Build stem -> index map from sessions
+    stem_to_idx = {}
+    dups = []
+    for i, s in enumerate(sessions):
+        h5 = getattr(s, h5_attr, '') or ''
+        fname = h5.rsplit('/', 1)[-1]            # basename
+        stem = fname[:-3] if fname.endswith('.h5') else fname
+        if stem in stem_to_idx:
+            dups.append(stem)
+        stem_to_idx[stem] = i
+
+    if dups:
+        print(f"⚠️ Duplicate stems found (unexpected for bijection): {dups[:5]}{' ...' if len(dups) > 5 else ''}")
+
+    # 2) Direct map
+    merged_all['session_idx'] = merged_all[session_base_col].map(stem_to_idx)
+
+    # 3) Optional fallback for any misses (substring containment in either direction)
+    if use_fallback:
+        missing = merged_all.loc[merged_all['session_idx'].isna(), session_base_col].unique().tolist()
+        if missing:
+            for base in missing:
+                cands = [idx for stem, idx in stem_to_idx.items() if (base in stem) or (stem in base)]
+                if len(cands) == 1:
+                    stem_to_idx[base] = cands[0]
+            merged_all['session_idx'] = merged_all['session_idx'].fillna(
+                merged_all[session_base_col].map(stem_to_idx)
+            )
+
+    # 4) Sanity / strictness
+    n_missing = int(merged_all['session_idx'].isna().sum())
+    if n_missing and strict:
+        examples = merged_all.loc[merged_all['session_idx'].isna(), session_base_col].unique()[:5]
+        raise ValueError(f"{n_missing} rows unmatched. Examples: {list(examples)}")
+    elif n_missing:
+        print(f"⚠️ {n_missing} rows unmatched; leaving session_idx as NaN for those rows.")
+
+    return merged_all
+```
+
+===== FILE: peth_plot.py =====
+```python
+from .config import *
+from .utils import _collect_regions_hemis, _prefix_for, _interp_then_smooth, _region_hemi_for
+
+import os 
+import numpy as np
+import matplotlib.pyplot as plt
+
+def compute_turn_peths_from_merged(
+    merged_all,
+    desired_labels=None,
+    label_col='turn_syllable',
+    onset_col='turn_onset',
+    signal_cols=None,
+    sampling_rate=None,
+    window_seconds=None,
+    smoothing_window=None,
+    smoothing_poly_order=None,
+    confidence=None,
+    min_traces_per_syllable=None,
+    save=True,
+    out_dir=None,
+    combine_signals=True,
+    lateralization='absolute',         # 'absolute' or 'relative'
+    link_y_by_region=True,
+    collapse_relative=False,            # False | True/'by_bin' | 'all'
+    verbose=False
+):
+    signal_cols           = signal_cols or SIGNAL_COLS
+    sampling_rate         = sampling_rate or SAMPLING_RATE
+    window_seconds        = window_seconds or WINDOW_SECONDS
+    smoothing_window      = smoothing_window or SMOOTHING_WINDOW
+    smoothing_poly_order  = smoothing_poly_order or SMOOTHING_POLY_ORDER
+    confidence            = confidence if confidence is not None else CONFIDENCE_LEVEL
+    min_traces_per_syllable = (MIN_TRACES_PER_SYLLABLE
+                               if min_traces_per_syllable is None else min_traces_per_syllable)
+    out_dir = out_dir or os.path.join(PROJECT_DIR_FULL or '.', 'peth_turns')
+
+    window_samples = int(sampling_rate * window_seconds)
+    total_samples  = 2 * window_samples
+    time_vector    = np.linspace(-window_seconds, window_seconds, total_samples)
+    regions, hemis_order_abs = _collect_regions_hemis(signal_cols)
+    lat_order = ['contra','ipsi'] if lateralization == 'relative' else hemis_order_abs
+
+    try: os.makedirs(out_dir, exist_ok=True)
+    except: pass
+
+    df = merged_all.sort_values(['session_idx','frame_index']).reset_index(drop=True)
+    sy = df[label_col]
+    on = df[onset_col].astype(bool)
+
+    if verbose:
+        print(f"[compute_turn_peths] desired_labels={desired_labels}")
+        print(f"[compute_turn_peths] lateralization={lateralization}, collapse={collapse_relative}")
+        print(f"[compute_turn_peths] total onsets in df: {int(on.sum())}")
+
+    if desired_labels is not None:
+        desired_labels = set(desired_labels)
+    else:
+        desired_labels = set(sy.dropna().astype(str).unique().tolist())
+
+    def _dir_and_bin(lbl: str):
+        if not isinstance(lbl, str): return None, None
+        L = lbl.lower().strip()
+        turn_dir = 'left' if L.startswith('left') else ('right' if L.startswith('right') else None)
+        # pull trailing number after underscore, e.g. left_90 -> '90'
+        m = None
+        try:
+            parts = L.split('_')
+            if len(parts) >= 2 and parts[-1].isdigit():
+                m = parts[-1]
+        except:
+            pass
+        return turn_dir, m
+
+    # ----- decide aggregation labels -----
+    collapse_mode = 'none'
+    if lateralization == 'relative':
+        if collapse_relative is True or (isinstance(collapse_relative, str) and collapse_relative.lower()=='by_bin'):
+            collapse_mode = 'by_bin'
+        elif isinstance(collapse_relative, str) and collapse_relative.lower()=='all':
+            collapse_mode = 'all'
+
+    if collapse_mode == 'by_bin':
+        # keep one figure per percentile bin present in desired_labels
+        bins = sorted({ _dir_and_bin(lbl)[1] for lbl in desired_labels if _dir_and_bin(lbl)[1] is not None })
+        labels_for_agg = [f'__REL_BIN_{b}' for b in bins]
+    elif collapse_mode == 'all':
+        labels_for_agg = ['__REL_ALL__']
+    else:
+        labels_for_agg = sorted(desired_labels)
+
+    # traces[label_key][(region,lat,group)][signal] = [trace,...]
+    syll_traces = {lab:{} for lab in labels_for_agg}
+    onset_idx = on[on].index.to_numpy()
+
+    # track why onsets get skipped
+    skipped_bad_label = skipped_boundary = skipped_region = 0
+
+    for i in onset_idx:
+        raw_label = sy.iloc[i]
+        if not isinstance(raw_label, str) or raw_label == '':
+            skipped_bad_label += 1
+            continue
+        if desired_labels is not None and raw_label not in desired_labels:
+            skipped_bad_label += 1
+            continue
+
+        ses   = int(df.loc[i, 'session_idx'])
+        start = i - window_samples
+        end   = i + window_samples
+        if start < 0 or end > len(df) or df.loc[start:end-1, 'session_idx'].nunique() != 1:
+            skipped_boundary += 1
+            continue
+
+        turn_dir, bin_key = _dir_and_bin(raw_label)
+        group = str(df.loc[i, 'group']) if 'group' in df.columns else 'UNK'
+
+        if collapse_mode == 'by_bin':
+            if bin_key is None:
+                skipped_bad_label += 1
+                continue
+            label_key = f'__REL_BIN_{bin_key}'
+        elif collapse_mode == 'all':
+            label_key = '__REL_ALL__'
+        else:
+            label_key = raw_label
+
+        bucket = syll_traces.get(label_key)
+        if bucket is None:
+            continue
+
+        for col in signal_cols:
+            prefix = _prefix_for(col)
+            region, hemi = _region_hemi_for(ses, prefix)
+            if region is None or hemi is None:
+                skipped_region += 1
+                continue
+
+            lat = hemi
+            if lateralization == 'relative':
+                if turn_dir is None:
+                    skipped_bad_label += 1
+                    continue
+                if turn_dir == 'left':
+                    lat = 'contra' if hemi == 'right' else ('ipsi' if hemi == 'left' else None)
+                else:
+                    lat = 'contra' if hemi == 'left' else ('ipsi' if hemi == 'right' else None)
+                if lat is None:
+                    skipped_region += 1
+                    continue
+
+            key = (region, lat, group)
+            if key not in bucket:
+                bucket[key] = {c: [] for c in signal_cols}
+
+            trace = df.loc[start:end-1, col].to_numpy()
+            if trace.shape[0] != total_samples:
+                skipped_boundary += 1
+                continue
+            smoothed = _interp_then_smooth(trace, smoothing_window, smoothing_poly_order)
+            baseline = smoothed[window_samples]
+            z = (smoothed - baseline).astype('float32', copy=False)
+            bucket[key][col].append(z)
+
+    # counts before filtering
+    raw_counts = {lbl: sum(len(vv) for dd in bucket.values() for vv in dd.values())
+                  for lbl, bucket in syll_traces.items()}
+
+    if verbose:
+        print(f"[compute_turn_peths] built trace buckets for {len(syll_traces)} figure keys.")
+        print("  raw counts per key:", raw_counts)
+        print(f"  skipped: bad_label={skipped_bad_label}, boundary/cross-session={skipped_boundary}, no_region/hemi={skipped_region}")
+
+    # ----- choose which figures to render (by count) -----
+    syll_counts = {}
+    for label_key, bucket in syll_traces.items():
+        total = 0
+        for data_by_signal in bucket.values():
+            total += sum(len(v) for v in data_by_signal.values())
+        syll_counts[label_key] = total
+    plot_labels = sorted([lbl for lbl, c in syll_counts.items() if c >= min_traces_per_syllable])
+
+    if verbose:
+        print(f"[compute_turn_peths] min_traces_per_syllable={min_traces_per_syllable}")
+        print(f"[compute_turn_peths] plot_labels (passed filter): {plot_labels}")
+
+    # ----- plotting -----
+    from scipy.stats import sem
+    totals_plotted = {}
+
+    def _nice_title_and_fname(label_key):
+        if label_key.startswith('__REL_BIN_'):
+            b = label_key[len('__REL_BIN_'):]
+            title = f"Turn onset: contra/ipsi (collapsed across left/right) | bin {b}"
+            fname = f"rel_collapsed_{b}.png"
+        elif label_key == '__REL_ALL__':
+            title = "Turn onset: contra/ipsi (collapsed across all selected labels)"
+            fname = "rel_collapsed_all.png"
+        else:
+            title = f"Turn onset: {label_key} ({'contra/ipsi' if lateralization=='relative' else 'left/right'})"
+            safe = str(label_key).replace('/', '_').replace(' ', '')
+            fname = f"{safe}.png"
+        return title, fname
+
+    for label_key in plot_labels:
+        n_rows, n_cols = max(1, len(lat_order)), max(1, len(regions))
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(5 * n_cols + 2, 3.8 * n_rows))
+        if n_rows == 1 and n_cols == 1:
+            axes = np.array([[axes]])
+        elif n_rows == 1:
+            axes = np.array([axes])
+        elif n_cols == 1:
+            axes = np.array([[ax] for ax in axes])
+
+        title_txt, file_name = _nice_title_and_fname(label_key)
+        try: fig.suptitle(title_txt, fontsize=16)
+        except: pass
+
+        y_extrema = {reg: [np.inf, -np.inf] for reg in regions}
+        label_total = 0
+        bucket = syll_traces[label_key]
+
+        for r_idx, region in enumerate(regions):
+            for h_idx, lat in enumerate(lat_order):
+                ax = axes[h_idx, r_idx]
+                traces_by_group = {'WT': [], 'KI': []}
+
+                for (reg, lat_key, grp), data_by_signal in bucket.items():
+                    if reg == region and lat_key == lat and grp in traces_by_group:
+                        if combine_signals:
+                            for c in signal_cols:
+                                traces_by_group[grp].extend([t for t in data_by_signal.get(c, []) if t is not None])
+                        else:
+                            for c in signal_cols:
+                                traces_by_group.setdefault(f"{grp}:{c}", [])
+                                traces_by_group[f"{grp}:{c}"].extend([t for t in data_by_signal.get(c, []) if t is not None])
+
+                for grp, traces in traces_by_group.items():
+                    if not traces: continue
+                    valid = [t for t in traces if t is not None and t.shape[0]==total_samples and not np.isnan(t).any()]
+                    if not valid: continue
+                    arr = np.stack(valid)
+                    m = arr.mean(axis=0)
+                    e = sem(arr, axis=0)
+                    lo, hi = m - confidence*e, m + confidence*e
+                    color = 'darkblue' if ('KI' in grp) else 'green'
+                    ax.plot(time_vector, m, label=f"{grp} (n={len(valid)})", color=color)
+                    ax.fill_between(time_vector, lo, hi, color=color, alpha=0.2)
+                    label_total += len(valid)
+
+                    ymin = np.nanmin(lo); ymax = np.nanmax(hi)
+                    if np.isfinite(ymin) and np.isfinite(ymax):
+                        y_extrema[region][0] = min(y_extrema[region][0], ymin)
+                        y_extrema[region][1] = max(y_extrema[region][1], ymax)
+
+                ax.set_title(f"{region} | {lat}", fontsize=12)
+                ax.axvline(0, color='crimson', linestyle='--', lw=1.8)
+                ax.axhline(0, color='grey', linestyle=':', lw=1)
+                if h_idx == len(lat_order) - 1: ax.set_xlabel("Time from turn onset (s)")
+                if r_idx == 0: ax.set_ylabel("ΔF/F (z), baseline @ onset")
+                ax.grid(True, linestyle=':', alpha=0.6)
+                ax.legend(fontsize='small', frameon=False, loc='upper right')
+
+        if link_y_by_region:
+            for r_idx, region in enumerate(regions):
+                lo, hi = y_extrema[region]
+                if not (np.isfinite(lo) and np.isfinite(hi)): continue
+                span = hi - lo
+                lo2, hi2 = lo - 0.05*span, hi + 0.05*span
+                for h_idx in range(len(lat_order)):
+                    axes[h_idx, r_idx].set_ylim(lo2, hi2)
+
+        plt.tight_layout(rect=[0, 0.04, 1, 0.94])
+        out_path = os.path.join(out_dir, file_name)
+        if save:
+            try:
+                plt.savefig(out_path, dpi=150); print(f"💾 Saved: {out_path}")
+            except Exception as e:
+                print(f"⚠️ Save failed for {label_key}: {e}")
+            plt.close()
+        else:
+            plt.show(); plt.close()
+
+        totals_plotted[label_key] = label_total
+
+    return {
+        'syll_traces': syll_traces,
+        'plot_labels': plot_labels,
+        'regions': regions,
+        'lat_order': lat_order,
+        'time_vector': time_vector,
+        'totals_plotted': totals_plotted,
+        'out_dir': out_dir,
+        'lateralization': lateralization,
+        'link_y_by_region': link_y_by_region,
+        'collapse_mode': collapse_mode
+    }
+```
+
+===== FILE: sanity.py =====
+```python
+def detector_percentile_sanity(df, method='omega', bins=(50,60,70,80,85,90,92,95,97,99),
+                               speed_col='velocity_px_s', omega_col='angular_velocity',
+                               kappa_col='curvature', speed_floor_omega=2.0, speed_floor_kappa=10.0,
+                               sessions_to_show=5):
+    import numpy as np, pandas as pd
+    sids = df['session_idx'].unique().tolist()
+    print(f"Sessions: {len(sids)}  | method={method}  | bins={bins}")
+    shown = 0
+    rows = []
+    for sid in sids:
+        x = df[df['session_idx']==sid]
+        spd = x[speed_col].to_numpy()
+        mag = np.abs(x[omega_col].to_numpy()) if method=='omega' else np.abs(x[kappa_col].to_numpy())
+        speed_floor = speed_floor_omega if method=='omega' else speed_floor_kappa
+        ref = mag[spd >= speed_floor]
+        if ref.size == 0:
+            ref = mag
+        thr = np.percentile(ref, bins).astype(float)
+        # monotonic?
+        mono = np.all(np.diff(thr) > 0)
+        rows.append([sid, mono, *thr])
+        if shown < sessions_to_show:
+            shown += 1
+            print(f"sid {sid}: monotonic={mono}  " + "  ".join([f"P{b}={t:.4g}" for b,t in zip(bins,thr)]))
+    cols = ['session_idx','monotonic']+[f'P{b}' for b in bins]
+    return pd.DataFrame(rows, columns=cols)
+
+def label_bin_counts(df, label_col='turn_syllable', onset_col='turn_onset'):
+    lab = df.loc[df[onset_col].astype(bool), label_col].dropna().astype(str)
+    # extract trailing number after underscore
+    bins = lab.str.extract(r'_(\d+)$')[0]
+    vc = bins.value_counts().sort_index()
+    print("Onsets per bin:\n", vc.to_string())
+    return vc
+```
+
+===== FILE: utils.py =====
+```python
+import numpy as np
+from scipy.signal import savgol_filter
+
+def _ensure_dir(path):
+    import os
+    try:
+        os.makedirs(path, exist_ok=True)
+    except Exception:
+        pass
+
+def _interp_then_smooth(x, win, poly):
+    """
+    Linear-interpolate NaNs then Savitzky–Golay smooth.
+    - Keeps array length.
+    - If window is too small/long, returns the (interpolated) input.
+    """
+    x = np.asarray(x, dtype=float)
+    n = x.size
+    if n == 0:
+        return x
+
+    # Interpolate NaNs (edge-hold at ends)
+    if np.isnan(x).any():
+        idx  = np.arange(n)
+        good = ~np.isnan(x)
+        if good.any():
+            x = x.copy()
+            x[~good] = np.interp(idx[~good], idx[good], x[good])
+            if np.isnan(x[0]):  x[0]  = x[good][0]
+            if np.isnan(x[-1]): x[-1] = x[good][-1]
+        else:
+            # all NaNs
+            return np.zeros_like(x)
+
+    # S-G smoothing
+    w = int(win) if win is not None else 0
+    if w < 5 or w > n:
+        return x
+    if w % 2 == 0:
+        w -= 1
+    if w <= 0:
+        return x
+    poly = int(poly) if poly is not None else 3
+    if poly >= w:
+        poly = max(1, w - 2)
+    return savgol_filter(x, w, poly)
+
+def _prefix_for(col):
+    """'signal_0_470_dff_z' -> 'signal_0'"""
+    return "_".join(col.split("_")[:2])
+
+def _region_hemi_for(session_idx, prefix):
+    """Look up (region, hemisphere) from sessions[session_idx].signal_meta[prefix]."""
+    from .context import get_sessions
+    s = get_sessions()[session_idx]
+    meta = getattr(s, 'signal_meta', {})
+    if prefix not in meta:
+        return None, None
+    region, hemi = meta[prefix][0], meta[prefix][1]
+    return region, hemi
+
+def _collect_regions_hemis(signal_cols):
+    """Unique regions/hemis across sessions for the given signal prefixes."""
+    from .context import get_sessions
+    prefixes = {_prefix_for(c) for c in signal_cols}
+    regs, hemis = set(), set()
+    for s in (get_sessions() or []):
+        meta = getattr(s, 'signal_meta', {})
+        for p in prefixes:
+            if p in meta:
+                r, h = meta[p][0], meta[p][1]
+                if r is not None: regs.add(r)
+                if h is not None: hemis.add(h)
+    regs = sorted(regs)
+    hemis_order = ['left','right'] if {'left','right'}.issubset(hemis) else sorted(hemis)
+    return regs, hemis_order
+
+```
+

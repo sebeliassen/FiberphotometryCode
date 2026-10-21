@@ -1,0 +1,88 @@
+anterior_bodyparts:
+- nose
+bodyparts:
+- nose
+- left_ear
+- right_ear
+- left_ear_tip
+- right_ear_tip
+- left_eye
+- right_eye
+- neck
+- mid_back
+- mouse_center
+- mid_backend
+- mid_backend2
+- mid_backend3
+- tail_base
+- tail1
+- tail2
+- tail3
+- tail4
+- tail5
+- left_shoulder
+- left_midside
+- left_hip
+- right_shoulder
+- right_midside
+- right_hip
+- tail_end
+- head_midpoint
+conf_pseudocount: 0.001
+fps: 40
+latent_dim: 6
+posterior_bodyparts:
+- tail_base
+skeleton:
+- - nose
+  - left_ear_tip
+- - left_ear_tip
+  - right_ear_tip
+- - right_ear_tip
+  - neck
+- - neck
+  - mid_back
+- - mid_back
+  - mouse_center
+- - mouse_center
+  - mid_backend
+- - mid_backend
+  - mid_backend2
+- - mid_backend2
+  - mid_backend3
+- - mid_backend3
+  - tail_base
+- - tail_base
+  - left_shoulder
+- - left_shoulder
+  - left_midside
+- - left_midside
+  - left_hip
+- - left_hip
+  - right_shoulder
+- - right_shoulder
+  - right_midside
+- - right_midside
+  - right_hip
+- - right_hip
+  - head_midpoint
+use_bodyparts:
+- nose
+- left_ear_tip
+- right_ear_tip
+- neck
+- mid_back
+- mouse_center
+- mid_backend
+- mid_backend2
+- mid_backend3
+- tail_base
+- left_shoulder
+- left_midside
+- left_hip
+- right_shoulder
+- right_midside
+- right_hip
+- head_midpoint
+video_dir: ''
+video_extension: avi

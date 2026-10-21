@@ -1,41 +1,177 @@
-#############################################
-# Positive gitignore: include only specified files
-#############################################
-# explicitly include these three notebooks
-!/fiberphotometry/notebooks/julia/test.ipynb
-!/fiberphotometry/notebooks/marco/test.ipynb
-!/fiberphotometry/notebooks/sebastian/session_averages.ipynb
+# ==============================================================================
+# FiberphotometryCode .gitignore (Scaffolding Refactor)
+# ==============================================================================
 
-# Ignore all files by default
-*
-
-# Unignore directories for recursion
-!*/
-
-# Allow top-level boilerplate files
-!/.gitignore
-!/LICENSE
-!/README.md
-
-# Allow code directories
-!/fiberphotometry/
-!/scripts/
-!/tests/
-
-# Unignore subdirectories for recursion
-!/fiberphotometry/**/
-!/scripts/**/
-!/tests/**/
-
-# Only include Python and Notebook files in code directories
-!/fiberphotometry/**/*.py
-!/fiberphotometry/**/*.ipynb
-!/scripts/**/*.py
-!/scripts/**/*.ipynb
-!/tests/**/*.py
-!/tests/**/*.ipynb
-
-# Ignore caches and checkpoints everywhere
+# ------------------------------------------------------------------------------
+# 1. Bytecode, Environment & Cache Directories
+# ------------------------------------------------------------------------------
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.ruff_cache/
+.worktrees/
 .ipynb_checkpoints/
+.vscode/
+.idea/
+.DS_Store
+.directory
+Thumbs.db
+
+# ------------------------------------------------------------------------------
+# 2. Large Binary Data, Checkpoints & Serialization Formats (NEVER GIT ADD DATA)
+# ------------------------------------------------------------------------------
+data/
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.p
+*.joblib
+*.pt
+*.pth
+*.onnx
+*.npy
+*.npz
+*.parquet
+*.feather
+*.db
+*.sqlite
+*.sqlite3
+
+# ------------------------------------------------------------------------------
+# 3. Media, Recordings, Heavy Figures & Output Renders
+# ------------------------------------------------------------------------------
+*.avi
+*.mp4
+*.mov
+*.mkv
+*.wmv
+*.flv
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.tif
+*.pdf
+*.svg
+*.html
+
+# ------------------------------------------------------------------------------
+# 4. Compressed Archives, Backups & Logs
+# ------------------------------------------------------------------------------
+*.zip
+*.tar
+*.gz
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.log
+*.out
+*.pid
+nohup.out
+
+# ------------------------------------------------------------------------------
+# 5. Runtime Artifacts, Trackers & Scratch/Output Folders
+# ------------------------------------------------------------------------------
+wandb/
+.wandb/
+run_records/
+tests/runs/
+tests/syllable_figs/
+tests/used_frames/
+tests/output/
+scratch/
+diagnostics/
+outputs/
+output/
+_backups/
+archive/*
+!archive/ARCHIVE_INDEX.md
+**/visualizations_*
+**/visualizations_*/
+**/output
+**/output/
+**/cache
+**/cache/
+**/grid_movies*/
+**/trajectories/
+
+# ------------------------------------------------------------------------------
+# 6. Heavy Raw Data and Model Directories
+# ------------------------------------------------------------------------------
+src_mono_inter/
+src_oft/
+karen_project/
+kpms_projects/
+fused_h5*/
+**/fused_h5*/
+**/session_caches/
+**/cache/
+**/caches/
+**/checkpoints/
+**/models/
+**/raw_data/
+**/tracking_data/
+**/h5_files/
+**/avis/
+**/videos/
+
+# ------------------------------------------------------------------------------
+# 7. Tabular Data: Exclude data CSVs/TSVs by default, allow small configs/manifests
+# ------------------------------------------------------------------------------
+*.csv
+*.tsv
+
+# Unignore small configuration/manifest CSVs and TSVs
+!**/overrides/*.csv
+!**/overrides/*.tsv
+!**/configs/*.csv
+!**/configs/*.tsv
+!**/*manifest*.csv
+!**/*manifest*.tsv
+!**/*mapping*.csv
+!**/*mapping*.tsv
+!ARTIFACT_INVENTORY.tsv
+!PERMISSIONS_MODIFIED_TIER_A.tsv
+!DUPLICATES.tsv
+!registry.tsv
+!MOVES.tsv
+!registry/*.tsv
+!registry/*.sh
+
+# ------------------------------------------------------------------------------
+# 8. Large Generated / Concatenated Text Bundles
+# ------------------------------------------------------------------------------
+*concat*.txt
+*concat*.tsv
+*review_package*.txt
+fiberphotometry_code_review.zip*
+SWE_ORGANIZATION_BOT_PROMPT.md
+
+# ------------------------------------------------------------------------------
+# 9. Whitelist Essential Repository Code, Configs, Documentation
+# ------------------------------------------------------------------------------
+!.gitignore
+!.gitignore.legacy
+!LICENSE
+!README.md
+!pyproject.toml
+# Small regression data and the explicit, manual runtime check are repository inputs.
+!tests/golden/historical_session_slice.npz
+!/ops/diagnostics/
+/ops/diagnostics/*
+!/ops/diagnostics/smoke_runtime.py
+!/ops/diagnostics/serve_local_viewer.py
+!/ops/diagnostics/validate_two_sessions.py
+!/ops/diagnostics/.folder-map.md
+# Accepted, small rollback/validation manifests are source-controlled.
+!registry/checkpoints/
+!registry/checkpoints/**

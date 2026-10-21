@@ -1,0 +1,446 @@
+[
+  {
+    "motif_id": "macro_motif_07",
+    "title": "Macro-Motif 7: Kinetic Wall-Rear & Sprint Loop (KI-Enriched)",
+    "tokens": [
+      "Sprint",
+      "Turn_R",
+      "Rear",
+      "Descent",
+      "Sprint"
+    ],
+    "sequence": [
+      3,
+      4,
+      6,
+      7,
+      3
+    ],
+    "is_locomotor": true,
+    "filename": "exemplar_3panel_macro_motif_07_rear_sprint_loop.mp4",
+    "filepath": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/clustered_seqnmf/movies_3panel_exemplars/exemplar_3panel_macro_motif_07_rear_sprint_loop.mp4",
+    "size_mb": 1.78,
+    "stats": {
+      "N_candidates": 272,
+      "k_pool": 28,
+      "density_ratio": "2.41x",
+      "disp_reduction": "60.4%",
+      "unique_animals_selected": 3,
+      "canonical_animal": "1658",
+      "canonical_genotype": "KI",
+      "canonical_path_length": "592.6px",
+      "canonical_net_disp": "368.8px",
+      "canonical_avg_speed": "180.9px/s"
+    },
+    "panels": [
+      {
+        "panel_index": 1,
+        "animal_id": "1658",
+        "genotype": "KI",
+        "role": "CANONICAL_EXEMPLAR",
+        "duration_sec": 3.3,
+        "path_length_px": 592.6,
+        "net_displacement_px": 368.8,
+        "avg_speed_px_s": 180.9,
+        "recording_key": "day1_T2_1658.1664.1666.e_Arena1234_CenterTopCamVid_2025-04-28T11_10_52_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 96913,
+        "end_frame": 97045
+      },
+      {
+        "panel_index": 2,
+        "animal_id": "728",
+        "genotype": "WT",
+        "role": "NEAREST_NEIGHBOR_EXEMPLAR",
+        "duration_sec": 4.775,
+        "path_length_px": 748.2,
+        "net_displacement_px": 336.4,
+        "avg_speed_px_s": 157.5,
+        "recording_key": "day2_T1_1680.1694.728.e_Arena1234_CenterTopCamVid_2025-05-01T08_30_27_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 11935,
+        "end_frame": 12126
+      },
+      {
+        "panel_index": 3,
+        "animal_id": "1666",
+        "genotype": "KI",
+        "role": "NEAREST_NEIGHBOR_EXEMPLAR",
+        "duration_sec": 3.925,
+        "path_length_px": 594.3,
+        "net_displacement_px": 286.8,
+        "avg_speed_px_s": 152.4,
+        "recording_key": "day2_T2_1658.1664.1666.e_Arena1234_CenterTopCamVid_2025-05-01T10_16_19_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 109087,
+        "end_frame": 109244
+      }
+    ]
+  },
+  {
+    "motif_id": "macro_motif_01",
+    "title": "Macro-Motif 1: Rest & Maintenance Cycle (WT-Enriched)",
+    "tokens": [
+      "Sniff",
+      "Rest",
+      "Sniff",
+      "Rest",
+      "Sniff"
+    ],
+    "sequence": [
+      8,
+      11,
+      8,
+      11,
+      8
+    ],
+    "is_locomotor": false,
+    "filename": "exemplar_3panel_macro_motif_01_rest_maintenance_cycle.mp4",
+    "filepath": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/clustered_seqnmf/movies_3panel_exemplars/exemplar_3panel_macro_motif_01_rest_maintenance_cycle.mp4",
+    "size_mb": 1.58,
+    "stats": {
+      "N_candidates": 163,
+      "k_pool": 17,
+      "density_ratio": "2.28x",
+      "disp_reduction": "53.2%",
+      "unique_animals_selected": 3,
+      "canonical_animal": "740",
+      "canonical_genotype": "WT",
+      "canonical_path_length": "245.2px",
+      "canonical_net_disp": "2.4px",
+      "canonical_avg_speed": "52.7px/s"
+    },
+    "panels": [
+      {
+        "panel_index": 1,
+        "animal_id": "740",
+        "genotype": "WT",
+        "role": "CANONICAL_EXEMPLAR",
+        "duration_sec": 4.675,
+        "path_length_px": 245.2,
+        "net_displacement_px": 2.4,
+        "avg_speed_px_s": 52.7,
+        "recording_key": "day2_T3_e.740.e.e_Arena1234_CenterTopCamVid_2025-05-01T11_53_06_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 6706,
+        "end_frame": 6893
+      },
+      {
+        "panel_index": 2,
+        "animal_id": "1773",
+        "genotype": "WT",
+        "role": "NEAREST_NEIGHBOR_EXEMPLAR",
+        "duration_sec": 5.0,
+        "path_length_px": 250.8,
+        "net_displacement_px": 1.1,
+        "avg_speed_px_s": 50.4,
+        "recording_key": "day1_T4_1771.1775.1773.e_Arena1234_CenterTopCamVid_2025-04-28T14_17_17_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 75496,
+        "end_frame": 75696
+      },
+      {
+        "panel_index": 3,
+        "animal_id": "1680",
+        "genotype": "WT",
+        "role": "NEAREST_NEIGHBOR_EXEMPLAR",
+        "duration_sec": 3.5,
+        "path_length_px": 178.1,
+        "net_displacement_px": 2.0,
+        "avg_speed_px_s": 51.3,
+        "recording_key": "day1_T1_1680.1694.728.e_Arena1234_CenterTopCamVid_2025-04-28T09_31_08_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 14508,
+        "end_frame": 14648
+      }
+    ]
+  },
+  {
+    "motif_id": "macro_motif_04",
+    "title": "Macro-Motif 4: High-Speed Slalom Burst (KI-Enriched)",
+    "tokens": [
+      "Sniff",
+      "Sprint",
+      "Turn_L",
+      "Sprint"
+    ],
+    "sequence": [
+      8,
+      3,
+      5,
+      3
+    ],
+    "is_locomotor": true,
+    "filename": "exemplar_3panel_macro_motif_04_slalom_burst.mp4",
+    "filepath": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/clustered_seqnmf/movies_3panel_exemplars/exemplar_3panel_macro_motif_04_slalom_burst.mp4",
+    "size_mb": 1.31,
+    "stats": {
+      "N_candidates": 60,
+      "k_pool": 6,
+      "density_ratio": "2.70x",
+      "disp_reduction": "76.9%",
+      "unique_animals_selected": 3,
+      "canonical_animal": "1666",
+      "canonical_genotype": "KI",
+      "canonical_path_length": "243.7px",
+      "canonical_net_disp": "127.3px",
+      "canonical_avg_speed": "97.5px/s"
+    },
+    "panels": [
+      {
+        "panel_index": 1,
+        "animal_id": "1666",
+        "genotype": "KI",
+        "role": "CANONICAL_EXEMPLAR",
+        "duration_sec": 2.525,
+        "path_length_px": 243.7,
+        "net_displacement_px": 127.3,
+        "avg_speed_px_s": 97.5,
+        "recording_key": "day1_T2_1658.1664.1666.e_Arena1234_CenterTopCamVid_2025-04-28T11_10_52_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 40000,
+        "end_frame": 40101
+      },
+      {
+        "panel_index": 2,
+        "animal_id": "1680",
+        "genotype": "WT",
+        "role": "NEAREST_NEIGHBOR_EXEMPLAR",
+        "duration_sec": 3.625,
+        "path_length_px": 361.7,
+        "net_displacement_px": 244.5,
+        "avg_speed_px_s": 100.5,
+        "recording_key": "day2_T1_1680.1694.728.e_Arena1234_CenterTopCamVid_2025-05-01T08_30_27_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 32430,
+        "end_frame": 32575
+      },
+      {
+        "panel_index": 3,
+        "animal_id": "1765",
+        "genotype": "WT",
+        "role": "NEAREST_NEIGHBOR_EXEMPLAR",
+        "duration_sec": 3.375,
+        "path_length_px": 366.6,
+        "net_displacement_px": 262.5,
+        "avg_speed_px_s": 109.4,
+        "recording_key": "day2_T5_1765.1767.1781.e_Arena1234_CenterTopCamVid_2025-05-01T15_00_23_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 43452,
+        "end_frame": 43587
+      }
+    ]
+  },
+  {
+    "motif_id": "macro_motif_08",
+    "title": "Macro-Motif 8: Attentive Visual Scanning Loop (WT-Enriched)",
+    "tokens": [
+      "Sniff",
+      "Look",
+      "Sniff",
+      "Look",
+      "Sniff"
+    ],
+    "sequence": [
+      8,
+      9,
+      8,
+      9,
+      8
+    ],
+    "is_locomotor": false,
+    "filename": "exemplar_3panel_macro_motif_08_attentive_scanning_loop.mp4",
+    "filepath": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/clustered_seqnmf/movies_3panel_exemplars/exemplar_3panel_macro_motif_08_attentive_scanning_loop.mp4",
+    "size_mb": 1.72,
+    "stats": {
+      "N_candidates": 163,
+      "k_pool": 17,
+      "density_ratio": "2.04x",
+      "disp_reduction": "49.6%",
+      "unique_animals_selected": 3,
+      "canonical_animal": "1680",
+      "canonical_genotype": "WT",
+      "canonical_path_length": "190.0px",
+      "canonical_net_disp": "29.5px",
+      "canonical_avg_speed": "50.7px/s"
+    },
+    "panels": [
+      {
+        "panel_index": 1,
+        "animal_id": "1680",
+        "genotype": "WT",
+        "role": "CANONICAL_EXEMPLAR",
+        "duration_sec": 3.775,
+        "path_length_px": 190.0,
+        "net_displacement_px": 29.5,
+        "avg_speed_px_s": 50.7,
+        "recording_key": "day1_T1_1680.1694.728.e_Arena1234_CenterTopCamVid_2025-04-28T09_31_08_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 71017,
+        "end_frame": 71168
+      },
+      {
+        "panel_index": 2,
+        "animal_id": "1666",
+        "genotype": "KI",
+        "role": "NEAREST_NEIGHBOR_EXEMPLAR",
+        "duration_sec": 2.525,
+        "path_length_px": 132.9,
+        "net_displacement_px": 20.2,
+        "avg_speed_px_s": 53.2,
+        "recording_key": "day1_T2_1658.1664.1666.e_Arena1234_CenterTopCamVid_2025-04-28T11_10_52_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 78182,
+        "end_frame": 78283
+      },
+      {
+        "panel_index": 3,
+        "animal_id": "1765",
+        "genotype": "WT",
+        "role": "NEAREST_NEIGHBOR_EXEMPLAR",
+        "duration_sec": 6.0,
+        "path_length_px": 350.8,
+        "net_displacement_px": 83.8,
+        "avg_speed_px_s": 58.7,
+        "recording_key": "day1_T5_1765.1767.1781.e_Arena1234_CenterTopCamVid_2025-04-28T15_54_32_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 30726,
+        "end_frame": 30966
+      }
+    ]
+  },
+  {
+    "motif_id": "macro_motif_03",
+    "title": "Macro-Motif 3: Rear Descent & Locomotor Launch",
+    "tokens": [
+      "Rear",
+      "Descent",
+      "Walk_L",
+      "Sprint"
+    ],
+    "sequence": [
+      6,
+      7,
+      1,
+      3
+    ],
+    "is_locomotor": true,
+    "filename": "exemplar_3panel_macro_motif_03_descent_sprint_launch.mp4",
+    "filepath": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/clustered_seqnmf/movies_3panel_exemplars/exemplar_3panel_macro_motif_03_descent_sprint_launch.mp4",
+    "size_mb": 0.93,
+    "stats": {
+      "N_candidates": 272,
+      "k_pool": 28,
+      "density_ratio": "2.07x",
+      "disp_reduction": "47.4%",
+      "unique_animals_selected": 3,
+      "canonical_animal": "1658",
+      "canonical_genotype": "KI",
+      "canonical_path_length": "189.7px",
+      "canonical_net_disp": "168.4px",
+      "canonical_avg_speed": "176.5px/s"
+    },
+    "panels": [
+      {
+        "panel_index": 1,
+        "animal_id": "1658",
+        "genotype": "KI",
+        "role": "CANONICAL_EXEMPLAR",
+        "duration_sec": 1.1,
+        "path_length_px": 189.7,
+        "net_displacement_px": 168.4,
+        "avg_speed_px_s": 176.5,
+        "recording_key": "day2_T2_1658.1664.1666.e_Arena1234_CenterTopCamVid_2025-05-01T10_16_19_bottom_rightDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 46940,
+        "end_frame": 46984
+      },
+      {
+        "panel_index": 2,
+        "animal_id": "728",
+        "genotype": "WT",
+        "role": "NEAREST_NEIGHBOR_EXEMPLAR",
+        "duration_sec": 1.85,
+        "path_length_px": 316.6,
+        "net_displacement_px": 279.4,
+        "avg_speed_px_s": 173.5,
+        "recording_key": "day2_T1_1680.1694.728.e_Arena1234_CenterTopCamVid_2025-05-01T08_30_27_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 16299,
+        "end_frame": 16373
+      },
+      {
+        "panel_index": 3,
+        "animal_id": "1666",
+        "genotype": "KI",
+        "role": "NEAREST_NEIGHBOR_EXEMPLAR",
+        "duration_sec": 2.075,
+        "path_length_px": 318.3,
+        "net_displacement_px": 276.4,
+        "avg_speed_px_s": 155.3,
+        "recording_key": "day2_T2_1658.1664.1666.e_Arena1234_CenterTopCamVid_2025-05-01T10_16_19_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 64727,
+        "end_frame": 64810
+      }
+    ]
+  },
+  {
+    "motif_id": "macro_motif_05",
+    "title": "Macro-Motif 5: Sprint, Turn & Scan",
+    "tokens": [
+      "Sprint",
+      "Turn_R",
+      "Sniff",
+      "Look"
+    ],
+    "sequence": [
+      3,
+      4,
+      8,
+      9
+    ],
+    "is_locomotor": true,
+    "filename": "exemplar_3panel_macro_motif_05_sprint_turn_scan.mp4",
+    "filepath": "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/sequence_viz/clustered_seqnmf/movies_3panel_exemplars/exemplar_3panel_macro_motif_05_sprint_turn_scan.mp4",
+    "size_mb": 1.48,
+    "stats": {
+      "N_candidates": 50,
+      "k_pool": 5,
+      "density_ratio": "2.69x",
+      "disp_reduction": "71.4%",
+      "unique_animals_selected": 3,
+      "canonical_animal": "1759",
+      "canonical_genotype": "WT",
+      "canonical_path_length": "405.7px",
+      "canonical_net_disp": "256.6px",
+      "canonical_avg_speed": "96.6px/s"
+    },
+    "panels": [
+      {
+        "panel_index": 1,
+        "animal_id": "1759",
+        "genotype": "WT",
+        "role": "CANONICAL_EXEMPLAR",
+        "duration_sec": 4.225,
+        "path_length_px": 405.7,
+        "net_displacement_px": 256.6,
+        "avg_speed_px_s": 96.6,
+        "recording_key": "day1_T6_1759.1749.e.e_Arena1234_CenterTopCamVid_2025-04-28T17_28_17_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 95765,
+        "end_frame": 95934
+      },
+      {
+        "panel_index": 2,
+        "animal_id": "740",
+        "genotype": "WT",
+        "role": "NEAREST_NEIGHBOR_EXEMPLAR",
+        "duration_sec": 3.575,
+        "path_length_px": 332.8,
+        "net_displacement_px": 177.6,
+        "avg_speed_px_s": 93.7,
+        "recording_key": "day1_T3_e.740.e.e_Arena1234_CenterTopCamVid_2025-04-28T12_46_50_bottom_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 129366,
+        "end_frame": 129509
+      },
+      {
+        "panel_index": 3,
+        "animal_id": "1680",
+        "genotype": "WT",
+        "role": "NEAREST_NEIGHBOR_EXEMPLAR",
+        "duration_sec": 3.0,
+        "path_length_px": 308.2,
+        "net_displacement_px": 201.7,
+        "avg_speed_px_s": 103.6,
+        "recording_key": "day1_T1_1680.1694.728.e_Arena1234_CenterTopCamVid_2025-04-28T09_31_08_top_leftDLC_HrnetW32_dataset_fixDec16shuffle10_detector_020_snapshot_020",
+        "start_frame": 145345,
+        "end_frame": 145465
+      }
+    ]
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "iter_0_to_20": {
+    "from_iter": 0,
+    "to_iter": 20,
+    "ari": 0.006635475426212046,
+    "label_change_pct": 97.16260601869458
+  },
+  "iter_20_to_25": {
+    "from_iter": 20,
+    "to_iter": 25,
+    "ari": 0.44678076858609245,
+    "label_change_pct": 50.39464873413213
+  },
+  "iter_25_to_50": {
+    "from_iter": 25,
+    "to_iter": 50,
+    "ari": 0.7847844970962865,
+    "label_change_pct": 18.96467449972985
+  },
+  "iter_50_to_75": {
+    "from_iter": 50,
+    "to_iter": 75,
+    "ari": 0.8640511334880392,
+    "label_change_pct": 10.354953712887292
+  },
+  "iter_75_to_100": {
+    "from_iter": 75,
+    "to_iter": 100,
+    "ari": 0.8949381644430638,
+    "label_change_pct": 7.8431641162268475
+  }
+}

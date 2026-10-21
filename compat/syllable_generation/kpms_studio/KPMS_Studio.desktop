@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=KPMS Studio
+Comment=Keypoint-MoSeq Calibration, Kappa Upscaling & Ethological Labeler
+Exec=/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/kpms_studio/launch.sh
+Path=/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/kpms_studio
+Terminal=false
+StartupNotify=true
+Categories=Science;DataAnalysis;

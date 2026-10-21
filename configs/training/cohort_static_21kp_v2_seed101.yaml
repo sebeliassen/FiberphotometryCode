@@ -1,0 +1,21 @@
+# configs/training/cohort_static_21kp_v2_seed101.yaml
+model_name: "model_21kp_static_50ar_300slds_seed101"
+project_dir: "syllable_generation/multiview_top_bot_experiments/cohort_static_21kp_v2"
+data_dir: "syllable_generation/multiview_top_bot_experiments/data/cohort_fused_static_21kp_v2"
+seed: 101
+
+hyperparameters:
+  num_ar_iters: 50
+  num_slds_iters: 300
+  total_iters: 350
+  save_every_n_iters: 25
+  init_kappa: 7.5e13
+  decrease_kappa_factor: 10.0
+  slds_kappa: 7.5e12
+  target_fps: 60
+  conf_threshold: 0.5
+  min_frames: 100
+
+keypoints:
+  num_keypoints: 21
+  layout: "fused_21kp"

@@ -1,0 +1,73 @@
+PYTHON ?= python3
+PYTEST ?= $(PYTHON) -m pytest
+RUFF ?= $(PYTHON) -m ruff
+MYPY ?= $(PYTHON) -m mypy
+BACKUP_DEST ?= /mnt/hdd/backups/FiberphotometryCode
+SNAPSHOT ?=
+RESTORE_DEST ?=
+VALIDATION_PROJECT ?=
+VALIDATION_ARGS ?=
+
+.PHONY: help test test-cpu doctor lint lint-baseline typecheck package-check architecture folder-maps folder-maps-check smoke-runtime validate-two-sessions backup-plan backup verify-backup restore-backup shims-report metrics
+
+help:
+	@echo "test, test-cpu, doctor, lint, lint-baseline, typecheck, package-check, architecture, folder-maps, folder-maps-check, smoke-runtime, validate-two-sessions, backup-plan, backup, verify-backup, restore-backup, shims-report, metrics"
+
+test:
+	$(PYTEST) -q -p no:cacheprovider
+
+test-cpu:
+	$(PYTHON) -B ops/repo/cpu_check.py
+
+doctor:
+	$(PYTHON) -B -m fpcode.cli.doctor --json
+
+lint:
+	$(PYTHON) -B ops/repo/lint.py
+
+# Updating the debt inventory is explicit and reviewable; CI never refreshes it.
+lint-baseline:
+	$(PYTHON) -B ops/repo/lint.py --write-baseline
+
+typecheck:
+	$(MYPY)
+
+package-check:
+	$(PYTHON) -B ops/repo/package_check.py
+
+architecture:
+	$(PYTHON) -B ops/repo/dependencies.py
+
+folder-maps:
+	$(PYTHON) -B ops/repo/generate_folder_maps.py
+
+folder-maps-check:
+	$(PYTHON) -B ops/repo/generate_folder_maps.py --check
+
+# Explicit optional gate, separate from the fast functional suite.
+smoke-runtime:
+	$(PYTHON) -B ops/diagnostics/smoke_runtime.py
+
+validate-two-sessions:
+	@test -n "$(VALIDATION_PROJECT)" || (echo 'Supply VALIDATION_PROJECT=/path/to/pilot/project'; exit 2)
+	$(PYTHON) -B ops/diagnostics/validate_two_sessions.py --project "$(VALIDATION_PROJECT)" $(VALIDATION_ARGS)
+
+backup-plan:
+	$(PYTHON) -B ops/backup/snapshot.py plan --root "$(CURDIR)" --policy configs/backup.yaml
+
+backup:
+	$(PYTHON) -B ops/backup/snapshot.py create --root "$(CURDIR)" --destination "$(BACKUP_DEST)" --policy configs/backup.yaml
+
+verify-backup:
+	@test -n "$(SNAPSHOT)" || (echo 'Supply SNAPSHOT=/path/to/sealed/snapshot'; exit 2)
+	$(PYTHON) -B ops/backup/snapshot.py verify --snapshot "$(SNAPSHOT)"
+
+restore-backup:
+	@test -n "$(SNAPSHOT)" -a -n "$(RESTORE_DEST)" || (echo 'Supply SNAPSHOT and a NEW RESTORE_DEST'; exit 2)
+	$(PYTHON) -B ops/backup/snapshot.py restore --snapshot "$(SNAPSHOT)" --destination "$(RESTORE_DEST)"
+
+shims-report:
+	$(PYTHON) -B ops/repo/shims_report.py
+
+metrics:
+	$(PYTHON) -B ops/repo/metrics.py

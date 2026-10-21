@@ -1,0 +1,42 @@
+{
+  "heading_median_filter_defect": {
+    "input_angles_rad": [
+      -3.13,
+      -3.13,
+      -3.13,
+      -3.13,
+      0.0,
+      3.13,
+      3.13,
+      3.13,
+      3.13
+    ],
+    "scalar_median_rad": 0.0,
+    "scalar_median_deg": 0.0,
+    "circular_median_rad": 3.141592653589793,
+    "circular_median_deg": 180.0,
+    "angular_error_deg": 180.0
+  },
+  "bouts_comparison": {
+    "syllable_37": {
+      "n_grid_bouts": 50,
+      "sample_grid_bouts": [
+        [
+          "2025-12-03T15_26_16_bottom_right_seg001",
+          54304,
+          54360
+        ],
+        [
+          "2026-04-27T16_17_19_top_left_seg000",
+          22972,
+          23061
+        ],
+        [
+          "2026-04-28T14_58_25_top_left_seg003",
+          57931,
+          58014
+        ]
+      ]
+    }
+  }
+}

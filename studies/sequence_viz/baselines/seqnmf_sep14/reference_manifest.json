@@ -1,0 +1,358 @@
+{
+  "date": "2026-10-15",
+  "scope": "Inventory, CSV recount, source inspection and three sampled video-frame comparisons; no pickle loads, refits or movie generation.",
+  "overall_status": "partially_recovered_not_numerically_reproduced",
+  "artifact_inventory": [
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/final_1x3_theme_A_rear_descent.mp4",
+      "bytes": 962183,
+      "sha256": "b951c78f5cf2c5b73ec233ecae87f341b6b48caff1cbc14345d88c1c2232baba"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/final_1x3_theme_A_rear_descent.png",
+      "bytes": 226325,
+      "sha256": "bb42836f764e5da52ba249f7acd862af9bc12d732fa2f00fd8a8eea1a8bf989a"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/final_1x3_theme_B_dash_rank2_panels456.mp4",
+      "bytes": 1176043,
+      "sha256": "ecaad8943178669c4cfb6d89af3a5b874a1425a2659552e083aade91d553476f"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/final_1x3_theme_B_dash_rank2_panels456.png",
+      "bytes": 314256,
+      "sha256": "ca8c3953e32fa25721052f7f280d78c75ecb5fc39b43bbe1955764d4e03ab987"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/final_1x3_theme_C_sensory_rest.mp4",
+      "bytes": 1627006,
+      "sha256": "2cb471a443440b9a4dd94c9b8c01f9e752425635ddea14526c440759c7d43a0e"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/final_1x3_theme_C_sensory_rest.png",
+      "bytes": 241033,
+      "sha256": "727d739913a6e6baf0eab3efe8c7cc4798133e859a93e613e5c2ee6854fb628e"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/movies_2x3_right_turn_chains/candidate_2x3_chain2_dash_rank2_exemplar.mp4",
+      "bytes": 2196383,
+      "sha256": "11a210814433c7992c99b611bc568e31f3c583888646b4ba4f6b6ae53e6a95ce"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/movies_2x3_right_turn_chains/candidate_2x3_chain2_dash_rank2_exemplar.png",
+      "bytes": 575031,
+      "sha256": "a607c4613e20696a0057c7170d424247018d72edce433e53a153326a5baa72f1"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/optimized_seqnmf/optimized_seqnmf_model_results.pkl",
+      "bytes": 2588814,
+      "sha256": "ca71454c2b9ea0a32574e8f66f50538362bf8e66ef153e2e4ff65401f182cd1f"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/optimized_seqnmf/optimized_seqnmf_verified_episodes.csv",
+      "bytes": 285671,
+      "sha256": "b16c4b1ce63c99108b3cacb7701630dde2f3970621344d3b45bf211ee93b4984"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/optimized_seqnmf/optimized_seqnmf_motifs_summary.csv",
+      "bytes": 1442,
+      "sha256": "3c83e9c76cac14f54e84537b89b5c4d1b9853e0d4d4ae828a5143891bdda4c16"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/optimized_seqnmf/seqnmf_optimal_hyperparams.json",
+      "bytes": 662,
+      "sha256": "c0a998aaeb4628c8f28d6c23aa98b3a1aaf7c2033afba6772b1cf9ec76cf64e8"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/optimized_seqnmf/seqnmf_optimization.log",
+      "bytes": 7710,
+      "sha256": "ecb5af96dddc642e4ded0b26d4793501a29be063b60ce8388d200fd155e66ccd"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/data/unified_sequence_dataset.pkl",
+      "bytes": 19139380,
+      "sha256": "c91a5c3436d129d5b21766b79fa61f2dd08a600451e359e976198d852809a4d4"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/data/session_metadata_ground_truth.csv",
+      "bytes": 7431,
+      "sha256": "a667e154bb8c3630551ed1b51eb749d5f2168e4c885b5eac424f3352edac2093"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/clustering_resolution_comparison/clustering_rigorous_coverage_statistics.csv",
+      "bytes": 1675,
+      "sha256": "a8546016a5c37233279cfa7d6ac4aec24830b902b680f6da720973e7399ebdba"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/fig_hidden_slide_level2_mann_whitney.png",
+      "bytes": 335008,
+      "sha256": "f6d3cc312f569ad148c9fe6a4a569e657c1a1b6e3172931ca7d0b5a8bc6e1110"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/optimized_seqnmf/figures/fig_level3_slide_duration_vertical.png",
+      "bytes": 391473,
+      "sha256": "7cf4b30957d02658ca007abc7cf3dffd2023b0ad88c99fba72be7d288b5770dd"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/data/level3_seqnmf_model_results.pkl",
+      "bytes": 3968,
+      "sha256": "c9ab931ee1c456960053c5db93ff85ded26160f1907f2d628159d51d3730d8ed"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/run12_human_labels.csv",
+      "bytes": 2096,
+      "sha256": "204c0e6a1f646cc2917e69de8e97d433f23ba04c9dc7a539f0324b25172edb3b"
+    },
+    {
+      "path": "compat/syllable_generation/presentations/fig_level3_slide_duration_vertical.png",
+      "bytes": 391473,
+      "sha256": "7cf4b30957d02658ca007abc7cf3dffd2023b0ad88c99fba72be7d288b5770dd"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/shmoseq/output/figures/pres_4_groups_vs_markov_null.png",
+      "bytes": 1895043,
+      "sha256": "4b28b51f13e6de75a08f7a7f7b34e4a7984c446ebffd638891d41d8f4c418bce"
+    },
+    {
+      "path": "compat/syllable_generation/analysis/shmoseq/output/data/lagged_mi_results_1000s.pkl",
+      "bytes": 18376,
+      "sha256": "37e244c8d583e38deb784f536a7fb00901bc1f8911a220e68b0369f1740a590b"
+    }
+  ],
+  "legacy_sources": [
+    {
+      "commit": "b83298fcfb15ffd5ce3f6dbbd863b1f8e98af03e",
+      "path": "studies/behavior/sequence_viz/render_1x3_final_exemplars.py",
+      "git_blob": "a6aec16c62adc31da4d61cd6cdcc010f600c50e0",
+      "sha256": "ab5d7e156346b84dc4451a2fabcebe179f45e8d24111172d02f0abd92567e100",
+      "bytes": 13190
+    },
+    {
+      "commit": "b83298fcfb15ffd5ce3f6dbbd863b1f8e98af03e",
+      "path": "studies/behavior/sequence_viz/render_2x3_right_turn_chains.py",
+      "git_blob": "cc6ac144ef9f7f9113af72128b1bd95e10230610",
+      "sha256": "1971778bb376062d101b18a288568ce78d6722f923aaa9eeec6f07a879965bc7",
+      "bytes": 12966
+    },
+    {
+      "commit": "b83298fcfb15ffd5ce3f6dbbd863b1f8e98af03e",
+      "path": "syllable_generation/analysis/sequence_viz/chain_grid_movie_wrapper.py",
+      "git_blob": "4fb95769aa03cae39edd2ba6735cf493f36508e4",
+      "sha256": "5bc0258ce8524a593bda4df19104f8ee0dc6aa5849c212b7fb499d39adb1d37d",
+      "bytes": 77257
+    },
+    {
+      "commit": "b83298fcfb15ffd5ce3f6dbbd863b1f8e98af03e",
+      "path": "studies/behavior/sequence_viz/generate_hidden_slide_mann_whitney_plot.py",
+      "git_blob": "e3efe965cae0a6816b28d5663b1712ba850bae02",
+      "sha256": "a477254cf52c2d2aedc49104aa84796e590fc7bb00a83b7356d131d826b5a792",
+      "bytes": 10145
+    },
+    {
+      "commit": "b83298fcfb15ffd5ce3f6dbbd863b1f8e98af03e",
+      "path": "studies/behavior/sequence_viz/generate_sniff_clustered_slide_figures.py",
+      "git_blob": "1959b1d46558761048917db490b9fd2fc503fe8b",
+      "sha256": "a9bb62755ce99e94d45d3425a6854fa063dccd77745739977c65c750e25a0683",
+      "bytes": 28527
+    },
+    {
+      "commit": "b83298fcfb15ffd5ce3f6dbbd863b1f8e98af03e",
+      "path": "studies/behavior/sequence_viz/optimized_seqnmf/fit_optimized_seqnmf_model.py",
+      "git_blob": "3f709a45643f53027affd5108c222e672e3829fc",
+      "sha256": "8c6f7de4b5f761518308bedcd73c7ab7912dc07495be473f8bec7d78274a3194",
+      "bytes": 9638
+    },
+    {
+      "commit": "b83298fcfb15ffd5ce3f6dbbd863b1f8e98af03e",
+      "path": "syllable_generation/analysis/sequence_viz/optimized_seqnmf/convolutional_seqnmf.py",
+      "git_blob": "af98d5d7cbdadb8baceb79731fcc2ab89fcbc226",
+      "sha256": "b7c8038a4ecdd21d5d0cc42fcd709c340174378fa3cc59150d5815e237188f5d",
+      "bytes": 14809
+    },
+    {
+      "commit": "b83298fcfb15ffd5ce3f6dbbd863b1f8e98af03e",
+      "path": "studies/behavior/shmoseq/generate_presentation_lag_figures.py",
+      "git_blob": "06d923be9014dd26a24677e4f1559943efdfcfbd",
+      "sha256": "9ea8774f08718e27caebf5f001d7d8236afab8ca1eb60a935ad5e6ccb2d10ce9",
+      "bytes": 14074
+    },
+    {
+      "commit": "b83298fcfb15ffd5ce3f6dbbd863b1f8e98af03e",
+      "path": "syllable_generation/analysis/shmoseq/monday_14_7_2026_presentation.md",
+      "git_blob": "e5710f5a3dcc67f848d9fd8719c4f44223c178ff",
+      "sha256": "7de650cb389802ff3db01a0b8e951b9fb215091101766f7312c52fb7b1ed5967",
+      "bytes": 58965
+    }
+  ],
+  "branch_catalogue_check": {
+    "rows": 2136,
+    "animals": 10,
+    "sessions": 10,
+    "drug_counts": {
+      "Saline": 2136
+    },
+    "factor_1_episodes": 350,
+    "factor_1_root_14_4_episodes": 307,
+    "variants": [
+      {
+        "tokens": [
+          14,
+          4,
+          3
+        ],
+        "count": 95,
+        "percent_of_factor": 27.142857142857142,
+        "percent_of_root": 30.944625407166125
+      },
+      {
+        "tokens": [
+          14,
+          4,
+          17
+        ],
+        "count": 79,
+        "percent_of_factor": 22.571428571428573,
+        "percent_of_root": 25.732899022801302
+      },
+      {
+        "tokens": [
+          14,
+          4,
+          6
+        ],
+        "count": 37,
+        "percent_of_factor": 10.571428571428571,
+        "percent_of_root": 12.052117263843648
+      }
+    ]
+  },
+  "five_step_coverage_rows": [
+    {
+      "Level": "Level 1",
+      "Vocab": "100",
+      "N_Step": "5",
+      "Distinct_Observed": "133003",
+      "Recurring_Families": "345",
+      "Pop_Time_Coverage_Pct": "14.1",
+      "Animal_Coverage_Mean_Pct": "14.0% \u00b1 7.0%",
+      "Support_Episodes": "28 [23\u201339]",
+      "Support_Animals": "10 [9\u201311]",
+      "Duration_Sec": "2.58s \u00b1 1.29s (med 2.35s)"
+    },
+    {
+      "Level": "Level 3",
+      "Vocab": "22",
+      "N_Step": "5",
+      "Distinct_Observed": "61781",
+      "Recurring_Families": "942",
+      "Pop_Time_Coverage_Pct": "46.1",
+      "Animal_Coverage_Mean_Pct": "46.2% \u00b1 9.9%",
+      "Support_Episodes": "29 [24\u201341]",
+      "Support_Animals": "11 [9\u201312]",
+      "Duration_Sec": "3.78s \u00b1 2.99s (med 3.08s)"
+    },
+    {
+      "Level": "Level 4",
+      "Vocab": "14",
+      "N_Step": "5",
+      "Distinct_Observed": "32074",
+      "Recurring_Families": "1524",
+      "Pop_Time_Coverage_Pct": "76.2",
+      "Animal_Coverage_Mean_Pct": "76.0% \u00b1 10.7%",
+      "Support_Episodes": "37 [26\u201363]",
+      "Support_Animals": "12 [10\u201314]",
+      "Duration_Sec": "3.63s \u00b1 2.22s (med 3.17s)"
+    }
+  ],
+  "media_metadata": [
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/final_1x3_theme_A_rear_descent.mp4",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "width": 960,
+            "height": 410,
+            "r_frame_rate": "40/1",
+            "nb_frames": "141"
+          }
+        ],
+        "format": {
+          "duration": "3.525000"
+        }
+      }
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/final_1x3_theme_B_dash_rank2_panels456.mp4",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "width": 960,
+            "height": 410,
+            "r_frame_rate": "40/1",
+            "nb_frames": "147"
+          }
+        ],
+        "format": {
+          "duration": "3.675000"
+        }
+      }
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/final_1x3_theme_C_sensory_rest.mp4",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "width": 960,
+            "height": 410,
+            "r_frame_rate": "40/1",
+            "nb_frames": "249"
+          }
+        ],
+        "format": {
+          "duration": "6.225000"
+        }
+      }
+    },
+    {
+      "path": "compat/syllable_generation/analysis/sequence_viz/movies_2x3_right_turn_chains/candidate_2x3_chain2_dash_rank2_exemplar.mp4",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "width": 960,
+            "height": 788,
+            "r_frame_rate": "40/1",
+            "nb_frames": "147"
+          }
+        ],
+        "format": {
+          "duration": "3.675000"
+        }
+      }
+    }
+  ],
+  "theme_B_sampled_parent_row_comparison": [
+    {
+      "frame_index": 0,
+      "mean_absolute_channel_difference_0_255": 0.7864280343055725
+    },
+    {
+      "frame_index": 73,
+      "mean_absolute_channel_difference_0_255": 0.9304094910621643
+    },
+    {
+      "frame_index": 146,
+      "mean_absolute_channel_difference_0_255": 0.7678506970405579
+    }
+  ],
+  "limits": [
+    "Exact Theme B final edit command not recovered; visual/HUD and sampled-frame evidence associates it with parent row two.",
+    "No original per-panel recording/start/end manifest recovered for these final movies.",
+    "Saved raw-state model payload fingerprinted but not deserialized or reprojected.",
+    "Stored Level 3 duration PNG differs from supplied screenshot; filename does not prove identity.",
+    "Historical resource loader names amph_prod_k150k_run_12; current relocated model/VFI identity remains unbound."
+  ]
+}

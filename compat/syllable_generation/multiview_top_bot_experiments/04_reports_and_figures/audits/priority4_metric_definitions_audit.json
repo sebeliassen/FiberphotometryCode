@@ -1,0 +1,26 @@
+{
+  "pilot_static_21kp": {
+    "n_components": 40,
+    "dorsal_tot_variance_px2": 205.6519775390625,
+    "dorsal_retained_variance_px2": 82.77155233802036,
+    "dorsal_retained_pct_of_dorsal": 40.24836197954787,
+    "dorsal_reconstruction_rmse_px": 11.085144347325485,
+    "paw_reconstruction_rmse_px": 5.774430520992026
+  },
+  "pilot_static_23kp": {
+    "n_components": 44,
+    "dorsal_tot_variance_px2": 205.6519775390625,
+    "dorsal_retained_variance_px2": 66.92394069682717,
+    "dorsal_retained_pct_of_dorsal": 32.542327818907225,
+    "dorsal_reconstruction_rmse_px": 11.77828666836715,
+    "paw_reconstruction_rmse_px": 6.431569291360486
+  },
+  "tandem_legacy_seed404": {
+    "n_components": 44,
+    "dorsal_tot_variance_px2": 205.6519775390625,
+    "dorsal_retained_variance_px2": 38.268584054733594,
+    "dorsal_retained_pct_of_dorsal": 18.60842016336297,
+    "dorsal_reconstruction_rmse_px": 12.93767341852193,
+    "paw_reconstruction_rmse_px": 11.256694899279468
+  }
+}

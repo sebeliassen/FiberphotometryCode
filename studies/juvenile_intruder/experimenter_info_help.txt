@@ -1,0 +1,28 @@
+mouse_id	folder	folder_prefix	fiber1_id	region1_sensor	fiber2_id	region2_sensor	injection	genotype	inarena	home_cage	juvenile_intruder_first_sniff	juvenile_removed	homecage_removed	Comments
+84	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/Juvenile_intruder_baseline/Data	T1	G4	lNAc_DA	G6	rNAc_5HT	saline	TH-Cre	8,3	40,15	42,6	44,9475	47,55	
+85	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/Juvenile_intruder_baseline/Data	T2	G4	lNAc_DA	G6	rNAc_5HT	saline	TH-Cre	6,2	36,8	38,71	40,7475	43,125	
+86	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/Juvenile_intruder_baseline/Data	T3	G4	lNAc_5HT	G6	rNAc_DA	saline	TH-Cre	8,5	39,9	42,125	44,325	46,395	
+2	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/Juvenile_intruder_baseline/Data	T4	G4	VTA_NE	G6	NAc_DA	none	WT	7,2	22,9	25,162	27,435	29,685	
+6	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/Juvenile_intruder_baseline/Data	T5	G4	DRN_NE	G6	NAc_5HT	none	WT	6,8	23,2	25,56	27,495	29,85	Likely no signal in the DRN (G4), if so skip it
+10	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/Juvenile_intruder_baseline/Data	T6	G4	DRN_NE	G6	NAc_5HT	none	WT	7,1	22,2	24,65	26,64	29,2725	Likely no signal in the DRN (G4), if so skip it
+4	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/Juvenile_intruder_baseline/Data	T7	G4	VTA_NE	G6	NAc_DA	none	WT	6,8	23	25,187	27,2325	29,4225	
+8	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/Juvenile_intruder_baseline/Data	T8	G4	VTA_NE	G6	NAc_DA	none	WT	7	23	25,08	27,06	29,385	
+1	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/Juvenile_intruder_baseline/Data	T9	G4	DRN_NE	G6	NAc_5HT	none	WT	7,1	22,6	25,112	27,1125	29,595	
+3	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/Juvenile_intruder_baseline/Data	T10	G4	DRN_NE	G6	NAc_5HT	none	WT	6,6	22,47	24,925	27,1125	29,31	
+7	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/Juvenile_intruder_baseline/Data	T11	G4	lNAc_5HT	G6	rNAc_DA	saline	WT	8,1	38,7	41,213	43,2825	45,5625	
+5	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/Juvenile_intruder_baseline/Data	T12	G4	VTA_NE	G6	NAc_DA	none	WT	7,6	23,4	25,637	28,02	30,2475	
+84	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/CNO_juvenile_intruder/0.2mgkg	T1	G4	lNAc_DA	G6	rNAc_5HT	0.2mg/kg CNO	TH-Cre	3,92	40,29	42,41	44,61	46,425	
+85	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/CNO_juvenile_intruder/0.2mgkg	T2	G4	lNAc_DA	G6	rNAc_5HT	0.2mg/kg CNO	TH-Cre	0,94	38,6	40,812	42,96	45,13	
+86	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/CNO_juvenile_intruder/0.2mgkg	T3	G4	lNAc_5HT	G6	rNAc_DA	0.2mg/kg CNO	TH-Cre	2,7	39,05	41,587	43,7	45,8	
+7	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/CNO_juvenile_intruder/0.2mgkg	T4	G4	lNAc_5HT	G6	rNAc_DA	0.2mg/kg CNO	WT	1,7	37	39,45	41,6	43,6	
+84	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/CNO_juvenile_intruder/0.05mgkg	T1	G4	lNAc_DA	G6	rNAc_5HT	0.05mg/kg CNO	TH-Cre	1,8	38,6	41,987	45,062	47,42	
+85	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/CNO_juvenile_intruder/0.05mgkg	T2	G4	lNAc_DA	G6	rNAc_5HT	0.05mg/kg CNO	TH-Cre	2,212	38,962	42,375	45,662	47,762	
+86	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/1st_cohort/CNO_juvenile_intruder/0.05mgkg	T3	G4	lNAc_5HT	G6	rNAc_DA	0.05mg/kg CNO	TH-Cre	2,625	39	42,787	45,937	48,887	
+100	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/second dreadd cohort/Juvenile intruder/saline	T1	G0	lNAc_5HT	G2	rNAc_DA	saline	TH-Cre	4,737	41,087	44,239	47,475	49,75	
+101	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/second dreadd cohort/Juvenile intruder/saline	T2	G0	lNAc_DA	G2	rNAc_5HT	saline	TH-Cre	2,438	41,15	44,162	47,374	49,538	
+105	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/second dreadd cohort/Juvenile intruder/saline	T3	G0	lNAc_5HT	G2	rNAc_DA	saline	TH-Cre negative	4,287	41,4	45,112	48,337	50,65	
+107	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/second dreadd cohort/Juvenile intruder/saline	T4	G0	lNAc_DA	G2	rNAc_5HT	saline	TH-Cre negative	1,8	38,925	42,01	44,186	46,4124	
+100	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/second dreadd cohort/Juvenile intruder/CNO 0.05mgkg	T1	G0	lNAc_5HT	G2	rNAc_DA	0.05mg/kg CNO	TH-Cre	4,02	39,85	43,55	46,637	48,975	
+101	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/second dreadd cohort/Juvenile intruder/CNO 0.05mgkg	T2	G0	lNAc_DA	G2	rNAc_5HT	0.05mg/kg CNO	TH-Cre	2,96	38,437	41,85	44,55	46,725	
+105	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/second dreadd cohort/Juvenile intruder/CNO 0.05mgkg/females	T1	G0	lNAc_5HT	G2	rNAc_DA	0.05mg/kg CNO	TH-Cre negative	3,499	40,537	44,537	47,12	50,063	
+107	/Volumes/Groupdir/SUN-IN-Neuropharm/Common/Lab member folder/Jonathan Korn/second dreadd cohort/Juvenile intruder/CNO 0.05mgkg/females	T2	G0	lNAc_DA	G2	rNAc_5HT	0.05mg/kg CNO	TH-Cre negative	2,775	40,537	43,725	46,712	49,223	

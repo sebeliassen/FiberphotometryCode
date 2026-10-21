@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "architecture.json",
+      "size_bytes": 13092,
+      "sha256": "b3526f1ff1b52c64f289e93ff575b2981e103e82e632f72a8fe040b0ecb5e982"
+    },
+    {
+      "path": "checkpoint_state.json",
+      "size_bytes": 579,
+      "sha256": "8096be44f60cfa8a72e6ae64d05ac717333d6f5a63bac9a30449f53d9c10e091"
+    },
+    {
+      "path": "claude_review.txt",
+      "size_bytes": 5463,
+      "sha256": "297a828eac9d0505b0ca7b7e8ee005cf7ba26e5f639223ecc42b79a72496c1e5"
+    },
+    {
+      "path": "fpcode_migrate_paths.py",
+      "size_bytes": 12813,
+      "sha256": "34317551026c5cbb4769cf58fc9197243b322f5c37d43bed82774669f7c3b382"
+    },
+    {
+      "path": "fpcode_prior_lint.py",
+      "size_bytes": 1713,
+      "sha256": "d4ad4411cf31cf05865e3c399f1d33731a112862077290a2bf847ca7b1eb72eb"
+    },
+    {
+      "path": "link_repairs_reviewed.json",
+      "size_bytes": 24634,
+      "sha256": "32797fff0f1beb4b395f05bae768223ee0c7d17c9e50d9fe5c8c1166f4fb911f"
+    },
+    {
+      "path": "path_migration_originals.json",
+      "size_bytes": 1028300,
+      "sha256": "7e384d3b6f2a43040e9a0f45fc5d055073f6abff11bb1c206019492bab294545"
+    },
+    {
+      "path": "prior_lint.json",
+      "size_bytes": 1563806,
+      "sha256": "3272f2813a4d9ccae173a144b0b69653b2f3cef7fecf56d12c6ddad510cd045b"
+    },
+    {
+      "path": "reference_counts.json",
+      "size_bytes": 576,
+      "sha256": "3bbad79c42640261c6cb97627bb50f3a89abbbc490552ac187de1a13178a030f"
+    },
+    {
+      "path": "symlinks_before_cleanup.json",
+      "size_bytes": 390035,
+      "sha256": "9d31b8ae6b821950c01a1c7c79c22b9178733d45874ddd6b690a953abca39298"
+    }
+  ]
+}

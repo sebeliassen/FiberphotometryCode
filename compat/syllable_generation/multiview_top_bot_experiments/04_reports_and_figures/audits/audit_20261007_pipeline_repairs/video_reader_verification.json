@@ -1,0 +1,9 @@
+{
+  "video_tested": "T1_Arena1234_CenterTopCamVid_2026-04-27T14_05_05_top_left.avi",
+  "total_frames": 204983,
+  "sequential_read_passed": true,
+  "forward_seek_passed": true,
+  "backward_seek_passed": true,
+  "backward_seek_exact_pixel_diff": 0,
+  "status": "VERIFIED_ACCURATE"
+}
