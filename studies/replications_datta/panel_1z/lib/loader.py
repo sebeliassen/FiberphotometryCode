@@ -3,6 +3,8 @@ import pickle
 import re
 from pathlib import Path
 
+from fpcode.common.paths import resolve_data_path
+
 logger = logging.getLogger("Panel1z.Loader")
 
 def load_sessions(project="ifdn", pkl_path=None):
@@ -10,8 +12,7 @@ def load_sessions(project="ifdn", pkl_path=None):
     Load sessions from the most recent .pkl file for the given project.
     Applies metadata filtering and region name standardization.
     """
-    repo_root = Path(__file__).resolve().parent.parent.parent.parent.parent
-    loaders_dir = repo_root / "data"
+    loaders_dir = resolve_data_path("data")
 
     # 1. Locate Pickle
     if pkl_path:

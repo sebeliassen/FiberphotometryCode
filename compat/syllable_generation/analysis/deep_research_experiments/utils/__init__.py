@@ -1,28 +1,23 @@
-"""
-[DEPRECATED SHIM] syllable_generation/analysis/deep_research_experiments/utils/__init__.py
-==================================================
-Relocated to: studies/behavior/deep_research_experiments/utils/__init__.py
-"""
+"""Structural compatibility package: retain physical leaf proxies and identity."""
 
 import importlib
-import sys
 import warnings
 
 warnings.warn(
-    "syllable_generation.analysis.deep_research_experiments.utils is deprecated; import from studies.behavior.deep_research_experiments.utils instead",
+    "syllable_generation.analysis.deep_research_experiments.utils is deprecated; "
+    "import from studies.deep_research_experiments.utils instead",
     DeprecationWarning,
     stacklevel=2,
 )
 
-_real = importlib.import_module("studies.behavior.deep_research_experiments.utils")
-sys.modules[__name__] = _real
+_real = importlib.import_module("studies.deep_research_experiments.utils")
+# Keep this package's physical search path: aliasing the parent to the namespace
+# would bypass leaf proxies and execute their implementations under old names.
+
 
 def __getattr__(name):
     return getattr(_real, name)
 
+
 def __dir__():
     return dir(_real)
-
-if __name__ == "__main__":
-    if hasattr(_real, "main"):
-        _real.main()

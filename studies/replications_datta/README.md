@@ -1,6 +1,6 @@
 # Datta Lab Syllable Dynamics Replication Study
 
-**Location**: `studies/behavior/replications_datta`  
+**Location**: `studies/replications_datta`
 **Status**: `FROZEN`  
 **Standard**: Conforms to [`docs/architecture/UNIT_CONTRACT.md`](../../docs/architecture/UNIT_CONTRACT.md)  
 
@@ -17,3 +17,12 @@ Replication figures, transition entropy curves, and usage rankings
 ```bash
 python panel_1f/generate_panel_1f_publication.py
 ```
+
+## Panel 1z session input boundary
+
+`panel_1z.lib.loader.load_sessions(project, pkl_path=None)` accepts a selected
+trusted pickle, or discovers under `resolve_data_path("data")`. `FP_DATA_ROOT`
+selects a mirror root containing `data/`, independently of the code checkout.
+The project pattern, newest-file priority, historical generic fallback, valid
+session filter and region/hemisphere standardization are preserved. This path
+repair does not establish support for every historical serialized object.

@@ -1,7 +1,7 @@
 """
 [DEPRECATED SHIM] syllable_generation/analysis/deep_research_experiments/utils/loaders.py
 ==================================================
-Relocated to: studies/behavior/deep_research_experiments/utils/loaders.py
+Relocated to: studies/deep_research_experiments/utils/loaders.py
 """
 
 import importlib
@@ -9,12 +9,12 @@ import sys
 import warnings
 
 warnings.warn(
-    "syllable_generation.analysis.deep_research_experiments.utils.loaders is deprecated; import from studies.behavior.deep_research_experiments.utils.loaders instead",
+    "syllable_generation.analysis.deep_research_experiments.utils.loaders is deprecated; import from studies.deep_research_experiments.utils.loaders instead",
     DeprecationWarning,
     stacklevel=2,
 )
 
-_real = importlib.import_module("studies.behavior.deep_research_experiments.utils.loaders")
+_real = importlib.import_module("studies.deep_research_experiments.utils.loaders")
 sys.modules[__name__] = _real
 
 def __getattr__(name):
