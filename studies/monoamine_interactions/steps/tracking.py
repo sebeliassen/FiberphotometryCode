@@ -1,26 +1,15 @@
 from __future__ import annotations
 
-# Import LOCAL config overrides
-# We assume the project folder is 'monoamine_interactions/jonathan_oft_baseline'
-# and we are in 'monoamine_interactions/steps'
-import sys
-from pathlib import Path
-
 import pandas as pd
 
 from fpcode.contracts.session_record import SessionRecord
-from syllable_generation.loaders.jonathan.utils.files import (
+from studies.oft_baseline.config import JCFG
+from studies.session_building.jonathan.utils.files import (
     group_by_session_id,
     parse_h5_path,
     parse_video_path,
     sort_parsed_h5_key,
 )
-
-# Ensure subproject is in path to import config
-subproj = Path(__file__).resolve().parents[1] / "jonathan_oft_baseline"
-if str(subproj) not in sys.path:
-    sys.path.insert(0, str(subproj))
-from config import JCFG
 
 
 def parse_ids_from_filename(filename: str):

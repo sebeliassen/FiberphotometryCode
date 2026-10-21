@@ -1,5 +1,18 @@
 # Karen Project Data & Video Directory Guide
 
+The historical session-discovery policy is owned by
+[`session_policy/config.py`](session_policy/config.py). It retains
+`VALID_FRAME_RANGE = (0, 999999)` and an independent default `JonathanConfig`
+instance, recovered from the archived original source. It uses the standard
+filename and chamber rules; the monoamine/juvenile relaxed regex and frame range
+are separate cohort policies. `analysis/tracking.py` imports this Karen policy
+explicitly and retains its timestamp-level grouping and empty-animal filtering.
+Filename-only synthetic tests cover those discovery rules without reading video
+or H5 contents. The unified builder's global configuration changes, direct old
+study symlink identity and real artifact reconstruction remain separate gates.
+Provenance and exact check limits are recorded in
+[`project_tracking_policies_20261021.json`](../../registry/checkpoints/project_tracking_policies_20261021.json).
+
 ## Overview & Directory Topology
 This directory (`karen_project/`) contains the workspace files for Karen's longitudinal Parkinson's disease / L-dopa mouse cohort studies (covering 5 experimental waves: `3_week_PI`, `8_weeks_PI`, `16w_PI`, `24_weeks_PI`, and `L_dopa`).
 

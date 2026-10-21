@@ -1,3 +1,36 @@
+## Project tracking policy candidate validated in focused scope (2026-10-21)
+
+Candidate .worktrees/project-tracking-policies / codex/project-tracking-policies
+starts at maina8ec522. Karen session_policy/config.py is restored from the exact
+272-byte archived original, whose SHA matches the historical source inventory.
+Its frame range remains(0,999999) and its independent JCFG uses standard defaults.
+Baseline config is restored at studies/oft_baseline/config.py from pinned Git
+source195c169 and the matching archive member: range(50000,250000), optional
+video tokens and original Arena fallback. Both policies use the canonical
+JonathanConfig class; full policy ASTs match their originals after class-import
+normalization. The archive's complete JonathanConfig class AST matches current.
+
+Two tracking callers now import their explicit project policy and canonical
+filename parser. Obsolete sys.path injection and bare config imports are removed.
+All four discovery/helper function ASTs match both archived originals and base
+main.19focused synthetic tests pass: independent policies, four Arena mappings,
+explicit-token precedence, empty-animal filtering, timestamp/camera grouping,
+matching H5 references, and cold imports with foreign cached or current-directory
+config poisoning in both project import orders. Tests discover empty files only;
+no empirical contents, pickle/model, cohort fit, export or rendering was used.
+Maintained lint passes3067reviewed diagnostics/no new debt,12historical diagnostics
+resolved; its inventory is unchanged. See
+registry/checkpoints/project_tracking_policies_20261021.json for exact provenance.
+
+NEXT: integration owner batches final functional/architecture/isolated checks and
+source-only inventory after integrating the preceding main slice, then reviews
+and publishes this bounded candidate. No commits/network/main merge were made
+for this focused slice. Unified builder dynamic-import/global-policy mutation,
+direct old study symlink identity, named real artifact reconstruction and ignored
+empirical/browser-feedback recovery remain separate gates. Existing legacy roots,
+original primary/delivery checkouts and viewers remain intact. Exact remote state
+is owned by primary outputs/consolidation_20261021/promotion_20261021.json.
+
 ## Export utility alias candidate validated (2026-10-21)
 
 PR8 Jonathan alias repair is merged at2ab0671; confirm actual-main CI using primary

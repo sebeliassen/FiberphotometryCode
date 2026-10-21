@@ -2,6 +2,21 @@
 
 A research project focused on multi-modal analysis of neural signals during behavior.
 
+Current project policy lives in explicit study owners. The baseline configuration
+is [`studies/oft_baseline/config.py`](../oft_baseline/config.py); the juvenile
+configuration is [`studies/juvenile_intruder/config.py`](../juvenile_intruder/config.py).
+The baseline hybrid discovery function in `steps/tracking.py` imports its own
+configuration directly, without a bare `config` import or path injection. Both
+historical policies retain the `(50000, 250000)` frame range, optional video token
+and Arena chamber fallback. Their configuration instances remain independent.
+
+The layout and setup instructions below describe the historical workspace.
+Current project aliases under `projects/` point to the corresponding study owners.
+The unified session builder still needs separate dynamic-import and configuration
+isolation work before its complete workflow is validated. No empirical build is
+implied by the filename-only synthetic discovery tests; see the
+[baseline policy notes](../oft_baseline/README.md).
+
 ## Project Structure
 
 ```
