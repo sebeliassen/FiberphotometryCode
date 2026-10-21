@@ -1,3 +1,89 @@
+## Import-boundary milestone complete; legacy retirement continues (2026-10-21)
+
+Local and remote main are a8ec522d45206713153bb2dcfe272d950f671e40. Reviewed normal
+merges PR7 (deep-research loading), PR8 (Jonathan contracts/aliases) and PR9 (export
+utility aliases) preserve ancestry; every actual main tree equals its passing
+reviewed head. All exact-head and actual-main workflows pass. Full1007CPU tests
+pass in lab and isolated pinned environments,6 existing warnings each; hosted1006
+pass/1ffmpeg-dependent skip/6warnings (video check passes locally).49 new cases.
+Architecture202/lint/maps/installed-wheel/dependencies pass. Canonical library,
+Karen source, pre-existing tests/goldens and lint inventory remain unchanged.
+No empirical pickle/model, cohort fit, export, render or data move was performed.
+
+Inspect current main in .worktrees/main-integration; start further implementation
+from fetched main in a fresh codex worktree. Original primary modular and Karen
+delivery code/viewers remain preserved; do not reset/clean/switch them. Current
+source and merge evidence: registry/checkpoints/import_boundaries_completed_20261021.json.
+Primary outputs/consolidation_20261021/promotion_20261021.json is the live remote
+record. Initial source snapshots/bundles remain. The new independent initial plus
+incremental restore result is import_boundary_bundle_restore_check.json in that
+output directory; if absent, run save_import_boundary_recovery.py before continuing.
+Source history recovery does not back up ignored empirical or browser-local data.
+
+Next: read outputs/consolidation_20261021/NEXT_LEGACY_BATCH.md. Recover the missing
+Karen/monoamine configuration policy, repair Jonathan builder enrichment/overrides
+and direct studies.behavior symlink identity, then missing exporter legacy_support/
+driver paths/backend setup and PPE outputs. Named trusted artifact reconstruction,
+physical entry-point coverage and empirical/feedback recovery remain gates before
+retiring core/pipelines/compat/archive. Those roots and all symlinks remain intact.
+The existing result loader may request save_results=True; it is not a read-only
+model probe. Do not infer one cohort's scientific settings from another cohort.
+
+Earlier entries below retain dated evidence; newest state and restore record govern.
+
+## Export utility alias candidate validating; PR7/PR8 merged (2026-10-21)
+
+Main2ab0671 includes loader PR7 and Jonathan identity PR8. Exact remote checks and
+actual-main CI are recorded in outputs/consolidation_20261021/promotion_20261021.json.
+Continue in .worktrees/export-utils-aliases / codex/export-utils-aliases, based on
+main2ab0671. Three legacy utility leaves and their structural parent now point to
+existing canonical helpers, with four matching registry rows. Canonical helper
+and driver source is byte-identical.16focused synthetic/stubbed cases pass; final
+lab/isolated checks running under export_alias_* logs. Do not execute exporters.
+
+Next: finish checks/notes/source-only ledger, commit/publish, exact-head CI/normal
+merge, actual-main CI, primary completion record and independent source/history
+restore. Prepared helper outputs/consolidation_20261021/save_import_boundary_recovery.py
+expects a clean primary and versioned primary import_boundaries_completed checkpoint.
+It has not run. Missing legacy_support/driver paths, cohort configurations, Jonathan
+builder enrichment, direct studies.behavior symlink identity, named real artifacts
+and empirical/feedback recovery remain gates. No models/data moved or legacy roots
+removed. Primary/delivery original code and both viewers remain intact.
+
+## Loader merged; Jonathan identity candidate validating (2026-10-21)
+
+Main/origin main46c2b35 includes PR7; both exact-head and actual-main CI pass.
+Loader972CPU/6warnings in both lab and isolated environments. Continue next code
+slice in .worktrees/jonathan-alias-identity / codex/jonathan-alias-identity, based on
+main46c2b35. Physical Jonathan proxies now target canonical owners, with structural
+parents and deferred builder import. Juvenile class import migrated; all12other
+canonical modules byte-identical and juvenile AST unchanged except import.
+19focused cases pass, including both-order identity,3synthetic historical class
+states, independent chamber/timestamp/channel/discovery expectations and physical
+proxy execution. Full lab/isolated checks running; see jonathan_* outputs.
+
+Next: read candidate CURRENT, finish checks/records, commit/publish/normal merge
+if passing. Karen proxy targets absent fpcode.behavior.config; monoamine config
+folder absent; Jonathan builder retains obsolete enrichment import. Do not invent
+cohort policy. Direct studies.behavior symlink identity, export aliases, real named
+artifacts and empirical/feedback recovery remain gates. No empirical execution or
+legacy directory removal. Primary/delivery code/viewers preserved. Exact remote
+state and pending-merge recovery: outputs/consolidation_20261021/promotion_20261021.json.
+
+## Deep-research loader candidate validated; publication next (2026-10-21)
+
+Resume in .worktrees/deep-research-loader on codex/deep-research-loader, based on
+main50a722c. Uncommitted implementation and documentation are complete: explicit
+study imports, data-mirror lookup, optional selected trusted pickle, guarded
+cohort diagnostics and both-order leaf identity. Full972CPU/6warnings in lab AND
+isolated pinned environments;14focused/architecture202/lint/maps/wheel/dependencies
+pass. Check its registry/checkpoints/deep_research_loading_20261021.json.
+Next: refreshed source-only legacy ledger, explicit commit, publish/review/check
+and normal merge of this coherent main-based PR. Do not repeat earlier main merges.
+Tracking/export/PPE output/artifact/recovery gates remain; no legacy deletion or
+empirical run. Primary/delivery code and viewers remain preserved. Read primary
+outputs/consolidation_20261021/promotion_20261021.json before remote operations.
+
 ## Main integration complete; resume legacy retirement from main (2026-10-21)
 
 Local and remote main now point to `50a722c6a129f21769d3b454f632729e8f2c0cca`.

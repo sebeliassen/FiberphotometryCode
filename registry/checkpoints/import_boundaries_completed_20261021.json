@@ -1,0 +1,185 @@
+{
+  "date": "2026-10-21",
+  "scope": "Three independent import-boundary milestones; whole legacy retirement remains in progress.",
+  "baseline_main": "50a722c6a129f21769d3b454f632729e8f2c0cca",
+  "latest_main": "a8ec522d45206713153bb2dcfe272d950f671e40",
+  "merges": [
+    {
+      "pr": 7,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/7",
+      "head": "f000f4f4a4bd07eff2bd9627fe08ca40240e464d",
+      "previous_main": "50a722c6a129f21769d3b454f632729e8f2c0cca",
+      "head_checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T21:07:53Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39675996084/job/119485864400",
+          "name": "functional",
+          "startedAt": "2026-10-21T21:06:10Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T21:08:37Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39675986404/job/119485830327",
+          "name": "functional",
+          "startedAt": "2026-10-21T21:06:07Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "status": "Merged and actual tree verified",
+      "merge_commit": "46c2b35611f065e418d659dc0cf7a938d29ea210",
+      "tree": "f669e15f4962554ad938e030114cc4f7deec9e3e",
+      "normal_merge_parents": [
+        "50a722c6a129f21769d3b454f632729e8f2c0cca",
+        "f000f4f4a4bd07eff2bd9627fe08ca40240e464d"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39676429409,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39676429409",
+          "head_sha": "46c2b35611f065e418d659dc0cf7a938d29ea210",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "pr": 8,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/8",
+      "head": "d4a3d189f644b4e72aca9c1d88c23c1b2ce3986f",
+      "previous_main": "46c2b35611f065e418d659dc0cf7a938d29ea210",
+      "head_checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T21:19:02Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39677405350/job/119490737330",
+          "name": "functional",
+          "startedAt": "2026-10-21T21:16:21Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T21:18:46Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39677397122/job/119490709248",
+          "name": "functional",
+          "startedAt": "2026-10-21T21:16:17Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "status": "Merged and actual tree verified",
+      "merge_commit": "2ab0671a69a7370807c61ae690a0dfb849f87988",
+      "tree": "0b6e6dccd36fc0ebf95ef25ae04d714fd0ed90ac",
+      "normal_merge_parents": [
+        "46c2b35611f065e418d659dc0cf7a938d29ea210",
+        "d4a3d189f644b4e72aca9c1d88c23c1b2ce3986f"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39677845918,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39677845918",
+          "head_sha": "2ab0671a69a7370807c61ae690a0dfb849f87988",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "pr": 9,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/9",
+      "head": "8292b4605ab14763a54554e24210c8fd5f231840",
+      "previous_main": "2ab0671a69a7370807c61ae690a0dfb849f87988",
+      "head_checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T21:26:29Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39678469236/job/119494408867",
+          "name": "functional",
+          "startedAt": "2026-10-21T21:24:04Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T21:26:30Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39678451649/job/119494345897",
+          "name": "functional",
+          "startedAt": "2026-10-21T21:23:56Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "status": "Merged and actual tree verified",
+      "merge_commit": "a8ec522d45206713153bb2dcfe272d950f671e40",
+      "tree": "f677fa27c9cdb264267df90643fd6349a1c1cf77",
+      "normal_merge_parents": [
+        "2ab0671a69a7370807c61ae690a0dfb849f87988",
+        "8292b4605ab14763a54554e24210c8fd5f231840"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39678879320,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39678879320",
+          "head_sha": "a8ec522d45206713153bb2dcfe272d950f671e40",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "cpu": {
+    "lab_passed": 1007,
+    "isolated_passed": 1007,
+    "hosted_passed": 1006,
+    "hosted_skipped": 1,
+    "warnings_each": 6,
+    "added_functional_cases": 49,
+    "hosted_skip": "ffmpeg-dependent synthetic video encoding; passed in both local environments."
+  },
+  "architecture": "202 modules; PASS",
+  "lint_maps_wheel_dependencies": "PASS; no shared environment upgrade or lint-baseline refresh",
+  "source_preservation": {
+    "baseline_main": "50a722c6a129f21769d3b454f632729e8f2c0cca",
+    "final_main": "a8ec522d45206713153bb2dcfe272d950f671e40",
+    "protected_paths_byte_identical": [
+      "src/fpcode",
+      "studies/karen_pff_vs_monomer",
+      "registry/LINT_BASELINE.json"
+    ],
+    "test_tree_changes_only": [
+      "tests/unit/.folder-map.md",
+      "tests/unit/test_deep_research_loading.py",
+      "tests/unit/test_export_utility_aliases.py",
+      "tests/unit/test_jonathan_identity.py"
+    ],
+    "all_existing_test_and_golden_source_unchanged": true,
+    "added_functional_cases": 49,
+    "limit": "Source provenance only; no empirical rerun or universal historical artifact validation."
+  },
+  "checkpoint_sha256": {
+    "deep_research_loading_20261021.json": "8d25e7906d0be2b23a6c8589e54b0a46eb9b1b10b718400dae0f94f8040d1964",
+    "jonathan_alias_identity_20261021.json": "f4eafe08ee1a9bc8d1fa028714a2c6134328392b9c24bd0423e891d5990cafd9",
+    "export_utility_aliases_20261021.json": "d9b66dd2d4731d27e47c7e9f9307b005780a14d276214c4ce5a55f56650977f3"
+  },
+  "remaining": [
+    "Karen configuration proxy points to absent fpcode.behavior.config; monoamine bare config names absent jonathan_oft_baseline. Recover exact project policy before migrating tracking callers.",
+    "Jonathan builder enrichment/override route and direct studies.behavior symlink identities remain outside pure contract/legacy leaf guarantees.",
+    "Exporter utility aliases repaired, but missing legacy_support and driver input/output/import-time backend/global setup remain. Result loader extraction may write; do not execute it as read-only metadata.",
+    "PPE full output/plotting setup, named trusted artifact-family reconstruction, physical entry points, external archive links and empirical/browser-feedback backup coverage still block legacy root deletion."
+  ],
+  "recovery": "Run outputs/consolidation_20261021/save_import_boundary_recovery.py after this clean source checkpoint; result import_boundary_bundle_restore_check.json. Source/history only; empirical payloads and browser-local feedback outside Git.",
+  "empirical_execution": "None; synthetic test fixtures and a nonwriting modeling stub only. No empirical file/model opened, fit/export/render run or physical legacy/data relocation."
+}
