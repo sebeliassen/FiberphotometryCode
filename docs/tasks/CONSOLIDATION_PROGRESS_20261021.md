@@ -3,7 +3,8 @@
 ## Current source and Git layout
 
 The foundation and dependent migrations are merged into main through PRs #2–#6.
-This revision repairs the next deep-research loading boundary. New work starts
+The deep-research loading boundary is merged through PR #7; this revision repairs
+Jonathan contract imports and compatibility leaf identity. New work starts
 from current main, with one main-based branch/worktree per coherent change. On
 Woody, .worktrees/main-integration verifies main without switching the preserved
 primary modular or Karen delivery checkouts and their running review viewers.
@@ -16,6 +17,7 @@ Original research branches and source checkpoints remain recoverable.
 | [#4](https://github.com/sebeliassen/FiberphotometryCode/pull/4) | `c053117` | `ecb9f67` | `17d1381` |
 | [#5](https://github.com/sebeliassen/FiberphotometryCode/pull/5) | `1ceb47b` | `c053117` | `7399ad6` |
 | [#6](https://github.com/sebeliassen/FiberphotometryCode/pull/6) | `50a722c` | `1ceb47b` | `0c73ed3` |
+| [#7](https://github.com/sebeliassen/FiberphotometryCode/pull/7) | `46c2b35` | `50a722c` | `f000f4f` |
 
 Every merge has two preserved parents and a tree identical to its passing head.
 The next candidate included current main before its checks. GitHub automatically
@@ -104,3 +106,24 @@ metadata/exclusions, controlled physical runpy diagnostics and cold PPE help.
 Architecture202 modules, lint, maps, installed wheel and dependencies pass.
 The checkpoint JSON records source hashes, policy AST comparisons and limits.
 No real pickle/model, fit, export, render, empirical analysis or data move occurred.
+
+## Jonathan contract import and alias identity batch
+
+Physical historical leaf proxies now target studies.session_building.jonathan
+directly. Three structural parent packages preserve their physical paths so the
+proxies execute; pure contract/parser imports defer the broken project builder.
+Juvenile's class import uses the canonical config; all twelve other canonical
+modules are byte-identical and its full AST is preserved except that import.
+
+Nineteen focused cases cover both import orders, nine nonbuilder leaf identities,
+three manufactured historical class states, cold imports, physical proxy execution
+and independent chamber/timestamp/channel/discovery expectations. Full991 CPU
+passes in both lab and isolated pinned environments (six existing warnings each);
+architecture202/lint/maps/wheel/dependencies pass. Exact hashes and limits are in
+registry/checkpoints/jonathan_alias_identity_20261021.json.
+
+The Karen config proxy points to absent fpcode.behavior.config; monoamine names
+an absent config directory. Do not substitute generic settings without recovering
+provenance. Jonathan's builder retains its obsolete enrichment import, and direct
+studies.behavior symlink import identity remains separate work. No empirical
+artifact/model was opened, cohort built, file converted or legacy path removed.

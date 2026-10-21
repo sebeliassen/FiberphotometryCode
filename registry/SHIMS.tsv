@@ -515,19 +515,19 @@ syllable_generation/generate_all_snapshots.py	studies/behavior/misc/syllable_gen
 syllable_generation/kpms_studio/launch_gui.py	studies/model_inspection/launch_gui.py	forwarder	ACTIVE	Emits DeprecationWarning
 syllable_generation/kpms_studio/server.py	studies/model_inspection/server.py	forwarder	ACTIVE	Emits DeprecationWarning
 syllable_generation/loaders/build_sessions_unified.py	studies/session_building/build_sessions_unified.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/__init__.py	studies/session_building/jonathan/__init__.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/build.py	studies/session_building/jonathan/build.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/config.py	studies/session_building/jonathan/config.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/context.py	studies/session_building/jonathan/context.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/steps/__init__.py	studies/session_building/jonathan/steps/__init__.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/steps/events.py	studies/session_building/jonathan/steps/events.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/steps/fiberphotometry.py	studies/session_building/jonathan/steps/fiberphotometry.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/steps/tracking.py	studies/session_building/jonathan/steps/tracking.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/steps/video.py	studies/session_building/jonathan/steps/video.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/utils/__init__.py	studies/session_building/jonathan/utils/__init__.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/utils/files.py	studies/session_building/jonathan/utils/files.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/utils/photometry.py	studies/session_building/jonathan/utils/photometry.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/loaders/jonathan/utils/time.py	studies/session_building/jonathan/utils/time.py	forwarder	ACTIVE	Emits DeprecationWarning
+syllable_generation/loaders/jonathan/__init__.py	studies.session_building.jonathan	namespace_bridge	ACTIVE	Physical parents retain leaf proxies; canonical contracts/parser identity checked
+syllable_generation/loaders/jonathan/build.py	studies.session_building.jonathan.build	module_proxy	ACTIVE	Physical parent and canonical leaf target; builder enrichment remains a separate workflow gate
+syllable_generation/loaders/jonathan/config.py	studies.session_building.jonathan.config	module_proxy	ACTIVE	Physical parents retain leaf proxies; canonical contracts/parser identity checked
+syllable_generation/loaders/jonathan/context.py	studies.session_building.jonathan.context	module_proxy	ACTIVE	Physical parents retain leaf proxies; canonical contracts/parser identity checked
+syllable_generation/loaders/jonathan/steps/__init__.py	studies.session_building.jonathan.steps	namespace_bridge	ACTIVE	Physical parents retain leaf proxies; canonical contracts/parser identity checked
+syllable_generation/loaders/jonathan/steps/events.py	studies.session_building.jonathan.steps.events	module_proxy	ACTIVE	Physical parents retain leaf proxies; canonical contracts/parser identity checked
+syllable_generation/loaders/jonathan/steps/fiberphotometry.py	studies.session_building.jonathan.steps.fiberphotometry	module_proxy	ACTIVE	Physical parents retain leaf proxies; canonical contracts/parser identity checked
+syllable_generation/loaders/jonathan/steps/tracking.py	studies.session_building.jonathan.steps.tracking	module_proxy	ACTIVE	Physical parents retain leaf proxies; canonical contracts/parser identity checked
+syllable_generation/loaders/jonathan/steps/video.py	studies.session_building.jonathan.steps.video	module_proxy	ACTIVE	Physical parents retain leaf proxies; canonical contracts/parser identity checked
+syllable_generation/loaders/jonathan/utils/__init__.py	studies.session_building.jonathan.utils	namespace_bridge	ACTIVE	Physical parents retain leaf proxies; canonical contracts/parser identity checked
+syllable_generation/loaders/jonathan/utils/files.py	studies.session_building.jonathan.utils.files	module_proxy	ACTIVE	Physical parents retain leaf proxies; canonical contracts/parser identity checked
+syllable_generation/loaders/jonathan/utils/photometry.py	studies.session_building.jonathan.utils.photometry	module_proxy	ACTIVE	Physical parents retain leaf proxies; canonical contracts/parser identity checked
+syllable_generation/loaders/jonathan/utils/time.py	studies.session_building.jonathan.utils.time	module_proxy	ACTIVE	Physical parents retain leaf proxies; canonical contracts/parser identity checked
 syllable_generation/metadata/karen_static_21kp_v2_labels.py	studies/karen_pff_vs_monomer/analysis/karen_static_21kp_v2_labels.py	forwarder	ACTIVE	Emits DeprecationWarning
 syllable_generation/multiview_top_bot_experiments/01_data_and_fusion/01_match_pairs.py	studies/multiview_experiments/01_data_and_fusion/01_match_pairs.py	forwarder	ACTIVE	Emits DeprecationWarning
 syllable_generation/multiview_top_bot_experiments/01_data_and_fusion/02_fuse_dorsal_ventral.py	studies/multiview_experiments/01_data_and_fusion/02_fuse_dorsal_ventral.py	forwarder	ACTIVE	Emits DeprecationWarning

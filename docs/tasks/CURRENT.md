@@ -1,3 +1,28 @@
+## Jonathan contract and alias identity candidate validated (2026-10-21)
+
+PR7 loader cleanup is merged at46c2b35; verify its actual-main CI in primary
+outputs/consolidation_20261021/promotion_20261021.json. Continue this next slice in
+.worktrees/jonathan-alias-identity on codex/jonathan-alias-identity, based on main.
+Retarget Jonathan legacy leaf proxies to the physical canonical owner and keep
+parent packages structural; defer builder import until requested so pure config,
+context, parser and serialized classes do not require old enrichment imports.
+Juvenile config uses the canonical class. All991 CPU tests pass in both lab and
+isolated pinned environments (six existing warnings each);19 focused cases,
+architecture202/lint/maps/installed-wheel/dependencies pass. Twelve canonical
+modules are byte-identical, and juvenile's full AST differs only in the class
+import. Three synthetic historical class states reconstruct canonical types;
+this does not establish compatibility with arbitrary real artifacts. See
+registry/checkpoints/jonathan_alias_identity_20261021.json. Publication/checks and
+normal merge are next; exact remote progress is in the primary promotion record.
+
+Karen session_policy/config is a broken proxy to absent fpcode.behavior.config;
+monoamine's referenced jonathan_oft_baseline config folder is absent. Do not invent
+replacement policies or claim complete cohort workflows. The Jonathan builder
+still references an obsolete project enrichment namespace. These remain separate
+provenance/input/output gates, alongside export aliases and artifact recovery.
+Direct studies.behavior symlink imports are not identity-covered by this slice.
+Legacy roots, symlinks, empirical artifacts and viewers remain intact.
+
 ## Deep-research loading boundary repaired (2026-10-21)
 
 Continue consolidation from integrated main. This batch replaces obsolete bare

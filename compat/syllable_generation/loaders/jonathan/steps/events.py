@@ -1,7 +1,7 @@
 """
 [DEPRECATED SHIM] syllable_generation/loaders/jonathan/steps/events.py
 ==================================================
-Relocated to: studies/behavior/loaders/jonathan/steps/events.py
+Relocated to: studies/session_building/jonathan/steps/events.py
 """
 
 import importlib
@@ -9,12 +9,12 @@ import sys
 import warnings
 
 warnings.warn(
-    "syllable_generation.loaders.jonathan.steps.events is deprecated; import from studies.behavior.loaders.jonathan.steps.events instead",
+    "syllable_generation.loaders.jonathan.steps.events is deprecated; import from studies.session_building.jonathan.steps.events instead",
     DeprecationWarning,
     stacklevel=2,
 )
 
-_real = importlib.import_module("studies.behavior.loaders.jonathan.steps.events")
+_real = importlib.import_module("studies.session_building.jonathan.steps.events")
 sys.modules[__name__] = _real
 
 def __getattr__(name):
