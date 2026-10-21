@@ -2,7 +2,7 @@
 
 ## Resume here
 
-Continue in `/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumers`, branch `codex/legacy-consumers`. This contains all current integration and caller-migration work. The primary checkout remains on codex/modular-refactor for the original viewer/library setup; do not switch/reset/clean it or the original delivery worktree. No merge is left unresolved.
+Continue in `/home/fsp585/Desktop/FiberphotometryCode/.worktrees/photometry-consumers`, branch `codex/photometry-consumers`. This contains all current integration and caller-migration work. The primary checkout remains on codex/modular-refactor for the original viewer/library setup; do not switch/reset/clean it or the original delivery worktree. No merge is left unresolved.
 
 ## Captured and tested branches
 
@@ -12,7 +12,8 @@ Continue in `/home/fsp585/Desktop/FiberphotometryCode/.worktrees/legacy-consumer
 | codex/karen-seqnmf-delivery | Source checkpoint2c43b75 | 45 reviewed source/test/doc files preserved; original empirical outputs unchanged |
 | codex/main-foundation | Foundation candidatef7c4056, based on origin/main and captured modular history | 850 CPU tests in lab and clean environments; architecture/lint/maps/package gates |
 | codex/main-seqnmf | Combined candidate525b589 | 937 CPU tests in lab and clean environments; all gates; installed source-origin checks |
-| codex/legacy-consumers | Current stacked caller-migration candidate | 951 CPU tests in lab and clean environments; all gates; exact extracted-statistic parity |
+| codex/legacy-consumers | Caller-migration checkpointb146e21 | 951 CPU tests in lab and clean environments; all gates; exact extracted-statistic parity |
+| codex/photometry-consumers | Latest alignment API/import recovery candidate | 955 CPU tests in lab and clean environments; all gates; exact original wrapper AST |
 
 main remains67468c1 and no remote ref has changed. Scaffolding and legacy branches are already ancestors, not separate integrations still to apply.
 
@@ -28,11 +29,15 @@ main remains67468c1 and no remote ref has changed. Scaffolding and legacy branch
 - Extracted the presentation Jensen-Shannon helper into fpcode.statistics.divergence;6 active consumers use it. Analytical bit-unit tests and exact float32/float64 parity use a new frozen pre-extraction reference. No existing numerical goldens or lint inventory changed.
 - Added a hashed static legacy ledger with617 paths and recorded scan limitations. Review bundles/historical notebooks are classified separately from current source.
 
+## Additional alignment recovery
+
+Six current study imports were migrated to fpcode.photometry.alignment. Four imported a function that had been lost during consolidation: build_aligned_moseq_phot. Its original body is recovered from pre-scaffolding Git source, with exact function AST parity; the current470/default merge policy is retained. The helper restores explicit frame_index ordering, unsupported-frame NaNs, missing-photometry fallback columns and original row-reset semantics. Eight focused historical/independent alignment checks pass. Full955 CPU tests pass in both environments, plus architecture/lint/maps/package gates and pip check. The installed restored module matches the candidate source without model backends. No existing golden fixture or lint baseline changed. See registry/checkpoints/alignment_restoration_20261021.json; complete empirical export jobs remain unexecuted.
+
 ## Validation and recovery locations
 
-Versioned evidence: `registry/checkpoints/consolidation_20261021.json`, `registry/SOURCE_RECOVERY_20261021.json`, `registry/LEGACY_*_20261021.*`, and `docs/architecture/LEGACY_RETIREMENT.md`.
+Versioned evidence: `registry/checkpoints/consolidation_20261021.json`, `registry/checkpoints/alignment_restoration_20261021.json`, `registry/SOURCE_RECOVERY_20261021.json`, `registry/LEGACY_*_20261021.*`, and `docs/architecture/LEGACY_RETIREMENT.md`.
 
-Detailed logs, manifests, snapshots and recovery bundles are in the primary checkout's `outputs/consolidation_20261021`. Lab interpreter: `/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python`. Clean environment path is recorded in `clean_cpu_environment.json`; do not assume a temporary environment survives another machine/session. Numerical pools were limited to two threads. Six existing warnings remain. Final gates:951 CPU tests pass in both environments; architecture202modules/no violations or cycles; lint has no new debt; maps and outside-checkout package checks pass. Run relevant checks again only after relevant changes or for a new merge candidate.
+Detailed logs, manifests, snapshots and recovery bundles are in the primary checkout's `outputs/consolidation_20261021`. Lab interpreter: `/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python`. Clean environment path is recorded in `clean_cpu_environment.json`; do not assume a temporary environment survives another machine/session. Numerical pools were limited to two threads. Six existing warnings remain. Final gates:955 CPU tests pass in both environments; architecture202modules/no violations or cycles; lint has no new debt; maps and outside-checkout package checks pass. Run relevant checks again only after relevant changes or for a new merge candidate.
 
 ## Outstanding gates
 
@@ -43,4 +48,4 @@ Detailed logs, manifests, snapshots and recovery bundles are in the primary chec
 
 ## Exact next step
 
-Read docs/architecture/LEGACY_RETIREMENT.md and the legacy ledger. Migrate the next small set of active project imports with focused tests, then prove loader/identity support for named trusted artifacts before retiring an adapter. If GitHub authentication becomes available, publish the foundation, seqNMF and consumer candidates as sequential PRs (bases main, foundation, then seqNMF), preserve ancestry, require their checks, and promote in that order. Refresh remote refs before publishing. Do not independently merge the ancestor scaffolding/legacy branches.
+Read docs/architecture/LEGACY_RETIREMENT.md and the legacy ledger. Migrate the next small set of active project imports with focused tests, then prove loader/identity support for named trusted artifacts before retiring an adapter. If GitHub authentication becomes available, publish the foundation, seqNMF, consumer and photometry candidates as sequential PRs (bases main, foundation, seqNMF, then consumer), preserve ancestry, require their checks, and promote in that order. Refresh remote refs before publishing. Do not independently merge the ancestor scaffolding/legacy branches.

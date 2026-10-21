@@ -70,8 +70,9 @@ if str(KPMS_UTILS_DIR) not in sys.path:
     sys.path.insert(0, str(KPMS_UTILS_DIR))
 
 import utils.resample_batching as rb
-from syllable_generation.analysis.replications.datta_utils import combined_photometry_and_syllables
 from utils.batch_init import batched_init_model_by_video
+
+from fpcode.photometry.alignment import combined_photometry_and_syllables
 
 # Configuration constants
 EXPERIMENT_DIR = REPO_ROOT / 'studies/multiview_experiments'
