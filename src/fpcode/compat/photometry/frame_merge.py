@@ -180,3 +180,49 @@ def build_fixed_moseq_dfs(
         out.append(slice_df)
 
     return out
+
+
+def build_aligned_moseq_phot(
+    sessions,
+    fixed_moseq_dfs: List[pd.DataFrame],
+) -> List[pd.DataFrame]:
+    """
+    For each n:
+      - phot = combined_photometry_and_syllables(sessions[n])     (index = frame index timeline)
+      - left-align phot to fixed_moseq_dfs[n]['frame_index']
+      - return concat([fixed_moseq_dfs[n], phot_aligned], axis=1)
+    """
+    # Find a template session to copy photometry columns from (for sessions with empty/missing photometry)
+    template_phot_cols = None
+    for s in sessions:
+        if hasattr(s, "photometry") and s.photometry and "470" in s.photometry:
+            if hasattr(s, "syllables") and s.syllables is not None and not s.syllables.empty:
+                try:
+                    phot = combined_photometry_and_syllables(s)
+                    template_phot_cols = list(phot.columns)
+                    break
+                except Exception:
+                    pass
+
+    if template_phot_cols is None:
+        template_phot_cols = ["SystemTimestamp", "signal_0", "signal_1", "signal_2", "signal_3"]
+
+    aligned = []
+    for i, s in enumerate(sessions):
+        moseq_fixed = fixed_moseq_dfs[i]
+        if "frame_index" not in moseq_fixed.columns:
+            raise KeyError("fixed_moseq_dfs[i] must have a 'frame_index' column.")
+
+        if not hasattr(s, "photometry") or not s.photometry or "470" not in s.photometry:
+            print(f"Warning: Session {s.session_id} is missing photometry. Creating NaN photometry columns.")
+            phot_aligned = pd.DataFrame(np.nan, index=moseq_fixed.index, columns=template_phot_cols)
+        else:
+            phot = combined_photometry_and_syllables(s)  # preserved default470 policy; index = frame index
+            phot_aligned = phot.reindex(moseq_fixed["frame_index"].to_numpy())
+
+        out = pd.concat(
+            [moseq_fixed.reset_index(drop=True), phot_aligned.reset_index(drop=True)],
+            axis=1
+        )
+        aligned.append(out)
+    return aligned

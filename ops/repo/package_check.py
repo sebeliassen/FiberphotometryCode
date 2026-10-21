@@ -63,6 +63,8 @@ def main() -> int:
             "import json, sys, fpcode",
             f"assert Path(fpcode.__file__).is_relative_to(Path({str(installation)!r}))",
             "from fpcode.tracking.geometry import rot2d",
+            "from fpcode.photometry.alignment import build_aligned_moseq_phot",
+            "assert build_aligned_moseq_phot([], []) == []",
             "assert rot2d(0).shape == (2, 2)",
             "from fpcode.contracts import FrameSpan, SessionKey, UnitOccurrence, UnitStream, UnitType",
             "from fpcode.behavior.analysis.unit_views import measure_unit_organisation",
