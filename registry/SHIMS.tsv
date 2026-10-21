@@ -490,10 +490,10 @@ syllable_generation/analysis/ulrik_kinematics/scratch/find_optimal_threads.py	st
 syllable_generation/analysis/ulrik_kinematics/scratch/run_ifdn_models.py	studies/kinematics_ulrik/scratch/run_ifdn_models.py	forwarder	ACTIVE	Emits DeprecationWarning
 syllable_generation/analysis/ulrik_kinematics/scratch/test_biophysical_fit.py	studies/kinematics_ulrik/scratch/test_biophysical_fit.py	forwarder	ACTIVE	Emits DeprecationWarning
 syllable_generation/analysis/ulrik_kinematics/scratch/test_debug.py	studies/kinematics_ulrik/scratch/test_debug.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/analysis/utils/__init__.py	studies/session_model_exports/utils/__init__.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/analysis/utils/frame_map_placeholder.py	studies/session_model_exports/utils/frame_map_placeholder.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/analysis/utils/sampling.py	studies/session_model_exports/utils/sampling.py	forwarder	ACTIVE	Emits DeprecationWarning
-syllable_generation/analysis/utils/syll_results.py	studies/session_model_exports/utils/syll_results.py	forwarder	ACTIVE	Emits DeprecationWarning
+syllable_generation/analysis/utils/__init__.py	studies.session_model_exports.utils	namespace_bridge	ACTIVE	Physical parent retains canonical leaf proxies; numerical/export policies unchanged
+syllable_generation/analysis/utils/frame_map_placeholder.py	studies.session_model_exports.utils.frame_map_placeholder	module_proxy	ACTIVE	Physical parent retains canonical leaf proxies; numerical/export policies unchanged
+syllable_generation/analysis/utils/sampling.py	studies.session_model_exports.utils.sampling	module_proxy	ACTIVE	Physical parent retains canonical leaf proxies; numerical/export policies unchanged
+syllable_generation/analysis/utils/syll_results.py	studies.session_model_exports.utils.syll_results	module_proxy	ACTIVE	Physical parent retains canonical leaf proxies; numerical/export policies unchanged
 syllable_generation/diagnostics/alignment/check_nframes_match.py	ops/diagnostics/check_nframes_match.py	forwarder	ACTIVE	Emits DeprecationWarning
 syllable_generation/diagnostics/alignment/check_sampling_rates.py	ops/diagnostics/check_sampling_rates.py	forwarder	ACTIVE	Emits DeprecationWarning
 syllable_generation/diagnostics/alignment/generate_verification_evidence.py	ops/diagnostics/generate_verification_evidence.py	forwarder	ACTIVE	Emits DeprecationWarning
