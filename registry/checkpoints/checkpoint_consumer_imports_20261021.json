@@ -1,0 +1,38 @@
+{
+  "base": "17d1381e8d071d2a73cc9103f979232d2d585f36",
+  "scope": "Three import module substitutions only; runners parsed and never executed",
+  "interpreter": "3.10.19 | packaged by conda-forge | (main, Oct 22 2025, 22:29:10) [GCC 14.3.0]",
+  "rows": [
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_cohort_static_21kp_production.py",
+      "source_before_sha256": "b5f18f2c62a55e3ee30fa2dbb47b85a59033f2b00d2e3394aeb31f26d2a7de22",
+      "source_after_sha256": "0ada6e8ec9e47199abd7fde0772652f2ae86fdbfc33ee82a5dc852224b8622eb",
+      "full_module_ast_after_import_normalization_sha256": "f6299f9252676dce04b22578daba92c3f1b1e149d187e412a150d64593c42041",
+      "function_class_ast_sha256": "404dca9a9b33b0800c8ebea756eb37d0ca43c9548ff03c43095d4be641f48db9",
+      "definition_count": 7,
+      "all_other_module_ast_equal": true,
+      "all_function_class_ast_equal": true
+    },
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_proper_search_and_production.py",
+      "source_before_sha256": "b5aeb1860a204c1ac3abd68ab77d60b6f672e88a730125aef3d95470eaa1b83a",
+      "source_after_sha256": "8febb36d80ba62bae935ec837e8cfe16a87a780af61ce8b90f983e440442aa01",
+      "full_module_ast_after_import_normalization_sha256": "d425bd2ea34473617efc598aa16865b12037eb0a6eb96aae9259ded1d82cd3fc",
+      "function_class_ast_sha256": "0521b2cd8e128cdbd6673f84a7ed39cbc0877b851f732c9493a7b764543fe09c",
+      "definition_count": 4,
+      "all_other_module_ast_equal": true,
+      "all_function_class_ast_equal": true
+    },
+    {
+      "path": "studies/multiview_experiments/02_training_runners/run_kappa_scan_and_production_pipeline.py",
+      "source_before_sha256": "5f23b96739cd1fb9fa480484cece4ee4d370c1efb099cb04ea4f6f98d0496b63",
+      "source_after_sha256": "4c1a494e74f454e9be026edf63e97713365d47dd2d676b7e4dc6bffd859fa6cd",
+      "full_module_ast_after_import_normalization_sha256": "e37b231c62e4bf3cbf9249c5fbdff8c845c15b26dd000f86efddeedee4997b25",
+      "function_class_ast_sha256": "bd782859968068fd54be1ba9b2efdef6938fe69834d7470d209c8281c6409e9e",
+      "definition_count": 6,
+      "all_other_module_ast_equal": true,
+      "all_function_class_ast_equal": true
+    }
+  ],
+  "import_order_note": "Narrow I001 annotations preserve existing import execution order; comments do not change AST."
+}

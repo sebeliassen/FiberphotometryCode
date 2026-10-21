@@ -1,0 +1,458 @@
+{
+  "date": "2026-10-21",
+  "original_main": "67468c199256a7642bcab535acc205f57b54a6e0",
+  "integrated_main_before_this_cleanup": "1ceb47b62a1141f19edcc87d4d32399e7b901da4",
+  "main_merges": [
+    {
+      "pr": 2,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/2",
+      "head": "aac9e7712b098205c567a3f2e08300580bb01c58",
+      "previous_main": "67468c199256a7642bcab535acc205f57b54a6e0",
+      "head_checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:22:30Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39633865016/job/119338975746",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:20:28Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:22:35Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39633847248/job/119338912840",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:20:21Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "status": "Merged and actual tree verified",
+      "merge_commit": "41ec464ddc7c9c8440315334040aed790d9ef5ab",
+      "tree": "e4bebc7700f4eafb177f94ffa07563138945f69a",
+      "normal_merge_parents": [
+        "67468c199256a7642bcab535acc205f57b54a6e0",
+        "aac9e7712b098205c567a3f2e08300580bb01c58"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39634272874,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39634272874",
+          "head_sha": "41ec464ddc7c9c8440315334040aed790d9ef5ab",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "pr": 3,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/3",
+      "head": "78e2dfd034950e243b2473eaf2fb40e8bee01d11",
+      "previous_main": "41ec464ddc7c9c8440315334040aed790d9ef5ab",
+      "head_checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:27:13Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39634635738/job/119341702061",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:25:29Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:27:48Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39634636814/job/119341704816",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:25:30Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:27:38Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39634627615/job/119341675188",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:25:26Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "status": "Merged and actual tree verified",
+      "merge_commit": "ecb9f67e028291d87e4209beede89d7113c30db9",
+      "tree": "0c753820253157681abfffb5506d13842ef27781",
+      "normal_merge_parents": [
+        "41ec464ddc7c9c8440315334040aed790d9ef5ab",
+        "78e2dfd034950e243b2473eaf2fb40e8bee01d11"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39635041399,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39635041399",
+          "head_sha": "ecb9f67e028291d87e4209beede89d7113c30db9",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "pr": 4,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/4",
+      "head": "17d1381e8d071d2a73cc9103f979232d2d585f36",
+      "previous_main": "ecb9f67e028291d87e4209beede89d7113c30db9",
+      "head_checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:32:50Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39635374842/job/119344283502",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:30:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:32:52Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39635375187/job/119344285053",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:30:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:32:43Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39635367125/job/119344258209",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:30:28Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "status": "Merged and actual tree verified",
+      "merge_commit": "c05311707c68f8a5ad25f39798770ddba4f14cfa",
+      "tree": "29e2f7fbab11c90e913100e34ba83c06a85b2f87",
+      "normal_merge_parents": [
+        "ecb9f67e028291d87e4209beede89d7113c30db9",
+        "17d1381e8d071d2a73cc9103f979232d2d585f36"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39635876978,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39635876978",
+          "head_sha": "c05311707c68f8a5ad25f39798770ddba4f14cfa",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "pr": 5,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/5",
+      "head": "7399ad61aebd9473908999d39c1c06bbfcf19c08",
+      "previous_main": "c05311707c68f8a5ad25f39798770ddba4f14cfa",
+      "head_checks": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:37:51Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39636179632/job/119347163447",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:35:50Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:38:10Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39636183237/job/119347176872",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:35:52Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-21T16:38:14Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39636172190/job/119347136918",
+          "name": "functional",
+          "startedAt": "2026-10-21T16:35:48Z",
+          "status": "COMPLETED",
+          "workflowName": "CPU checks"
+        }
+      ],
+      "status": "Merged and actual tree verified",
+      "merge_commit": "1ceb47b62a1141f19edcc87d4d32399e7b901da4",
+      "tree": "a1dfd680aea92f962d6672ef88255d57e5e868f4",
+      "normal_merge_parents": [
+        "c05311707c68f8a5ad25f39798770ddba4f14cfa",
+        "7399ad61aebd9473908999d39c1c06bbfcf19c08"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39636591738,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39636591738",
+          "head_sha": "1ceb47b62a1141f19edcc87d4d32399e7b901da4",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "followup_branch": "codex/checkpoint-consumers",
+  "tested_code_commit": "f672d5cb303593b8f871ec6af92271c2dcd49022",
+  "tested_source_sha256": {
+    "studies/multiview_experiments/02_training_runners/run_cohort_static_21kp_production.py": "0ada6e8ec9e47199abd7fde0772652f2ae86fdbfc33ee82a5dc852224b8622eb",
+    "studies/multiview_experiments/02_training_runners/run_proper_search_and_production.py": "8febb36d80ba62bae935ec837e8cfe16a87a780af61ce8b90f983e440442aa01",
+    "studies/multiview_experiments/02_training_runners/run_kappa_scan_and_production_pipeline.py": "4c1a494e74f454e9be026edf63e97713365d47dd2d676b7e4dc6bffd859fa6cd",
+    "tests/architecture/test_checkpoint_legacy_identity.py": "0d3f88101193db709e5e03436dffbb2a85d6ac3a873d85aafacb22ce8affad08",
+    "src/fpcode/compat/photometry/frame_merge.py": "46d36893b9014b506329afeee3bb3c43d4d9441ff2ae4e2996394b30b0447cbd",
+    "src/fpcode/statistics/divergence.py": "0d4ab545750d6b837abed0680ae57bb8535f81dc3d1ce3b3b8087cab7370758d"
+  },
+  "cpu_passed": {
+    "lab": 958,
+    "isolated_pinned": 958,
+    "warnings_each": 6
+  },
+  "lab_checks": {
+    "head": "f672d5cb303593b8f871ec6af92271c2dcd49022",
+    "results": [
+      {
+        "cwd": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers",
+        "command": [
+          "make",
+          "test-cpu",
+          "PYTHON=/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python"
+        ],
+        "returncode": 0,
+        "seconds": 25.149,
+        "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/final_main_candidate_test-cpu.log"
+      },
+      {
+        "cwd": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers",
+        "command": [
+          "make",
+          "architecture",
+          "PYTHON=/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python"
+        ],
+        "returncode": 0,
+        "seconds": 0.366,
+        "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/final_main_candidate_architecture.log"
+      },
+      {
+        "cwd": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers",
+        "command": [
+          "make",
+          "lint",
+          "PYTHON=/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python"
+        ],
+        "returncode": 0,
+        "seconds": 0.315,
+        "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/final_main_candidate_lint.log"
+      },
+      {
+        "cwd": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers",
+        "command": [
+          "make",
+          "folder-maps-check",
+          "PYTHON=/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python"
+        ],
+        "returncode": 0,
+        "seconds": 1.923,
+        "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/final_main_candidate_folder-maps-check.log"
+      },
+      {
+        "cwd": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers",
+        "command": [
+          "make",
+          "package-check",
+          "PYTHON=/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python"
+        ],
+        "returncode": 0,
+        "seconds": 3.675,
+        "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/final_main_candidate_package-check.log"
+      }
+    ]
+  },
+  "isolated_cpu": {
+    "environment": "/tmp/fpcode-clean-cpu-sr5b37il",
+    "candidate": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers",
+    "system_site_packages": false,
+    "steps": [
+      {
+        "command": [
+          "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+          "-B",
+          "-m",
+          "pip",
+          "install",
+          "--force-reinstall",
+          "--no-deps",
+          "--no-build-isolation",
+          "/tmp/fpcode-consumer-build-oeevl_m1"
+        ],
+        "returncode": 0,
+        "seconds": 0.616,
+        "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/final_main_clean_install.log"
+      },
+      {
+        "command": [
+          "make",
+          "test-cpu",
+          "PYTHON=/tmp/fpcode-clean-cpu-sr5b37il/bin/python"
+        ],
+        "returncode": 0,
+        "seconds": 23.993,
+        "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/final_main_clean_functional.log"
+      },
+      {
+        "command": [
+          "make",
+          "package-check",
+          "PYTHON=/tmp/fpcode-clean-cpu-sr5b37il/bin/python"
+        ],
+        "returncode": 0,
+        "seconds": 3.124,
+        "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/final_main_clean_package.log"
+      },
+      {
+        "command": [
+          "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+          "-B",
+          "-m",
+          "pip",
+          "check"
+        ],
+        "returncode": 0,
+        "seconds": 0.315,
+        "log": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/final_main_clean_dependencies.log"
+      }
+    ],
+    "ok": true
+  },
+  "installed_origins": {
+    "ok": true,
+    "modules": {
+      "fpcode.common.paths": {
+        "path": "/tmp/fpcode-clean-cpu-sr5b37il/lib/python3.10/site-packages/fpcode/common/paths.py",
+        "sha256": "060a23cce7921049571b6ef642bee79871971a8a0101de94938c61cf06a7b0ed"
+      },
+      "fpcode.compat.photometry.frame_merge": {
+        "path": "/tmp/fpcode-clean-cpu-sr5b37il/lib/python3.10/site-packages/fpcode/compat/photometry/frame_merge.py",
+        "sha256": "46d36893b9014b506329afeee3bb3c43d4d9441ff2ae4e2996394b30b0447cbd"
+      },
+      "fpcode.statistics.divergence": {
+        "path": "/tmp/fpcode-clean-cpu-sr5b37il/lib/python3.10/site-packages/fpcode/statistics/divergence.py",
+        "sha256": "0d4ab545750d6b837abed0680ae57bb8535f81dc3d1ce3b3b8087cab7370758d"
+      },
+      "fpcode.behavior.episodes.seqnmf": {
+        "path": "/tmp/fpcode-clean-cpu-sr5b37il/lib/python3.10/site-packages/fpcode/behavior/episodes/seqnmf.py",
+        "sha256": "a18461f7063012b296e63ff31eac3a37e348eca21cf24844f865804d3c930d44"
+      },
+      "fpcode.behavior.analysis.unit_views": {
+        "path": "/tmp/fpcode-clean-cpu-sr5b37il/lib/python3.10/site-packages/fpcode/behavior/analysis/unit_views.py",
+        "sha256": "66dff60b9fb858924ab66d70c28febaee01e42755b1b4a497304350692e3a67b"
+      },
+      "studies.karen_pff_vs_monomer.analysis.reference_seqnmf": {
+        "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers/studies/karen_pff_vs_monomer/analysis/reference_seqnmf.py",
+        "sha256": "b21f2eb338be40299b22e919fa38c99eea85d0fed291914fcb6a1c69a47b1f5a"
+      },
+      "studies.karen_pff_vs_monomer.analysis.run_theme_delivery": {
+        "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers/studies/karen_pff_vs_monomer/analysis/run_theme_delivery.py",
+        "sha256": "b6088b1f1b8d073b520fcc03aeb2285f1fbc416e7bc427a00b04a677e2393e8c"
+      },
+      "studies.karen_pff_vs_monomer.analysis.theme_measurements": {
+        "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers/studies/karen_pff_vs_monomer/analysis/theme_measurements.py",
+        "sha256": "2e8d607183f5deb418ed1c857b8ae3d0295561a0bddee5c7a3756b7bd880688c"
+      },
+      "studies.karen_pff_vs_monomer.analysis.theme_statistics": {
+        "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers/studies/karen_pff_vs_monomer/analysis/theme_statistics.py",
+        "sha256": "f4ad278f458cda3adcd1d82eb41bb21e825fbf12cb5d54f5763274c02507cbfb"
+      },
+      "studies.karen_pff_vs_monomer.analysis.theme_organisation": {
+        "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers/studies/karen_pff_vs_monomer/analysis/theme_organisation.py",
+        "sha256": "6bf6be4b5c6cf9a9a1d0bf641797a685ac2b7af7e8de2c5ade39c05242731709"
+      },
+      "studies.karen_pff_vs_monomer.analysis.execution_similarity": {
+        "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers/studies/karen_pff_vs_monomer/analysis/execution_similarity.py",
+        "sha256": "b47348e9b457fe21aaa8c115fe6e17abaf29938de1b11b69c2fe431f24743bb1"
+      },
+      "studies.karen_pff_vs_monomer.analysis.theme_neighbourhoods": {
+        "path": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/checkpoint-consumers/studies/karen_pff_vs_monomer/analysis/theme_neighbourhoods.py",
+        "sha256": "579d2f20545ae961e881359f631aa360bda019c9ec9b2d5d85a52c37afad7e46"
+      }
+    },
+    "model_backends_loaded": false,
+    "writes_in_test_cwd": [],
+    "head": "f672d5cb303593b8f871ec6af92271c2dcd49022"
+  },
+  "frozen_atlas_source_audit": {
+    "ok": true,
+    "frozen_manifest": "/home/fsp585/Desktop/FiberphotometryCode/.worktrees/karen-seqnmf-delivery/outputs/karen_theme_delivery_20261021/runtime_library_sources.json",
+    "matched": [
+      {
+        "function": "fpcode.behavior.analysis.organisation.exclusive_timeline",
+        "module_path": "src/fpcode/behavior/analysis/organisation.py",
+        "sha256": "7c320f41693dde1ab546f15250710da1027fdefbb8e3bf997ff5afd3a60e0088"
+      },
+      {
+        "function": "fpcode.behavior.analysis.organisation.organisation_arrays",
+        "module_path": "src/fpcode/behavior/analysis/organisation.py",
+        "sha256": "7c320f41693dde1ab546f15250710da1027fdefbb8e3bf997ff5afd3a60e0088"
+      },
+      {
+        "function": "fpcode.behavior.analysis.organisation.organisation_metrics",
+        "module_path": "src/fpcode/behavior/analysis/organisation.py",
+        "sha256": "7c320f41693dde1ab546f15250710da1027fdefbb8e3bf997ff5afd3a60e0088"
+      },
+      {
+        "function": "fpcode.statistics.chain_nulls.frequency_expectations",
+        "module_path": "src/fpcode/statistics/chain_nulls.py",
+        "sha256": "061b9bea55f4b9f2e8b8595871529b4a5fab75c24a4c59d787ca11f94f2bfd89"
+      },
+      {
+        "function": "fpcode.statistics.chain_nulls.simulate_chain_null",
+        "module_path": "src/fpcode/statistics/chain_nulls.py",
+        "sha256": "061b9bea55f4b9f2e8b8595871529b4a5fab75c24a4c59d787ca11f94f2bfd89"
+      },
+      {
+        "function": "fpcode.statistics.behavior_comparisons.adjust_fdr",
+        "module_path": "src/fpcode/statistics/behavior_comparisons.py",
+        "sha256": "c2f953f4a45000acb4d91d47854b2554b09e342af9f4d910f925c4b37da0fd83"
+      }
+    ],
+    "limit": "Source identity across six symbols/three modules; no empirical rerun."
+  },
+  "runner_ast_audit": "registry/checkpoints/checkpoint_consumer_imports_20261021.json",
+  "reviews": {
+    "foundation_findings": "Missing public helper and omitted checkout activation resolved before first main merge.",
+    "merge_conflicts": "Derived maps regenerated; additive package/test expectations retained and independently reviewed.",
+    "followup": "Import-only module substitutions, preserved execution order and 17 unchanged function/class ASTs; both-order identity with backend import blockers."
+  },
+  "remaining_legacy_blockers": [
+    "Deep-research loader uses removed hardcoded source paths and bare loader/processing imports; diagnostic callers execute cohort loading at import.",
+    "Karen/monoamine tracking use bare config and obsolete paths; Jonathan canonical paths require symlink/class identity review.",
+    "Export utility aliases and SHIMS.tsv disagree; some legacy_support/sampling/result targets are missing. Historical densification/extrapolation and result extraction/write policies need separate review. Do not import empirical exporters or load models just for inspection."
+  ],
+  "limits": [
+    "CPU fixture/install/source evidence, not empirical replay or universal scientific/artifact equivalence.",
+    "Hosted CI skips the ffmpeg-dependent synthetic grid video test; both local validation environments exercise it.",
+    "Root core/pipelines/compat/archive and all empirical artifacts retained; recovery coverage still needs named artifact checks.",
+    "This manifest captures the completed original four merges and the tested followup code. Its final merge is recorded by Git history/GitHub and the primary promotion log."
+  ]
+}
