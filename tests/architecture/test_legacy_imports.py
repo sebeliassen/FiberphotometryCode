@@ -1,5 +1,6 @@
 """Exercise real compatibility paths without the study test search paths."""
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -48,3 +49,33 @@ def test_shim_regeneration_preserves_independently_registered_paths(tmp_path, mo
     assert targets["core/fusion_engine.py"] == "fpcode.tracking.fusion"
     assert targets["core/static_fusion_engine.py"] == "fpcode.tracking.static_fusion"
     assert targets["core/camera_correspondence.py"] == "fpcode.tracking.camera_correspondence"
+
+
+def test_documented_checkout_paths_expose_legacy_aliases_outside_repo(tmp_path):
+    environment = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
+    environment["PYTHONPATH"] = os.pathsep.join(str(path) for path in (
+        ROOT / "src", ROOT, ROOT / "compat", ROOT / "vendor/keypoint_moseq_syll"))
+    for name in ("FIBERPHOTOMETRY_ROOT", "FP_DATA_ROOT"):
+        environment.pop(name, None)
+    script = f"""
+import importlib.util
+import sys
+import warnings
+from pathlib import Path
+warnings.simplefilter('ignore', DeprecationWarning)
+root = Path({str(ROOT)!r})
+for name in ('syllable_generation', 'fiberphotometry'):
+    spec = importlib.util.find_spec(name)
+    assert spec is not None and Path(spec.origin) == root / 'compat' / name / '__init__.py'
+for name in ('core', 'pipelines'):
+    assert importlib.util.find_spec(name) is not None
+from fpcode.photometry.alignment import build_aligned_moseq_phot as canonical
+from syllable_generation.analysis.replications.datta_utils import build_aligned_moseq_phot as legacy
+assert legacy is canonical and legacy([], []) == []
+assert Path(sys.modules[canonical.__module__].__file__) == root / 'src/fpcode/compat/photometry/frame_merge.py'
+assert not {{'jax', 'keypoint_moseq', 'torch', 'numba', 'cv2'}} & set(sys.modules)
+"""
+    result = subprocess.run([sys.executable, "-B", "-c", script], cwd=tmp_path,
+                            env=environment, capture_output=True, text=True, timeout=15)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "" and not list(tmp_path.iterdir())
