@@ -78,3 +78,23 @@ def test_check_reports_obsolete_maps_and_regeneration_preserves_other_notes(tmp_
     assert stale.exists()
     assert maps.execute(["ops"], quiet=True) == 0
     assert not stale.exists() and notes.read_text() == "preserved historical notes\n"
+
+
+def test_named_source_data_packages_remain_visible_without_empirical_traversal(tmp_path, monkeypatch):
+    monkeypatch.setattr(maps, "ROOT", tmp_path)
+    source = tmp_path / "studies/photometry_exploration/data"
+    source.mkdir(parents=True)
+    (source / "loading.py").write_text("raise RuntimeError('never import')\ndef load(): pass\n")
+    empirical = tmp_path / "studies/unrelated/data"
+    empirical.mkdir(parents=True)
+    (empirical / "private.py").write_text("not Python")
+    root_data = tmp_path / "data"
+    root_data.mkdir()
+    (root_data / "private.py").write_text("not Python")
+    inventory = maps.collect_directory_tree(["studies", "data"])
+    assert {entry.rel_path for entry in inventory} == {"studies", "studies/photometry_exploration",
+                                                              "studies/photometry_exploration/data"}
+    assert maps.execute(["studies"], quiet=True) == 0
+    assert source / ".folder-map.md" in maps.existing_maps(["studies"])
+    assert not (empirical / ".folder-map.md").exists()
+    assert not (root_data / ".folder-map.md").exists()

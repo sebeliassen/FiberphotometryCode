@@ -22,3 +22,11 @@ Git fetch works. A dry-run push failed because GitHub HTTPS credentials are unav
 ## Next operation
 
 Checkpoint explicitly reviewed source files in the original branches, create preservation tags and a verified all-refs Git bundle, then prepare codex/main-foundation in a separate worktree from origin/main. Keep main unchanged until the integration candidate has passed its gates and can be reviewed/published. Later local candidates can be stacked while remote publication remains unavailable.
+
+## Foundation candidate validated
+
+Isolated worktree .worktrees/main-foundation / codex/main-foundation merges the preserved modular checkpoint into origin/main without changing main. A clean checkout revealed20 ignored Python source files in photometry data loading and language-model data/models. registry/SOURCE_RECOVERY_20261021.json records original hashes and numerical-definition baselines. All original import sets and numerical definitions are preserved; changes are import ordering, whitespace and explicit retained module attributes. Git exceptions expose source only; test payloads remain ignored. Navigation recognizes the two named source data packages while pruning empirical directories/symlinks.
+
+Final foundation checks:850CPU tests passed/6existingwarnings; architecture, maintained lint(no newdebt), maps149directories and installed-wheel checks passed. Eight focused recovery/navigation tests passed. No lint inventory/golden fixture was regenerated. See primary outputs/consolidation_20261021/foundation_recovered_*.log. Source checkpoints31326cc/2c43b75 and all three tags restore from the verified703830120-byte Gitbundle.
+
+NEXT: checkpoint this source recovery, then create a stacked codex/main-seqnmf candidate and merge preserved delivery2c43b75. Resolve task-state notes without losing dated provenance. Keep main unchanged while GitHub publication remains unavailable.

@@ -1,3 +1,13 @@
+## Clean-checkout source recovery validated for foundation (2026-10-21)
+
+Consolidation candidate is codex/main-foundation in .worktrees/main-foundation.
+Recovered20previouslyignoredsourcefiles from preservedprimarysnapshot; original
+imports/numericalASTs retained. NarrowGitignore/source-navigation exceptions and
+regressions added; no payload inclusion, lintinventory refresh or algorithmchange.
+CPU850/6warnings; architecture/lint/maps149/package checks PASS. Original sources,
+artifacts and viewers unchanged. See CONSOLIDATION_PROGRESS_20261021.md.
+NEXT checkpointfoundationrepair, then stacked preservedseqnmf merge; main untouched.
+
 ## Consolidation execution started; recovery snapshots ready (2026-10-21)
 
 User authorised executing the staged consolidation plan with resumable checkpoints.

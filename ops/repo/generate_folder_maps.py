@@ -59,6 +59,20 @@ EXCLUDE_DIRS = {
     "scratch",
 }
 
+# These are Python source packages, despite their empirical-looking names.
+SOURCE_PACKAGE_DIRECTORIES = {
+    Path("studies/photometry_exploration/data"),
+    Path("studies/language_models/lib/data"),
+}
+
+
+def excluded_directory(path: Path) -> bool:
+    """Prune empirical directories while retaining explicitly named source packages."""
+    parts = path.relative_to(ROOT).parts
+    return any(part in EXCLUDE_DIRS and Path(*parts[:index + 1]) not in SOURCE_PACKAGE_DIRECTORIES
+               for index, part in enumerate(parts))
+
+
 # Curated tags for canonical modules in src/fpcode
 CANONICAL_TAGS: dict[str, list[str]] = {
     "fpcode": ["computational-neuroscience", "fiberphotometry", "keypoint-moseq", "tracking", "pipelines"],
@@ -493,16 +507,16 @@ def existing_maps(target_roots: Sequence[str]) -> set[Path]:
     visible_files = repository_files(target_roots)
     if visible_files is not None:
         return {path for path in visible_files if path.name == ".folder-map.md"
-                and not any(part in EXCLUDE_DIRS for part in path.relative_to(ROOT).parts)
+                and not excluded_directory(path)
                 and not any(parent.is_symlink() for parent in path.parents if parent.is_relative_to(ROOT))
                 and not path.is_symlink() and path.is_file()}
     found = set()
     for target in target_roots:
         root = ROOT / target
-        if root.is_symlink():
+        if root.is_symlink() or excluded_directory(root):
             continue
         for folder, dirs, files in os.walk(root, followlinks=False):
-            dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS and not (Path(folder) / d).is_symlink()]
+            dirs[:] = [d for d in dirs if not excluded_directory(Path(folder) / d) and not (Path(folder) / d).is_symlink()]
             path = Path(folder) / ".folder-map.md"
             if ".folder-map.md" in files and not path.is_symlink():
                 found.add(path)
@@ -521,7 +535,7 @@ def collect_directory_tree(target_roots: Sequence[str]) -> list[DirectoryInfo]:
 
     for root_str in target_roots:
         root_path = ROOT / root_str
-        if not root_path.exists():
+        if not root_path.exists() or excluded_directory(root_path):
             continue
 
         # Traverse all directories under root_path
@@ -529,7 +543,7 @@ def collect_directory_tree(target_roots: Sequence[str]) -> list[DirectoryInfo]:
         if root_path.is_symlink():
             continue
         for folder, dirs, _files in os.walk(root_path, followlinks=False):
-            dirs[:] = sorted(d for d in dirs if d not in EXCLUDE_DIRS and not (Path(folder) / d).is_symlink()
+            dirs[:] = sorted(d for d in dirs if not excluded_directory(Path(folder) / d) and not (Path(folder) / d).is_symlink()
                              and (visible_dirs is None or Path(folder) / d in visible_dirs))
             candidate_paths.append(Path(folder))
 

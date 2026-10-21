@@ -175,3 +175,18 @@ SWE_ORGANIZATION_BOT_PROMPT.md
 # Accepted, small rollback/validation manifests are source-controlled.
 !registry/checkpoints/
 !registry/checkpoints/**
+
+# Python source packages whose names overlap empirical data/model exclusions.
+# Keep payloads ignored; expose only Python source and generated navigation.
+!studies/photometry_exploration/data/
+studies/photometry_exploration/data/*
+!studies/photometry_exploration/data/*.py
+!studies/photometry_exploration/data/.folder-map.md
+!studies/language_models/lib/data/
+studies/language_models/lib/data/*
+!studies/language_models/lib/data/*.py
+!studies/language_models/lib/data/.folder-map.md
+!studies/language_models/lib/models/
+studies/language_models/lib/models/*
+!studies/language_models/lib/models/*.py
+!studies/language_models/lib/models/.folder-map.md
