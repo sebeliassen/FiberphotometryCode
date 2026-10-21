@@ -14,17 +14,18 @@ here or reset/clean/switch the preserved delivery worktree. Main now also contai
 current handoff/presentation, retirement ledger and detailed source/validation
 records. Main's CURRENT retains the complete historical scientific delivery notes.
 
-Full final CPU958 passes in lab and isolated pinned environments, six existing
+Full final CPU 958 passes in lab and isolated pinned environments, six existing
 warnings each. Architecture/lint/maps/wheel/dependencies/source-origin checks pass;
-head and PR checks pass, with one hosted ffmpeg-dependent video skip covered in
-both local suites. Current final main workflow/merge URLs and exact state are in
+head, PR and every actual merged-main workflow pass, with one hosted ffmpeg-
+dependent video skip covered in both local suites. Final main workflow/merge URLs
+and exact state are in
 primary outputs/consolidation_20261021/promotion_20261021.json. Existing golden
 fixtures and lint baseline are unchanged. Six frozen runtime symbols across three
 modules retain their source hashes; no empirical rerun or acceptance is implied.
 
 Foundation review fixed the missing historical alignment helper before promotion
 and documented explicit checkout activation for legacy imports. Three additional
-checkpoint patch callers now use canonical imports; all17 runner function/class
+checkpoint patch callers now use canonical imports; all 17 runner function/class
 ASTs and import execution order remain intact. Read main's
 registry/checkpoints/main_promotion_20261021.json and
 checkpoint_consumer_imports_20261021.json for exact evidence and limits.

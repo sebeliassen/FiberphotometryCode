@@ -15,7 +15,6 @@ Original research branches and source checkpoints remain recoverable.
 | [#3](https://github.com/sebeliassen/FiberphotometryCode/pull/3) | `ecb9f67` | `41ec464` | `78e2dfd` |
 | [#4](https://github.com/sebeliassen/FiberphotometryCode/pull/4) | `c053117` | `ecb9f67` | `17d1381` |
 | [#5](https://github.com/sebeliassen/FiberphotometryCode/pull/5) | `1ceb47b` | `c053117` | `7399ad6` |
-
 | [#6](https://github.com/sebeliassen/FiberphotometryCode/pull/6) | `50a722c` | `1ceb47b` | `0c73ed3` |
 
 Every merge has two preserved parents and a tree identical to its passing head.
@@ -88,3 +87,5 @@ is still in progress. Do not interpret a green CPU suite as authority to delete
 legacy roots, load arbitrary pickles or launch empirical maintenance workloads.
 
 Final full suites: 958 pass in lab and isolated pinned CPU environments (six existing warnings each), all repository/package/origin gates pass. See primary `outputs/consolidation_20261021/promotion_20261021.json` for the final main workflow and `main_bundle_restore_check.json` for the latest recovery proof. Main is available in `.worktrees/main-integration`; preserved primary/delivery sources and viewers remain intact.
+
+Final merged-main workflow also passes: [CPU checks](https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39638140445). Hosted result:957 passed,1 ffmpeg-dependent skip,6 existing warnings; local suites958 pass each. The integrated source remains main `50a722c6a129f21769d3b454f632729e8f2c0cca`.

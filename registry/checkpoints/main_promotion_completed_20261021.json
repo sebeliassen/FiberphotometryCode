@@ -1,0 +1,137 @@
+{
+  "date": "2026-10-21",
+  "main": "50a722c6a129f21769d3b454f632729e8f2c0cca",
+  "previous_main": "67468c199256a7642bcab535acc205f57b54a6e0",
+  "local_main_fast_forward": {
+    "previous": "67468c199256a7642bcab535acc205f57b54a6e0",
+    "current": "50a722c6a129f21769d3b454f632729e8f2c0cca",
+    "fast_forward": true
+  },
+  "all_actual_main_workflows_successful": true,
+  "merges": [
+    {
+      "pr": 2,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/2",
+      "head": "aac9e7712b098205c567a3f2e08300580bb01c58",
+      "previous_main": "67468c199256a7642bcab535acc205f57b54a6e0",
+      "merge_commit": "41ec464ddc7c9c8440315334040aed790d9ef5ab",
+      "tree": "e4bebc7700f4eafb177f94ffa07563138945f69a",
+      "normal_merge_parents": [
+        "67468c199256a7642bcab535acc205f57b54a6e0",
+        "aac9e7712b098205c567a3f2e08300580bb01c58"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39634272874,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39634272874",
+          "head_sha": "41ec464ddc7c9c8440315334040aed790d9ef5ab",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "pr": 3,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/3",
+      "head": "78e2dfd034950e243b2473eaf2fb40e8bee01d11",
+      "previous_main": "41ec464ddc7c9c8440315334040aed790d9ef5ab",
+      "merge_commit": "ecb9f67e028291d87e4209beede89d7113c30db9",
+      "tree": "0c753820253157681abfffb5506d13842ef27781",
+      "normal_merge_parents": [
+        "41ec464ddc7c9c8440315334040aed790d9ef5ab",
+        "78e2dfd034950e243b2473eaf2fb40e8bee01d11"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39635041399,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39635041399",
+          "head_sha": "ecb9f67e028291d87e4209beede89d7113c30db9",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "pr": 4,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/4",
+      "head": "17d1381e8d071d2a73cc9103f979232d2d585f36",
+      "previous_main": "ecb9f67e028291d87e4209beede89d7113c30db9",
+      "merge_commit": "c05311707c68f8a5ad25f39798770ddba4f14cfa",
+      "tree": "29e2f7fbab11c90e913100e34ba83c06a85b2f87",
+      "normal_merge_parents": [
+        "ecb9f67e028291d87e4209beede89d7113c30db9",
+        "17d1381e8d071d2a73cc9103f979232d2d585f36"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39635876978,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39635876978",
+          "head_sha": "c05311707c68f8a5ad25f39798770ddba4f14cfa",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "pr": 5,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/5",
+      "head": "7399ad61aebd9473908999d39c1c06bbfcf19c08",
+      "previous_main": "c05311707c68f8a5ad25f39798770ddba4f14cfa",
+      "merge_commit": "1ceb47b62a1141f19edcc87d4d32399e7b901da4",
+      "tree": "a1dfd680aea92f962d6672ef88255d57e5e868f4",
+      "normal_merge_parents": [
+        "c05311707c68f8a5ad25f39798770ddba4f14cfa",
+        "7399ad61aebd9473908999d39c1c06bbfcf19c08"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39636591738,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39636591738",
+          "head_sha": "1ceb47b62a1141f19edcc87d4d32399e7b901da4",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "pr": 6,
+      "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/6",
+      "head": "0c73ed3481dd598e3ee11b3c13ff25fcfc215eab",
+      "previous_main": "1ceb47b62a1141f19edcc87d4d32399e7b901da4",
+      "merge_commit": "50a722c6a129f21769d3b454f632729e8f2c0cca",
+      "tree": "6809bbe5a524c638a682b8f05403a2ba086ad082",
+      "normal_merge_parents": [
+        "1ceb47b62a1141f19edcc87d4d32399e7b901da4",
+        "0c73ed3481dd598e3ee11b3c13ff25fcfc215eab"
+      ],
+      "source_tree_equals_tested_head": true,
+      "main_workflows": [
+        {
+          "id": 39638140445,
+          "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39638140445",
+          "head_sha": "50a722c6a129f21769d3b454f632729e8f2c0cca",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "lab_passed": 958,
+    "isolated_passed": 958,
+    "hosted_passed": 957,
+    "hosted_skipped": 1,
+    "warnings_each": 6,
+    "hosted_skip": "ffmpeg-dependent synthetic grid encoding; passed locally in both environments."
+  },
+  "detailed_main_manifest": "registry/checkpoints/main_promotion_20261021.json on main",
+  "limits": [
+    "Source/CPU/install evidence; no empirical rerun, universal artifact guarantee or scientific acceptance.",
+    "Legacy directories retained; large empirical recovery/feedback coverage still incomplete."
+  ],
+  "next": "Start new code from main. Repair loader/configuration/export-alias paths with focused evidence, then named artifact/physical-entrypoint/recovery gates before any legacy directory deletion."
+}
