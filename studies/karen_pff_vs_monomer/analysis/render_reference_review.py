@@ -66,7 +66,10 @@ def normalize_descriptors(values, calibration):
     # execution_descriptors flattens 32x10 latent, 32x2 displacement, 32x2 heading, log duration.
     if values.shape[1] != 449:
         raise ValueError("expected 10 original latent channels and 32 phase samples")
-    latent = calibration[:, :320].reshape(-1, 32, 10)
+    # Calibrate in original feature units, then retain the descriptor's block
+    # normalization when applying the scale. Estimating this IQR in normalized
+    # units would cancel the latent block's 1/sqrt(4*320) factor.
+    latent = calibration[:, :320].reshape(-1, 32, 10) * math.sqrt(4 * 320)
     latent_iqr = np.diff(np.quantile(latent, [.25, .75], axis=(0, 1)), axis=0)[0]
     latent_iqr = np.maximum(latent_iqr, 1e-6)
     # Undo existing equal-block normalisation only to express native-pixel path scale.

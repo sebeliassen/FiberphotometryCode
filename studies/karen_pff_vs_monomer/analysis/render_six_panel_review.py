@@ -154,9 +154,13 @@ def write_gallery(output, manifest, results):
     for f in manifest["families"]:
         if f["stem"] in ready:
             families.append(dict(**f, movies=ready[f["stem"]]))
+    expected = len(manifest["families"]) * len(manifest.get("modes", MODES))
     data = dict(package=manifest["labels_key"], legacy_key=manifest["legacy_labels_key"],
                 families=families, names=manifest["annotation_mappings"]["karen"],
-                complete=len(results) == 147, expected_movies=147, ready_movies=len(results))
+                complete=len(results) == expected, expected_movies=expected, ready_movies=len(results),
+                reference_key=manifest.get("reference_labels_key"),
+                reference_labels=manifest.get("reference_labels", {}),
+                description=manifest.get("review_description", "Model parameters and rankings are unchanged."))
     template = Path(__file__).with_name("six_panel_gallery.html").read_text()
     page = template.replace("__REVIEW_DATA__", json.dumps(data).replace("<", "\\u003c"))
     temporary = output / "index.html.tmp"

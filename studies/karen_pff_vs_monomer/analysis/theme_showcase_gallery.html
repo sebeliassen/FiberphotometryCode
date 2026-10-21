@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Karen — theme neighbourhood review</title>
+  <style>
+    :root { color-scheme: dark; font: 17px/1.5 system-ui, sans-serif; background: #14171d; color: #e9edf5; }
+    * { box-sizing: border-box; }
+    body { max-width: 1720px; padding: 24px; margin: auto; }
+    h1, h2, h3, p { margin: 0 0 .75rem; }
+    h1 { font-size: 1.8rem; } h2 { font-size: 1.35rem; } h3 { font-size: 1.1rem; }
+    a { color: #91c6ff; } .muted { color: #bdc5d4; } .small { font-size: .86rem; }
+    .notice, .card { border: 1px solid #485264; border-radius: 8px; padding: 16px; margin-bottom: 16px; background: #1c222c; }
+    .notice { border-left: 4px solid #78b5ec; }
+    .controls, .actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin: 16px 0; }
+    label { display: block; } label > span { display: block; margin-bottom: 4px; }
+    select, button, textarea { font: inherit; color: inherit; background: #242d3b; border: 1px solid #657287; border-radius: 5px; padding: 8px 12px; }
+    select { max-width: 100%; } button { cursor: pointer; } button:hover { background: #34435a; }
+    button:disabled { opacity: .5; cursor: default; } textarea { width: 100%; resize: vertical; min-height: 100px; }
+    :focus-visible { outline: 3px solid #ffc96c; outline-offset: 2px; }
+    #themeSelect { min-width: min(500px, 80vw); }
+    #movie { width: auto; height: auto; max-width: 100%; max-height: 83vh; margin: auto; background: #000; display: block; }
+    .rowPlayer { margin: 24px 0; }
+    .rowMovie { display: block; width: 100%; height: auto; aspect-ratio: 9 / 4; background: #000; }
+    .rowWrap { background: #000; }
+    .rowWrap:fullscreen { width: 100vw; height: 100vh; display: grid; place-items: center; }
+    .rowWrap:fullscreen video { width: 100%; height: 100%; object-fit: contain; }
+    #movieWrap { position: relative; background: #000; border-radius: 8px; overflow: hidden; }
+    #movieWrap:fullscreen { display: grid; place-items: center; width: 100%; height: 100%; }
+    #movieWrap:fullscreen video { max-height: 100vh; }
+    #movieUnavailable { padding: 30px; background: #272c36; }
+    #playbackStatus { min-height: 1.5em; }
+    .regions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .region { min-width: 0; } .region select { width: 100%; } .region label { margin: 12px 0; }
+    .region.active { border-color: #86baff; } .region dt { color: #c2ccda; }
+    .region dd { margin: 0 0 8px; overflow-wrap: anywhere; }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px 25px; margin-bottom: 12px; }
+    #distributionPlot { display: block; width: min(100%, 1100px); height: auto; background: white; }
+    #saveStatus { min-height: 1.5em; } .error { color: #ffb5ad; } .success { color: #afdfaf; }
+    #importFile { display: none; } details { margin: 16px 0; } summary { cursor: pointer; }
+    [hidden] { display: none !important; }
+    @media (max-width: 850px) { body { padding: 14px; } .regions { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Five themes · independent row players (v2)</h1>
+    <p>Each row shows an exemplar and two nearby executions. Compare similarity within a row, then the useful differences between rows.</p>
+    <div class="notice">
+      <strong>These are selected illustrations of recurring variations.</strong>
+      Three separated anchors do not establish three biological clusters. Local-radius counts describe nearby executions; nearest-anchor partitions assign the whole eligible population. The tight examples in a row do not represent every execution counted.
+      <p class="small muted" style="margin-top:8px;margin-bottom:0">Natural playback speed. Position and heading are fixed at onset; the camera then stays still. The centre dot follows the current source syllable. Each panel finishes independently.</p>
+    </div>
+    <p id="readiness" class="small muted"></p>
+  </header>
+
+  <div class="controls">
+    <label><span>Theme</span><select id="themeSelect" aria-label="Theme"></select></label>
+    <label><span>View</span><select id="viewSelect" aria-label="View"></select></label>
+    <button type="button" id="previousTheme">Previous theme</button>
+    <button type="button" id="nextTheme">Next theme</button>
+    <button type="button" id="replay">Replay</button>
+    <button type="button" id="fullscreen">Fullscreen</button>
+  </div>
+
+  <main>
+    <h2 id="themeTitle"></h2>
+    <p id="stageLabels" class="muted"></p>
+    <p id="themeCaution" class="small"></p>
+    <div id="themeStats" class="stats small"></div>
+    <p id="viewCaption"></p>
+    <div id="rowPlayers"></div>
+    <div id="movieWrap">
+      <video id="movie" controls playsinline preload="metadata" aria-label="Selected theme movie"></video>
+      <p id="movieUnavailable" hidden>This movie is not available yet. Its selection and feedback fields remain accessible below.</p>
+    </div>
+    <p id="playbackStatus" class="small muted" aria-live="polite"></p>
+    <p class="small"><a id="movieLink" download>Download this movie</a></p>
+
+    <div class="card">
+      <h2>Feedback for this theme</h2>
+      <p class="small muted">Do the rows show useful versions of one theme, near-duplicates, or different behaviours grouped together? All fields are optional.</p>
+      <label for="themeNote"><span>Overall theme note</span></label>
+      <textarea id="themeNote" maxlength="12000" placeholder="What does this theme capture? What is missing or mixed together?"></textarea>
+    </div>
+    <div id="regions" class="regions"></div>
+
+    <details id="distributionDetails" open>
+      <summary>Where these examples sit in the population</summary>
+      <p class="small muted">Use support and the similarity distribution to judge how much variation the selected rows leave out. The nearest-anchor regions are descriptive partitions, not accepted subtypes.</p>
+      <a id="plotLink" target="_blank" rel="noopener"><img id="distributionPlot" alt="Theme similarity distribution with selected neighbourhoods marked" loading="lazy"></a>
+      <p id="plotUnavailable" class="small muted" hidden>No distribution plot is available for this theme.</p>
+    </details>
+    <p><a id="previousRandom" hidden>Open the previous p100 / P80 / random movies</a></p>
+  </main>
+
+  <footer class="card">
+    <h2>Save your feedback</h2>
+    <p class="small muted">Feedback saves in this browser for this exact package. Export a JSON file before changing browser, address or computer. Import merges matching theme/region notes after validating the entire file.</p>
+    <div class="actions">
+      <button id="exportLabels" type="button">Export feedback JSON</button>
+      <button id="importLabels" type="button">Import feedback JSON</button>
+      <input id="importFile" type="file" accept="application/json,.json">
+    </div>
+    <p id="saveStatus" class="small" role="status" aria-live="polite"></p>
+    <p id="packageIdentity" class="small muted"></p>
+  </footer>
+
+  <script>
+  'use strict';
+  const DATA = __DATA__;
+  const SCHEMA_VERSION = 1;
+  const KIND = 'karen_theme_neighbourhood_feedback';
+  const families = Array.isArray(DATA.families) ? DATA.families : [];
+  const byStem = new Map(families.map(f => [String(f.stem), f]));
+  const storageKey = `${KIND}:${DATA.package}:${DATA.source_manifest_sha256}`;
+  const coherenceChoices = ['', 'coherent', 'mostly coherent', 'mixed', 'unclear'];
+  const differenceChoices = ['', 'usefully different', 'near-duplicate', 'different behaviour', 'unclear'];
+  const $ = id => document.getElementById(id);
+  const text = (parent, tag, value, className = '') => {
+    const element = document.createElement(tag);
+    element.textContent = String(value ?? '');
+    if (className) element.className = className;
+    parent.appendChild(element);
+    return element;
+  };
+  const fresh = () => ({schema_version: SCHEMA_VERSION, kind: KIND, package: DATA.package,
+    source_manifest_sha256: DATA.source_manifest_sha256, updated_at: '', labels: {}});
+  let feedback = fresh();
+  let activeIndex = 0;
+  let activeView = 'rows';
+  const viewSessionKey = `${storageKey}:chosen-views`;
+  const viewsByTheme = new Map();
+  try {
+    const savedViews = JSON.parse(sessionStorage.getItem(viewSessionKey) || '{}');
+    if (savedViews && typeof savedViews === 'object' && !Array.isArray(savedViews)) {
+      Object.entries(savedViews).forEach(([stem, view]) => {
+        const family = byStem.get(stem);
+        if (family && typeof view === 'string' && (view === 'rows' || view === 'overview' ||
+            (family.neighbourhoods || []).some(region => String(region.id) === view))) viewsByTheme.set(stem, view);
+      });
+    }
+  } catch (error) { /* In-memory choices still work when tab storage is unavailable. */ }
+  function rememberView(family) {
+    viewsByTheme.set(family.stem, activeView);
+    try { sessionStorage.setItem(viewSessionKey, JSON.stringify(Object.fromEntries(viewsByTheme))); }
+    catch (error) { /* Keep the choice in memory for this page. */ }
+  }
+  let storageFailure = '';
+
+  function message(value, error = false) {
+    $('saveStatus').textContent = value;
+    $('saveStatus').className = `small ${error ? 'error' : 'success'}`;
+  }
+  function relativeFile(value) {
+    if (typeof value !== 'string' || !value || value.startsWith('/') || value.includes('\\') ||
+        value.includes(':') || value.split('/').some(part => part === '..') || /[\u0000-\u001f]/.test(value)) return '';
+    return value;
+  }
+  function recordFor(family) {
+    if (!Object.prototype.hasOwnProperty.call(feedback.labels, family.stem)) {
+      feedback.labels[family.stem] = {theme_note: '', neighbourhoods: {}};
+    }
+    return feedback.labels[family.stem];
+  }
+  function regionFor(family, region) {
+    const record = recordFor(family);
+    const id = String(region.id);
+    if (!Object.prototype.hasOwnProperty.call(record.neighbourhoods, id)) {
+      record.neighbourhoods[id] = {coherence: '', difference: '', note: ''};
+    }
+    return record.neighbourhoods[id];
+  }
+  function save() {
+    feedback.updated_at = new Date().toISOString();
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(feedback));
+      storageFailure = '';
+      message(`Saved in this browser at ${new Date().toLocaleTimeString()}. Export JSON for a portable copy.`);
+    } catch (error) {
+      storageFailure = String(error.message || error);
+      message('Browser storage is unavailable. Your current notes remain here; use Export feedback JSON.', true);
+    }
+  }
+  function plain(value) {
+    return value !== null && typeof value === 'object' && !Array.isArray(value) &&
+      (Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null);
+  }
+  function exactKeys(value, permitted, required = permitted) {
+    if (!plain(value) || Object.keys(value).some(key => !permitted.includes(key)) ||
+        required.some(key => !Object.prototype.hasOwnProperty.call(value, key))) throw new Error('Unexpected feedback fields.');
+  }
+  function boundedString(value, field, maximum = 12000) {
+    if (typeof value !== 'string' || value.length > maximum) throw new Error(`Invalid ${field}.`);
+    return value;
+  }
+  function validateImport(value) {
+    exactKeys(value, ['schema_version', 'kind', 'package', 'source_manifest_sha256', 'updated_at', 'labels']);
+    if (value.schema_version !== SCHEMA_VERSION || value.kind !== KIND || value.package !== DATA.package ||
+        value.source_manifest_sha256 !== DATA.source_manifest_sha256) {
+      throw new Error('This feedback belongs to a different package or source manifest. Nothing was imported.');
+    }
+    boundedString(value.updated_at, 'timestamp', 100);
+    if (!plain(value.labels)) throw new Error('Invalid theme labels.');
+    const clean = fresh();
+    clean.updated_at = value.updated_at;
+    for (const [stem, record] of Object.entries(value.labels)) {
+      const family = byStem.get(stem);
+      if (!family) throw new Error(`Unknown theme: ${stem}.`);
+      exactKeys(record, ['theme_note', 'neighbourhoods']);
+      const cleaned = {theme_note: boundedString(record.theme_note, 'theme note'), neighbourhoods: {}};
+      if (!plain(record.neighbourhoods)) throw new Error('Invalid neighbourhood labels.');
+      const ids = new Set((family.neighbourhoods || []).map(region => String(region.id)));
+      for (const [id, label] of Object.entries(record.neighbourhoods)) {
+        if (!ids.has(id)) throw new Error(`Unknown neighbourhood: ${id}.`);
+        exactKeys(label, ['coherence', 'difference', 'note']);
+        if (!coherenceChoices.includes(label.coherence) || !differenceChoices.includes(label.difference)) {
+          throw new Error('Invalid feedback choice.');
+        }
+        cleaned.neighbourhoods[id] = {coherence: label.coherence, difference: label.difference,
+          note: boundedString(label.note, 'neighbourhood note')};
+      }
+      clean.labels[stem] = cleaned;
+    }
+    return clean;
+  }
+  function loadSaved() {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) { feedback = validateImport(JSON.parse(saved)); message('Restored feedback for this exact package.'); }
+      else message('No saved feedback yet. Notes will save automatically in this browser.');
+    } catch (error) {
+      message(`Could not restore browser feedback: ${error.message}. Existing storage has been left intact.`, true);
+    }
+  }
+  function choices(parent, caption, values, current, onChange) {
+    const label = document.createElement('label');
+    text(label, 'span', caption);
+    const select = document.createElement('select');
+    select.setAttribute('aria-label', caption);
+    values.forEach(value => { const option = new Option(value || 'Not rated', value); select.add(option); });
+    select.value = current;
+    select.addEventListener('change', () => onChange(select.value));
+    label.appendChild(select); parent.appendChild(label);
+  }
+  function formatValue(value) {
+    if (value === null || value === undefined) return 'Unavailable';
+    if (typeof value === 'number') return Number.isFinite(value) ? value.toLocaleString(undefined, {maximumFractionDigits: 3}) : 'Unavailable';
+    if (Array.isArray(value)) return value.map(formatValue).join(' · ');
+    if (typeof value === 'object') return Object.entries(value).map(([key, val]) => `${key.replaceAll('_', ' ')}: ${formatValue(val)}`).join('; ');
+    return String(value);
+  }
+  function showRegions(family) {
+    $('regions').replaceChildren();
+    (family.neighbourhoods || []).forEach((region, index) => {
+      const card = document.createElement('section');
+      card.className = `card region${activeView === String(region.id) ? ' active' : ''}`;
+      card.dataset.region = String(region.id);
+      text(card, 'h3', region.label || `Neighbourhood ${index + 1}`);
+      text(card, 'p', region.selection_kind || 'Selected local exemplar neighbourhood', 'small muted');
+      text(card, 'p', `Local-radius support: ${formatValue(region.support_calls)} executions / ${formatValue(region.support_mice)} mice${region.support_share == null ? '' : ` · ${formatValue(100 * region.support_share)}% of eligible executions`}`, 'small');
+      if (region.assigned_calls != null) {
+        text(card, 'p', `Nearest-anchor partition: ${formatValue(region.assigned_calls)} executions${region.assigned_share == null ? '' : ` · ${formatValue(100 * region.assigned_share)}% of eligible executions`}`, 'small muted');
+      }
+      if (region.summary) {
+        text(card, 'p', 'Local-radius descriptions · median, 10th and 90th percentiles', 'small muted');
+        if (plain(region.summary)) {
+          const dl = document.createElement('dl'); dl.className = 'small';
+          Object.entries(region.summary).forEach(([key, value]) => {
+            text(dl, 'dt', key.replaceAll('_', ' ')); text(dl, 'dd', formatValue(value));
+          });
+          card.appendChild(dl);
+        } else text(card, 'p', formatValue(region.summary), 'small');
+      }
+      const button = text(card, 'button', 'Watch this row'); button.type = 'button';
+      button.addEventListener('click', () => { activeView = String(region.id); $('viewSelect').value = activeView; showMovie(); showRegions(family); });
+      const label = regionFor(family, region);
+      choices(card, 'Similarity within this row', coherenceChoices, label.coherence, value => { label.coherence = value; save(); });
+      choices(card, 'Difference from the other rows', differenceChoices, label.difference, value => { label.difference = value; save(); });
+      const noteLabel = document.createElement('label'); text(noteLabel, 'span', 'What do you see?');
+      const area = document.createElement('textarea'); area.rows = 3; area.maxLength = 12000; area.value = label.note;
+      area.placeholder = 'Shared behaviour, useful variation, mismatches…';
+      area.addEventListener('input', () => { label.note = area.value; save(); });
+      noteLabel.appendChild(area); card.appendChild(noteLabel); $('regions').appendChild(card);
+    });
+  }
+  function showRowPlayers(family) {
+    document.querySelectorAll('.rowMovie').forEach(video => { video.pause(); video.removeAttribute('src'); video.load(); });
+    $('rowPlayers').replaceChildren();
+    (family.neighbourhoods || []).forEach((region, index) => {
+      const section = document.createElement('section'); section.className = 'rowPlayer'; section.dataset.row = String(region.id);
+      text(section, 'h3', `${region.label || 'Neighbourhood ' + (index + 1)} · exemplar + two neighbours`);
+      const wrap = document.createElement('div'); wrap.className = 'rowWrap';
+      const video = document.createElement('video'); video.className = 'rowMovie'; video.controls = true;
+      video.playsInline = true; video.preload = 'metadata'; video.setAttribute('aria-label', `${family.theme_name}: ${region.label}`);
+      const filename = relativeFile(region.movie && region.movie.filename);
+      if (filename) { video.src = filename; video.poster = filename.replace(/\.mp4$/, '.png'); }
+      video.addEventListener('play', () => { document.querySelectorAll('video').forEach(other => { if (other !== video) other.pause(); }); });
+      wrap.appendChild(video); section.appendChild(wrap);
+      const controls = document.createElement('div'); controls.className = 'actions';
+      const replay = text(controls, 'button', 'Replay this row'); replay.type = 'button'; replay.disabled = !filename;
+      replay.addEventListener('click', async () => { try { video.currentTime = 0; await video.play(); } catch (error) { message(error.message, true); } });
+      const full = text(controls, 'button', 'Fullscreen this row'); full.type = 'button'; full.disabled = !filename;
+      full.addEventListener('click', async () => { try { if (wrap.requestFullscreen) await wrap.requestFullscreen(); else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen(); } catch (error) { message(error.message, true); } });
+      if (filename) { const link = text(controls, 'a', 'Download row'); link.href = filename; link.download = ''; }
+      text(controls, 'span', region.movie ? `${formatValue(region.movie.playback_s)} seconds/play` : 'Still rendering', 'small muted');
+      section.appendChild(controls); $('rowPlayers').appendChild(section);
+    });
+  }
+  function showMovie() {
+    const family = families[activeIndex]; if (!family) return;
+    document.querySelectorAll('video').forEach(video => video.pause());
+    rememberView(family);
+    const overview = activeView === 'overview';
+    $('rowPlayers').hidden = overview; $('movieWrap').hidden = !overview;
+    $('movieLink').hidden = !overview; $('replay').hidden = !overview; $('fullscreen').hidden = !overview;
+    $('playbackStatus').textContent = '';
+    document.querySelectorAll('.rowPlayer').forEach(row => { row.hidden = activeView !== 'rows' && row.dataset.row !== activeView; });
+    if (!overview) {
+      $('viewCaption').textContent = 'Independent row players: play, pause, replay or fullscreen each row separately. Starting a row pauses the others.';
+      return;
+    }
+    const movie = family.overview, filename = relativeFile(movie && movie.filename), player = $('movie');
+    $('viewCaption').textContent = 'Optional combined overview. Use the independent rows for individual playback.';
+    if (filename) {
+      player.src = filename; player.hidden = false; player.load(); $('movieUnavailable').hidden = true;
+      $('movieLink').href = filename; $('replay').disabled = false; $('fullscreen').disabled = false;
+    } else {
+      player.removeAttribute('src'); player.load(); player.hidden = true; $('movieUnavailable').hidden = false;
+      $('movieLink').hidden = true; $('replay').disabled = true; $('fullscreen').disabled = true;
+    }
+  }
+  function showFamily() {
+    const family = families[activeIndex]; if (!family) return;
+    activeView = viewsByTheme.get(family.stem) || 'rows';
+    $('themeSelect').value = String(activeIndex);
+    $('themeTitle').textContent = family.theme_name || family.stem;
+    $('stageLabels').textContent = Array.isArray(family.stage_labels) ? family.stage_labels.map(stage => Array.isArray(stage) ? stage.join(' / ') : stage).join(' → ') : (family.stage_labels || '');
+    $('themeCaution').textContent = family.caution || '';
+    $('themeStats').replaceChildren();
+    [['Saved core executions', family.saved_calls], ['Eligible for similarity', family.eligible_calls], ['Eligible mice', family.eligible_mice]]
+      .forEach(([label, value]) => text($('themeStats'), 'span', `${label}: ${formatValue(value)}`));
+    $('viewSelect').replaceChildren(new Option('Three independent row players', 'rows'));
+    (family.neighbourhoods || []).forEach((region, index) => $('viewSelect').add(new Option(region.label || `Neighbourhood ${index + 1}`, String(region.id))));
+    $('viewSelect').add(new Option('Combined overview · optional', 'overview'));
+    if (![...$('viewSelect').options].some(option => option.value === activeView)) activeView = 'rows';
+    $('viewSelect').value = activeView;
+    $('themeNote').value = recordFor(family).theme_note;
+    const plot = relativeFile(family.plot_filename);
+    $('plotLink').hidden = !plot; $('plotUnavailable').hidden = !!plot;
+    if (plot) { $('distributionPlot').src = plot; $('plotLink').href = plot; }
+    else $('distributionPlot').removeAttribute('src');
+    showRowPlayers(family); showMovie(); showRegions(family);
+  }
+  $('themeSelect').addEventListener('change', () => { activeIndex = Number($('themeSelect').value); showFamily(); });
+  $('viewSelect').addEventListener('change', () => { activeView = $('viewSelect').value; showMovie(); showRegions(families[activeIndex]); });
+  $('previousTheme').addEventListener('click', () => { activeIndex = (activeIndex + families.length - 1) % families.length; showFamily(); });
+  $('nextTheme').addEventListener('click', () => { activeIndex = (activeIndex + 1) % families.length; showFamily(); });
+  $('replay').addEventListener('click', async () => {
+    try { $('movie').currentTime = 0; await $('movie').play(); }
+    catch (error) { $('playbackStatus').textContent = `Playback could not start: ${error.message}`; }
+  });
+  $('fullscreen').addEventListener('click', async () => {
+    try {
+      if ($('movieWrap').requestFullscreen) await $('movieWrap').requestFullscreen();
+      else if ($('movie').webkitEnterFullscreen) $('movie').webkitEnterFullscreen();
+    } catch (error) { $('playbackStatus').textContent = `Fullscreen could not start: ${error.message}`; }
+  });
+  $('movie').addEventListener('error', () => {
+    if ($('movie').getAttribute('src')) $('playbackStatus').textContent = 'The movie could not load. It may still be rendering; reload later, or use the download link.';
+  });
+  $('themeNote').addEventListener('input', () => { recordFor(families[activeIndex]).theme_note = $('themeNote').value; save(); });
+  $('exportLabels').addEventListener('click', () => {
+    feedback.updated_at = new Date().toISOString();
+    const blob = new Blob([JSON.stringify(feedback, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob); const link = document.createElement('a');
+    link.href = url; link.download = `${String(DATA.package).replace(/[^a-zA-Z0-9_.-]/g, '_')}_labels.json`;
+    document.body.appendChild(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+    message(storageFailure ? 'Feedback exported. Browser storage is unavailable; keep this JSON file.' : 'Feedback exported. Keep the JSON file as your portable copy.');
+  });
+  $('importLabels').addEventListener('click', () => { $('importFile').value = ''; $('importFile').click(); });
+  $('importFile').addEventListener('change', async event => {
+    const file = event.target.files[0]; if (!file) return;
+    try {
+      if (file.size > 2_000_000) throw new Error('Feedback file is unexpectedly large.');
+      const incoming = validateImport(JSON.parse(await file.text()));
+      // Build a complete new record before mutating current feedback or browser storage.
+      const merged = validateImport(JSON.parse(JSON.stringify(feedback)));
+      Object.entries(incoming.labels).forEach(([stem, record]) => {
+        const previous = merged.labels[stem] || {theme_note: '', neighbourhoods: {}};
+        merged.labels[stem] = {theme_note: record.theme_note,
+          neighbourhoods: {...previous.neighbourhoods, ...record.neighbourhoods}};
+      });
+      feedback = merged; save(); showFamily();
+      if (!storageFailure) message(`Imported feedback from ${file.name} and saved in this browser.`);
+    } catch (error) { message(`Import rejected: ${error.message} Current feedback was left unchanged.`, true); }
+  });
+  families.forEach((family, index) => $('themeSelect').add(new Option(family.theme_name || family.stem, String(index))));
+  $('readiness').textContent = `${formatValue(DATA.ready)} / ${formatValue(DATA.expected)} grid movies ready · 45 source clips across five themes`;
+  $('packageIdentity').textContent = `Package: ${DATA.package} · source manifest SHA-256: ${DATA.source_manifest_sha256}`;
+  if (typeof DATA.previous_random_url === 'string' && DATA.previous_random_url &&
+      !/^(?:javascript|data):/i.test(DATA.previous_random_url)) {
+    $('previousRandom').href = DATA.previous_random_url; $('previousRandom').hidden = false;
+  }
+  loadSaved();
+  if (families.length) showFamily();
+  else { $('themeTitle').textContent = 'No theme selections are available yet.'; $('previousTheme').disabled = true; $('nextTheme').disabled = true; }
+  </script>
+</body>
+</html>

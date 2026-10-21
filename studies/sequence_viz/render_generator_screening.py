@@ -75,18 +75,31 @@ def choose_examples(calls):
 
 
 def sample_indexes(clock, start, stop, *, fps=30, context=0.5):
-    """Real-time native lookup: never convert acquisition IDs using AVI header FPS."""
+    """Native zero-order hold, snapping float-roundoff at real clock boundaries.
+
+    Eight float64 ULPs prevent exact-rate grids from dropping/repeating frames
+    because arithmetic places a target just before its intended timestamp. Real
+    acquisition gaps/duplicate timestamps retain right-sided floor semantics.
+    AVI header FPS never converts acquisition frame IDs.
+    """
     import numpy as np
 
     clock = np.asarray(clock, float)
     if clock.ndim != 1 or not np.isfinite(clock).all() or np.any(np.diff(clock) < 0):
         raise ValueError("camera clock must be finite, nondecreasing")
+    if not np.isfinite(fps) or fps <= 0 or not np.isfinite(context) or context < 0:
+        raise ValueError("positive output fps and nonnegative finite context required")
     if not 0 <= start < stop < len(clock) or clock[stop] <= clock[start]:
         raise ValueError("call lacks an independently timed half-open endpoint")
     begin = max(clock[0], clock[start] - context)
     end = min(clock[-1], clock[stop] + context)
-    targets = begin + np.arange(math.ceil((end - begin) * fps)) / fps
-    indexes = np.searchsorted(clock, targets, side="right") - 1
+    span = (end - begin) * fps
+    rounding = 8 * np.finfo(float).eps * max(1., abs(begin * fps), abs(end * fps))
+    if abs(span - round(span)) <= rounding:
+        span = round(span)
+    targets = begin + np.arange(math.ceil(span)) / fps
+    tolerance = 8 * np.finfo(float).eps * np.maximum(1., np.abs(targets))
+    indexes = np.searchsorted(clock, targets + tolerance, side="right") - 1
     indexes = np.clip(indexes, 0, len(clock) - 1)
     return indexes, targets - clock[start]
 

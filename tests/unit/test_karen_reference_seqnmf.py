@@ -44,6 +44,28 @@ def test_packed_onsets_cannot_use_padding_or_cross_chunks():
     assert references.iloc[0].start_frame == 0 and references.iloc[8].end_frame_exclusive == 13
 
 
+def test_five_bout_windows_keep_short_chunks_and_recording_barriers_unavailable():
+    x, valid, tokens, refs = pack_chunks(
+        [chunk([0, 1, 2, 3], 0, 0), chunk([0, 1, 2, 3, 4, 0], 20, 1)], np.arange(5), 5, 5)
+    assert np.flatnonzero(valid).tolist() == [9, 10]
+    assert tokens[tokens >= 0].tolist() == [0, 1, 2, 3, 0, 1, 2, 3, 4, 0]
+    assert np.all(x[:, tokens < 0] == 0)
+    assert refs.iloc[9].start_frame == 20 and refs.iloc[14].end_frame_exclusive == 26
+
+
+def test_five_bout_partial_support_has_explicit_normalized_error_geometry():
+    _, valid, tokens, refs = pack_chunks([chunk([4, 0, 1, 2, 4, 3])], np.arange(5), 5, 5)
+    w = np.eye(5, dtype=np.float32)[:, None, :]
+    h = np.zeros((1, len(tokens)), np.float32)
+    h[0, 1] = 2
+    metrics, calls = evaluate(w, h, tokens, valid, refs, np.array([1.]))
+    assert len(calls) == 1
+    assert calls.iloc[0].stage_support == pytest.approx(3 / 5)
+    assert calls.iloc[0].template_error == pytest.approx(.64)
+    assert calls.iloc[0].end_frame_exclusive == 6
+    assert metrics["fit_union_time_coverage"] == pytest.approx(5 / 6)
+
+
 def test_unsupported_activations_stay_exactly_zero():
     x, valid, _, _ = pack_chunks([chunk([0, 1, 2, 0]), chunk([1, 2, 0], 10, 1)], np.arange(3), 3, 3)
     runtime = backend("cpu")
