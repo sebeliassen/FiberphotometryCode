@@ -33,6 +33,7 @@ dependencies = [
 
 [project.optional-dependencies]
 test = [
+    "tqdm>=4.0",
     "pytest>=7.0",
     "pytest-timeout",
     "scikit-learn>=1.1",
