@@ -1,3 +1,28 @@
+## Copy-only absolute-frame support restored (2026-10-21)
+
+This source revision starts from the PR7–PR9 milestone at maina8ec522. The missing
+migrate_legacy_vfi helper is recovered from pinned969c893 under its canonical
+session-export utility owner. Its latest historical implementation copies arrays;
+it never infers/rescales rates or coerces dtype. Corrected documentation replaces
+stale heuristic claims; the executable function AST is identical after docstring
+removal. Two complete driver ASTs differ only in their explicit helper import.
+A physical old leaf proxy, shim target and additive restoration ledger agree.
+
+Full1020CPU tests pass in lab AND isolated pinned environments (6existing warnings
+each);13 focused cases preserve values/dtypes/independent storage even with short
+trimmed VFIs and scale arguments, both import orders and cold physical execution.
+CPU doctor/architecture202/lint/maps/wheel/dependencies pass. Exact source/check
+hashes and limits: registry/checkpoints/absolute_vfi_support_20261021.json.
+No empirical artifact/model was loaded and no exporter was run. Their old paths,
+backend/global setup and result-write semantics remain separate work; the helper
+name/log does not establish coordinate validity or actual legacy conversion.
+
+Project tracking configurations and Jonathan builder/default overrides are separate
+candidates being prepared from independently preserved source. Their evidence
+must not be inferred from this fixture pass. Legacy roots/symlinks/data remain.
+The primary checkout's CURRENT and outputs/consolidation_20261021/promotion_20261021.json
+record the live sequential review/merge state; preserve primary/delivery viewers.
+
 ## Export utility alias candidate validated (2026-10-21)
 
 PR8 Jonathan alias repair is merged at2ab0671; confirm actual-main CI using primary

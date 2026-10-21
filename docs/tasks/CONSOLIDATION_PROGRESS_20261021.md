@@ -145,3 +145,12 @@ is absent. This behavior was preserved and tested only with a nonwriting stub,
 not executed against a model. Real VFI reconstruction, missing legacy_support,
 old driver inputs/outputs, import-time backends and empirical recovery remain
 separate gates. No full exporter, real pickle/model, fit, render or data move.
+
+## Copy-only VFI support restoration
+
+Restored the missing historical helper from969c893 with its exact executable
+function AST and no rate inference/scaling/dtype conversion. Two driver modules
+differ only in the helper import. Added old leaf proxy, matching shim target and
+additive source-restoration record; historical quarantine history is retained.
+Full1020CPU/6existing warnings in both environments;13 focused, doctorCPU,
+architecture202/lint/maps/wheel/dependencies pass. No exporter/model executed.
