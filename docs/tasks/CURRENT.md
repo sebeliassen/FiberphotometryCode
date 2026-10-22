@@ -1,3 +1,36 @@
+## Unified builder configuration merged and verified (2026-10-22)
+
+PR13 is merged normally. Main/origin/main/main-integration are
+2e655fe073c527b855ad84ad696205bcae14c401; reviewed head 712ed134af1136a26e2b9bb5e5868675f89885f7.
+Actual main tree equals the tested head; both exact-head workflows and actual-main
+CI pass. Explicit project owners/override roots and ctx.cfg transport through shared
+stages and process tasks are complete. Historical direct-call fallbacks, owned
+hybrid discovery choices, eight stages/two enrichments and cache/API/CLI defaults
+are preserved. Numerical algorithms and source cohort policies are unchanged;
+correct selected policy can replace earlier stale/generic settings.
+
+135 focused checks and 1,136 full CPU tests pass in lab and isolated pinned
+environments (6 existing warnings each). Hosted 1,135 pass/1 existing ffmpeg skip;
+the video test passes locally. Architecture, maintained lint, maps, wheel/package,
+dependency and outside-checkout source-origin gates pass. Independent exact-commit
+review verifies 9 normalized stage ASTs and 369 unchanged protected files. No
+shared-library, existing test/golden, cohort-policy or lint-inventory change.
+
+Read registry/checkpoints/unified_builder_completed_20261022.json and primary
+outputs/consolidation_20261021/promotion_20261021.json for exact merge/check evidence.
+The new source/history proof is unified_builder_bundle_restore_check.json there;
+if absent, run save_unified_builder_checkpoint.py before new work. It uses a new
+bundle/tag, retaining all earlier bundles. Git does not recover ignored recordings,
+models/media, external symlink targets or browser-local feedback.
+
+Start further source work from fetched main in a fresh codex worktree. Preserve
+original primary/delivery runtime checkouts and both viewers; all legacy roots,
+symlinks and empirical data remain. No empirical builder/model/video load, fit,
+export or deletion was performed. Whole legacy retirement remains in progress.
+Next: read NEXT_LEGACY_BATCH.md for AMPH provenance/clock-policy, API/direct-alias,
+full exporter/PPE, trusted artifact and empirical/feedback recovery gates. Never
+interpret synthetic/source validation as universal scientific/artifact equivalence.
+
 ## Source-policy recovery merged and CI verified; retirement continues (2026-10-22)
 
 Local/remote main isff141959003e502ef6bd52d1b644854d8023c4c7. PR10(copy-only VFI),

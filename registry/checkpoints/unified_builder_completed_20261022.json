@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-22",
+  "pr": 13,
+  "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/13",
+  "main": "2e655fe073c527b855ad84ad696205bcae14c401",
+  "reviewed_head": "712ed134af1136a26e2b9bb5e5868675f89885f7",
+  "normal_merge_parents": [
+    "ff141959003e502ef6bd52d1b644854d8023c4c7",
+    "712ed134af1136a26e2b9bb5e5868675f89885f7"
+  ],
+  "main_tree_equals_tested_head": true,
+  "actual_main_workflows": [
+    {
+      "id": 39760731818,
+      "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/39760731818",
+      "head_sha": "2e655fe073c527b855ad84ad696205bcae14c401",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "validation": {
+    "lab_passed": 1136,
+    "isolated_passed": 1136,
+    "warnings_each": 6,
+    "hosted_passed": 1135,
+    "hosted_skipped": 1,
+    "hosted_warnings": 6,
+    "skip": "Existing ffmpeg-dependent synthetic video test; passed in both local suites.",
+    "focused_passed": 135,
+    "new_cases": 81,
+    "architecture_modules": 202,
+    "cycles": 0,
+    "lint": "3067 reviewed diagnostics; no new debt or inventory refresh",
+    "navigation": "149 directories",
+    "wheels_dependencies_origins": "PASS",
+    "worker_pool_cap": 2,
+    "observed_numerical_threads": 2
+  },
+  "source_preservation": {
+    "normalized_stage_ASTs": 9,
+    "protected_source_test_policy_files_unchanged": 369,
+    "existing_tests_goldens_and_shared_library_unchanged": true,
+    "cohort_configs_enrichments_trackers_overrides_unchanged": true,
+    "original_runtime_checkouts_preserved": true,
+    "legacy_roots_symlinks_retained": true,
+    "empirical_execution": false
+  },
+  "review_artifacts": {
+    "exact_commit_review_20261022.json": "4f2f45971506f62d356bf000574c9397db96ccb28fe6fe5c9e78efb2638aee58",
+    "unified_independent_review_20261022.json": "89cf8c4c76b10d798aa794618338a2ee55b4c2591ff9902cea95cf59f5cdd29d",
+    "unified_candidate_checks.json": "b6e49ff464f517a6747029b25c393febaeb29b17ec63ee483fb04d7715df218a",
+    "unified_clean_cpu.json": "462027c46c76e9bb7d5b941bd6468f48c1c690ce6a0aaf497ff29cc4cb59430d",
+    "unified_worker_evidence_20261022.log": "21268c57630b7c21efc9f99c722f10b43e6ae379cb0a45b8ca06c176bb97315b",
+    "unified_main_hosted.log": "ffe8771938eec450aca42ff917466bcbb24f222fe9d043c36ee9f30edb0b9781"
+  },
+  "recovery": {
+    "planned_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consolidation_unified_builder_milestones.bundle",
+    "proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/unified_builder_bundle_restore_check.json",
+    "helper": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/save_unified_builder_checkpoint.py",
+    "requires_initial_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/preserved_all_refs.bundle",
+    "previous_verified_proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/policy_recovery_bundle_restore_check.json",
+    "limit": "Source/history only; ignored empirical payloads, external symlink targets and browser-local feedback are not backed up by Git."
+  },
+  "remaining_gates": [
+    "AMPH distinct source/policy and historical clock heuristic; flipped source provenance",
+    "Package lazy build name and direct study-symlink identity",
+    "Full exporter/PPE routes and physical entry points",
+    "Named trusted artifact families; empirical/external/browser-feedback recovery before legacy-root removal"
+  ],
+  "next": "Start new code from fetched main in a fresh codex worktree. Preserve primary/delivery runtimes and all legacy roots. No empirical builder/export/model execution implied."
+}
