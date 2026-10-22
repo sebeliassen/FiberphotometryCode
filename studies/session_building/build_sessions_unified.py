@@ -1,17 +1,36 @@
 import argparse
 import importlib
-import os
 import pickle
-import sys
 from pathlib import Path
 from typing import Optional
 
-from fpcode.common.paths import get_repo_root
+# Physical owners: IFdN and monoamine baseline intentionally have distinct policy tables.
+_PROJECT_OWNERS = {
+    "jonathan_full": ("studies.oft_baseline.ifdn_policy.enrich", None, "h5"),
+    "jonathan_openfield_example": ("studies.oft_baseline.ifdn_policy.enrich", None, "h5"),
+    "jonathan_oft_baseline": ("studies.oft_baseline.enrich", "studies.oft_baseline.config", "hybrid"),
+    "jonathan_juvenile_intruder": ("studies.juvenile_intruder.enrich", "studies.juvenile_intruder.config", "hybrid"),
+    "karen_project": ("studies.karen_pff_vs_monomer.analysis.enrich", "studies.karen_pff_vs_monomer.session_policy.config", "hybrid"),
+}
 
-# Ensure project root is in sys.path
-REPO_ROOT = str(get_repo_root())
-if REPO_ROOT not in sys.path:
-    sys.path.insert(0, REPO_ROOT)
+
+def _resolve_project(project):
+    try:
+        enrich_name, config_name, default_mode = _PROJECT_OWNERS[project]
+    except KeyError:
+        raise ValueError(
+            f"No audited policy owner for project {project!r}. "
+            "AMPH, flipped and external project policies require separate source review."
+        ) from None
+
+    from studies.session_building.jonathan.config import JonathanConfig
+
+    enrich = importlib.import_module(enrich_name)
+    project_config = importlib.import_module(config_name) if config_name else None
+    cfg = project_config.JCFG if project_config is not None else JonathanConfig()
+    policy_module = project_config if project_config is not None else enrich
+    overrides_dir = Path(policy_module.__file__).resolve().parent / "overrides"
+    return enrich, project_config, cfg, overrides_dir, default_mode
 
 def build_sessions(
     *,
@@ -38,111 +57,42 @@ def build_sessions(
         with out_path.open("rb") as f:
             return pickle.load(f)
 
-    # 1. Discover Project Module
-    sg_proj_dir = (get_repo_root() / 'studies/oft_baseline/ifdn_policy') / project
-    mi_proj_dir = Path(REPO_ROOT) / "studies" / "monoamine_interactions" / "projects" / project
-
-    proj_dir = None
-    if sg_proj_dir.exists():
-        proj_dir = sg_proj_dir
-    elif mi_proj_dir.exists():
-        proj_dir = mi_proj_dir
-    else:
-        # Check fallback (e.g. if the project is jonathan_full but config is under jonathan_openfield_example)
-        if project == "jonathan_full":
-            proj_dir = (get_repo_root() / 'studies/oft_baseline/ifdn_policy') / "jonathan_openfield_example"
-        else:
-            raise ValueError(f"Project directory for '{project}' not found.")
-
-    print(f"[sessions-unified] Using project overrides from: {proj_dir}")
-
-    # Dynamic imports
-    if str(proj_dir) not in sys.path:
-        sys.path.insert(0, str(proj_dir))
-
-    # Reload modules to make sure we don't have cached configs from other runs
-    if "enrich" in sys.modules:
-        importlib.reload(sys.modules["enrich"])
-
-    if "config" in sys.modules:
-        try:
-            importlib.reload(sys.modules["config"])
-        except Exception:
-            # If config module is cached but cannot be reloaded, delete it
-            sys.modules.pop("config", None)
-
-    import enrich
-
-    project_config = None
-    try:
-        import config as project_config
-    except (ImportError, ModuleNotFoundError):
-        print(f"[sessions-unified] No custom config.py found in {proj_dir}. Using defaults.")
-
-    # Clean up sys.path
-    if str(proj_dir) in sys.path:
-        sys.path.remove(str(proj_dir))
-
-    # Overwrite the global JCFG in syllable_generation library
-    from studies.session_building.jonathan import config as lib_config
-    from studies.session_building.jonathan.config import JonathanConfig
-
-    if project_config is not None and hasattr(project_config, "JCFG"):
-        print("[sessions-unified] Overwriting JCFG with project config.")
-        lib_config.JCFG = project_config.JCFG
-    else:
-        print("[sessions-unified] Resetting JCFG to default JonathanConfig.")
-        lib_config.JCFG = JonathanConfig()
+    # 1. Select explicit source owners without changing module or path state.
+    enrich, project_config, cfg, overrides_dir, default_mode = _resolve_project(project)
+    print(f"[sessions-unified] Using project overrides from: {overrides_dir}")
 
     from studies.session_building.jonathan import steps as jonathan_steps
     from studies.session_building.jonathan.build import build
     from studies.session_building.jonathan.context import BuildContext
 
-    # 2. Determine Discovery Mode
-    # Default to H5-based for syllable_generation example, and hybrid video/H5 for others
+    # 2. Preserve the historical default and forced discovery choices.
     if discovery_mode is None:
-        if project in ["jonathan_full", "jonathan_openfield_example"]:
-            discovery_mode = "h5"
-        else:
-            discovery_mode = "hybrid"
-
+        discovery_mode = default_mode
+    if discovery_mode not in ("h5", "hybrid"):
+        raise ValueError(f"Unknown discovery mode: {discovery_mode!r}")
     print(f"[sessions-unified] Discovery mode: {discovery_mode}")
 
     if discovery_mode == "h5":
         discovery_step = jonathan_steps.tracking.discover_sessions
+    elif project == "karen_project":
+        from studies.karen_pff_vs_monomer.analysis.tracking import discover_sessions_hybrid
+
+        discovery_step = discover_sessions_hybrid
     else:
-        # Check if project has custom tracking steps override
-        custom_tracking = proj_dir / "tracking.py"
-        if custom_tracking.exists():
-            print(f"[sessions-unified] Loading custom tracking step from: {custom_tracking}")
-            if str(proj_dir) not in sys.path:
-                sys.path.insert(0, str(proj_dir))
+        # This fallback historically owns baseline discovery policy, including
+        # when hybrid discovery is explicitly forced for another project.
+        from studies.monoamine_interactions.steps.tracking import discover_sessions_hybrid
 
-            if "tracking" in sys.modules:
-                importlib.reload(sys.modules["tracking"])
-            import tracking
-
-            discovery_step = tracking.discover_sessions_hybrid
-
-            if str(proj_dir) in sys.path:
-                sys.path.remove(str(proj_dir))
-        else:
-            # Import hybrid discovery step from monoamine_interactions/steps/tracking.py
-            sys.path.insert(0, os.path.join(REPO_ROOT, "studies", "monoamine_interactions"))
-            from steps.tracking import discover_sessions_hybrid
-            sys.path.remove(os.path.join(REPO_ROOT, "studies", "monoamine_interactions"))
-            discovery_step = discover_sessions_hybrid
+        discovery_step = discover_sessions_hybrid
 
     # 3. Setup Enrichment wrappers
     def _custom_enrich_pre(ctx, sessions):
-        overrides_dir = proj_dir / "overrides"
         return enrich.enrich(ctx, sessions, overrides_dir=overrides_dir, skip_exclusions=force_dirty)
 
     def _custom_enrich_pre_wrapper(ctx, sessions):
         return _custom_enrich_pre(ctx, sessions)
 
     def _custom_enrich_post(ctx, sessions):
-        overrides_dir = proj_dir / "overrides"
         return enrich.enrich(ctx, sessions, overrides_dir=overrides_dir, skip_exclusions=force_dirty)
 
     def _custom_enrich_post_wrapper(ctx, sessions):
@@ -192,6 +142,7 @@ def build_sessions(
         video_dir=video_dir,
         csv_root=csv_root,
         project=project,
+        cfg=cfg,
     )
 
     print(f"[sessions-unified] Building sessions for {project}...")

@@ -1,3 +1,36 @@
+## Unified builder project and worker configuration (2026-10-22)
+
+Candidate: codex/unified-builder-config, based on main
+ff141959003e502ef6bd52d1b644854d8023c4c7. The unified driver selects five audited
+physical project IDs and exact override roots, passes selected policy through
+BuildContext.cfg, and avoids bare imports, sys.path edits and singleton mutation.
+Shared stages and process tasks use that policy; historical direct-call fallbacks,
+eight-stage order, two enrichments, CLI/cache defaults and owned hybrid discovery
+choices remain. Legacy unified leaf now has canonical module/function identity.
+AMPH/flipped and external project policies fail explicitly before a new build;
+a trusted selected cache still short-circuits project lookup. Numerical formulas,
+source policies, masks and clocks are preserved; fixing selection can change which
+policy a cohort actually receives. See studies/session_building/README.md.
+
+Validation complete: 135 focused passes, including 81 new cases. Full 1,136 CPU passes
+in both lab and isolated pinned environments, 6 existing warnings each. Architecture
+202 modules/no cycles, maintained lint 3,067/no new debt, 149-directory maps, installed wheels,
+pip dependencies and outside-checkout source origins pass. Independent review
+verified 9 stage ASTs after only config-transport normalization and 369 unchanged
+protected source/test/policy files. No shared library, existing goldens/tests,
+cohort policy or lint inventory was changed. No empirical session/model/video
+contents or production build/export were executed. All legacy roots, symlinks,
+empirical data and original primary/delivery runtimes remain. Publish/review exact
+head and verify CI before normal promotion; do not infer remote merge from this
+source checkpoint. registry/checkpoints/unified_builder_config_20261022.json holds
+source/check evidence. Primary outputs/consolidation_20261021/promotion_20261021.json
+tracks live Git state and unified_builder_audit_20261021.md records policy gates.
+
+Next source gates remain AMPH provenance/clock policy, package lazy-build name and
+direct study-symlink identity, full exporter/PPE routes, named trusted artifact
+families and ignored empirical/external/browser-feedback recovery. Green synthetic
+checks do not authorize root deletion or imply universal scientific equivalence.
+
 ## Direct Jonathan builder and IFdN source policy restored (2026-10-21)
 
 This revision incorporates actual PR11 maineb779c7 through a normal merge, retaining

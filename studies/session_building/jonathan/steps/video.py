@@ -18,6 +18,7 @@ def attach_video_refs(ctx: BuildContext, sessions: List[SessionRecord]) -> List[
     and attach per-session video_refs_df keyed by (timestamp × chamber).
     Also attaches fast video metadata: fps, n_frames, duration_s, meta_origin.
     """
+    cfg = getattr(ctx, "cfg", JCFG)
     video_dir = ctx.video_dir or (ctx.root / "video_files")
     if not video_dir.exists():
         return sessions
@@ -108,7 +109,7 @@ def attach_video_refs(ctx: BuildContext, sessions: List[SessionRecord]) -> List[
     # Parse all videos and index by session_id = f"{ts}_{chamber}"
     index: dict[str, list[dict]] = {}
     for p in gather_video_paths(video_dir):
-        info = parse_video_path(p, JCFG)
+        info = parse_video_path(p, cfg)
         if not info:
             continue
 
