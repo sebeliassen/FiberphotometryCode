@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-22",
+  "baseline": "ff141959003e502ef6bd52d1b644854d8023c4c7",
+  "branch": "codex/unified-builder-config",
+  "source_sha256": {
+    "studies/session_building/build_sessions_unified.py": "ad24295da53c7f0600040347a4c112fb89e98d87766df7d0bef714b8be7d3c69",
+    "compat/syllable_generation/loaders/build_sessions_unified.py": "93811abd66d76a15115a6f1e9e25c6d4af8971d2e07e7821b7c33ca2b659c545",
+    "studies/session_building/jonathan/steps/tracking.py": "355dff0c5424f1b6b0da47af0a6321ca4794713852d0870e991713f915fa6584",
+    "studies/session_building/jonathan/steps/video.py": "13188ed44827814b670a45640b53c064533e58e83554515140ad75845fc57467",
+    "studies/session_building/jonathan/steps/fiberphotometry.py": "5bc3bdf0365a17a8948ecff1c5bd99949491ed2b782d275f54c7a7c34f767043",
+    "tests/unit/test_unified_builder_entrypoints.py": "7ff41f08cada151950422b1af74ebb90eb9a373397467010ead482d6d6779e68",
+    "tests/unit/test_unified_builder_projects.py": "09cdc066a98b9a530712e0f5130ce645274a9c871b80a5da35c625fd0284d842",
+    "tests/unit/test_stage_policy_transport.py": "f8f2af02c0b6a428b1e640dbed2e44d2f4c311acedb8fb59ad4d21daa672e88c"
+  },
+  "scope": [
+    "Explicit physical owner mapping for jonathan_full/example, baseline, juvenile and Karen; separate override schemas retained.",
+    "Existing ctx.cfg transports selected policy through shared stages and explicit joblib task arguments; no global singleton mutation.",
+    "Canonical/historical unified leaf identity and cold physical help; existing SHIMS.tsv row already canonical and unchanged.",
+    "Cache/CLI defaults, eight-stage order/two enrichments, selected project metadata and historical owned hybrid discovery retained."
+  ],
+  "preservation": {
+    "numerical_algorithm_AST": "Independent normalized audit of9 top-level functions/classes; only config selection/argument transport normalized.",
+    "scientific_source_policies": "No project config, enrichment, tracker, override or clock policy edits.",
+    "shared_library_existing_tests_goldens_lint_inventory": "Independently verified unchanged vs baseline;369 protected files.",
+    "intentional_behavior_change": "Selected context policy now governs shared stages/workers; this can correct earlier stale/default cohort settings. Invalid API discovery mode now raises ValueError.",
+    "source_roots_symlinks_payloads": "All retained. No empirical data/model/video read, production cohort build, fit, export or deletion."
+  },
+  "validation": {
+    "status": "PASS; complete candidate working tree with manifest hashes. Commit/remote exact-head checks follow.",
+    "focused_command": "python -B -m pytest -q -p no:cacheprovider tests/unit/test_unified_builder_projects.py tests/unit/test_unified_builder_entrypoints.py tests/unit/test_stage_policy_transport.py tests/unit/test_jonathan_identity.py tests/unit/test_project_tracking_policies.py tests/unit/test_jonathan_builder_policy.py",
+    "focused_passed": 135,
+    "new_cases": 81,
+    "lab_interpreter": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "isolated_interpreter": "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "available_cpu_affinity": 32,
+    "synthetic_worker_pool_cap": 2,
+    "observed_worker_numerical_threads": 2,
+    "float_fixture_tolerances": {
+      "rtol": 1e-13,
+      "atol": 1e-13,
+      "dtype": "float64"
+    },
+    "doctor": "PASS with explicit candidate root; backend not initialized",
+    "lab_cpu": {
+      "passed": 1136,
+      "warnings": 6,
+      "seconds": 33.86
+    },
+    "isolated_cpu": {
+      "passed": 1136,
+      "warnings": 6,
+      "seconds": 31.67
+    },
+    "architecture": "PASS;202modules,zero violations/cycles",
+    "lint": "PASS;3067 reviewed diagnostics,no new debt;inventory unchanged",
+    "folder_maps": "PASS;149directories",
+    "package_dependencies": "PASS;lab and isolated wheel checks,isolated pip check",
+    "outside_checkout_origins": "PASS;exact installed library/canonical study source hashes;no modeling backends or output artifacts",
+    "evidence_sha256": {
+      "unified_focused.log": "c64f9bb8497f709cab4717fc2593eef13660d02b8e8bc0feb92bcc3394b1e41f",
+      "unified_candidate_checks.json": "b6e49ff464f517a6747029b25c393febaeb29b17ec63ee483fb04d7715df218a",
+      "unified_candidate_test-cpu.log": "d4b1a27a404cfd203d4bc2ae4858c138d42b031fc74a55c59f30016b63a08bf9",
+      "unified_clean_cpu.json": "462027c46c76e9bb7d5b941bd6468f48c1c690ce6a0aaf497ff29cc4cb59430d",
+      "unified_clean_functional.log": "fa5b6c703726e7d43a6045793624956e0427707e1bd22eaee4320ecb3a243264",
+      "unified_candidate_origin_check.json": "15d3b769c838aedfdad82dc2659a8be3dc887ee8e5ec96e7f9a939e713efeae5",
+      "unified_independent_review_20261022.json": "89cf8c4c76b10d798aa794618338a2ee55b4c2591ff9902cea95cf59f5cdd29d",
+      "unified_worker_evidence_20261022.log": "21268c57630b7c21efc9f99c722f10b43e6ae379cb0a45b8ca06c176bb97315b",
+      "unified_doctor.json": "c5ce72277f53b060e55f9516ae4fba75b1326c1c40cf69c6ea4c7653cca43388"
+    }
+  },
+  "limits": [
+    "Controlled pipeline tests and tiny synthetic actual stages/workers; not full empirical cohort acceptance or all numerical-method equivalence.",
+    "Baseline hybrid discovery retains its own historical policy even when selected for another project; changing this requires separate scientific review.",
+    "Production joblib retains historical n_jobs=-1; tests use explicit bounded pools.",
+    "Output serialization retains historical open/write failure semantics; no new atomic-output claim.",
+    "AMPH original enrichment/clock heuristic and flipped source owner remain unresolved; new builds fail explicitly. Trusted cache fast path remains.",
+    "Package-level lazy build name, direct study-symlink aliases, full exporter/PPE, trusted artifact families and empirical/external/browser-feedback recovery remain gates.",
+    "Git/source bundles do not back up ignored empirical data or external/browser-local state."
+  ],
+  "independent_review": "dependent_review: no unresolved actionable finding;9 normalized stage ASTs,369 protected files, all3 new testfiles and frozen source hashes reviewed."
+}

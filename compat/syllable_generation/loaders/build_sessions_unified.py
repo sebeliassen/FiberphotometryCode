@@ -1,7 +1,7 @@
 """
 [DEPRECATED SHIM] syllable_generation/loaders/build_sessions_unified.py
 ==================================================
-Relocated to: studies/behavior/loaders/build_sessions_unified.py
+Relocated to: studies/session_building/build_sessions_unified.py
 """
 
 import importlib
@@ -9,12 +9,12 @@ import sys
 import warnings
 
 warnings.warn(
-    "syllable_generation.loaders.build_sessions_unified is deprecated; import from studies.behavior.loaders.build_sessions_unified instead",
+    "syllable_generation.loaders.build_sessions_unified is deprecated; import from studies.session_building.build_sessions_unified instead",
     DeprecationWarning,
     stacklevel=2,
 )
 
-_real = importlib.import_module("studies.behavior.loaders.build_sessions_unified")
+_real = importlib.import_module("studies.session_building.build_sessions_unified")
 sys.modules[__name__] = _real
 
 def __getattr__(name):

@@ -27,13 +27,14 @@ class ParsedH5:
     cam_slot: str
 
 def discover_sessions(ctx: BuildContext, sessions: list[SessionRecord]) -> list[SessionRecord]:
+    cfg = getattr(ctx, "cfg", JCFG)
     h5_dir = ctx.h5_dir
     if not h5_dir.exists():
         raise FileNotFoundError(f"H5 directory not found: {h5_dir}")
 
     parsed = []
     for p in h5_dir.glob("*.h5"):  # keep glob() to preserve current behavior
-        info = parse_h5_path(p, JCFG)  # utils.files.parse_h5_path
+        info = parse_h5_path(p, cfg)  # utils.files.parse_h5_path
         if info:
             parsed.append(info)
 
@@ -54,7 +55,7 @@ def discover_sessions(ctx: BuildContext, sessions: list[SessionRecord]) -> list[
                 "chamber": it["chamber"],
                 "ts": it["ts"],
                 "camera_key": f"{it['cam_slot']}:{it['chamber']}",
-                "chamber_index": JCFG.chamber_index(it["chamber"]),
+                "chamber_index": cfg.chamber_index(it["chamber"]),
             })
         tracking_refs_df = pd.DataFrame(rows)
 
@@ -70,7 +71,7 @@ def discover_sessions(ctx: BuildContext, sessions: list[SessionRecord]) -> list[
                 "camsets_present": sorted({it["camset"] for it in items}),
                 "cam_slots_present": sorted({it["cam_slot"] for it in items}),
                 "arenas_present": sorted({it["arena"] for it in items}),
-                "chamber_index": JCFG.chamber_to_index.get(first["chamber"]),
+                "chamber_index": cfg.chamber_to_index.get(first["chamber"]),
             },
             tracking_refs_df=tracking_refs_df,
         )

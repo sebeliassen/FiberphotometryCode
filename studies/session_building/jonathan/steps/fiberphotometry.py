@@ -12,12 +12,13 @@ from ..utils.time import parse_session_ts
 
 
 def attach_photometry_refs(ctx, sessions, tolerance_seconds=None):
-    tol = JCFG.tolerance_seconds if tolerance_seconds is None else float(tolerance_seconds)
+    cfg = getattr(ctx, "cfg", JCFG)
+    tol = cfg.tolerance_seconds if tolerance_seconds is None else float(tolerance_seconds)
     root = ctx.csv_root
     if not root:
         return sessions
 
-    entries = list_combined_csv_entries(root, JCFG)
+    entries = list_combined_csv_entries(root, cfg)
     if not entries:
         return sessions
 
@@ -53,6 +54,7 @@ def attach_photometry_refs(ctx, sessions, tolerance_seconds=None):
     return sessions
 
 def realize_photometry_columns(ctx, sessions):
+    cfg = getattr(ctx, "cfg", JCFG)
     import gc
     from collections import defaultdict
 
@@ -81,7 +83,7 @@ def realize_photometry_columns(ctx, sessions):
         union_cols = set()
         group_plans = {}
         for s in group:
-            plan = plan_from_header(all_cols, s, JCFG)
+            plan = plan_from_header(all_cols, s, cfg)
             group_plans[s.session_id] = plan
 
             sig_cols = [col for _, col in plan["signals"]]
@@ -116,7 +118,7 @@ def realize_photometry_columns(ctx, sessions):
                 df = df.rename(columns=fiber_to_signal)
 
             # --- attach frame_idx (with caching) ---
-            entries = list_alltimestamps_entries(p.parent, JCFG)
+            entries = list_alltimestamps_entries(p.parent, cfg)
             ts_str = s.metadata.get("timestamp")
             if not isinstance(ts_str, str):
                 continue
@@ -124,14 +126,14 @@ def realize_photometry_columns(ctx, sessions):
 
             match = None
             if entries:
-                match = best_csv_match(dt_sess, entries, JCFG.tolerance_seconds)
+                match = best_csv_match(dt_sess, entries, cfg.tolerance_seconds)
 
             if not match and ctx.csv_root:
                 # Fallback: search recursively in the csv_root
                 import re
-                csv_re = re.compile(JCFG.alltimestamps_csv_regex, re.I)
+                csv_re = re.compile(cfg.alltimestamps_csv_regex, re.I)
                 fallback_entries = []
-                for p_any in Path(ctx.csv_root).rglob(JCFG.alltimestamps_csv_glob):
+                for p_any in Path(ctx.csv_root).rglob(cfg.alltimestamps_csv_glob):
                     m = csv_re.match(p_any.name)
                     if not m:
                         continue
@@ -142,7 +144,7 @@ def realize_photometry_columns(ctx, sessions):
                     except Exception:
                         pass
                 fallback_entries.sort(key=lambda t: t[1])
-                match = best_csv_match(dt_sess, fallback_entries, JCFG.tolerance_seconds)
+                match = best_csv_match(dt_sess, fallback_entries, cfg.tolerance_seconds)
 
             if not match:
                 raise FileNotFoundError(f"No matching AllTimestampsCombined for {dt_sess}")
@@ -152,9 +154,9 @@ def realize_photometry_columns(ctx, sessions):
 
             if cache_key not in allts_cache:
                 # OPTIMIZATION: Cache AllTimestamps
-                allts_cache[cache_key] = pd.read_csv(allts_path, usecols=[JCFG.allts_system_ts_col], engine='pyarrow')
+                allts_cache[cache_key] = pd.read_csv(allts_path, usecols=[cfg.allts_system_ts_col], engine='pyarrow')
 
-            df = attach_frame_idx_column(df, allts_cache[cache_key], JCFG)
+            df = attach_frame_idx_column(df, allts_cache[cache_key], cfg)
 
             s.metadata["alltimestamps_csv_path"] = str(allts_path)
             s.metadata["alltimestamps_camera"] = camera_name
@@ -172,25 +174,26 @@ def realize_photometry_columns(ctx, sessions):
 
 # --- per-session splitter (side-effect only) ---
 def split_photometry_session(ctx, s, source_key: str = "combined_filtered", keep_led_col: bool = False) -> None:
+    cfg = getattr(ctx, "cfg", JCFG)
     df = s.photometry.get(source_key)
     if df is None or getattr(df, "empty", True):
         return
 
-    led_col = JCFG.led_col_name
+    led_col = cfg.led_col_name
     if led_col not in df.columns:
         return
 
     non_fiber   = set(s.metadata.get("photometry_non_fiber_cols", []))
 
     # ensure frame_idx is preserved as a non-fiber column
-    fic = getattr(JCFG, "frame_index_col_name", "frame_idx")
+    fic = getattr(cfg, "frame_index_col_name", "frame_idx")
     if fic in df.columns:
         non_fiber.add(fic)
 
     signal_keys = get_signal_cols(df)
     sig_meta    = s.metadata.get("signal_meta", {})
 
-    for code, (letter_key, freq) in JCFG.led_state_map.items():
+    for code, (letter_key, freq) in cfg.led_state_map.items():
         part = df[df[led_col] == code]
         if part.empty:
             continue
@@ -210,7 +213,7 @@ def split_photometry_session(ctx, s, source_key: str = "combined_filtered", keep
         out = part.loc[:, keep].copy()
         s.photometry[freq] = out.reset_index(drop=True)
 
-    chans = [freq for _, (_, freq) in JCFG.led_state_map.items() if freq in s.photometry]
+    chans = [freq for _, (_, freq) in cfg.led_state_map.items() if freq in s.photometry]
     if chans:
         s.metadata["photometry_channels"] = sorted(set(chans))
 
@@ -222,13 +225,15 @@ def split_photometry(ctx, sessions, source_key: str = "combined_filtered"):
 
 # --- per-session ---
 def compute_dff_zscore_session(
-    ctx, s, freqs=("470", "560"), iso="415"
+    ctx, s, freqs=("470", "560"), iso="415", *, cfg=None
 ) -> None:
     iso_df = s.photometry.get(str(iso))
     if iso_df is None or getattr(iso_df, "empty", True):
         return
 
-    from ..config import JCFG
+    if cfg is None:
+        from .. import config as live_config
+        cfg = getattr(ctx, "cfg", live_config.JCFG)
 
     def _assign_col(df, col, data_series):
         if col not in df.columns: df[col] = pd.NA
@@ -237,7 +242,7 @@ def compute_dff_zscore_session(
         df.loc[: n - 1, col] = data_series.to_numpy()
 
     iso_signals = set(get_signal_cols(iso_df))
-    ts_col = JCFG.phot_system_ts_col
+    ts_col = cfg.phot_system_ts_col
 
     # Estimate FPS for rolling calculations
     fps = estimate_fps(iso_df, ts_col)
@@ -296,25 +301,25 @@ def compute_dff_zscore_session(
             clean_ransac = calculate_ransac_subtraction(sig_dff_datta, ref_dff_datta)
             z_ransac = calculate_rolling_zscore(clean_ransac, fps, win_sec=20.0)
 
-            if JCFG.include_ransac:
+            if cfg.include_ransac:
                 _assign_col(tgt, f"{sig}_zscore_ransac", z_ransac)
 
             # --- Optional Wallace Method (Regression) ---
             # Compute if requested OR if needed as basis for prominence
-            active_basis = getattr(JCFG, "prominence_basis", "wallace")
+            active_basis = getattr(cfg, "prominence_basis", "wallace")
 
             # 1. Wallace (Regression)
-            needs_wallace = JCFG.include_wallace or (JCFG.include_prominence and active_basis == "wallace")
+            needs_wallace = cfg.include_wallace or (cfg.include_prominence and active_basis == "wallace")
             z_wallace = None
             if needs_wallace:
                 clean_wallace = calculate_wallace_dff(sig_dff_datta, ref_dff_datta)
                 z_wallace = calculate_rolling_zscore(clean_wallace, fps, win_sec=20.0)
 
-                if JCFG.include_wallace:
+                if cfg.include_wallace:
                     _assign_col(tgt, f"{sig}_zscore_wallace", z_wallace)
 
             # 2. Manual Method (Simple Subtraction)
-            needs_manual = JCFG.include_manual or (JCFG.include_prominence and active_basis == "manual")
+            needs_manual = cfg.include_manual or (cfg.include_prominence and active_basis == "manual")
             z_manual = None
             if needs_manual:
                 # Use rolling dF/F inputs to account for signal drift, but apply simple subtraction
@@ -322,18 +327,18 @@ def compute_dff_zscore_session(
                 clean_manual = calculate_manual_dff(sig_dff_datta, ref_dff_datta)
                 z_manual = calculate_rolling_zscore(clean_manual, fps, win_sec=20.0)
 
-                if JCFG.include_manual:
+                if cfg.include_manual:
                     _assign_col(tgt, f"{sig}_zscore_manual", z_manual)
 
             # --- Legacy/Global Outputs ---
-            if JCFG.include_dff:
+            if cfg.include_dff:
                 _assign_col(tgt, dff_col, dff)
 
-            if JCFG.include_zscore:
+            if cfg.include_zscore:
                 _assign_col(tgt, z_col, z)
 
             # --- Prominence (Optional) ---
-            if JCFG.include_prominence:
+            if cfg.include_prominence:
                 # Select basis based on config
                 base_for_prom = None
                 if active_basis == "wallace":
@@ -360,14 +365,16 @@ def compute_dff_zscore_session(
 def compute_dff_zscore(
     ctx, sessions, freqs=("470", "560"), iso="415"
 ):
+    from .. import config as live_config
+    cfg = getattr(ctx, "cfg", live_config.JCFG)
     # OPTIMIZATION: Parallelize signal processing across sessions if joblib is available
-    def _proc(s):
-        compute_dff_zscore_session(ctx, s, freqs=freqs, iso=iso)
+    def _proc(s, selected_cfg):
+        compute_dff_zscore_session(ctx, s, freqs=freqs, iso=iso, cfg=selected_cfg)
         return s
 
     try:
         from joblib import Parallel, delayed
-        sessions = Parallel(n_jobs=-1)(delayed(_proc)(s) for s in sessions)
+        sessions = Parallel(n_jobs=-1)(delayed(_proc)(s, cfg) for s in sessions)
     except ImportError:
-        sessions = [_proc(s) for s in sessions]
+        sessions = [_proc(s, cfg) for s in sessions]
     return sessions

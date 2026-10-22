@@ -18,12 +18,14 @@ are separate obligations. Three test-created historical class states reconstruct
 as the canonical JonathanConfig, BuildContext and ParsedH5 types. This is not
 proof that arbitrary historical session/model pickles can be loaded.
 
-Class definitions, parser code, default channel/clock policy and tracking discovery
-are byte-identical to the previous main. Tests independently check timestamp text,
+Class definitions, parser code and default channel/clock policy are preserved.
+Shared stages now read explicit `ctx.cfg`, with historical direct-call fallbacks;
+their discovery and numerical algorithms are preserved. Tests independently check timestamp text,
 chambers, camera slots, chamber indices, effective channel indices and discovery
 rows using synthetic filenames. No actual H5/video contents are opened. Juvenile
 configuration now imports the canonical class; its own settings and functions are
 unchanged. The IFdN policy files match pinned969c893 exactly; no other cohort's
-overrides were substituted. Unified project/configuration lookup, other cohort
-policy recovery, full builders and empirical artifact verification remain
-separate work.
+overrides were substituted. The [unified builder](../README.md) now selects audited
+physical owners and transports configuration through stages and process workers.
+AMPH/flipped policy recovery, full empirical builders and artifact verification
+remain separate work.
