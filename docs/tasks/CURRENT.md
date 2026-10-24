@@ -1,3 +1,40 @@
+## Karen policy adapter identity merged and verified (2026-10-24)
+
+PR16 is merged normally. Main/origin/main/main-integration are
+b19c12b3fb8c9ce4d180ba82be9152e29bbbd197; reviewed head e253281464a06b5986bd6bb474c5d5f00ed2d2ca.
+Both exact-head workflows and actual-main CI pass; actual tree equals tested head.
+Two physical Karen session_policy adapters now forward directly to canonical
+analysis.enrich/tracking modules, matching existing SHIMS targets. Both current
+and historical monoamine project paths share exact module/function identity.
+Physical spec/runpy, deprecation and optional-main delegation contracts remain.
+No directory symlink or canonical algorithm/configuration/policy is changed.
+
+99 focused checks (20 new) and 1,197 full CPU tests pass in lab and isolated pinned
+environments (6 existing warnings each). Hosted 1196 pass/1 skip; the existing
+ffmpeg-dependent video test passes locally. Architecture/lint/maps/dependencies
+and outside-checkout source origins pass. Unchanged validated wheel installation
+was reused locally; hosted CI rebuilt/checked it. Independent exact review and
+byte/AST proof verify 1,815 protected files, including 1,700 Python sources,
+56 symlink payloads, all policy/config/golden owners and unchanged
+MOVES/SHIMS/lint ledgers with 29 MOVES CRLF sequences. Existing tests/goldens and lint inventory are unchanged.
+
+Exact record: registry/checkpoints/karen_policy_aliases_completed_20261024.json;
+live state: primary outputs/consolidation_20261021/promotion_20261021.json.
+New source/history proof there: karen_alias_bundle_restore_check.json; if absent
+run save_karen_alias_checkpoint.py before new work. Earlier bundles remain.
+Git does not recover ignored recordings/models/media, external payloads or browser
+feedback. Six larger milestones remain; these small PRs advance import cleanup.
+
+Next: read NEXT_LEGACY_BATCH.md and the three immutable next-gate audits in that
+output directory. Base attach_kpms can be made cold/canonical with main(argv) and
+a repaired physical entrypoint; preserve its attachment policy and flags. The
+optimized flipped helper has a separate bare-sibling-import repair; this does not
+activate a flipped project. Direct studies.behavior identities, full exporter/PPE
+routes, AMPH/flipped policy decisions and trusted-artifact/external recovery remain.
+Use fresh codex worktrees from fetched main; preserve primary/delivery runtimes,
+both viewers, legacy roots/symlinks and data. No real model/recording/auto-mask,
+cohort build/fit/export/render, notification or deletion was performed.
+
 ## Stable Jonathan package API merged and verified (2026-10-24)
 
 PR15 is merged normally. Main/origin/main/main-integration are

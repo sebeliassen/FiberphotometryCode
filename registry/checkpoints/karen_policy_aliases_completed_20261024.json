@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-24",
+  "pr": 16,
+  "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/16",
+  "main": "b19c12b3fb8c9ce4d180ba82be9152e29bbbd197",
+  "reviewed_head": "e253281464a06b5986bd6bb474c5d5f00ed2d2ca",
+  "normal_merge_parents": [
+    "c2a460f8f3bf531d903a27a28c86726e4cd2ad8f",
+    "e253281464a06b5986bd6bb474c5d5f00ed2d2ca"
+  ],
+  "main_tree_equals_tested_head": true,
+  "actual_main_workflows": [
+    {
+      "id": 40089772608,
+      "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/40089772608",
+      "head_sha": "b19c12b3fb8c9ce4d180ba82be9152e29bbbd197",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "validation": {
+    "focused_passed": 99,
+    "new_cases": 20,
+    "lab_passed": 1197,
+    "isolated_passed": 1197,
+    "warnings_each": 6,
+    "hosted_passed": 1196,
+    "hosted_skipped": 1,
+    "hosted_warnings": 6,
+    "architecture_modules": 202,
+    "lint": "3067 reviewed diagnostics/no new debt; inventory unchanged",
+    "navigation_directories": 150,
+    "dependencies_origins": "PASS",
+    "wheel": "Unchanged validated installation reused locally; hosted rebuild/check PASS",
+    "numerical_threads": 2
+  },
+  "source": {
+    "changed_existing_implementations": [
+      "studies/karen_pff_vs_monomer/session_policy/enrich.py",
+      "studies/karen_pff_vs_monomer/session_policy/tracking.py"
+    ],
+    "delta": "Only canonical destination strings in import/warning/docstring; physical forwarding unchanged",
+    "protected_files_unchanged": 1815,
+    "protected_Python_sources_unchanged": 1700,
+    "symlink_payloads_unchanged": 56,
+    "MOVES_CRLF_sequences_retained": 29,
+    "canonical_algorithms_policies_and_existing_tests_goldens_unchanged": true
+  },
+  "evidence_sha256": {
+    "karen_alias_exact_commit_review_20261024.json": "3ae766a6b87d5794ee215a12ab466ef191d76952ebacbc93d0b88ed163f3bd0f",
+    "karen_alias_independent_review_20261024.json": "c17aba87ae3f56aaa096d1e42af31510947aff3ac4ec22784305500e5857217f",
+    "karen_alias_source_proof_20261024.json": "06d5e5bc2aa8bc497cfc1b42c8f3038f6857748db275627dbc9f6c7fb56cda8c",
+    "karen_alias_candidate_checks.json": "41e318e20a53c998f27d950d7b151f1361410096381d03fd73910aa99a45b75b",
+    "karen_alias_clean_cpu.json": "7a5bd5d16c0c6ef357e9a7a2d417f55d9b435c889d09050f2400d4b4e4d6f31a",
+    "karen_alias_focused_result_20261024.json": "69c848c42b96032e7832fab118dbcde90333948a2800595845809245d90536e7",
+    "direct_study_identity_next_audit_20261024.md": "46c75e9394c51a9a9230828a9fa7e3fb3d7ecc32eb75f8915be56bddf88a0929",
+    "exporter_ppe_next_audit_20261024.md": "95f5e1015797232305f843190583017533bced73d36c2833ef749bada223cd9b",
+    "flipped_provenance_next_audit_20261024.md": "4bedca2fe9d0249a53d2c74b7cb4240b4f151b5f85d7a2e7238cb13832bb881c",
+    "karen_alias_main_hosted.log": "fe94998711f8448a888ed3fa83c6f10305f936ec4567599d335922964520ee22"
+  },
+  "recovery": {
+    "planned_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consolidation_karen_alias_milestones.bundle",
+    "proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/karen_alias_bundle_restore_check.json",
+    "helper": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/save_karen_alias_checkpoint.py",
+    "requires_initial_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/preserved_all_refs.bundle",
+    "previous_proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/stable_api_bundle_restore_check.json",
+    "limits": "Source/history only; ignored recordings/models/media, external symlink targets and browser feedback require separate coverage."
+  },
+  "remaining_milestones": [
+    "Finish compatibility/import cleanup, including old-name retirement and direct-study namespace identity",
+    "Repair complete exporter/PPE routes and physical entry points",
+    "Specify and validate AMPH/flipped support or explicitly retire unsupported workflows",
+    "Verify named trusted historical artifact families",
+    "Verify ignored/external data, model and human-feedback recovery",
+    "Remove legacy roots only after supported routes and recovery gates pass; final validation/handoff"
+  ],
+  "runtime_preservation": "Original primary/delivery runtimes, both viewers, all legacy roots/symlinks and empirical payloads retained; no empirical execution."
+}
