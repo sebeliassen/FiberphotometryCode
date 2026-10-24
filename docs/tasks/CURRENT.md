@@ -1,3 +1,31 @@
+## Direct Karen policy adapter identity (2026-10-24)
+
+Candidate codex/karen-policy-aliases starts from verified main
+c2a460f8f3bf531d903a27a28c86726e4cd2ad8f. Two physical session_policy adapters
+forward directly to canonical analysis.enrich/tracking owners, matching SHIMS.tsv.
+Their historical monoamine project paths remain physical adapters; no directory
+symlink, canonical algorithm/configuration, library or scientific policy changes.
+Validation complete: 99 focused checks (20 new identity cases and 79 existing
+policy/project cases); 1,197 CPU tests pass in both lab and isolated pinned
+environments (6 existing warnings each). Architecture 202/no cycles, lint 3,067/no
+new debt, 150-directory navigation, dependencies and outside-checkout source
+origins pass. Unchanged validated library wheel installation reused locally;
+hosted CI rebuild/check required before promotion. Independent byte/AST proof
+verifies 1,815 protected files unchanged, including 1,700 Python sources, 56 symlink
+payloads, canonical policies/configuration, existing tests/goldens and complete
+MOVES/SHIMS/lint ledgers.
+Only the two destination changes occur in existing Python files; physical adapter
+semantics are preserved. Finish exact-commit review and hosted checks before normal
+promotion. Evidence: registry/checkpoints/karen_policy_aliases_20261024.json;
+primary outputs/consolidation_20261021/promotion_20261021.json tracks actual Git.
+Keep original runtimes/viewers, legacy roots/symlinks and empirical payloads.
+No empirical model/recording load, cohort build/fit/export or deletion.
+
+Direct studies.behavior module identity remains a separate gate, as do full
+exporter/PPE routes, AMPH/flipped scientific support decisions, named trusted
+artifacts and external/empirical/browser-feedback recovery. Six larger milestones
+remain; synthetic source/identity checks are not universal artifact equivalence.
+
 ## Stable lazy Jonathan package callable (2026-10-24)
 
 Candidate codex/stable-builder-api starts from main
