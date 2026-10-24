@@ -12,7 +12,8 @@ new debt, 150-directory navigation, dependencies and outside-checkout source
 origins pass. Unchanged validated library wheel installation reused locally;
 hosted CI rebuild/check required before promotion. Independent byte/AST proof
 verifies 1,815 protected files unchanged, including 1,700 Python sources, 56 symlink
-payloads, canonical policies/configuration, existing tests/goldens and all ledgers.
+payloads, canonical policies/configuration, existing tests/goldens and complete
+MOVES/SHIMS/lint ledgers.
 Only the two destination changes occur in existing Python files; physical adapter
 semantics are preserved. Finish exact-commit review and hosted checks before normal
 promotion. Evidence: registry/checkpoints/karen_policy_aliases_20261024.json;
