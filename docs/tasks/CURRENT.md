@@ -1,3 +1,40 @@
+## Stable Jonathan package API merged and verified (2026-10-24)
+
+PR15 is merged normally. Main/origin/main/main-integration are
+c2a460f8f3bf531d903a27a28c86726e4cd2ad8f; reviewed head 74577dbe802001f0905f8fbf6fc3b8347d8528d9.
+Both exact-head workflows and actual-main CI pass; actual tree equals tested head.
+Canonical and historical Jonathan packages now expose lazy build_sessions as the
+exact existing leaf function, preserving identity/signature/pickle qualified name
+across supported import orders. Historical package build ambiguity remains; this
+is an additive migration API, not retirement of that spelling. No maintained
+package-export caller was found; unknown external/computed usage remains a gate.
+
+53 focused checks (11 new) and 1,177 full CPU tests pass in lab and isolated pinned
+environments (6 existing warnings each). Hosted 1176 pass/1 skip; the existing
+ffmpeg-dependent video test passes locally. Architecture/lint/maps/dependencies
+and outside-checkout source origins pass. Unchanged validated wheel installation
+was reused locally; hosted CI rebuilt/checked it. Independent exact review verifies
+1,013 protected existing Python files, frozen source/test/evidence hashes and the
+declared two-node executable AST delta. Existing algorithms/policies, library,
+proxies, tests/goldens and MOVES/SHIMS/lint inventory are unchanged.
+
+Exact record: registry/checkpoints/stable_builder_api_completed_20261024.json and
+primary outputs/consolidation_20261021/promotion_20261021.json. New source/history
+restore proof there is stable_api_bundle_restore_check.json; if absent run
+save_stable_api_checkpoint.py before new work. Earlier bundles remain. Git does
+not recover ignored recordings/models/media, external payloads or browser feedback.
+
+Six larger milestones remain: finish compatibility/import cleanup; complete
+exporter/PPE routes; resolve AMPH/flipped support or explicit retirement; check
+named trusted historical artifacts; verify external/empirical/feedback recovery;
+then remove legacy roots with final checks and handoff. These may require several
+small PRs each; do not treat this list as six predetermined commits.
+Read NEXT_LEGACY_BATCH.md and start independent source work from fetched main in a
+fresh codex worktree. Preserve primary/delivery runtime checkouts and viewers,
+legacy roots/symlinks and data. No real model/recording/auto-mask, cohort build,
+fit/export/render, notification or deletion was performed. Whole retirement is
+in progress; synthetic/source checks are not universal artifact/science proof.
+
 ## AMPH source boundary merged and verified (2026-10-24)
 
 PR14 is merged normally. Main/origin/main/main-integration are

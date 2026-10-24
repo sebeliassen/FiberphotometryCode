@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-24",
+  "pr": 15,
+  "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/15",
+  "main": "c2a460f8f3bf531d903a27a28c86726e4cd2ad8f",
+  "reviewed_head": "74577dbe802001f0905f8fbf6fc3b8347d8528d9",
+  "normal_merge_parents": [
+    "8ada6ff519586a4d5575f7ca812fe6c7c012c7cf",
+    "74577dbe802001f0905f8fbf6fc3b8347d8528d9"
+  ],
+  "main_tree_equals_tested_head": true,
+  "actual_main_workflows": [
+    {
+      "id": 40088175252,
+      "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/40088175252",
+      "head_sha": "c2a460f8f3bf531d903a27a28c86726e4cd2ad8f",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "validation": {
+    "focused_passed": 53,
+    "new_cases": 11,
+    "lab_passed": 1177,
+    "isolated_passed": 1177,
+    "warnings_each": 6,
+    "hosted_passed": 1176,
+    "hosted_skipped": 1,
+    "hosted_warnings": 6,
+    "architecture_modules": 202,
+    "lint": "3067 reviewed diagnostics/no new debt; inventory unchanged",
+    "navigation_directories": 150,
+    "dependencies_origins": "PASS",
+    "wheel": "Unchanged validated installation reused locally; hosted rebuild/check PASS",
+    "numerical_threads": 2
+  },
+  "API": {
+    "stable_alias": "Exact lazy leaf build function exported as build_sessions",
+    "historical_build_quirk": "Retained; old spelling not retired",
+    "protected_existing_Python_files": 1013,
+    "science_or_algorithm_change": false,
+    "existing_package_callers_to_migrate": 0,
+    "external_computed_imports": "Not established"
+  },
+  "evidence_sha256": {
+    "stable_api_exact_commit_review_20261024.json": "719a8fca620e67058223b6f3a69b27a0acd0ac570ccf01d50aa843f6e80ee776",
+    "stable_api_independent_review_20261024.json": "7538978a87300102e30aa68f9926de107aa18071aee390e825781ef2ccdb65de",
+    "stable_api_candidate_checks.json": "6d9d54720bd6ae5c23869bede3003edc7fa60f40893833c4c0513ecae27ce7a8",
+    "stable_api_clean_cpu.json": "9a4be9f37f364f5e6906d1ad492213955be967599d21af14dd4cbfbdae8d94e7",
+    "stable_api_source_audit_20261024.json": "323db1084345f64ea9c8ce15cd1190b4f194e776f09f5772cc8f4ea0dbd6090c",
+    "jonathan_package_api_audit_20261024.md": "4f9ce256161c253578068775e62263f6af76bc51ff3b9735582959e4317f4ad2",
+    "stable_api_main_hosted.log": "027c5c1dd50df7a08c4be2628e10aff276901cb0eb157a512e84f82cdb0133f5"
+  },
+  "recovery": {
+    "planned_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consolidation_stable_api_milestones.bundle",
+    "proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/stable_api_bundle_restore_check.json",
+    "helper": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/save_stable_api_checkpoint.py",
+    "requires_initial_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/preserved_all_refs.bundle",
+    "previous_proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/amph_source_bundle_restore_check.json",
+    "limits": "Source/history only; ignored recordings/models/media, external symlink contents and browser feedback require separate recovery."
+  },
+  "remaining_milestones": [
+    "Finish compatibility/import cleanup, including old-name retirement and direct-study namespace identity",
+    "Repair complete exporter/PPE routes and physical entry points",
+    "Specify and validate AMPH/flipped support or explicitly retire unsupported workflows",
+    "Verify named trusted historical artifact families",
+    "Verify ignored/external data, model and human-feedback recovery",
+    "Remove legacy roots only after supported routes and recovery gates pass; final validation/handoff"
+  ],
+  "runtime_preservation": "Original primary/delivery code and viewers, all legacy roots/symlinks and empirical payloads retained; no empirical execution."
+}
