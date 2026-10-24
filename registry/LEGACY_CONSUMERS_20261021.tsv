@@ -2623,11 +2623,11 @@ docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	132	literal_candidate	archive
 docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	132	literal_candidate	archive/legacy.	documentation_or_history
 docs/tasks/CONSOLIDATION_PROGRESS_20261021.md	73	literal_candidate	core/pipelines/compat/archive	documentation_or_history
 docs/tasks/CONSOLIDATION_PROGRESS_20261021.md	166	literal_candidate	archive/Git/AST	documentation_or_history
-docs/tasks/CURRENT.md	188	literal_candidate	core/pipelines/compat/archive.	documentation_or_history
-docs/tasks/CURRENT.md	301	literal_candidate	core/pipelines/compat/archive	documentation_or_history
-docs/tasks/CURRENT.md	309	literal_candidate	pipelines/core	documentation_or_history
-docs/tasks/CURRENT.md	1220	literal_candidate	syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/	documentation_or_history
-docs/tasks/CURRENT.md	2202	literal_candidate	syllable_generation/analysis/sequence_viz/run12_human_labels.csv	documentation_or_history
+docs/tasks/CURRENT.md	218	literal_candidate	core/pipelines/compat/archive.	documentation_or_history
+docs/tasks/CURRENT.md	331	literal_candidate	core/pipelines/compat/archive	documentation_or_history
+docs/tasks/CURRENT.md	339	literal_candidate	pipelines/core	documentation_or_history
+docs/tasks/CURRENT.md	1250	literal_candidate	syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/	documentation_or_history
+docs/tasks/CURRENT.md	2232	literal_candidate	syllable_generation/analysis/sequence_viz/run12_human_labels.csv	documentation_or_history
 ops/repo/build_triage.py	9	literal_candidate	archive/legacy/	repository_tool
 ops/repo/build_triage.py	92	literal_candidate	archive/legacy/	repository_tool
 ops/repo/build_triage.py	95	literal_candidate	syllable_generation/syllabizers/keypoint_moseq_syll/...	repository_tool
@@ -3801,6 +3801,7 @@ studies/multiview_experiments/rebuild_expert_package_clean.py	32	literal_candida
 studies/multiview_experiments/rebuild_expert_package_clean.py	84	literal_candidate	fiberphotometry/data/session_synchronization.py	study_or_active_source
 studies/multiview_experiments/serialize_cohort_static_21kp_v2_seed101_sessions.py	10	literal_candidate	syllable_generation/data/sessions_karen_project_w_sylls.pkl	study_or_active_source
 studies/multiview_experiments/serialize_cohort_static_21kp_v2_seed101_sessions.py	15	literal_candidate	syllable_generation/multiview_top_bot_experiments/sessions_karen_project_tandem_cohort_static_21kp_seed101.pkl	study_or_active_source
+studies/oft_amph/README.md	11	literal_candidate	syllable_generation/projects/jonathan_openfield_amph/enrich.py	study_or_active_source
 studies/oft_baseline/cleaning_gui.ipynb	7	literal_candidate	syllable_generation/projects/jonathan_openfield_example/	study_or_active_source
 studies/oft_baseline/cleaning_gui.ipynb	427	literal_candidate	syllable_generation/syllabizers/keypoint_moseq_syll/demo_project/full-run/video_frame_indexes.npz	study_or_active_source
 studies/oft_baseline/ifdn_policy/README.md	4	literal_candidate	syllable_generation/projects/jonathan_openfield_example	study_or_active_source
@@ -4672,6 +4673,10 @@ tests/unit/test_absolute_vfi_support.py	15	literal_candidate	syllable_generation
 tests/unit/test_absolute_vfi_support.py	86	literal_candidate	syllable_generation.analysis.utils	test
 tests/unit/test_absolute_vfi_support.py	93	literal_candidate	syllable_generation/analysis/utils/legacy_support.py	test
 tests/unit/test_aligned_photometry.py	77	literal_candidate	syllable_generation.analysis.replications.datta_utils	test
+tests/unit/test_amph_source_boundary.py	19	literal_candidate	syllable_generation.projects.jonathan_openfield_amph.enrich	test
+tests/unit/test_amph_source_boundary.py	52	literal_candidate	syllable_generation/projects/jonathan_openfield_amph/overrides	test
+tests/unit/test_amph_source_boundary.py	282	literal_candidate	syllable_generation.projects.jonathan_openfield_amph	test
+tests/unit/test_amph_source_boundary.py	296	literal_candidate	syllable_generation/projects/jonathan_openfield_amph/enrich.py	test
 tests/unit/test_backup_snapshot.py	244	literal_candidate	core.hooksPath	test
 tests/unit/test_behavior_reuse.py	77	literal_candidate	syllable_generation/analysis/ulrik_kinematics	test
 tests/unit/test_cache_manifest_synthetic.py	5	literal_candidate	core.cache_manifest	test
