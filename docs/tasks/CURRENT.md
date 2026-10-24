@@ -1,3 +1,33 @@
+## AMPH source and metadata boundary (2026-10-24)
+
+Candidate codex/amph-source-boundary starts from main
+2e655fe073c527b855ad84ad696205bcae14c401. The historical AMPH route no longer
+substitutes IFdN enrichment. Its own source and five tracked policy tables are
+preserved; seven metadata helper ASTs are recovered unchanged. Enrichment and
+both mask-application APIs raise immediately because the audited original has no
+return or mask-application tail and unresolved clock/missing-key behavior.
+No scientific default or rate conversion is invented. Unified AMPH selection
+remains unsupported. See studies/oft_amph/README.md for exact scope and limits.
+
+Validation complete: 106 focused checks including 30 new cases; full 1,166 CPU
+tests pass in lab and isolated pinned environments (6 existing warnings each).
+Architecture 202/no cycles, lint 3,067/no new debt, 150-directory navigation, wheels,
+dependencies and outside-checkout source origins pass. Independent review verifies
+7 exact helper ASTs, 3 immediate gates and 1,026 unchanged protected files; the
+entire old MOVES prefix and 29 CRLF lines are preserved. No existing tests/goldens,
+library, cohort policy or lint inventory changed. Publish/review exact head and
+verify hosted CI before normal promotion. Source/check evidence is in
+registry/checkpoints/amph_source_boundary_20261024.json; primary
+outputs/consolidation_20261021/promotion_20261021.json tracks actual remote state.
+Every original runtime/viewer, legacy root/symlink and empirical payload remains.
+No real artifact, model, recording or auto-mask was loaded; no cohort build/export.
+
+Remaining gates: complete AMPH stage/clock policy on explicitly selected inputs,
+flipped source provenance, package/direct-symlink identity, full exporter/PPE routes
+and named trusted artifact plus empirical/external/browser-feedback recovery.
+Whole legacy retirement remains in progress; synthetic source tests do not prove
+scientific or arbitrary stored-artifact equivalence.
+
 ## Unified builder project and worker configuration (2026-10-22)
 
 Candidate: codex/unified-builder-config, based on main

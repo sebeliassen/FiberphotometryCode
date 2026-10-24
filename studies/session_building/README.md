@@ -42,10 +42,13 @@ fresh process workers. They do not establish full empirical cohort equivalence.
 Production joblib parallelism retains its existing behavior; the tests cap workers
 and numerical threads rather than launching an unbounded production build.
 
-AMPH has a distinct original enrichment and an unresolved historical frame-clock
-heuristic; its surviving old shim is not a validated route. A flipped source owner
-has not been recovered. Both IDs fail explicitly before building, as do unknown
-projects, unless the historical cache fast path applies. Named trusted artifact
+[AMPH source recovery](../oft_amph/README.md) preserves its distinct original
+source and tables. Its canonical and historical APIs expose metadata helpers;
+enrichment and mask execution fail explicitly because the original enrichment is
+incomplete and its frame-clock heuristic is unresolved. AMPH remains outside this
+builder's supported project mapping. A flipped source owner has not been recovered.
+Both IDs fail explicitly before building, as do unknown projects, unless the
+historical cache fast path applies. Named trusted artifact
 reconstruction, empirical/feedback recovery and remaining exporter/PPE consumers
 still gate retirement of legacy roots. All legacy roots and symlinks are retained.
 
