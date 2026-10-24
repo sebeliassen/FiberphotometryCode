@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-24",
+  "pr": 14,
+  "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/14",
+  "main": "8ada6ff519586a4d5575f7ca812fe6c7c012c7cf",
+  "reviewed_head": "855a9156a64bccbc4df66f48b2c419bc1439768a",
+  "normal_merge_parents": [
+    "2e655fe073c527b855ad84ad696205bcae14c401",
+    "855a9156a64bccbc4df66f48b2c419bc1439768a"
+  ],
+  "main_tree_equals_tested_head": true,
+  "actual_main_workflows": [
+    {
+      "id": 40045007543,
+      "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/40045007543",
+      "head_sha": "8ada6ff519586a4d5575f7ca812fe6c7c012c7cf",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "validation": {
+    "focused_passed": 106,
+    "new_cases": 30,
+    "lab_passed": 1166,
+    "isolated_passed": 1166,
+    "warnings_each": 6,
+    "hosted_passed": 1165,
+    "hosted_skipped": 1,
+    "hosted_warnings": 6,
+    "architecture_modules": 202,
+    "lint": "3067 reviewed diagnostics/no new debt; inventory unchanged",
+    "navigation_directories": 150,
+    "wheels_dependencies_origins": "PASS",
+    "numerical_threads": 2
+  },
+  "source_boundary": {
+    "snapshot_bytes": 12768,
+    "snapshot_sha256": "4fcb471c6dba2269b0017cf6e6adccb5f47cd677a2f901fbe65c20d2ff326814",
+    "exact_source_tables": 5,
+    "exact_metadata_helper_ASTs": 7,
+    "immediately_gated_APIs": 3,
+    "protected_existing_files_unchanged": 1026,
+    "MOVES_prefix_bytes": 107445,
+    "retained_CRLF_lines": 29,
+    "scientific_workflow_enabled": false,
+    "preserved_whitespace_lines": 54,
+    "metadata_AST_digest_encoding": "Python3.12 ast.dump; actual helper AST equality also verified under Python3.10; file-byte hashes interpreter-independent"
+  },
+  "evidence_sha256": {
+    "amph_exact_commit_review_20261024.json": "d3826e223f36bc7d9136dbf720c538dc720932723e8b06170dfdaf7daf837077",
+    "amph_independent_review_20261024.json": "d8a33eaea8ab4c5bfc1856f95294357f48ab1e12fd8d59573e88b485aef4d00a",
+    "amph_candidate_checks.json": "76af7047c6cc4e27460e970b4ef0f3af8977d66cc682c37c5995ed348896bfca",
+    "amph_clean_cpu.json": "44b6571008815507ef1545760ca57cdcd7aa348b2c0c6b5fa2e4cced14bfd811",
+    "amph_history_integrity_20261024.md": "c0be786d71cdcf072c4270512da83aac01c0c8ccae7ba8db7f5e932aa5c4bb0f",
+    "amph_policy_audit_20261024.md": "d123ccf55df6facbdfa08db9fff8bde7794c167aa9320e0f0000fff0533f40e8",
+    "amph_consumers_audit_20261024.md": "802d9d78521367202dfd2c825a427d91b9f6d4d2415c5da3dfa8c33784eaa92c",
+    "amph_main_hosted.log": "71be03e50384d3df19087769ddefee3bcfd8c24d3d8690b1cc826ef8ac6e20e3"
+  },
+  "recovery": {
+    "planned_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consolidation_amph_source_milestones.bundle",
+    "proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/amph_source_bundle_restore_check.json",
+    "helper": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/save_amph_source_checkpoint.py",
+    "requires_initial_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/preserved_all_refs.bundle",
+    "previous_proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/unified_builder_bundle_restore_check.json",
+    "limits": "Source/history only; ignored empirical payloads, external symlink contents and browser feedback require separate recovery coverage."
+  },
+  "remaining_gates": [
+    "Complete AMPH stage/mask order, missing-key and explicit clock/coordinate policy on selected inputs; flipped provenance",
+    "Package lazy build name/direct study-symlink identity and named artifact families",
+    "Full exporter/PPE routes/physical entry points",
+    "Ignored/external empirical and browser-feedback recovery before physical legacy-root deletion"
+  ],
+  "runtime_preservation": "Original primary/delivery code and viewers, all legacy roots/symlinks and empirical payloads retained; no empirical execution or scientific policy invented."
+}

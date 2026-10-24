@@ -1,3 +1,38 @@
+## AMPH source boundary merged and verified (2026-10-24)
+
+PR14 is merged normally. Main/origin/main/main-integration are
+8ada6ff519586a4d5575f7ca812fe6c7c012c7cf; reviewed head 855a9156a64bccbc4df66f48b2c419bc1439768a.
+Both exact-head workflows and actual-main CI pass; actual tree equals tested head.
+AMPH now owns seven original metadata helpers, five exact source tables and a
+byte-exact 12,768-byte historical text snapshot. Its old adapter no longer loads
+IFdN enrichment. Three enrichment/mask APIs immediately raise because the audited
+source has no return/mask-application tail and unresolved clock/missing-key policy.
+Unified AMPH remains unsupported; this is source/metadata recovery, not a working
+AMPH scientific workflow. No heuristic or new scientific default is activated.
+
+106 focused checks and 1,166 full CPU tests pass in lab and isolated pinned
+environments (6 existing warnings each). Hosted 1165 pass/1 skip; the existing
+ffmpeg-dependent video test passes locally. Architecture, lint, maps, wheels,
+dependencies and source-origin checks pass. Independent exact review verifies
+1,026 unchanged protected files, 7 helper ASTs, 3 immediate gates and preserved
+MOVES prefix/29 CRLF lines. Only the exact frozen snapshot is excluded from diff
+whitespace style checks; its 54 original trailing-space lines remain byte-exact.
+AST digest strings use Python3.12 encoding; actual equality also passed under3.10.
+
+Exact record: registry/checkpoints/amph_source_completed_20261024.json and primary
+outputs/consolidation_20261021/promotion_20261021.json. New restore proof there is
+amph_source_bundle_restore_check.json; if absent run save_amph_source_checkpoint.py
+before new work. Earlier bundles remain; Git covers source/history, not ignored
+recordings/models/media, external symlink contents or browser-local feedback.
+
+Next independent source gates: package/direct-study identity and full exporter/PPE
+routes, then named trusted artifacts and empirical/external/feedback recovery.
+Full AMPH execution separately needs a specified stage/clock policy and validation
+on selected inputs. Start source work from fetched main in a fresh codex worktree.
+Keep original runtime checkouts/viewers, all legacy roots/symlinks and empirical
+data. No real model/recording/auto-mask, cohort build, fit, export or deletion.
+Whole legacy retirement remains in progress.
+
 ## Unified builder configuration merged and verified (2026-10-22)
 
 PR13 is merged normally. Main/origin/main/main-integration are
