@@ -52,6 +52,10 @@ historical cache fast path applies. Named trusted artifact
 reconstruction, empirical/feedback recovery and remaining exporter/PPE consumers
 still gate retirement of legacy roots. All legacy roots and symlinks are retained.
 
-Use the explicit leaf API
-`from studies.session_building.jonathan.build import build` for the direct IFdN
-builder. Its package-level lazy `build` name remains import-order-sensitive.
+For the direct IFdN builder, use the stable lazy package callable
+`from studies.session_building.jonathan import build_sessions`, or the unchanged
+explicit leaf API `from studies.session_building.jonathan.build import build`.
+Both refer to the same function accepting a `BuildContext`. This differs from
+the unified `build_sessions_unified.build_sessions` orchestration API above.
+The historical package-level `build` name remains import-order-sensitive; its
+retirement requires a separate compatibility decision. See [the package API](jonathan/README.md).

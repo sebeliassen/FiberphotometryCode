@@ -2,7 +2,7 @@
 
 from .context import BuildContext
 
-__all__ = ["BuildContext", "build"]
+__all__ = ["BuildContext", "build", "build_sessions"]
 
 
 def __dir__():
@@ -12,7 +12,11 @@ def __dir__():
 def __getattr__(name):
     # Configuration, parsers and serialized classes must be usable independently
     # of the builder's project enrichment and optional workflow dependencies.
-    if name == "build":
+    # The build submodule can bind the package's historical `build` attribute.
+    # `build_sessions` has no colliding child module, so it remains the same
+    # callable regardless of package/leaf import order. Preserve the old export
+    # for external notebooks while giving new callers a stable lazy entry point.
+    if name in ("build", "build_sessions"):
         from .build import build
 
         globals()[name] = build

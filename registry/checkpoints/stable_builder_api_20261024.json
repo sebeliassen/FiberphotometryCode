@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-24",
+  "baseline": "8ada6ff519586a4d5575f7ca812fe6c7c012c7cf",
+  "branch": "codex/stable-builder-api",
+  "owner": "studies.session_building.jonathan",
+  "scope": "Additive stable lazy build_sessions package alias, exact existing leaf function; no existing caller migration required",
+  "source_sha256": {
+    "studies/session_building/jonathan/__init__.py": "73fabc20444347ee25295c7f9871806e02ec182b5f8c1fa9a4d14255dc0f6d7d",
+    "tests/unit/test_jonathan_package_api.py": "3f0967d023f8c6850ddf3aeba524d4a5916d42a38cac0e8cc7063e7b1cf3b115"
+  },
+  "contract": {
+    "alias_is_exact_leaf_function": true,
+    "signature_and_pickle_qualified_name_preserved": true,
+    "historical_package_delegation_unchanged": true,
+    "configuration_and_dir_imports_stay_cold": true,
+    "historical_build_route": "Retained including function/module import-order limitation; not retired by this additive API",
+    "normal_package_and_child_semantics": "No wrapper,eager builder import,custom module class or global finder"
+  },
+  "validation": {
+    "status": "PASS; final local candidate",
+    "focused_passed": 53,
+    "new_cases": 11,
+    "lab_interpreter": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "isolated_interpreter": "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "numerical_threads": 2,
+    "doctor": "PASS;explicit candidate root;backend not initialized",
+    "lab_passed": 1177,
+    "isolated_passed": 1177,
+    "warnings_each": 6,
+    "architecture_modules": 202,
+    "lint": "3067 reviewed diagnostics; no new debt; inventory unchanged",
+    "navigation_directories": 150,
+    "dependencies": "pip check PASS",
+    "installed_origins": "PASS; exact unchanged library hashes and canonical candidate study origins outside checkout",
+    "wheel": "Unchanged library/package sources; previously validated pinned wheel reused locally. Hosted rebuild/check required before promotion.",
+    "independent_review": "PASS; no actionable findings; 1013 protected existing Python files independently hashed against baseline blobs"
+  },
+  "preservation": {
+    "date": "2026-10-24",
+    "baseline": "8ada6ff519586a4d5575f7ca812fe6c7c012c7cf",
+    "interpreter": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "python": "3.10.19",
+    "method": "AST equality after exactly undoing the additional __all__ string and the supported-name membership branch; comments/locations excluded by standard AST dump. Equality only, no version-sensitive AST hash contract.",
+    "normalized_package_AST_equal": true,
+    "package_before_sha256": "5641aef01cba35cf9eb6bfd2b8fd9a21a27f2096dbc9a18747301457ecaaf7c6",
+    "package_after_sha256": "73fabc20444347ee25295c7f9871806e02ec182b5f8c1fa9a4d14255dc0f6d7d",
+    "changed_existing_Python_files": [
+      "studies/session_building/jonathan/__init__.py"
+    ],
+    "protected_existing_Python_files_unchanged": 1013,
+    "protected_scopes_unchanged": [
+      "shared_library",
+      "existing_tests_and_goldens",
+      "all_other_study_Python",
+      "compatibility_proxies",
+      "MOVES",
+      "SHIMS",
+      "LINT_BASELINE"
+    ],
+    "leaf_builder_sha256": "6ce5ddb7cb96b3ae7f6db60c533c4adb820d16dd532d02fcaa0a292b8c2f7e28",
+    "scientific_policy_or_algorithm_change": false,
+    "historical_build_route": "Retained, including documented import-order limitation; this additive alias is not its retirement.",
+    "limits": "Git-visible source/AST evidence; computed external imports, real artifacts, empirical cohort execution and direct studies.behavior namespace identity remain unproved."
+  },
+  "audit_sha256": {
+    "jonathan_package_api_audit_20261024.md": "4f9ce256161c253578068775e62263f6af76bc51ff3b9735582959e4317f4ad2",
+    "stable_api_source_audit_20261024.json": "323db1084345f64ea9c8ce15cd1190b4f194e776f09f5772cc8f4ea0dbd6090c",
+    "stable_api_independent_review_20261024.json": "7538978a87300102e30aa68f9926de107aa18071aee390e825781ef2ccdb65de",
+    "stable_api_candidate_checks.json": "6d9d54720bd6ae5c23869bede3003edc7fa60f40893833c4c0513ecae27ce7a8",
+    "stable_api_clean_cpu.json": "9a4be9f37f364f5e6906d1ad492213955be967599d21af14dd4cbfbdae8d94e7",
+    "stable_api_candidate_origin_check.json": "0251d9c893dd13934290360045d4fe3027ada028d02e68e19e38a4004ee767b6",
+    "stable_api_doctor.json": "adb7a1f8e090a89b0299d5dc4b2fa8e8e62729d4b2fe924dc29751181c6b8708",
+    "stable_api_focused.log": "44222158714c4b944b04ae8b00d834ece01681095c4216d577b56ca86b99928d"
+  },
+  "limits": [
+    "No maintained literal package-export caller found; computed imports/external notebooks and old-name retirement remain unproved.",
+    "The original package build name still has its documented import-order quirk; supported build_sessions and explicit leaf APIs are stable.",
+    "One wholly test-created in-memory canonical function reference roundtrips; not arbitrary historical pickle compatibility.",
+    "No empirical pipeline,data/model/video read,cohort policy,algorithm,backend or output change.",
+    "Direct studies.behavior directory-symlink identities,full exporter/PPE and trusted artifact/recovery obligations remain.",
+    "Library/wheel/dependency sources are unchanged; existing pinned isolated installation is reused and its exact library source origins verified. Hosted CI also rebuilds/checks the wheel.",
+    "Source/history backups do not include ignored recordings/models,external symlink payloads or browser-local feedback."
+  ]
+}
