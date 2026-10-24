@@ -1,3 +1,35 @@
+## Stable lazy Jonathan package callable (2026-10-24)
+
+Candidate codex/stable-builder-api starts from main
+8ada6ff519586a4d5575f7ca812fe6c7c012c7cf. Canonical/historical Jonathan packages
+expose build_sessions as the exact existing leaf build function. The alias is lazy
+and does not collide with a build child module, so supported callers retain
+function identity and signature across import orders. Existing builder, stage,
+cohort-policy and legacy-proxy implementations are unchanged. The explicit leaf
+API remains valid. Old package build ambiguity is retained for external notebook
+compatibility; this is an additive migration interface, not retirement of that name.
+No maintained package-export caller was found; external usage remains unverified.
+
+Validation complete: 53 focused checks including 11 new cases; full 1,177 CPU
+tests pass in lab and isolated pinned environments (6 existing warnings each).
+Architecture 202/no cycles, lint 3,067/no new debt, 150-directory navigation,
+dependencies and outside-checkout exact source origins pass. Unchanged library
+wheel/pinned installation is reused locally; hosted CI must rebuild/check it before
+promotion. Independent review verifies 1,013 protected existing Python files and
+the exact two-node executable AST delta. Existing tests/goldens, library, cohort
+policy, proxies, MOVES/SHIMS and lint inventory are unchanged. Publish/review the
+exact commit and verify hosted CI before normal promotion. Exact evidence:
+registry/checkpoints/stable_builder_api_20261024.json; primary
+outputs/consolidation_20261021/promotion_20261021.json tracks actual Git state.
+Preserve original runtimes/viewers, all legacy roots/symlinks and empirical data.
+No empirical build, fit/export, model/video read or scientific policy change.
+
+Remaining gates: historical package build retirement, direct study-symlink identity,
+full exporter/PPE and physical/artifact routes, named trusted input families and
+empirical/external/browser-feedback recovery. AMPH scientific execution remains
+gated pending specified stage/clock policy and scoped inputs. Whole legacy
+retirement is in progress; synthetic/import tests are not universal equivalence.
+
 ## AMPH source and metadata boundary (2026-10-24)
 
 Candidate codex/amph-source-boundary starts from main

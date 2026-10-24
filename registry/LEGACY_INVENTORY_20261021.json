@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "source_commit": "2e655fe073c527b855ad84ad696205bcae14c401",
+  "source_commit": "8ada6ff519586a4d5575f7ca812fe6c7c012c7cf",
   "legacy_paths": 618,
-  "static_references": 4751,
+  "static_references": 4753,
   "parse_or_budget_limits": [
     [
       "compat/syllable_generation/analysis/replications/datta_orig/panels/1f/1f.ipynb",
@@ -926,7 +926,7 @@
     "docs/tasks/BROAD_SEARCH_HANDOFF_20261013.md": "11e397af9a90de96520e23a9ada10598bfb35e220d2fadb9f59236a9c2697782",
     "docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md": "c54f53c37149a527322c5c92fdec722c9eebc5b92046277f32d172e4d7477d14",
     "docs/tasks/CONSOLIDATION_PROGRESS_20261021.md": "4000c9356253cf51fc0cf5993243aa26216f49c3f9eed19161f388253dfbec54",
-    "docs/tasks/CURRENT.md": "d09ed45dd36e640c27952046ba98cc95b8e10ec8dfb47a6bf3eb959f2a1c411c",
+    "docs/tasks/CURRENT.md": "b006d76243f4a5ce4afb11bc3cb5fa75238dfc25dfcc22220a79960ab9adbe00",
     "ops/repo/build_triage.py": "3529c2ecabf640aaa2a48b5e1fe9436b6a5bcaed6a9f9a36dbf21a0f32d25e58",
     "ops/repo/generate_folder_maps.py": "0f6c8b8b6e6f70fe4ff8e2e62b9e5d168a2dbd4b3d5b6360165a1432cc045b4c",
     "ops/repo/metrics.py": "d78e6fad0a463d888dd2c0f06b5197d78d12e49ae988eab1cd7b09fc555c0df9",
@@ -1221,7 +1221,7 @@
     "studies/sequence_viz/run_multimethod_diagnostic_movies.py": "4c41010c604fd9f8366125e39bf00fcb8b31aeb0a225a65451e1bb66d6acbf1b",
     "studies/sequence_viz/run_prioritized_additions_pilot.py": "3fd0b526ead5db9533e13e6054ad7f10e62e8312d7960e5d59c33132a25693de",
     "studies/sequence_viz/run_relational_topology_and_heading_reset_movies.py": "94b9a13be26a28e0f2053568fc63dd67576da708d2576df19f7dd375f04f3419",
-    "studies/session_building/jonathan/README.md": "824987d26f28d2e373a2ca3ae37d8e71efba2a971826c100022f8e53635fc974",
+    "studies/session_building/jonathan/README.md": "28d8b9913f9b00be235516d636e60d433f28bf943009857c627bbfb1f873b93f",
     "studies/session_building/jonathan/build.py": "6ce5ddb7cb96b3ae7f6db60c533c4adb820d16dd532d02fcaa0a292b8c2f7e28",
     "studies/session_building/jonathan/steps/.folder-map.md": "da2106d5343b0fd9ddbce6f44f95a052aacca02bf1a23b6d4cf524c10f5cef66",
     "studies/session_building/jonathan/steps/fiberphotometry.py": "5bc3bdf0365a17a8948ecff1c5bd99949491ed2b782d275f54c7a7c34f767043",
@@ -1263,6 +1263,7 @@
     "tests/unit/test_io_utils_hardening.py": "0e6843e4965ba3c754a3db63577767ad77640be5ba9e3b5e6a9053ab2424f3e1",
     "tests/unit/test_jonathan_builder_policy.py": "a938f22c4e56a8723330cef2e98fe0aa6a08eface93fab37743ebe6f07cc20e5",
     "tests/unit/test_jonathan_identity.py": "088e3f0650cc422ed3a4644d1cb3c46f86e14600a659dffac4cc1f50371055d5",
+    "tests/unit/test_jonathan_package_api.py": "3f0967d023f8c6850ddf3aeba524d4a5916d42a38cac0e8cc7063e7b1cf3b115",
     "tests/unit/test_npz_component_cache.py": "dc6e63ee5edc4b87cc926476bb81650dde3544cbcc154f52cfae402708ffb577",
     "tests/unit/test_stage_policy_transport.py": "f8f2af02c0b6a428b1e640dbed2e44d2f4c311acedb8fb59ad4d21daa672e88c",
     "tests/unit/test_unified_builder_entrypoints.py": "7ff41f08cada151950422b1af74ebb90eb9a373397467010ead482d6d6779e68",
@@ -1296,15 +1297,12 @@
   },
   "notebook_line_numbers": "Offsets in concatenated code cells, not raw notebook JSON lines",
   "working_tree_changes": [
-    "compat/syllable_generation/projects/jonathan_openfield_amph/enrich.py",
     "docs/tasks/CURRENT.md",
     "registry/LEGACY_CONSUMERS_20261021.tsv",
     "registry/LEGACY_INVENTORY_20261021.json",
-    "registry/LEGACY_PATHS_20261021.tsv",
-    "registry/MOVES.tsv",
-    "registry/SHIMS.tsv",
-    "studies/.folder-map.md",
     "studies/session_building/README.md",
+    "studies/session_building/jonathan/README.md",
+    "studies/session_building/jonathan/__init__.py",
     "tests/unit/.folder-map.md"
   ],
   "interpretation": "Static references are candidates for review, not proof of live use; unknown external consumers and stored-object names remain retirement gates."

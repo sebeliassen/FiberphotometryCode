@@ -2623,11 +2623,11 @@ docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	132	literal_candidate	archive
 docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	132	literal_candidate	archive/legacy.	documentation_or_history
 docs/tasks/CONSOLIDATION_PROGRESS_20261021.md	73	literal_candidate	core/pipelines/compat/archive	documentation_or_history
 docs/tasks/CONSOLIDATION_PROGRESS_20261021.md	166	literal_candidate	archive/Git/AST	documentation_or_history
-docs/tasks/CURRENT.md	218	literal_candidate	core/pipelines/compat/archive.	documentation_or_history
-docs/tasks/CURRENT.md	331	literal_candidate	core/pipelines/compat/archive	documentation_or_history
-docs/tasks/CURRENT.md	339	literal_candidate	pipelines/core	documentation_or_history
-docs/tasks/CURRENT.md	1250	literal_candidate	syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/	documentation_or_history
-docs/tasks/CURRENT.md	2232	literal_candidate	syllable_generation/analysis/sequence_viz/run12_human_labels.csv	documentation_or_history
+docs/tasks/CURRENT.md	250	literal_candidate	core/pipelines/compat/archive.	documentation_or_history
+docs/tasks/CURRENT.md	363	literal_candidate	core/pipelines/compat/archive	documentation_or_history
+docs/tasks/CURRENT.md	371	literal_candidate	pipelines/core	documentation_or_history
+docs/tasks/CURRENT.md	1282	literal_candidate	syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/	documentation_or_history
+docs/tasks/CURRENT.md	2264	literal_candidate	syllable_generation/analysis/sequence_viz/run12_human_labels.csv	documentation_or_history
 ops/repo/build_triage.py	9	literal_candidate	archive/legacy/	repository_tool
 ops/repo/build_triage.py	92	literal_candidate	archive/legacy/	repository_tool
 ops/repo/build_triage.py	95	literal_candidate	syllable_generation/syllabizers/keypoint_moseq_syll/...	repository_tool
@@ -4588,7 +4588,7 @@ studies/sequence_viz/run_prioritized_additions_pilot.py	39	literal_candidate	syl
 studies/sequence_viz/run_prioritized_additions_pilot.py	41	literal_candidate	syllable_generation/analysis/sequence_viz/chain_grid_movie.log	study_or_active_source
 studies/sequence_viz/run_relational_topology_and_heading_reset_movies.py	40	literal_candidate	syllable_generation/analysis/sequence_viz/output_pilot_movies	study_or_active_source
 studies/sequence_viz/run_relational_topology_and_heading_reset_movies.py	42	literal_candidate	syllable_generation/analysis/sequence_viz/chain_grid_movie.log	study_or_active_source
-studies/session_building/jonathan/README.md	13	literal_candidate	syllable_generation.loaders.jonathan	study_or_active_source
+studies/session_building/jonathan/README.md	29	literal_candidate	syllable_generation.loaders.jonathan	study_or_active_source
 studies/session_building/jonathan/build.py	26	literal_candidate	fiberphotometry.attach_photometry_refs	study_or_active_source
 studies/session_building/jonathan/build.py	28	literal_candidate	fiberphotometry.realize_photometry_columns	study_or_active_source
 studies/session_building/jonathan/build.py	30	literal_candidate	fiberphotometry.split_photometry	study_or_active_source
@@ -4694,6 +4694,8 @@ tests/unit/test_jonathan_builder_policy.py	88	literal_candidate	syllable_generat
 tests/unit/test_jonathan_identity.py	17	literal_candidate	syllable_generation.loaders.jonathan	test
 tests/unit/test_jonathan_identity.py	43	literal_candidate	syllable_generation.projects	test
 tests/unit/test_jonathan_identity.py	168	literal_candidate	syllable_generation/loaders/jonathan	test
+tests/unit/test_jonathan_package_api.py	12	literal_candidate	syllable_generation.loaders.jonathan	test
+tests/unit/test_jonathan_package_api.py	138	literal_candidate	syllable_generation/loaders/jonathan	test
 tests/unit/test_npz_component_cache.py	82	literal_candidate	archive.writestr	test
 tests/unit/test_npz_component_cache.py	83	literal_candidate	archive.writestr	test
 tests/unit/test_stage_policy_transport.py	109	literal_candidate	fiberphotometry.attach_photometry_refs	test
