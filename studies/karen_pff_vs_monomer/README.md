@@ -13,6 +13,15 @@ study symlink identity and real artifact reconstruction remain separate gates.
 Provenance and exact check limits are recorded in
 [`project_tracking_policies_20261021.json`](../../registry/checkpoints/project_tracking_policies_20261021.json).
 
+The physical `session_policy.enrich` and `session_policy.tracking` adapters now
+forward directly to `analysis.enrich` and `analysis.tracking`. Their historical
+`studies.monoamine_interactions.projects.karen_project` paths share the same
+canonical module/function objects, without loading an intermediate
+`studies.behavior.karen_studies` module. The physical wrappers and deprecation
+warnings remain. This does not unify every direct study-directory symlink import
+or establish compatibility with arbitrary saved sessions; canonical analysis and
+configuration implementations are unchanged.
+
 ## Overview & Directory Topology
 This directory (`karen_project/`) contains the workspace files for Karen's longitudinal Parkinson's disease / L-dopa mouse cohort studies (covering 5 experimental waves: `3_week_PI`, `8_weeks_PI`, `16w_PI`, `24_weeks_PI`, and `L_dopa`).
 

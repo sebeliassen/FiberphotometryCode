@@ -2623,11 +2623,11 @@ docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	132	literal_candidate	archive
 docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	132	literal_candidate	archive/legacy.	documentation_or_history
 docs/tasks/CONSOLIDATION_PROGRESS_20261021.md	73	literal_candidate	core/pipelines/compat/archive	documentation_or_history
 docs/tasks/CONSOLIDATION_PROGRESS_20261021.md	166	literal_candidate	archive/Git/AST	documentation_or_history
-docs/tasks/CURRENT.md	250	literal_candidate	core/pipelines/compat/archive.	documentation_or_history
-docs/tasks/CURRENT.md	363	literal_candidate	core/pipelines/compat/archive	documentation_or_history
-docs/tasks/CURRENT.md	371	literal_candidate	pipelines/core	documentation_or_history
-docs/tasks/CURRENT.md	1282	literal_candidate	syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/	documentation_or_history
-docs/tasks/CURRENT.md	2264	literal_candidate	syllable_generation/analysis/sequence_viz/run12_human_labels.csv	documentation_or_history
+docs/tasks/CURRENT.md	277	literal_candidate	core/pipelines/compat/archive.	documentation_or_history
+docs/tasks/CURRENT.md	390	literal_candidate	core/pipelines/compat/archive	documentation_or_history
+docs/tasks/CURRENT.md	398	literal_candidate	pipelines/core	documentation_or_history
+docs/tasks/CURRENT.md	1309	literal_candidate	syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/	documentation_or_history
+docs/tasks/CURRENT.md	2291	literal_candidate	syllable_generation/analysis/sequence_viz/run12_human_labels.csv	documentation_or_history
 ops/repo/build_triage.py	9	literal_candidate	archive/legacy/	repository_tool
 ops/repo/build_triage.py	92	literal_candidate	archive/legacy/	repository_tool
 ops/repo/build_triage.py	95	literal_candidate	syllable_generation/syllabizers/keypoint_moseq_syll/...	repository_tool

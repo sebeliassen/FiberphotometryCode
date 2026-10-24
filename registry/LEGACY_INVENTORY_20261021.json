@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_commit": "8ada6ff519586a4d5575f7ca812fe6c7c012c7cf",
+  "source_commit": "c2a460f8f3bf531d903a27a28c86726e4cd2ad8f",
   "legacy_paths": 618,
   "static_references": 4753,
   "parse_or_budget_limits": [
@@ -926,7 +926,7 @@
     "docs/tasks/BROAD_SEARCH_HANDOFF_20261013.md": "11e397af9a90de96520e23a9ada10598bfb35e220d2fadb9f59236a9c2697782",
     "docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md": "c54f53c37149a527322c5c92fdec722c9eebc5b92046277f32d172e4d7477d14",
     "docs/tasks/CONSOLIDATION_PROGRESS_20261021.md": "4000c9356253cf51fc0cf5993243aa26216f49c3f9eed19161f388253dfbec54",
-    "docs/tasks/CURRENT.md": "b006d76243f4a5ce4afb11bc3cb5fa75238dfc25dfcc22220a79960ab9adbe00",
+    "docs/tasks/CURRENT.md": "0dff8effa8a53aaf95be993c1d21387b714b7cf80f6f0d026d8b1ba35213eab5",
     "ops/repo/build_triage.py": "3529c2ecabf640aaa2a48b5e1fe9436b6a5bcaed6a9f9a36dbf21a0f32d25e58",
     "ops/repo/generate_folder_maps.py": "0f6c8b8b6e6f70fe4ff8e2e62b9e5d168a2dbd4b3d5b6360165a1432cc045b4c",
     "ops/repo/metrics.py": "d78e6fad0a463d888dd2c0f06b5197d78d12e49ae988eab1cd7b09fc555c0df9",
@@ -1299,10 +1299,9 @@
   "working_tree_changes": [
     "docs/tasks/CURRENT.md",
     "registry/LEGACY_CONSUMERS_20261021.tsv",
-    "registry/LEGACY_INVENTORY_20261021.json",
-    "studies/session_building/README.md",
-    "studies/session_building/jonathan/README.md",
-    "studies/session_building/jonathan/__init__.py",
+    "studies/karen_pff_vs_monomer/README.md",
+    "studies/karen_pff_vs_monomer/session_policy/enrich.py",
+    "studies/karen_pff_vs_monomer/session_policy/tracking.py",
     "tests/unit/.folder-map.md"
   ],
   "interpretation": "Static references are candidates for review, not proof of live use; unknown external consumers and stored-object names remain retirement gates."
