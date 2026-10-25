@@ -1,0 +1,128 @@
+{
+  "date": "2026-10-25",
+  "pr": 17,
+  "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/17",
+  "main": "5c6de957b576a859453f6da7ffa88f9a9268e044",
+  "reviewed_head": "4786fbf1d14c54a9c88a64a46a8076e7acddc601",
+  "normal_merge_parents": [
+    "b19c12b3fb8c9ce4d180ba82be9152e29bbbd197",
+    "4786fbf1d14c54a9c88a64a46a8076e7acddc601"
+  ],
+  "main_tree_equals_tested_head": true,
+  "actual_main_workflows": [
+    {
+      "id": 40219815545,
+      "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/40219815545",
+      "head_sha": "5c6de957b576a859453f6da7ffa88f9a9268e044",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "candidate_checkpoint": {
+    "path": "registry/checkpoints/attach_kpms_entrypoint_20261025.json",
+    "sha256": "417eac5c879bf5e3511da4ae84ebc133c4a1ef440f1f930ed400ec52c67d1085"
+  },
+  "validation": {
+    "status": "Merged; exact-head and actual-main CI PASS",
+    "new_cases": 44,
+    "lab_interpreter": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "isolated_interpreter": "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "numerical_threads": 2,
+    "doctor": "CPU metadata PASS; backend not initialized",
+    "focused_passed": 73,
+    "lab_passed": 1241,
+    "isolated_passed": 1241,
+    "warnings_each": 6,
+    "architecture_modules": 202,
+    "lint": "3064 reviewed diagnostics/no new debt; unchanged inventory;3fewer diagnostics than base",
+    "navigation_directories": 150,
+    "package_check": "New candidate wheel built/installed/checked outside checkout PASS",
+    "installed_entrypoint": "Both fresh canonical/legacy orders use exact pinned installed fpcode source; cold API/help PASS",
+    "dependencies": "pip check PASS",
+    "test_revision": 2,
+    "hosted_fixture_correction": "Initial hosted CI exposed editable src already present under -I; tests now preserve ambient baseline and explicitly verify pre-existing paths. Production unchanged.",
+    "reexecuted_checks": [
+      "44newfocused+Ruff",
+      "fullfunctional in both environments",
+      "maintained lint",
+      "folder maps"
+    ],
+    "reused_checks": [
+      "original architecture202",
+      "original new outside-checkout wheel build/install/resources/help",
+      "original both-order installed-library API/help/source checks",
+      "original pip-check; unchanged environment/production/library"
+    ],
+    "hosted_passed": 1240,
+    "hosted_skipped": 1,
+    "hosted_warnings": 6,
+    "hosted_wheel": "Rebuild/check PASS"
+  },
+  "preservation": {
+    "protected_files_unchanged": 1816,
+    "protected_Python_sources_unchanged": 1701,
+    "canonical_library_study_test_Python_unchanged": 1015,
+    "historical_proxy_Python_unchanged": 603,
+    "symlink_payloads_unchanged": 56,
+    "scope": "Exact bytes/modes in independent manifest; numerical/helper/parser AST normalization limited to declared import/bootstrap/main/doc changes"
+  },
+  "contract": {
+    "canonical_legacy_identity": true,
+    "main": "main(argv=None), original flags/defaults/forwarding/JSON and None return",
+    "ordinary_import": "Canonical utilities, no modeling backend/payload/output/own sys.path setup",
+    "physical_bootstrap": "Only direct main adds selected root/src through execution; finally removes only additions on help/success/error, with immediate cleanup on import failure",
+    "optional_backend": "Imported locally only in explicit library branch, preserving missing-library ImportError message after trusted-session read",
+    "attachment_policy": "Existing mapping/conversion, two-stream and length-mismatch choices, distinct legacy/library timelines, no downsample rescaling, output and late-overwrite behavior preserved",
+    "cpu_flag": "Forwarded only to historical legacy loader; no library-mode device-isolation guarantee",
+    "old_module_kpms_attribute": "Not a supported API; no maintained consumer found",
+    "SHIMS": "Existing row84 already names canonical physical owner; full MOVES/SHIMS/lint ledgers retained"
+  },
+  "evidence_sha256": {
+    "attach_entry_implementation_20261025.json": "d727f296b1c3f2f7e9027d3c5f4b996eb2738c0434636f7a1ae17e5baa9d7ac7",
+    "attach_entry_source_proof_20261025.json": "2e072d4e510950fc1e71720a1aa12cfbab4cbf33e386eb9497e8a8dfc2913543",
+    "attach_entry_test_result_20261025.json": "023b73ca8772c2bb555c06483cceabdc5c70c39eb6a05c83d2a0e3eb8a62bbf2",
+    "attach_entry_focused_20261025.log": "63d9b39791ab43231d47bb504b23d976b52a05642abe63c509cccd79773850a8",
+    "attach_entry_doctor.json": "9a0461e9eb99dd696ae40fc77c073233f1b478e5294279b60d92efaf25de940a",
+    "attach_entry_independent_review_20261025.json": "b6c75160de2df9602c03bfd7326dca1afe3935707ceca65d139961372a3f3ffb",
+    "attach_entry_related_focused.log": "ac253192c0537d538d882906e1b86c1ec74caf7c627d060d3e89b342fde21d62",
+    "attach_entry_candidate_checks.json": "fa7a6505754f9e4dcef130ebabdc68f87d0940fb8b557d3d24f28dde9cf91375",
+    "attach_entry_clean_cpu.json": "08fe5c7b14eca9c33001f41e45ead0c255022d61fc6599c614bb1d66242f44cd",
+    "attach_entry_candidate_installed_entrypoint_check.json": "eac124dee7fcd183c1ade5d193a80d1e12fcd63ea3c3a7b6b4e3e6dd00c320f1",
+    "attach_entry_candidate_package-check.log": "68f62505b05d351f5b08ee256ec8ac3e2eafb6cae3dfc14a0d2be8e4aca3ebce",
+    "attach_entry_test_result_v2_20261025.json": "49b9475d3e5cd4555d95f66ae54151800a0fa7ac1d58ef2939271742714bc8ef",
+    "attach_entry_focused_v2_20261025.log": "86ea2de63f741334862c73212f7338f5e4d5bb3232f311585fcda925f0af447d",
+    "attach_entry_independent_review_v2_20261025.json": "a3fbbf5633c67495191edab0bdecf953f5710c106a015caf6283e647d773df09",
+    "attach_entry_candidate_v2_checks.json": "9ea996029f6babcf39dcfc3574c5dd659be2a324c1d5994b273da3767b76728b",
+    "attach_entry_v2_clean_cpu.json": "c227c99ded46e6606affd863c6c5d16e73591c52910e472a366f52af82d75730",
+    "attach_entry_hosted_first_failure.log": "98ea5e9ae1c904ac755458c2ce079d8d65f8055bee40eecbb3ed37c8d9989595",
+    "attach_entry_exact_commit_review_v2_20261025.json": "b8cfde4d6bc9fec5ce85a1e89fd51dc438db49c8bb6759d0013b19654815b659",
+    "attach_entry_main_hosted_v3.log": "7e0676e50a6d3a3b0ca6cd888a2c198c5b3291d41b1e9ea29e295c061ed987cf"
+  },
+  "recovery": {
+    "planned_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consolidation_attach_entry_milestones.bundle",
+    "proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/attach_entry_bundle_restore_check.json",
+    "helper": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/save_attach_entry_checkpoint.py",
+    "requires_initial_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/preserved_all_refs.bundle",
+    "previous_proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/karen_alias_bundle_restore_check.json",
+    "limits": "Source/history only; ignored empirical payloads, external symlink targets and browser feedback require separate recovery."
+  },
+  "remaining_milestones": [
+    "Finish compatibility/import cleanup, including old-name retirement and direct-study namespace identity",
+    "Repair complete exporter/PPE routes and physical entry points",
+    "Specify and validate AMPH/flipped support or explicitly retire unsupported workflows",
+    "Verify named trusted historical artifact families",
+    "Verify ignored/external data, model and human-feedback recovery",
+    "Remove legacy roots only after supported routes and recovery gates pass; final validation/handoff"
+  ],
+  "limits": [
+    "Cold state snapshots preload ordinary NumPy/pandas/scipy.stats startup; true direct-file help runs without preloading.",
+    "Explicit result loading may extract/write model products; overwrite refusal remains late and does not prove absence of earlier effects.",
+    "Synthetic test-owned objects/backend responses/files only; no real pickle/model/recording/video or cohort execution.",
+    "Direct studies.behavior namespaces, other exporters/PPE/media, AMPH/flipped policy, trusted-artifact and external/feedback recovery remain separate gates.",
+    "Source/history bundles exclude ignored empirical payloads, external symlink targets and browser-local feedback.",
+    "Unchanged pinned library installation reused for isolated functional checks; candidate package-check and hosted CI rebuild/check the library wheel.",
+    "Editable installations can expose src under Python -I; revised tests preserve ambient and pre-existing paths. Earlier frozen evidence remains for unchanged production; final functional/lint/maps use revision2."
+  ],
+  "runtime_preservation": "Original primary/delivery runtimes, both viewers, legacy roots/symlinks and empirical payloads retained; no empirical execution."
+}

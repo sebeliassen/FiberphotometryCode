@@ -1,26 +1,45 @@
-## Attachment entry-point PR17 revision2 published; promotion pending (2026-10-25)
+## Base KPMS attachment entry point merged and verified (2026-10-25)
 
-Candidate .worktrees/attach-kpms-entrypoint / codex/attach-kpms-entrypoint is
-4786fbf1d14c54a9c88a64a46a8076e7acddc601, from main
-b19c12b3fb8c9ce4d180ba82be9152e29bbbd197. Draft PR17 is published and attached.
-Initial hosted CI exposed an incorrect test assumption: editable installs may
-already expose src under -I. The revised tests preserve ambient paths and cover
-explicit pre-existing paths; production source and earlier evidence are unchanged.
-73 focused checks (44 new), full 1,241 CPU tests in lab and isolated environments
-(6 existing warnings each), final lint3,064/maps150 pass. Architecture202, new
-outside-checkout wheel build/install/resources/help, installed-library API/help/
-source and dependency evidence remains valid for unchanged production/environment.
-Independent source/AST proof preserves1,816protected files. The canonical/legacy
-module and physical main are cold; explicit execution keeps scientific behavior.
+PR17 merged normally. Main/origin/main/main-integration are
+5c6de957b576a859453f6da7ffa88f9a9268e044; reviewed head 4786fbf1d14c54a9c88a64a46a8076e7acddc601.
+Both exact-head workflows and actual-main CI pass; actual tree equals tested head.
+Canonical and historical base attach_kpms now share exact module/function identity
+and main(argv). Import/help stays free of modeling backend, payload and product
+operations. Optional KPMS is loaded locally only by explicit library execution.
+Direct-file root/src activation lasts through main and restores additions on
+success/help/failure, with owner-import failure cleanup. Ordinary imports require
+an activated checkout and do not add paths. The original parser/defaults/JSON,
+attachment/mapping bodies, two-stream/length-mismatch choices, distinct legacy/
+library timelines, no downsample rescaling and late overwrite/output policy remain.
+--cpu still forwards only to the legacy loader; no library device guarantee.
 
-Read outputs/consolidation_20261021/promotion_20261021.json. Finish v2 exact-commit
-and helper reviews; require exact-head hosted checks before guarded normal merge,
-then actual-main CI. Recovery helpers require original branch/expected HEAD and
-clean tree before note or bundle/tag writes. After merge/CI, finalize primary notes
-and independently restore a new source bundle. Keep all previous backups and
-original runtimes/viewers, legacy roots/symlinks and empirical payloads. No real
-attachment/export/model/recording run or scientific policy change. Six larger
-gates remain; next small source candidate is PPE physical main/alias boundary.
+73 focused checks (44 new) and 1,241 full CPU tests pass in both lab and isolated
+pinned environments (6 existing warnings each). Hosted 1240 pass/1 skip;
+the existing ffmpeg video check passes locally. Architecture 202/no cycles, lint
+3,064/no new debt, navigation 150, dependencies, new outside-checkout wheel build/
+install/resources/help and installed-library attachment API/help pass. Independent
+review and byte/AST proof verify 1,816 protected files, including 1,701 Python,
+56 symlink payloads, named policy/config/golden owners and exact MOVES/SHIMS/lint
+ledgers (29 MOVES CRLF retained). Three diagnostics resolved; one historical E701
+in the preserved body remains accepted, with no lint inventory refresh. Cold state
+snapshots preload ordinary NumPy/pandas/scipy.stats; true file help has no preload.
+
+Exact record: registry/checkpoints/attach_kpms_entrypoint_completed_20261025.json.
+Live state: primary outputs/consolidation_20261021/promotion_20261021.json.
+New source/history restore proof there: attach_entry_bundle_restore_check.json;
+if absent run save_attach_entry_checkpoint.py before new work. Previous bundles
+remain. Git does not recover ignored recordings/models/media, external targets or
+browser-local feedback. Six larger milestones remain; this advances exporter APIs.
+
+Next source gate: PPE physical main/alias boundary using the completed exporter
+audit. Preserve its scientific window/clock/slope/cohort policies; no actual PPE
+run or new claim of portability/scientific equivalence. A separate optimized
+flipped-helper sibling import is also scoped in the provenance audit, without
+supporting a flipped project. Other exporters/media, direct study identities,
+AMPH/flipped policy decisions and trusted-artifact/external recovery remain gates.
+Use fresh codex worktrees from fetched main. Preserve primary/delivery runtimes,
+both viewers, legacy roots/symlinks and data. No real session/model/recording/video,
+cohort attachment/export/fit/render, notification or deletion was performed.
 
 ## Karen policy adapter identity merged and verified (2026-10-24)
 
