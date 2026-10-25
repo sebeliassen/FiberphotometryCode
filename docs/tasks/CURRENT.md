@@ -1,27 +1,40 @@
-## Bounded PPE PR18 published; promotion pending (2026-10-25)
+## Bounded PPE entry point merged and verified (2026-10-25)
 
-Candidate .worktrees/ppe-entrypoint / codex/ppe-entrypoint is
-1785a71975b259875d7c15e061b7bb36d7fb0237, from verified main
-5c6de957b576a859453f6da7ffa88f9a9268e044. Draft PR18 is published and attached.
-The finite contract changes three production files: main(argv), historical leaf
-and structural compatibility parent. All helpers and complete analysis function
-retain exact bytes/AST; parser changes only to parse_args(argv). Other known
-scientific/portability/artifact obligations remain backlog rather than new scope.
+PR18 merged normally. Main/origin/main/main-integration are
+098389cd836ab8e0b755dbb684050e482613bb78; reviewed head 1785a71975b259875d7c15e061b7bb36d7fb0237.
+Exact-head and actual-main CI pass; main tree equals tested head. This finite
+slice changed three production files: canonical main(argv), physical historical
+leaf and structural compatibility parent. Both import orders share canonical leaf
+identity. Parent retains physical __path__ so ordinary imports reach proxies.
+Direct-file root/src stays through explicit main and restores only added paths on
+success/help/import/main error; normal/spec nonmain imports do not activate paths.
 
-47 focused checks (33 new), 1,274 full CPU tests in both lab/isolated environments
-(6 existing warnings each), architecture202/lint3064/maps150/new wheel and actual
-installed-library PPE API/help/source/dependency checks pass. Source/AST and
-exact-commit/helper reviews are root-owned; no new independent agent review is
-claimed while optional subagents are unavailable under usage limit. Require
-exact-head hosted checks before normal guarded merge, then actual-main CI.
+47 focused checks (33 new) and 1,274 CPU tests pass in lab and pinned isolated
+environments (6 existing warnings each). Hosted 1273 pass/1 skip;
+the existing ffmpeg test passes locally. Architecture202/no cycles, lint3064/no
+new debt, maps150, new outside-checkout wheel/resources/help, installed-library
+PPE API/help/source in both orders and dependencies pass. Both helpers and all
+run_analysis retain exact source bytes/AST; parser body is AST-exact after only
+parse_args(argv) normalization. Other source/tests/policies/configs/goldens/symlinks
+and complete MOVES/SHIMS/lint ledgers are unchanged. Root source/AST and exact-commit
+review plus independent hosted CI; no new independent agent review is claimed.
 
-Live state: outputs/consolidation_20261021/promotion_20261021.json. Completion
-helpers finalize_ppe_entry_notes.py and save_ppe_entry_checkpoint.py preserve
-branch/expected-HEAD/clean-tree/content guards; use their frozen helper review.
-After merge/main CI, commit completion notes, independently restore a new source
-bundle, then run read-only audit_ppe_entry_completion.py. Keep previous backups,
-original runtime checkouts/viewers, all legacy paths/symlinks and empirical data.
-No real PPE/model/session/recording run or scientific policy change.
+Exact record: registry/checkpoints/ppe_entrypoint_completed_20261025.json.
+Live state: primary outputs/consolidation_20261021/promotion_20261021.json.
+New source/history proof there: ppe_entry_bundle_restore_check.json; if absent,
+run save_ppe_entry_checkpoint.py before new work. Keep every previous bundle.
+Source bundles exclude ignored recordings/models/media, external payloads and
+browser-local feedback. Whole legacy consolidation remains in progress.
+
+This entry-point contract is closed. Existing backlog still includes PPE explicit
+trusted input/output plumbing and frozen frame/time/slope/timewarp/cohort/inference
+policy, other exporter/media imports and mutations, the optimized flipped-helper
+sibling import, AMPH/flipped support decisions, direct study identities, trusted
+saved artifacts and ignored/external/feedback recovery, then legacy-root removal.
+Keep those separate from this completed slice. Use fresh codex worktrees from
+fetched main; preserve original runtimes/viewers, all legacy roots/symlinks and
+data. No actual PPE/session/model/recording/video decoding, cohort fit/export/
+render, notification, data moves or deletions were performed.
 
 ## Base KPMS attachment entry point merged and verified (2026-10-25)
 

@@ -1,0 +1,115 @@
+{
+  "date": "2026-10-25",
+  "pr": 18,
+  "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/18",
+  "main": "098389cd836ab8e0b755dbb684050e482613bb78",
+  "reviewed_head": "1785a71975b259875d7c15e061b7bb36d7fb0237",
+  "normal_merge_parents": [
+    "5c6de957b576a859453f6da7ffa88f9a9268e044",
+    "1785a71975b259875d7c15e061b7bb36d7fb0237"
+  ],
+  "main_tree_equals_tested_head": true,
+  "actual_main_workflows": [
+    {
+      "id": 40241834199,
+      "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/40241834199",
+      "head_sha": "098389cd836ab8e0b755dbb684050e482613bb78",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "candidate_checkpoint": {
+    "path": "registry/checkpoints/ppe_entrypoint_20261025.json",
+    "sha256": "941d2116619ee4faadedf7fbae869c5c6c932a02f23c34f43e8c4fd9d9cbf99e"
+  },
+  "validation": {
+    "status": "Merged; exact-head and actual-main CI PASS",
+    "new_cases": 33,
+    "focused_passed": 47,
+    "lab_passed": 1274,
+    "isolated_passed": 1274,
+    "warnings_each": 6,
+    "lab_interpreter": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "isolated_interpreter": "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "numerical_threads": 2,
+    "architecture_modules": 202,
+    "lint": "3064 reviewed diagnostics; no new debt; unchanged baseline",
+    "navigation_directories": 150,
+    "package_check": "New wheel build/install/resources/help outside checkout PASS",
+    "installed_PPE_API": "Both fresh canonical/legacy orders use exact pinned installed fpcode source; help and own state PASS",
+    "dependencies": "pip check PASS; no upgrades/install in pinned environment",
+    "hosted_passed": 1273,
+    "hosted_skipped": 1,
+    "hosted_warnings": 6,
+    "hosted_wheel": "Rebuild/check PASS"
+  },
+  "preservation": {
+    "scientific_functions_byte_and_AST_unchanged": [
+      "get_best_signal_column",
+      "get_dls_signal_col",
+      "run_analysis"
+    ],
+    "unrelated_existing_source_tests_configs_goldens_symlinks": "Unchanged by bounded Git diff; final exact-commit scope checked separately",
+    "ledgers": {
+      "registry/MOVES.tsv": {
+        "sha256": "0d458652b9214dd4c5cb287a1e9c673849152c4ca6ad5a15e1c79f21df12d549",
+        "CRLF": 29
+      },
+      "registry/SHIMS.tsv": {
+        "sha256": "79b259c290f759998379d8450c6db11b62fb5fb1cd21bf0343441e2be6dea7ac",
+        "CRLF": 0
+      },
+      "registry/LINT_BASELINE.json": {
+        "sha256": "ca7361a0405c333f8e03a395682f729e1e30427ac2a33b1acdffe1708201fc64",
+        "CRLF": 0
+      }
+    }
+  },
+  "contract": {
+    "production_files": 3,
+    "main": "Original parser flags/defaults/keyword forwarding and None return; only argv seam added",
+    "identity": "Canonical/historical leaf share exact module/function identity in both import orders; legacy parent retains physical __path__",
+    "physical": "Only direct main activates selected root/src through execution; removes only added paths on success/help/import/main failure",
+    "analysis": "Both helpers and complete run_analysis source bytes and AST unchanged",
+    "parser": "Body AST unchanged after only parse_args(argv) normalization",
+    "siblings": "No eager sibling imports; lib and saved-output analyses retain their existing implementations/routes and separate obligations"
+  },
+  "evidence_sha256": {
+    "ppe_entry_source_proof_20261025.json": "59f804219cbaa80ae5f6695706a9f398de5756967ad84a4b6c95061466ed1f7d",
+    "ppe_entry_focused.log": "6c72c820b578339658322a8beebcfada5823349ed64cd16f8d63b67185bb471f",
+    "ppe_entry_doctor.json": "c52eee0ccf7a26beed6cbe084b600344508facd19ef13daf269710d2b0bebc9e",
+    "ppe_entry_candidate_checks.json": "2881ee01a0c70be3061fee3d44efd728f64c772fd5a86ab8f05ce0ec65e381f7",
+    "ppe_entry_clean_cpu.json": "34863f95bae309ec942d45eb92c45bde33a91feae64c1680a7f32e91ecb386f4",
+    "ppe_entry_candidate_installed_entrypoint_check.json": "da52b50c28f0bc3e70c38fa8504614bb43b195cf7bb7b0c9a3df1af473b8be16",
+    "ppe_entry_candidate_package-check.log": "8d9a3ccce8c237627b00dd15d9e76807d6c4fe2d26a422bfc31fb822a020808d",
+    "ppe_entry_exact_commit_review_20261025.json": "94ba12ab1ee4b4a93852091d006d6313688610fef3b96f2663204b9839cd2551",
+    "ppe_entry_main_hosted.log": "00c08ecf8df6bf2862396ca3cc44c1a70012b6e1430b51be8eab5d9f442df4f6",
+    "ppe_entry_recovery_helper_review_20261025.json": "c3774465791ff48237390d9f213ad25d0d6dbebecee8e8d6a8ee6131f11a711b"
+  },
+  "recovery": {
+    "planned_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consolidation_ppe_entry_milestones.bundle",
+    "proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/ppe_entry_bundle_restore_check.json",
+    "helper": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/save_ppe_entry_checkpoint.py",
+    "requires_initial_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/preserved_all_refs.bundle",
+    "previous_proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/attach_entry_bundle_restore_check.json",
+    "limits": "Source/history only; ignored empirical payloads, external symlink targets and browser feedback require separate recovery."
+  },
+  "remaining_milestones": [
+    "Finish compatibility/import cleanup, including old-name retirement and direct-study namespace identity",
+    "Repair complete exporter/PPE routes and physical entry points",
+    "Specify and validate AMPH/flipped support or explicitly retire unsupported workflows",
+    "Verify named trusted historical artifact families",
+    "Verify ignored/external data, model and human-feedback recovery",
+    "Remove legacy roots only after supported routes and recovery gates pass; final validation/handoff"
+  ],
+  "limits": [
+    "Ordinary NumPy/pandas/scipy.stats startup precedes own-state snapshots; true direct-file help also runs without preloading.",
+    "Only test-owned analysis stubs; no actual session/pickle/model/recording/video or cohort execution.",
+    "Fixed AMPH/discovery/output defaults and row/frame/time/slope/timewarp/cohort/inference policy remain frozen. This is not full PPE portability or scientific-equivalence validation.",
+    "Direct studies.behavior identity retirement, other exporters/media and named-artifact/external/feedback recovery remain existing backlog.",
+    "Source/history bundles exclude ignored empirical/external/feedback payloads.",
+    "Root source/AST and exact-scope review plus independent hosted CI; optional subagents unavailable under usage limit. No new independent agent review is claimed."
+  ],
+  "runtime_preservation": "Original primary/delivery runtimes, both viewers, legacy roots/symlinks and empirical payloads retained; no empirical execution."
+}
