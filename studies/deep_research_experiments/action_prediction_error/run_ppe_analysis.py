@@ -63,7 +63,7 @@ def get_best_signal_column(df, base_key):
         return base_key
     return None
 
-def run_analysis(test_mode=False, use_history=False, use_kinematics=False, use_timewarp=False, use_force=False, suffix="", metric="variance"):
+def run_analysis(test_mode=False, use_history=False, use_kinematics=False, use_timewarp=False, use_force=False, suffix="", metric="variance", *, pkl_path=None, output_dir=None):
     print("--- Action Prediction Error (PPE) Analysis ---")
     print(f"Options: History={use_history}, Kinematics={use_kinematics}, TimeWarp={use_timewarp}, ForceVectors={use_force}, Suffix={suffix}, Metric={metric}")
 
@@ -72,7 +72,10 @@ def run_analysis(test_mode=False, use_history=False, use_kinematics=False, use_t
 
     # 1. Load Data
     # For AMPH only as requested
-    all_sessions = load_sessions('amph', apply_filter=True)
+    if pkl_path is None:
+        all_sessions = load_sessions('amph', apply_filter=True)
+    else:
+        all_sessions = load_sessions('amph', apply_filter=True, pkl_path=Path(pkl_path))
 
     results = []
 
@@ -392,7 +395,10 @@ def run_analysis(test_mode=False, use_history=False, use_kinematics=False, use_t
     print("\n--- Results Summary ---")
     if not res_df.empty:
         # Save Results
-        out_dir = "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/deep_research_experiments/action_prediction_error/output"
+        out_dir = (
+            os.fspath(output_dir) if output_dir is not None else
+            "/home/fsp585/Desktop/FiberphotometryCode/syllable_generation/analysis/deep_research_experiments/action_prediction_error/output"
+        )
         os.makedirs(out_dir, exist_ok=True)
         csv_name = f"ppe_results{suffix}.csv"
         res_df.to_csv(os.path.join(out_dir, csv_name))
@@ -427,7 +433,17 @@ def main(argv=None):
     parser.add_argument("--force-vectors", action="store_true", help="Enable Force Vectors (Directionality)")
     parser.add_argument("--suffix", type=str, default="", help="Suffix for output files")
     parser.add_argument("--metric", type=str, default="variance", choices=["variance", "mean"], help="Metric to analyze: 'variance' (PPE) or 'mean' (Signal Strength)")
+    parser.add_argument("--sessions-pkl", dest="pkl_path", type=Path, default=None,
+                        help="Explicit trusted session pickle (omit to retain AMPH discovery)")
+    parser.add_argument("--output-dir", type=Path, default=None,
+                        help="Directory for PPE CSV and plots (omit to retain the historical output path)")
     args = parser.parse_args(argv)
+
+    path_options = {}
+    if args.pkl_path is not None:
+        path_options["pkl_path"] = args.pkl_path
+    if args.output_dir is not None:
+        path_options["output_dir"] = args.output_dir
 
     run_analysis(
         test_mode=args.test_mode,
@@ -436,7 +452,8 @@ def main(argv=None):
         use_timewarp=args.time_warp,
         use_force=args.force_vectors,
         suffix=args.suffix,
-        metric=args.metric
+        metric=args.metric,
+        **path_options
     )
 
 
