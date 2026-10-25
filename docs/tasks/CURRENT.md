@@ -1,3 +1,25 @@
+## Attachment entry-point PR17 published; promotion pending (2026-10-25)
+
+Candidate .worktrees/attach-kpms-entrypoint / codex/attach-kpms-entrypoint is
+15e3b26740f81aeeed1b55cb981c639491cefa2a, parent main
+b19c12b3fb8c9ce4d180ba82be9152e29bbbd197. Draft PR17 is published and attached.
+Independent exact-commit review passes. 71 focused checks (42 new), full1,239CPU
+in lab and isolated environments (6 existing warnings), architecture202/lint3064/
+maps150/newwheel build-install/help/resources and actual installed-library API/
+help/source/dependency checks pass. Source/AST review preserves1,816protected files.
+The base canonical/legacy module and physical main are cold, with explicit backend
+execution and bootstrap restoration. Attachment science/defaults are unchanged.
+
+Read outputs/consolidation_20261021/promotion_20261021.json. Require exact-head
+hosted checks before guarded normal promotion, then actual-main CI. Prepared
+finalize_attach_entry_notes.py and save_attach_entry_checkpoint.py are receiving
+branch/expected-HEAD/clean-tree preflights before any versioned note or bundle/tag
+writes. Finish their independent helper review before use; previous backups remain.
+After merge/CI, finalize primary notes and independently restore a new source
+bundle. Preserve original runtimes/viewers, legacy roots/symlinks and data. No real
+attachment/export/model/recording or scientific policy change. Six larger gates
+remain; next small source candidate is PPE physical main/alias portability boundary.
+
 ## Karen policy adapter identity merged and verified (2026-10-24)
 
 PR16 is merged normally. Main/origin/main/main-integration are
