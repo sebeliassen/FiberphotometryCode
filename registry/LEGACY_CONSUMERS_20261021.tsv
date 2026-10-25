@@ -2621,11 +2621,11 @@ docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	132	literal_candidate	archive
 docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	132	literal_candidate	archive/legacy.	documentation_or_history
 docs/tasks/CONSOLIDATION_PROGRESS_20261021.md	73	literal_candidate	core/pipelines/compat/archive	documentation_or_history
 docs/tasks/CONSOLIDATION_PROGRESS_20261021.md	166	literal_candidate	archive/Git/AST	documentation_or_history
-docs/tasks/CURRENT.md	348	literal_candidate	core/pipelines/compat/archive.	documentation_or_history
-docs/tasks/CURRENT.md	461	literal_candidate	core/pipelines/compat/archive	documentation_or_history
-docs/tasks/CURRENT.md	469	literal_candidate	pipelines/core	documentation_or_history
-docs/tasks/CURRENT.md	1380	literal_candidate	syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/	documentation_or_history
-docs/tasks/CURRENT.md	2362	literal_candidate	syllable_generation/analysis/sequence_viz/run12_human_labels.csv	documentation_or_history
+docs/tasks/CURRENT.md	374	literal_candidate	core/pipelines/compat/archive.	documentation_or_history
+docs/tasks/CURRENT.md	487	literal_candidate	core/pipelines/compat/archive	documentation_or_history
+docs/tasks/CURRENT.md	495	literal_candidate	pipelines/core	documentation_or_history
+docs/tasks/CURRENT.md	1406	literal_candidate	syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/	documentation_or_history
+docs/tasks/CURRENT.md	2388	literal_candidate	syllable_generation/analysis/sequence_viz/run12_human_labels.csv	documentation_or_history
 ops/repo/build_triage.py	9	literal_candidate	archive/legacy/	repository_tool
 ops/repo/build_triage.py	92	literal_candidate	archive/legacy/	repository_tool
 ops/repo/build_triage.py	95	literal_candidate	syllable_generation/syllabizers/keypoint_moseq_syll/...	repository_tool
@@ -3339,7 +3339,7 @@ src/fpcode/tracking/static_fusion.py	2	literal_candidate	core.static_fusion_engi
 studies/behavior/misc/.folder-map.md	9	literal_candidate	syllable_generation/.folder-map.md	study_or_active_source
 studies/behavior/misc/syllable_generation/generate_all_snapshots.py	38	literal_candidate	syllable_generation/syllabizers/keypoint_moseq_syll/optimized_flip_project/optimized_flip_activity_k100k/trajectory_plots	study_or_active_source
 studies/deep_research_experiments/action_prediction_error/analyze_variance_distribution.py	5	literal_candidate	syllable_generation/analysis/deep_research_experiments/action_prediction_error/output	study_or_active_source
-studies/deep_research_experiments/action_prediction_error/run_ppe_analysis.py	395	literal_candidate	syllable_generation/analysis/deep_research_experiments/action_prediction_error/output	study_or_active_source
+studies/deep_research_experiments/action_prediction_error/run_ppe_analysis.py	400	literal_candidate	syllable_generation/analysis/deep_research_experiments/action_prediction_error/output	study_or_active_source
 studies/deep_research_experiments/test_ang_vel.py	24	literal_candidate	syllable_generation/data/jonathan_amph_sessions_double_w_sylls.pkl	study_or_active_source
 studies/deep_research_experiments/utils/inspect_alignment.py	5	literal_candidate	syllable_generation/data/jonathan_ifdn_sessions_w_sylls.pkl	study_or_active_source
 studies/deep_research_experiments/utils/inspect_alignment.py	6	literal_candidate	syllable_generation/data/jonathan_amph_sessions_v2_w_sylls.pkl	study_or_active_source
@@ -4697,6 +4697,7 @@ tests/unit/test_npz_component_cache.py	82	literal_candidate	archive.writestr	tes
 tests/unit/test_npz_component_cache.py	83	literal_candidate	archive.writestr	test
 tests/unit/test_ppe_entrypoint.py	13	literal_candidate	syllable_generation.analysis.deep_research_experiments.action_prediction_error.run_ppe_analysis	test
 tests/unit/test_ppe_entrypoint.py	17	literal_candidate	syllable_generation/analysis/deep_research_experiments/action_prediction_error/run_ppe_analysis.py	test
+tests/unit/test_ppe_explicit_io.py	18	literal_candidate	syllable_generation/analysis/	test
 tests/unit/test_stage_policy_transport.py	109	literal_candidate	fiberphotometry.attach_photometry_refs	test
 tests/unit/test_stage_policy_transport.py	111	literal_candidate	fiberphotometry.attach_photometry_refs	test
 tests/unit/test_stage_policy_transport.py	150	literal_candidate	fiberphotometry.realize_photometry_columns	test

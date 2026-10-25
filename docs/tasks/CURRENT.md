@@ -1,3 +1,29 @@
+## Explicit PPE input/output candidate (2026-10-26)
+
+Candidate codex/ppe-explicit-io starts from verified main
+098389cd836ab8e0b755dbb684050e482613bb78. Scope is optional trusted-session and
+output paths in the canonical PPE driver, additive tests and owner/checkpoint
+metadata. API pkl_path/output_dir are keyword-only; CLI --sessions-pkl/--output-dir
+select them. Omitted input/output and all seven old arguments/forwarding/defaults
+retain original behavior. Explicit inputs never silently fall back to discovery;
+nonempty CSV/both plot calls share selected output, empty results make no output.
+
+Analysis calculations, cohort/filter/frame/time/slope/timewarp/inference policy,
+bootstrap, historical proxies and structural parent are unchanged. 70 focused tests pass (23 new); full 1,297 CPU tests pass in lab and pinned
+isolated environments with 6 existing warnings each. Architecture202/no cycles,
+lint3064/no new debt, maps150, fresh outside-checkout wheel/resources/help, actual
+installed-library PPE API/help/source and dependencies pass. Independent source
+review verifies entire original driver bytes/AST after only six declared I/O
+plumbing reversals. Exact checkpoint: registry/checkpoints/ppe_explicit_io_20261026.json.
+Finish exact-commit/helper reviews and hosted checks before normal promotion, then
+actual-main CI and a new independently restored source/history backup. No real
+session/model/recording/video or empirical PPE/cohort run is authorized/performed.
+Keep primary/delivery runtime branches, both viewers, legacy roots/symlinks, data
+and every previous source bundle. This closes an existing I/O portability item;
+remaining exporter/media, AMPH/flipped, direct-study identity, trusted-artifact,
+external/empirical/feedback recovery and final legacy-root retirement stay backlog.
+Live state: primary outputs/consolidation_20261021/promotion_20261021.json.
+
 ## Bounded PPE entry-point candidate (2026-10-25)
 
 Candidate codex/ppe-entrypoint starts from verified main

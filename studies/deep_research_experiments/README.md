@@ -45,9 +45,8 @@ python -m studies.deep_research_experiments.action_prediction_error.run_ppe_anal
 The first two commands intentionally load IFDN/AMPH when executed; importing them
 is inert. Historical compatibility files still forward to their guarded `main`
 functions. Tests use controlled synthetic sessions and do not validate historical
-pickles or reproduce cohort analyses. The full PPE analysis driver retains its
-historical fixed output path and optional plotting dependencies; its execution
-and output-location migration remain separate work.
+pickles or reproduce cohort analyses. PPE accepts selected paths as described
+below; omitted paths retain the historical discovery and output defaults.
 
 ## PPE entry points
 
@@ -58,8 +57,23 @@ imports reach the leaf proxy. Canonical and historical direct files support
 `--help` from another working directory, activating this checkout only through
 explicit execution and restoring only paths they added on success/help/failure.
 
-This entry-point repair does not make full PPE execution portable. Running without
-`--help` retains AMPH selection, pickle discovery and the historical fixed output
-location. Its existing frame/time, filtering, regression, slope and inference
-policies are frozen. Sibling diagnostics and saved-output analyses have their own
-execution obligations; importing the PPE package does not execute them.
+Select a trusted session pickle and output directory for an explicit execution:
+
+```bash
+python -m studies.deep_research_experiments.action_prediction_error.run_ppe_analysis \
+  --sessions-pkl /selected/trusted.pkl --output-dir /selected/ppe-output
+```
+
+The API exposes the same optional paths as keyword-only `pkl_path` and
+`output_dir` arguments to `run_analysis`. Omitting either retains its historical
+default. An explicitly selected input never falls back to discovery when missing;
+an empty input string selects the current directory and fails as an input file.
+Empty results create no output directory or files. Nonempty results use the
+selected directory for the CSV and both plots, retaining their original names
+and suffix behavior.
+
+Running without `--help` loads trusted pickle data; `--test-mode` still loads
+sessions and is not a dry run. AMPH selection, filtering, frame/time, regression,
+slope and inference policies remain frozen. Path selection does not validate
+historical artifacts or scientific results. Sibling diagnostics and saved-output
+analyses retain their own execution obligations; importing PPE does not run them.
