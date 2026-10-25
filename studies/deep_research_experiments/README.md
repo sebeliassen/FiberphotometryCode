@@ -48,3 +48,18 @@ functions. Tests use controlled synthetic sessions and do not validate historica
 pickles or reproduce cohort analyses. The full PPE analysis driver retains its
 historical fixed output path and optional plotting dependencies; its execution
 and output-location migration remain separate work.
+
+## PPE entry points
+
+The canonical PPE driver exposes `main(argv=None)` and retains its original CLI
+flags and analysis defaults. The historical leaf forwards to that same canonical
+module; its compatibility parent retains its physical search path so ordinary
+imports reach the leaf proxy. Canonical and historical direct files support
+`--help` from another working directory, activating this checkout only through
+explicit execution and restoring only paths they added on success/help/failure.
+
+This entry-point repair does not make full PPE execution portable. Running without
+`--help` retains AMPH selection, pickle discovery and the historical fixed output
+location. Its existing frame/time, filtering, regression, slope and inference
+policies are frozen. Sibling diagnostics and saved-output analyses have their own
+execution obligations; importing the PPE package does not execute them.
