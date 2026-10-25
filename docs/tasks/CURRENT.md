@@ -1,3 +1,30 @@
+## PPE explicit input/output PR19 published; promotion pending (2026-10-26)
+
+Candidate .worktrees/ppe-explicit-io / codex/ppe-explicit-io is
+1985cd6f788dddce3283b0cd42f8410799bf067d, from main
+098389cd836ab8e0b755dbb684050e482613bb78. Draft PR19 is published and attached.
+One production driver adds optional trusted input/output paths while preserving
+seven old positional arguments/defaults, exact omitted loader/CLI forwarding,
+scientific calculations and bootstrap/compatibility routes. Missing/empty input
+never silently discovers another file; empty results create no outputs.
+
+70 focused checks (23 new), full1,297CPU in both lab/pinned isolated environments
+(6 existing warnings), architecture202/lint3064/maps150/new outside-checkout wheel
+and both-order installed API/help/source/dependencies pass. Independent source,
+exact-commit and helper reviews PASS. Six declared I/O reversals recover the entire
+original driver byte/AST-exact. Existing tests, policies, configs, goldens, aliases,
+symlinks and MOVES/SHIMS/lint ledgers are unchanged. Synthetic12-slope reference
+checks143/12 variance and3.5 meanabs; plotting stubbed, owned CSV serialization.
+
+Live state: outputs/consolidation_20261021/promotion_20261021.json. Require both
+exact-head hosted workflows before guarded normal merge, then actual-main CI.
+Reviewed finalize_ppe_io_notes.py/save_ppe_io_checkpoint.py/audit_ppe_io_completion.py
+provide expected-branch/HEAD/clean-tree/content, official CI evidence, fresh source
+restore and21-worktree/runtime checks. After mainCI finalize notes, restore new
+bundle, audit final state. Preserve original primary/delivery runtimes, both
+viewers, data/legacy roots/symlinks and all previous bundles. No actual empirical
+PPE/session/model/recording/video, fit/export/render or scientific policy change.
+
 ## Bounded PPE entry point merged and verified (2026-10-25)
 
 PR18 merged normally. Main/origin/main/main-integration are
