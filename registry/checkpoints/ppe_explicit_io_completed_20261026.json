@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-26",
+  "pr": 19,
+  "url": "https://github.com/sebeliassen/FiberphotometryCode/pull/19",
+  "main": "ce281ccdf76616035fd705475bd15bb3e61f3b72",
+  "reviewed_head": "1985cd6f788dddce3283b0cd42f8410799bf067d",
+  "normal_merge_parents": [
+    "098389cd836ab8e0b755dbb684050e482613bb78",
+    "1985cd6f788dddce3283b0cd42f8410799bf067d"
+  ],
+  "main_tree_equals_tested_head": true,
+  "actual_main_workflows": [
+    {
+      "id": 40244859126,
+      "html_url": "https://github.com/sebeliassen/FiberphotometryCode/actions/runs/40244859126",
+      "head_sha": "ce281ccdf76616035fd705475bd15bb3e61f3b72",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "candidate_checkpoint": {
+    "path": "registry/checkpoints/ppe_explicit_io_20261026.json",
+    "sha256": "ce95999a95c82ee415ade3d67cd9c49e98159404c7f3c7483920c8e8a3b25b28"
+  },
+  "validation": {
+    "status": "Merged; exact-head and actual-main CI PASS",
+    "baseline_passed": 1274,
+    "new_cases": 23,
+    "focused_passed": 70,
+    "lab_passed": 1297,
+    "isolated_passed": 1297,
+    "warnings_each": 6,
+    "lab_interpreter": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "isolated_interpreter": "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "numerical_threads": 2,
+    "architecture_modules": 202,
+    "lint": "3064 accepted historical diagnostics; no new debt; unchanged inventory",
+    "navigation_directories": 150,
+    "package_check": "Fresh outside-checkout wheel build/install/resources/help PASS",
+    "installed_PPE_API": "Both fresh canonical/legacy import orders use exact pinned installed library source; new CLI help flags and own-state checks PASS",
+    "dependencies": "pip check PASS; existing pinned environment, no upgrade/install",
+    "numerical_fixture": "12 float64 slopes -3..8: population variance143/12 and meanabs3.5, rel1e-12/abs1e-10; test-owned rows only; plotting stubbed",
+    "hosted_passed": 1296,
+    "hosted_skipped": 1,
+    "hosted_warnings": 6,
+    "hosted_wheel": "Rebuild/check PASS"
+  },
+  "preservation": {
+    "entire_driver_bytes_AST_after_six_IO_reversals": true,
+    "two_helper_bytes_AST_unchanged": true,
+    "all_existing_related_tests_unchanged": {
+      "tests/unit/test_ppe_entrypoint.py": "3d53e27d2fb7cae99cf9958487e8401caf4e084cb89ddc1ce30910a8e48eab5c",
+      "tests/unit/test_deep_research_loading.py": "dc672a9ad291cd0277c085a8ee1dbad44a6a7ccdceddcd7d8223c6501f196953"
+    },
+    "bootstrap_proxies_library_config_policy_goldens_symlinks": "Unchanged; exact final committed path scope still to verify",
+    "ledgers": {
+      "registry/MOVES.tsv": {
+        "sha256": "0d458652b9214dd4c5cb287a1e9c673849152c4ca6ad5a15e1c79f21df12d549",
+        "CRLF": 29
+      },
+      "registry/SHIMS.tsv": {
+        "sha256": "79b259c290f759998379d8450c6db11b62fb5fb1cd21bf0343441e2be6dea7ac",
+        "CRLF": 0
+      },
+      "registry/LINT_BASELINE.json": {
+        "sha256": "ca7361a0405c333f8e03a395682f729e1e30427ac2a33b1acdffe1708201fc64",
+        "CRLF": 0
+      }
+    }
+  },
+  "contract": {
+    "production_files": 1,
+    "API": "Preserve seven existing positional arguments/defaults; new keyword-only pkl_path=None/output_dir=None",
+    "CLI": "--sessions-pkl and --output-dir parse Path values; omitted options retain original seven-key forwarding exactly",
+    "input": "None keeps old AMPH/filter loader call; explicit Path(pkl_path) prevents missing/empty-string fallback to discovery",
+    "output": "None retains exact historical literal; explicit os.fspath only for nonempty results; CSV and both plot calls retain directory/name/suffix/index/write/exception behavior",
+    "empty_results": "No output directory or file creation",
+    "science": "Exact entire baseline driver bytes/AST after six declared plumbing reversals; scientific bodies, clock/window/filter/cohort/regression/timewarp/inference policy preserved",
+    "import_identity_bootstrap": "Existing canonical/legacy routes, structural parent and cold main bootstrap unchanged"
+  },
+  "source_sha256": {
+    "studies/deep_research_experiments/action_prediction_error/run_ppe_analysis.py": "6414768a912fd31e389f970dd0820eb77e237a34562242aa37c481039a627c6e",
+    "studies/deep_research_experiments/README.md": "64ff7ee02bd44b13e9e527af8792fc075203a17709c20113f91a7f608b5d10a5",
+    "tests/unit/test_ppe_explicit_io.py": "579e39c41ef86634a298a6067ef5a174a1c98e09b73ed4ec4f58d346741f91ac"
+  },
+  "source_review": {
+    "path": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/ppe_io_source_review_20261026.json",
+    "sha256": "e152bbedf1f678dd828a4f56bc3585f5f931eda66b2b315970394d236aa2e07c",
+    "bytes": 15789
+  },
+  "evidence_sha256": {
+    "ppe_io_source_review_20261026.json": "e152bbedf1f678dd828a4f56bc3585f5f931eda66b2b315970394d236aa2e07c",
+    "ppe_io_test_result_20261026.json": "8fc0cc247b76e3adbf4fea6883757344c127347ac987007d4da467f0fddcfdda",
+    "ppe_io_focused_20261026.log": "a2ffcadc08ad692d240645535a284abeca343296b0e916bdbd55cb39584eb36e",
+    "ppe_io_related_focused_20261026.log": "6ca3e2e66a8e2fbd8e1b6e4d61885f5216de1d181ca090d86e35325f2688e355",
+    "ppe_io_doctor.json": "62d3a4cf52bab34424e9c41cb03f3cb514117c56bf970e0bf3cc8001f990d450",
+    "ppe_io_candidate_checks.json": "1d5595ce7c726975497f47dff044e64cb689cfd4e266efc7774fc83a17477183",
+    "ppe_io_clean_cpu.json": "937a59fbb413c51caeedb061f4b2af7d5e887bbd79f00b24364d18e488e7bc65",
+    "ppe_io_candidate_installed_entrypoint_check.json": "25d1759ef688d04d8b2c1de6b806ef458b79a27943ff964c0e4798ff38d986ac",
+    "ppe_io_candidate_package-check.log": "e6b769dedaa8411a3519bb24fe15fa7c683e9ebc93deb174953b9a56a6b88763",
+    "ppe_io_exact_commit_review_20261026.json": "1c2eeb715108026fb468439510b3bae0717994af76bab69ebf1c8bcbc30a237a",
+    "ppe_io_main_hosted.log": "f419483b0a534346216a40970e6dee8d5ec5a2e755db1e64eac2aed66bc047a2",
+    "ppe_io_helper_preparation_20261026.json": "6fd155b8c2a118986138d8cac0a346a1ac80445f8f76e16175bb9454d12d816a"
+  },
+  "recovery": {
+    "planned_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consolidation_ppe_io_milestones.bundle",
+    "proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/ppe_io_bundle_restore_check.json",
+    "helper": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/save_ppe_io_checkpoint.py",
+    "requires_initial_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/preserved_all_refs.bundle",
+    "previous_proof": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/ppe_entry_bundle_restore_check.json",
+    "limits": "Source/history only; ignored empirical payloads, external symlink targets and browser feedback require separate recovery."
+  },
+  "remaining_milestones": [
+    "Finish compatibility/import cleanup, including old-name retirement and direct-study namespace identity",
+    "Repair complete exporter/PPE routes and physical entry points",
+    "Specify and validate AMPH/flipped support or explicitly retire unsupported workflows",
+    "Verify named trusted historical artifact families",
+    "Verify ignored/external data, model and human-feedback recovery",
+    "Remove legacy roots only after supported routes and recovery gates pass; final validation/handoff"
+  ],
+  "limits": [
+    "Only test-owned in-memory sessions and temporary files; only a test-created empty-list pickle decoded, not the controlled fallback.",
+    "CSV serialization of synthetic rows is real; plotting is stubbed and historical default writes are intercepted.",
+    "AMPH selection/filtering and row/frame/time/slope/timewarp/cohort/inference policies remain historical; path selection is not scientific or real-artifact validation.",
+    "Cold state checks preload ordinary NumPy/pandas/scipy.stats; inherited true direct-file help also runs without preloads.",
+    "Default discovery/output paths and suffix/overwrite policy remain; --test-mode is not a dry run.",
+    "Other known exporters/media, AMPH/flipped decisions, direct-study identities, named artifacts, external/empirical/feedback recovery and final legacy-root retirement remain existing backlog.",
+    "Source/history bundles exclude ignored recordings/models/media, external target contents and browser feedback."
+  ],
+  "runtime_preservation": "Original primary/delivery runtimes, both viewers, legacy roots/symlinks and empirical payloads retained; no empirical execution."
+}

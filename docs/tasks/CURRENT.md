@@ -1,29 +1,42 @@
-## PPE explicit input/output PR19 published; promotion pending (2026-10-26)
+## PPE explicit input/output merged and verified (2026-10-26)
 
-Candidate .worktrees/ppe-explicit-io / codex/ppe-explicit-io is
-1985cd6f788dddce3283b0cd42f8410799bf067d, from main
-098389cd836ab8e0b755dbb684050e482613bb78. Draft PR19 is published and attached.
-One production driver adds optional trusted input/output paths while preserving
-seven old positional arguments/defaults, exact omitted loader/CLI forwarding,
-scientific calculations and bootstrap/compatibility routes. Missing/empty input
-never silently discovers another file; empty results create no outputs.
+PR19 merged normally. Main/origin/main/main-integration are
+ce281ccdf76616035fd705475bd15bb3e61f3b72; reviewed head 1985cd6f788dddce3283b0cd42f8410799bf067d.
+Exact-head and actual-main CI pass; normal merge tree equals tested head.
+PPE run_analysis retains seven positional options/defaults and adds keyword-only
+pkl_path/output_dir. Omitted input calls the historical AMPH loader exactly;
+explicit input is Path-normalized and never falls back to discovery. Omitted
+output retains the exact historical directory; selected output is shared by the
+CSV and both existing plot calls. Empty results create no output directory/files.
+CLI --sessions-pkl/--output-dir are optional Paths; omission forwards only the
+original seven keywords. Existing main bootstrap/proxy/structural parent remain.
 
-70 focused checks (23 new), full1,297CPU in both lab/pinned isolated environments
-(6 existing warnings), architecture202/lint3064/maps150/new outside-checkout wheel
-and both-order installed API/help/source/dependencies pass. Independent source,
-exact-commit and helper reviews PASS. Six declared I/O reversals recover the entire
-original driver byte/AST-exact. Existing tests, policies, configs, goldens, aliases,
-symlinks and MOVES/SHIMS/lint ledgers are unchanged. Synthetic12-slope reference
-checks143/12 variance and3.5 meanabs; plotting stubbed, owned CSV serialization.
+70 focused checks (23 new) and 1,297 CPU tests
+pass in lab and pinned isolated environments (6 existing warnings each).
+Hosted 1296 pass/1 skip; the ffmpeg check passes locally. Architecture
+202/no cycles, lint3064/no new debt, maps150, package/installed API/help/source and
+dependencies pass as recorded. Source/AST and exact-commit reviews bind the raw
+source/test hashes to this head. Only declared input/output/signature/parser
+plumbing changes the driver; helpers, scientific calculations, clocks, filtering,
+cohort policies, suffix/naming/overwrite behavior and old defaults remain.
+Complete MOVES/SHIMS/lint ledgers and unrelated existing source/tests/goldens stay
+unchanged. This is synthetic/source evidence; no real PPE artifact was executed.
 
-Live state: outputs/consolidation_20261021/promotion_20261021.json. Require both
-exact-head hosted workflows before guarded normal merge, then actual-main CI.
-Reviewed finalize_ppe_io_notes.py/save_ppe_io_checkpoint.py/audit_ppe_io_completion.py
-provide expected-branch/HEAD/clean-tree/content, official CI evidence, fresh source
-restore and21-worktree/runtime checks. After mainCI finalize notes, restore new
-bundle, audit final state. Preserve original primary/delivery runtimes, both
-viewers, data/legacy roots/symlinks and all previous bundles. No actual empirical
-PPE/session/model/recording/video, fit/export/render or scientific policy change.
+Exact record: registry/checkpoints/ppe_explicit_io_completed_20261026.json.
+Live state: primary outputs/consolidation_20261021/promotion_20261021.json.
+New source/history proof: ppe_io_bundle_restore_check.json; if absent run
+save_ppe_io_checkpoint.py before new work. Keep every previous bundle and runtime.
+Git recovery excludes ignored recordings/models/media, external symlink contents
+and browser-local feedback. Whole legacy consolidation remains in progress.
+
+The PPE explicit-path contract is closed. Existing backlog still includes real
+scientific/artifact validation, other exporter/media imports and mutations,
+optimized flipped-helper sibling import, AMPH/flipped policy/support decisions,
+direct study identities, trusted saved artifacts and ignored/external/feedback
+recovery, then gated legacy-root removal and handoff. No new milestone is added.
+Use fresh codex worktrees from fetched main. Preserve original primary/delivery
+runtimes, both viewers, every legacy root/symlink and data. No empirical decoding,
+cohort build/fit/export/render, notification, environment upgrade or deletion.
 
 ## Bounded PPE entry point merged and verified (2026-10-25)
 
