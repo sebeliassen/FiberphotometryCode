@@ -1,3 +1,28 @@
+## Bounded PPE PR18 published; promotion pending (2026-10-25)
+
+Candidate .worktrees/ppe-entrypoint / codex/ppe-entrypoint is
+1785a71975b259875d7c15e061b7bb36d7fb0237, from verified main
+5c6de957b576a859453f6da7ffa88f9a9268e044. Draft PR18 is published and attached.
+The finite contract changes three production files: main(argv), historical leaf
+and structural compatibility parent. All helpers and complete analysis function
+retain exact bytes/AST; parser changes only to parse_args(argv). Other known
+scientific/portability/artifact obligations remain backlog rather than new scope.
+
+47 focused checks (33 new), 1,274 full CPU tests in both lab/isolated environments
+(6 existing warnings each), architecture202/lint3064/maps150/new wheel and actual
+installed-library PPE API/help/source/dependency checks pass. Source/AST and
+exact-commit/helper reviews are root-owned; no new independent agent review is
+claimed while optional subagents are unavailable under usage limit. Require
+exact-head hosted checks before normal guarded merge, then actual-main CI.
+
+Live state: outputs/consolidation_20261021/promotion_20261021.json. Completion
+helpers finalize_ppe_entry_notes.py and save_ppe_entry_checkpoint.py preserve
+branch/expected-HEAD/clean-tree/content guards; use their frozen helper review.
+After merge/main CI, commit completion notes, independently restore a new source
+bundle, then run read-only audit_ppe_entry_completion.py. Keep previous backups,
+original runtime checkouts/viewers, all legacy paths/symlinks and empirical data.
+No real PPE/model/session/recording run or scientific policy change.
+
 ## Base KPMS attachment entry point merged and verified (2026-10-25)
 
 PR17 merged normally. Main/origin/main/main-integration are
