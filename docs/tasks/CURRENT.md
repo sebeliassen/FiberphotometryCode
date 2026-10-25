@@ -1,3 +1,38 @@
+## Base KPMS attachment import and physical CLI boundary (2026-10-25)
+
+Candidate codex/attach-kpms-entrypoint starts from main
+b19c12b3fb8c9ce4d180ba82be9152e29bbbd197. The base canonical driver and historical
+physical leaf share exact module/function identity and main(argv). Optional KPMS
+loads only during explicit library-mode execution; canonical utilities are used.
+Ordinary imports do not activate source paths. Direct-file main keeps its selected
+root/src through execution and restores additions on success/help/failure. Existing
+VFI mapping/conversion, two-stream/length-mismatch policy, distinct legacy/library
+timelines, no downsample rescaling and late overwrite/output behavior are retained.
+--cpu remains legacy-loader forwarding; library device policy is unchanged.
+
+Validation complete: 71 focused checks (42 new); 1,239 full CPU tests pass in
+lab and isolated pinned environments (6 existing warnings each). Architecture
+202/no cycles, lint 3,064/no new debt, 150-directory navigation, new outside-checkout
+wheel build/install/resources/help and dependencies pass. Attachment API/help
+matches installed-library source hashes in both fresh canonical/legacy orders.
+Independent review and byte/AST proof verify 1,816 protected files, including
+1,701 Python sources, 56 symlink payloads and named policy/config/golden owners.
+MOVES/SHIMS/lint ledgers retain exact bytes; generated consumer inventories update
+separately. Source has one accepted historical E701; three old diagnostics are
+resolved and no lint inventory refreshed. Cold snapshots preload ordinary
+NumPy/pandas/scipy.stats; true direct-file help also passes without preloading.
+No actual session/model/recording/video payload, cohort attachment/export/fit or
+scientific policy change. Finish exact-commit review and hosted checks before
+normal promotion, then actual-main CI and an independently restored source backup.
+Evidence: registry/checkpoints/attach_kpms_entrypoint_20261025.json; primary
+outputs/consolidation_20261021/promotion_20261021.json tracks live Git state.
+
+Other exporters/PPE/media, direct study symlink identities, AMPH/flipped scientific
+support and named trusted artifacts plus empirical/external/browser-feedback
+recovery remain gates. Keep original runtimes/viewers, all legacy roots/symlinks,
+empirical payloads and previous bundles. Source/history backups exclude those
+ignored/external/feedback payloads; whole legacy retirement remains in progress.
+
 ## Direct Karen policy adapter identity (2026-10-24)
 
 Candidate codex/karen-policy-aliases starts from verified main

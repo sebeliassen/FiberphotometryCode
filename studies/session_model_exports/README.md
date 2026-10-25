@@ -17,7 +17,18 @@ model results; it is not a read-only inspection helper. Tests stub the backend a
 verify requests without running it. Placeholder identity/spread maps retain their
 separate filename and must not be mistaken for true video_frame_indexes.
 
-Full exporter drivers still contain old workstation paths and import-time
+The base `attach_kpms` driver and its historical physical leaf now share the
+canonical module and expose `main(argv=None)`. Import/help does not initialize
+KPMS, read sessions or write products. Normal imports require an activated checkout;
+direct-file execution keeps its selected root/src through `main` and restores only
+its added paths on exit. Explicit attachment still loads trusted
+inputs and may extract model results or write a session pickle. `--cpu` is only
+forwarded to the legacy loader; library mode retains its existing device policy.
+Existing VFI mapping/conversion, normal/flipped attachment, output defaults and
+the late overwrite check are preserved. The old module-level `kpms` attribute is
+not a supported API.
+
+Other full exporter drivers still contain old workstation paths and import-time
 backends/global setup. Their help/import is not a safe
 metadata probe. These aliases do not establish executable cohort export or support
 for arbitrary historical artifacts. Inputs, outputs, clock policies and recovery
@@ -37,5 +48,5 @@ Two drivers now import this exact study owner; the physical old leaf proxy share
 module/function identity. Original quarantine history remains in MOVES.tsv with
 an additive source-restoration record. Checkpoint absolute_vfi_support_20261021.json
 pins the original source and normalized AST; only documentation/unused imports and
-the two import paths change. Full exporters remain unexecuted and are not cold
-metadata probes. Legacy roots, symlinks and empirical data remain in place.
+the two import paths change. Full exporters remain unexecuted; the other drivers
+are not cold metadata probes. Legacy roots, symlinks and empirical data remain in place.

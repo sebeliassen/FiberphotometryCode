@@ -16,23 +16,27 @@ RESULTS_PATH = PATH_PREFIX + "syllabizers/keypoint_moseq_syll/demo_project/kappa
 SYLLABLE_LOADER = "keypoint-moseq"
 OVERWRITE_PICKLE = True
 
-# --- local imports (utils) ---
+# Direct-file execution activates this checkout through imports and main().
 REPO_ROOT = Path(__file__).resolve().parents[2]
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+_bootstrap_paths = []
+if __name__ == "__main__" and not __package__:
+    for _source_dir in (REPO_ROOT, REPO_ROOT / "src"):
+        if str(_source_dir) not in sys.path:
+            sys.path.insert(0, str(_source_dir))
+            _bootstrap_paths.append(str(_source_dir))
 
-# KPMS library optional
 try:
-    import keypoint_moseq as kpms
-except ImportError:
-    kpms = None
-
-from syllable_generation.analysis.utils.sampling import flatten_results_to_timeline
-from syllable_generation.analysis.utils.syll_results import (
-    build_result_to_session_map,
-    compute_actual_lengths_from_sessions,
-    load_kpms_results_and_vfi,
-)
+    from studies.session_model_exports.utils.sampling import flatten_results_to_timeline
+    from studies.session_model_exports.utils.syll_results import (
+        build_result_to_session_map,
+        compute_actual_lengths_from_sessions,
+        load_kpms_results_and_vfi,
+    )
+except BaseException:
+    for _source_dir in _bootstrap_paths:
+        if _source_dir in sys.path:
+            sys.path.remove(_source_dir)
+    raise
 
 
 def get_sessions(pkl_path: str | Path):
@@ -113,8 +117,11 @@ def run_attach(
     Supports both:
       1. Legacy Mode (use_kpms_lib=False): Uses internal 'load_kpms_results_and_vfi'
       2. Library Mode (use_kpms_lib=True): Uses 'kpms.compute_moseq_df' (Standard columns)
-    
-    Both paths support 'downsample_rate' to scale VFI (e.g. 2.0 for 40->80Hz).
+
+    Existing VFI mapping/conversion is preserved. 'downsample_rate' does not
+    infer or rescale coordinates; it only prints a notice when greater than one.
+    'use_cpu' is passed only to the legacy loader; library mode does not set a
+    device policy. Loading results may extract and write model products.
     """
     sessions_pkl = Path(sessions_pkl)
     results_path = Path(results_path)
@@ -127,8 +134,10 @@ def run_attach(
     vfi = None
 
     if use_kpms_lib:
-        if kpms is None:
-             raise ImportError("keypoint_moseq library not installed")
+        try:
+            import keypoint_moseq as kpms
+        except ImportError:
+            raise ImportError("keypoint_moseq library not installed") from None
 
         print(f"Loading via KPMS lib from {results_path} / {model_name}...")
         moseq_df = kpms.compute_moseq_df(str(results_path), model_name, smooth_heading=True)
@@ -221,7 +230,7 @@ def run_attach(
 
     return {"attached": attached, "save_path": str(save_path)}
 
-if __name__ == "__main__":
+def main(argv=None):
     import argparse
     import json
     ap = argparse.ArgumentParser()
@@ -229,13 +238,13 @@ if __name__ == "__main__":
     ap.add_argument("--results", required=True)
     ap.add_argument("--model-name", default=None)
     ap.add_argument("--overwrite", action="store_true")
-    ap.add_argument("--cpu", action="store_true", help="force CPU (sets JAX_PLATFORMS=cpu)")
+    ap.add_argument("--cpu", action="store_true", help="Pass CPU preference to legacy loader (no effect with --use-lib)")
     ap.add_argument("--key-prefix", default="kpms")
     ap.add_argument("--use-lib", action="store_true")
     ap.add_argument("--downsample", type=float, default=1.0)
     ap.add_argument("--out", type=str, default=None, help="Output PKL path")
 
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
     out = run_attach(
         args.sessions, args.results,
         model_name=args.model_name,
@@ -247,3 +256,12 @@ if __name__ == "__main__":
         out_path=args.out
     )
     print(json.dumps(out, indent=2))
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    finally:
+        for _source_dir in _bootstrap_paths:
+            if _source_dir in sys.path:
+                sys.path.remove(_source_dir)

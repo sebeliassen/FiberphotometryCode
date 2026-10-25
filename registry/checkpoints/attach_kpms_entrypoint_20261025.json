@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-25",
+  "baseline": "b19c12b3fb8c9ce4d180ba82be9152e29bbbd197",
+  "branch": "codex/attach-kpms-entrypoint",
+  "scope": "Cold canonical base KPMS attachment import/help, explicit lazy library backend and callable physical CLI",
+  "source_sha256": {
+    "studies/session_model_exports/attach_kpms.py": "dfcfb1a7ff13a55120e350d839c7d8a2806ce5a78f93b1be93473d072760ac32",
+    "compat/syllable_generation/analysis/attach_kpms.py": "1c99a74f56028ac63b06153c1a5458d7980ea3ea874069e043e7740338ee9204",
+    "studies/session_model_exports/README.md": "bdd27ec4ce2400fe5f473db717b193658a8a8381dfd0128d9ea52958f4e49a24",
+    "tests/unit/test_attach_kpms_entrypoint.py": "ed273440dfc30d6850511641d5284bb4c3851fbac8508b0b768a768dfd23ad14"
+  },
+  "contract": {
+    "canonical_legacy_identity": true,
+    "main": "main(argv=None), original flags/defaults/forwarding/JSON and None return",
+    "ordinary_import": "Canonical utilities, no modeling backend/payload/output/own sys.path setup",
+    "physical_bootstrap": "Only direct main adds selected root/src through execution; finally removes only additions on help/success/error, with immediate cleanup on import failure",
+    "optional_backend": "Imported locally only in explicit library branch, preserving missing-library ImportError message after trusted-session read",
+    "attachment_policy": "Existing mapping/conversion, two-stream and length-mismatch choices, distinct legacy/library timelines, no downsample rescaling, output and late-overwrite behavior preserved",
+    "cpu_flag": "Forwarded only to historical legacy loader; no library-mode device-isolation guarantee",
+    "old_module_kpms_attribute": "Not a supported API; no maintained consumer found",
+    "SHIMS": "Existing row84 already names canonical physical owner; full MOVES/SHIMS/lint ledgers retained"
+  },
+  "validation": {
+    "status": "PASS; final local candidate and independent source/API review; exact-commit and hosted checks required before promotion",
+    "new_cases": 42,
+    "lab_interpreter": "/home/fsp585/miniforge3/envs/kpms_gpu_cuml/bin/python",
+    "isolated_interpreter": "/tmp/fpcode-clean-cpu-sr5b37il/bin/python",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "numerical_threads": 2,
+    "doctor": "CPU metadata PASS; backend not initialized",
+    "focused_passed": 71,
+    "lab_passed": 1239,
+    "isolated_passed": 1239,
+    "warnings_each": 6,
+    "architecture_modules": 202,
+    "lint": "3064 reviewed diagnostics/no new debt; unchanged inventory;3fewer diagnostics than base",
+    "navigation_directories": 150,
+    "package_check": "New candidate wheel built/installed/checked outside checkout PASS",
+    "installed_entrypoint": "Both fresh canonical/legacy orders use exact pinned installed fpcode source; cold API/help PASS",
+    "dependencies": "pip check PASS"
+  },
+  "preservation": {
+    "protected_files_unchanged": 1816,
+    "protected_Python_sources_unchanged": 1701,
+    "canonical_library_study_test_Python_unchanged": 1015,
+    "historical_proxy_Python_unchanged": 603,
+    "symlink_payloads_unchanged": 56,
+    "scope": "Exact bytes/modes in independent manifest; numerical/helper/parser AST normalization limited to declared import/bootstrap/main/doc changes"
+  },
+  "audit_sha256": {
+    "attach_entry_implementation_20261025.json": "d727f296b1c3f2f7e9027d3c5f4b996eb2738c0434636f7a1ae17e5baa9d7ac7",
+    "attach_entry_source_proof_20261025.json": "2e072d4e510950fc1e71720a1aa12cfbab4cbf33e386eb9497e8a8dfc2913543",
+    "attach_entry_test_result_20261025.json": "023b73ca8772c2bb555c06483cceabdc5c70c39eb6a05c83d2a0e3eb8a62bbf2",
+    "attach_entry_focused_20261025.log": "63d9b39791ab43231d47bb504b23d976b52a05642abe63c509cccd79773850a8",
+    "attach_entry_doctor.json": "9a0461e9eb99dd696ae40fc77c073233f1b478e5294279b60d92efaf25de940a",
+    "attach_entry_independent_review_20261025.json": "b6c75160de2df9602c03bfd7326dca1afe3935707ceca65d139961372a3f3ffb",
+    "attach_entry_related_focused.log": "ac253192c0537d538d882906e1b86c1ec74caf7c627d060d3e89b342fde21d62",
+    "attach_entry_candidate_checks.json": "fa7a6505754f9e4dcef130ebabdc68f87d0940fb8b557d3d24f28dde9cf91375",
+    "attach_entry_clean_cpu.json": "08fe5c7b14eca9c33001f41e45ead0c255022d61fc6599c614bb1d66242f44cd",
+    "attach_entry_candidate_installed_entrypoint_check.json": "eac124dee7fcd183c1ade5d193a80d1e12fcd63ea3c3a7b6b4e3e6dd00c320f1",
+    "attach_entry_candidate_package-check.log": "68f62505b05d351f5b08ee256ec8ac3e2eafb6cae3dfc14a0d2be8e4aca3ebce"
+  },
+  "limits": [
+    "Cold state snapshots preload ordinary NumPy/pandas/scipy.stats startup; true direct-file help runs without preloading.",
+    "Explicit result loading may extract/write model products; overwrite refusal remains late and does not prove absence of earlier effects.",
+    "Synthetic test-owned objects/backend responses/files only; no real pickle/model/recording/video or cohort execution.",
+    "Direct studies.behavior namespaces, other exporters/PPE/media, AMPH/flipped policy, trusted-artifact and external/feedback recovery remain separate gates.",
+    "Source/history bundles exclude ignored empirical payloads, external symlink targets and browser-local feedback.",
+    "Unchanged pinned library installation reused for isolated functional checks; candidate package-check and hosted CI rebuild/check the library wheel."
+  ]
+}
