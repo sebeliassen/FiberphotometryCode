@@ -1,3 +1,33 @@
+## Bounded PPE entry-point candidate (2026-10-25)
+
+Candidate codex/ppe-entrypoint starts from verified main
+5c6de957b576a859453f6da7ffa88f9a9268e044. Scope is three production files:
+canonical PPE main(argv), its historical physical leaf, and a structural legacy
+parent retaining physical __path__. The parent repair is necessary for ordinary
+imports to reach leaf proxies; both import orders expose the canonical leaf.
+No analysis expansion or new workflow is part of this slice.
+
+47 focused checks pass (33 new PPE cases and 14 existing loading/diagnostic
+regressions). Helpers and run_analysis retain exact source bytes/AST; parser body
+is AST-exact after only parse_args(argv) normalization. Both-order outside-checkout
+PPE API/help uses matching pinned installed fpcode source. Imports/help and physical
+path cleanup use test-owned guards/stubs only. Final broader checks pass: 1,274 CPU tests in both lab and pinned isolated
+environments (6 existing warnings each), architecture202/no cycles, lint3064/no
+new debt, maps150, new outside-checkout wheel/resources/help and dependencies.
+Source/AST and exact-scope review is root-owned; subagents are currently unavailable
+under their usage limit, so no new independent agent review is claimed.
+Checkpoint: registry/checkpoints/ppe_entrypoint_20261025.json. Finish exact-commit
+review and hosted checks before normal promotion, then actual-main CI and a fresh
+independently restored source/history backup.
+
+Fixed AMPH selection, session discovery/output defaults, scientific window/clock/
+slope/timewarp/cohort/inference policies and unsafe sibling analyses stay frozen.
+Full PPE input/output portability, other exporters/media, AMPH/flipped decisions,
+trusted saved artifacts and external/empirical/feedback recovery remain backlog.
+Keep original runtimes/viewers, all legacy paths/symlinks and data. No actual PPE,
+session/model/recording/video decoding or empirical fit/export/render is performed.
+Live state: primary outputs/consolidation_20261021/promotion_20261021.json.
+
 ## Base KPMS attachment import and physical CLI boundary (2026-10-25)
 
 Candidate codex/attach-kpms-entrypoint starts from main

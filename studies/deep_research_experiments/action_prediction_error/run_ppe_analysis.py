@@ -1,10 +1,27 @@
 import argparse
 import os
+import sys
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-from studies.deep_research_experiments.utils.loaders import load_sessions
+# Activate this checkout only for direct-file execution, through main().
+_bootstrap_paths = []
+if __name__ == "__main__" and not __package__:
+    _repo_root = Path(__file__).resolve().parents[3]
+    for _source_dir in (_repo_root, _repo_root / "src"):
+        if str(_source_dir) not in sys.path:
+            sys.path.insert(0, str(_source_dir))
+            _bootstrap_paths.append(str(_source_dir))
+
+try:
+    from studies.deep_research_experiments.utils.loaders import load_sessions
+except BaseException:
+    for _source_dir in _bootstrap_paths:
+        if _source_dir in sys.path:
+            sys.path.remove(_source_dir)
+    raise
 
 
 def get_dls_signal_col(session):
@@ -401,7 +418,7 @@ def run_analysis(test_mode=False, use_history=False, use_kinematics=False, use_t
     else:
         print("No results generated.")
 
-if __name__ == "__main__":
+def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--test-mode", action="store_true", help="Run on small subset")
     parser.add_argument("--history", action="store_true", help="Enable History (RL) correction")
@@ -410,7 +427,7 @@ if __name__ == "__main__":
     parser.add_argument("--force-vectors", action="store_true", help="Enable Force Vectors (Directionality)")
     parser.add_argument("--suffix", type=str, default="", help="Suffix for output files")
     parser.add_argument("--metric", type=str, default="variance", choices=["variance", "mean"], help="Metric to analyze: 'variance' (PPE) or 'mean' (Signal Strength)")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     run_analysis(
         test_mode=args.test_mode,
@@ -421,3 +438,12 @@ if __name__ == "__main__":
         suffix=args.suffix,
         metric=args.metric
     )
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    finally:
+        for _source_dir in _bootstrap_paths:
+            if _source_dir in sys.path:
+                sys.path.remove(_source_dir)
