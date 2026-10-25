@@ -16,8 +16,10 @@ new debt, maps150, new outside-checkout wheel/resources/help, installed-library
 PPE API/help/source in both orders and dependencies pass. Both helpers and all
 run_analysis retain exact source bytes/AST; parser body is AST-exact after only
 parse_args(argv) normalization. Other source/tests/policies/configs/goldens/symlinks
-and complete MOVES/SHIMS/lint ledgers are unchanged. Root source/AST and exact-commit
-review plus independent hosted CI; no new independent agent review is claimed.
+and complete MOVES/SHIMS/lint ledgers are unchanged. Supplemental independent
+source, exact-commit/test/metadata and recovery-helper reviews all pass after
+the agent quota reset; their frozen hashes are in the completion record. The
+published candidate checkpoint retains its earlier review-state snapshot.
 
 Exact record: registry/checkpoints/ppe_entrypoint_completed_20261025.json.
 Live state: primary outputs/consolidation_20261021/promotion_20261021.json.

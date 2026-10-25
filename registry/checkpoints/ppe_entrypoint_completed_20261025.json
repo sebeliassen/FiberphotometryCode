@@ -42,7 +42,8 @@
     "hosted_passed": 1273,
     "hosted_skipped": 1,
     "hosted_warnings": 6,
-    "hosted_wheel": "Rebuild/check PASS"
+    "hosted_wheel": "Rebuild/check PASS",
+    "supplemental_independent_reviews": "Source, exact commit/tests/metadata and recovery helpers PASS; obtained after candidate freeze when quota reset."
   },
   "preservation": {
     "scientific_functions_byte_and_AST_unchanged": [
@@ -85,7 +86,10 @@
     "ppe_entry_candidate_package-check.log": "8d9a3ccce8c237627b00dd15d9e76807d6c4fe2d26a422bfc31fb822a020808d",
     "ppe_entry_exact_commit_review_20261025.json": "94ba12ab1ee4b4a93852091d006d6313688610fef3b96f2663204b9839cd2551",
     "ppe_entry_main_hosted.log": "00c08ecf8df6bf2862396ca3cc44c1a70012b6e1430b51be8eab5d9f442df4f6",
-    "ppe_entry_recovery_helper_review_20261025.json": "c3774465791ff48237390d9f213ad25d0d6dbebecee8e8d6a8ee6131f11a711b"
+    "ppe_entry_recovery_helper_review_20261025.json": "c3774465791ff48237390d9f213ad25d0d6dbebecee8e8d6a8ee6131f11a711b",
+    "ppe_entry_independent_source_review_20261025.json": "a2a98f82a31ae55507171d6915773f115f4d710ce5fa74c5c100880b72551041",
+    "ppe_entry_independent_exact_review_20261025.json": "bcf47c44115cc9966662dd36d5bd22725fb28551b58821f6757ebf55baacb6bc",
+    "ppe_entry_independent_helper_review_20261025.json": "8002751a4645e08ad6d1169c108262536e7ad056857df8d6cf93699299429682"
   },
   "recovery": {
     "planned_bundle": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/consolidation_ppe_entry_milestones.bundle",
@@ -111,5 +115,22 @@
     "Source/history bundles exclude ignored empirical/external/feedback payloads.",
     "Root source/AST and exact-scope review plus independent hosted CI; optional subagents unavailable under usage limit. No new independent agent review is claimed."
   ],
-  "runtime_preservation": "Original primary/delivery runtimes, both viewers, legacy roots/symlinks and empirical payloads retained; no empirical execution."
+  "runtime_preservation": "Original primary/delivery runtimes, both viewers, legacy roots/symlinks and empirical payloads retained; no empirical execution.",
+  "supplemental_independent_reviews": {
+    "ppe_entry_independent_source_review_20261025.json": {
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/ppe_entry_independent_source_review_20261025.json",
+      "sha256": "a2a98f82a31ae55507171d6915773f115f4d710ce5fa74c5c100880b72551041",
+      "verdict": "PASS"
+    },
+    "ppe_entry_independent_exact_review_20261025.json": {
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/ppe_entry_independent_exact_review_20261025.json",
+      "sha256": "bcf47c44115cc9966662dd36d5bd22725fb28551b58821f6757ebf55baacb6bc",
+      "verdict": "PASS"
+    },
+    "ppe_entry_independent_helper_review_20261025.json": {
+      "path": "/home/fsp585/Desktop/FiberphotometryCode/outputs/consolidation_20261021/ppe_entry_independent_helper_review_20261025.json",
+      "sha256": "8002751a4645e08ad6d1169c108262536e7ad056857df8d6cf93699299429682",
+      "verdict": "PASS"
+    }
+  }
 }
