@@ -116,8 +116,7 @@ compat/syllable_generation/analysis/attach_double_flip_kpms.py	12	literal_candid
 compat/syllable_generation/analysis/attach_karen_final_model.py	2	literal_candidate	syllable_generation/analysis/attach_karen_final_model.py	compatibility_adapter
 compat/syllable_generation/analysis/attach_karen_final_model.py	12	literal_candidate	syllable_generation.analysis.attach_karen_final_model	compatibility_adapter
 compat/syllable_generation/analysis/attach_kpms.py	2	literal_candidate	syllable_generation/analysis/attach_kpms.py	compatibility_adapter
-compat/syllable_generation/analysis/attach_kpms.py	4	literal_candidate	syllable_generation/analysis/attach_kpms.py	compatibility_adapter
-compat/syllable_generation/analysis/attach_kpms.py	12	literal_candidate	syllable_generation.analysis.attach_kpms	compatibility_adapter
+compat/syllable_generation/analysis/attach_kpms.py	13	literal_candidate	syllable_generation.analysis.attach_kpms	compatibility_adapter
 compat/syllable_generation/analysis/attach_syllables_kpms.py	2	literal_candidate	syllable_generation/analysis/attach_syllables_kpms.py	compatibility_adapter
 compat/syllable_generation/analysis/attach_syllables_kpms.py	4	literal_candidate	syllable_generation/analysis/attach_syllables_kpms.py	compatibility_adapter
 compat/syllable_generation/analysis/attach_syllables_kpms.py	12	literal_candidate	syllable_generation.analysis.attach_syllables_kpms	compatibility_adapter
@@ -2623,11 +2622,11 @@ docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	132	literal_candidate	archive
 docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md	132	literal_candidate	archive/legacy.	documentation_or_history
 docs/tasks/CONSOLIDATION_PROGRESS_20261021.md	73	literal_candidate	core/pipelines/compat/archive	documentation_or_history
 docs/tasks/CONSOLIDATION_PROGRESS_20261021.md	166	literal_candidate	archive/Git/AST	documentation_or_history
-docs/tasks/CURRENT.md	278	literal_candidate	core/pipelines/compat/archive.	documentation_or_history
-docs/tasks/CURRENT.md	391	literal_candidate	core/pipelines/compat/archive	documentation_or_history
-docs/tasks/CURRENT.md	399	literal_candidate	pipelines/core	documentation_or_history
-docs/tasks/CURRENT.md	1310	literal_candidate	syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/	documentation_or_history
-docs/tasks/CURRENT.md	2292	literal_candidate	syllable_generation/analysis/sequence_viz/run12_human_labels.csv	documentation_or_history
+docs/tasks/CURRENT.md	318	literal_candidate	core/pipelines/compat/archive.	documentation_or_history
+docs/tasks/CURRENT.md	431	literal_candidate	core/pipelines/compat/archive	documentation_or_history
+docs/tasks/CURRENT.md	439	literal_candidate	pipelines/core	documentation_or_history
+docs/tasks/CURRENT.md	1350	literal_candidate	syllable_generation/analysis/sequence_viz/movies_1x3_final_exemplars/	documentation_or_history
+docs/tasks/CURRENT.md	2332	literal_candidate	syllable_generation/analysis/sequence_viz/run12_human_labels.csv	documentation_or_history
 ops/repo/build_triage.py	9	literal_candidate	archive/legacy/	repository_tool
 ops/repo/build_triage.py	92	literal_candidate	archive/legacy/	repository_tool
 ops/repo/build_triage.py	95	literal_candidate	syllable_generation/syllabizers/keypoint_moseq_syll/...	repository_tool
@@ -4608,10 +4607,6 @@ studies/session_model_exports/attach_double_flip_kpms.py	31	import	syllable_gene
 studies/session_model_exports/attach_double_flip_kpms.py	31	literal_candidate	syllable_generation.analysis.utils.sampling	study_or_active_source
 studies/session_model_exports/attach_double_flip_kpms.py	34	import	syllable_generation.analysis.utils.syll_results	study_or_active_source
 studies/session_model_exports/attach_double_flip_kpms.py	34	literal_candidate	syllable_generation.analysis.utils.syll_results	study_or_active_source
-studies/session_model_exports/attach_kpms.py	30	import	syllable_generation.analysis.utils.sampling	study_or_active_source
-studies/session_model_exports/attach_kpms.py	30	literal_candidate	syllable_generation.analysis.utils.sampling	study_or_active_source
-studies/session_model_exports/attach_kpms.py	31	import	syllable_generation.analysis.utils.syll_results	study_or_active_source
-studies/session_model_exports/attach_kpms.py	31	literal_candidate	syllable_generation.analysis.utils.syll_results	study_or_active_source
 studies/session_model_exports/attach_syllables_kpms.py	37	import	syllable_generation.analysis.attach_kpms	study_or_active_source
 studies/session_model_exports/attach_syllables_kpms.py	37	literal_candidate	syllable_generation.analysis.attach_kpms	study_or_active_source
 studies/session_model_exports/attach_syllables_kpms.py	40	import	syllable_generation.analysis.utils.sampling	study_or_active_source
@@ -4677,6 +4672,9 @@ tests/unit/test_amph_source_boundary.py	19	literal_candidate	syllable_generation
 tests/unit/test_amph_source_boundary.py	52	literal_candidate	syllable_generation/projects/jonathan_openfield_amph/overrides	test
 tests/unit/test_amph_source_boundary.py	282	literal_candidate	syllable_generation.projects.jonathan_openfield_amph	test
 tests/unit/test_amph_source_boundary.py	296	literal_candidate	syllable_generation/projects/jonathan_openfield_amph/enrich.py	test
+tests/unit/test_attach_kpms_entrypoint.py	22	literal_candidate	syllable_generation.analysis.attach_kpms	test
+tests/unit/test_attach_kpms_entrypoint.py	25	literal_candidate	syllable_generation/analysis/attach_kpms.py	test
+tests/unit/test_attach_kpms_entrypoint.py	126	literal_candidate	syllable_generation.analysis	test
 tests/unit/test_backup_snapshot.py	244	literal_candidate	core.hooksPath	test
 tests/unit/test_behavior_reuse.py	77	literal_candidate	syllable_generation/analysis/ulrik_kinematics	test
 tests/unit/test_cache_manifest_synthetic.py	5	literal_candidate	core.cache_manifest	test

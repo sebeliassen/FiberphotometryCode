@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "source_commit": "380adb3f2964bfc11c20de51448ff1651b93a391",
+  "source_commit": "15e3b26740f81aeeed1b55cb981c639491cefa2a",
   "legacy_paths": 618,
-  "static_references": 4753,
+  "static_references": 4751,
   "parse_or_budget_limits": [
     [
       "compat/syllable_generation/analysis/replications/datta_orig/panels/1f/1f.ipynb",
@@ -220,7 +220,7 @@
     "compat/fiberphotometry/utils.py": "51cb228efc45a4ed155b2b9eb233cd1cd713a873777cfcfefed669e0ea64f024",
     "compat/syllable_generation/analysis/attach_double_flip_kpms.py": "291d15b120635e391909db48a4673a8d045edccd3da1dffdb8bd508627ebaf04",
     "compat/syllable_generation/analysis/attach_karen_final_model.py": "67f747b4196d24ac7e3855ec7464479edb6a1003e3838e7a106a1bf8b943243e",
-    "compat/syllable_generation/analysis/attach_kpms.py": "a516d384d38a3bc8385b2ce111bf7e03f3658da6d514e1bbbe23c19953d9479c",
+    "compat/syllable_generation/analysis/attach_kpms.py": "1c99a74f56028ac63b06153c1a5458d7980ea3ea874069e043e7740338ee9204",
     "compat/syllable_generation/analysis/attach_syllables_kpms.py": "10dbea0db328a75ba7b25f2d760755c77f93c066ee370217b20b6c8cea63674b",
     "compat/syllable_generation/analysis/deep_research_experiments/action_prediction_error/__init__.py": "f6affd698d8ee79f33d5eda0fb926162bac574372f52f4366fef745d2f27b22f",
     "compat/syllable_generation/analysis/deep_research_experiments/action_prediction_error/analyze_variance_distribution.py": "32ae35cd6ead824f8ce509ed90815567188a8cd926ff1ead8a85ae7f22ea05bc",
@@ -926,7 +926,7 @@
     "docs/tasks/BROAD_SEARCH_HANDOFF_20261013.md": "11e397af9a90de96520e23a9ada10598bfb35e220d2fadb9f59236a9c2697782",
     "docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md": "c54f53c37149a527322c5c92fdec722c9eebc5b92046277f32d172e4d7477d14",
     "docs/tasks/CONSOLIDATION_PROGRESS_20261021.md": "4000c9356253cf51fc0cf5993243aa26216f49c3f9eed19161f388253dfbec54",
-    "docs/tasks/CURRENT.md": "0526fb5521164ed89f7db271ba09f9cd771f0bafa4c7e926a2a71177d914710e",
+    "docs/tasks/CURRENT.md": "9dfda2b11e98995d1a01cf1aead17ebca63bd7cda536bf12fbe213471b47caff",
     "ops/repo/build_triage.py": "3529c2ecabf640aaa2a48b5e1fe9436b6a5bcaed6a9f9a36dbf21a0f32d25e58",
     "ops/repo/generate_folder_maps.py": "0f6c8b8b6e6f70fe4ff8e2e62b9e5d168a2dbd4b3d5b6360165a1432cc045b4c",
     "ops/repo/metrics.py": "d78e6fad0a463d888dd2c0f06b5197d78d12e49ae988eab1cd7b09fc555c0df9",
@@ -1226,7 +1226,6 @@
     "studies/session_building/jonathan/steps/.folder-map.md": "da2106d5343b0fd9ddbce6f44f95a052aacca02bf1a23b6d4cf524c10f5cef66",
     "studies/session_building/jonathan/steps/fiberphotometry.py": "5bc3bdf0365a17a8948ecff1c5bd99949491ed2b782d275f54c7a7c34f767043",
     "studies/session_model_exports/attach_double_flip_kpms.py": "ad07452b3158ba45df90f5e683527a86b87117b29831eac95bc19e505ec2bda6",
-    "studies/session_model_exports/attach_kpms.py": "907b25fa4c2df58add3c4aa6cc93279d20f7d44e46dce478bdc90c512fe7f47b",
     "studies/session_model_exports/attach_syllables_kpms.py": "f24b45e3c366f319100af058330abbf395a0034954abef7710707a9858a963c9",
     "studies/session_model_exports/generate_animated_trajectories.py": "c57b10458e649d8dd83704e157cc881f81f1c739440682d90b47a3e1a11d80c1",
     "studies/session_model_exports/generate_k240k_results_and_pkl.py": "6064df5ef97be2e3aac50f3f72999647b2fa525a38915807e8bac04651e42ee0",
@@ -1254,6 +1253,7 @@
     "tests/unit/test_absolute_vfi_support.py": "54033f24056c86726de6a6768139b88e248a534630bce3f31f80ebdd858c9a2e",
     "tests/unit/test_aligned_photometry.py": "4cc655a28f7d131bd4411ba79e5c30cf638d96a6f30d6846b928be958bad6ffc",
     "tests/unit/test_amph_source_boundary.py": "ccbe0e9d2a5041ffd440df083fe88c1aaed3e0cdf4899f35fbf4a60ef3e75cf5",
+    "tests/unit/test_attach_kpms_entrypoint.py": "5a421ccf8f3da93f912c745197e2ded717c758624c90bd784e33174a75872903",
     "tests/unit/test_backup_snapshot.py": "485eda2962928bd25df8efadf29398d28111c62f3a76e120cb12eb69d4ae0211",
     "tests/unit/test_behavior_reuse.py": "a67fd9ace99799acdd0632cb56dd7cf2003b66120f694fee6c74a1d24b354c1f",
     "tests/unit/test_cache_manifest_synthetic.py": "1d880f879a187838cf43e660babf5d2261fba227bd2fa8bb3aa9f69e31947211",
@@ -1298,7 +1298,9 @@
   "notebook_line_numbers": "Offsets in concatenated code cells, not raw notebook JSON lines",
   "working_tree_changes": [
     "docs/tasks/CURRENT.md",
-    "registry/LEGACY_CONSUMERS_20261021.tsv"
+    "registry/LEGACY_CONSUMERS_20261021.tsv",
+    "registry/checkpoints/attach_kpms_entrypoint_20261025.json",
+    "tests/unit/test_attach_kpms_entrypoint.py"
   ],
   "interpretation": "Static references are candidates for review, not proof of live use; unknown external consumers and stored-object names remain retirement gates."
 }
