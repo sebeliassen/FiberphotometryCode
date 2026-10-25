@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_commit": "b19c12b3fb8c9ce4d180ba82be9152e29bbbd197",
+  "source_commit": "15e3b26740f81aeeed1b55cb981c639491cefa2a",
   "legacy_paths": 618,
   "static_references": 4751,
   "parse_or_budget_limits": [
@@ -926,7 +926,7 @@
     "docs/tasks/BROAD_SEARCH_HANDOFF_20261013.md": "11e397af9a90de96520e23a9ada10598bfb35e220d2fadb9f59236a9c2697782",
     "docs/tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md": "c54f53c37149a527322c5c92fdec722c9eebc5b92046277f32d172e4d7477d14",
     "docs/tasks/CONSOLIDATION_PROGRESS_20261021.md": "4000c9356253cf51fc0cf5993243aa26216f49c3f9eed19161f388253dfbec54",
-    "docs/tasks/CURRENT.md": "18e11f7b297559e9acb74d34904385efead2505ff04625d46ad94665410695fb",
+    "docs/tasks/CURRENT.md": "9dfda2b11e98995d1a01cf1aead17ebca63bd7cda536bf12fbe213471b47caff",
     "ops/repo/build_triage.py": "3529c2ecabf640aaa2a48b5e1fe9436b6a5bcaed6a9f9a36dbf21a0f32d25e58",
     "ops/repo/generate_folder_maps.py": "0f6c8b8b6e6f70fe4ff8e2e62b9e5d168a2dbd4b3d5b6360165a1432cc045b4c",
     "ops/repo/metrics.py": "d78e6fad0a463d888dd2c0f06b5197d78d12e49ae988eab1cd7b09fc555c0df9",
@@ -1253,7 +1253,7 @@
     "tests/unit/test_absolute_vfi_support.py": "54033f24056c86726de6a6768139b88e248a534630bce3f31f80ebdd858c9a2e",
     "tests/unit/test_aligned_photometry.py": "4cc655a28f7d131bd4411ba79e5c30cf638d96a6f30d6846b928be958bad6ffc",
     "tests/unit/test_amph_source_boundary.py": "ccbe0e9d2a5041ffd440df083fe88c1aaed3e0cdf4899f35fbf4a60ef3e75cf5",
-    "tests/unit/test_attach_kpms_entrypoint.py": "ed273440dfc30d6850511641d5284bb4c3851fbac8508b0b768a768dfd23ad14",
+    "tests/unit/test_attach_kpms_entrypoint.py": "5a421ccf8f3da93f912c745197e2ded717c758624c90bd784e33174a75872903",
     "tests/unit/test_backup_snapshot.py": "485eda2962928bd25df8efadf29398d28111c62f3a76e120cb12eb69d4ae0211",
     "tests/unit/test_behavior_reuse.py": "a67fd9ace99799acdd0632cb56dd7cf2003b66120f694fee6c74a1d24b354c1f",
     "tests/unit/test_cache_manifest_synthetic.py": "1d880f879a187838cf43e660babf5d2261fba227bd2fa8bb3aa9f69e31947211",
@@ -1297,13 +1297,10 @@
   },
   "notebook_line_numbers": "Offsets in concatenated code cells, not raw notebook JSON lines",
   "working_tree_changes": [
-    "compat/syllable_generation/analysis/attach_kpms.py",
     "docs/tasks/CURRENT.md",
     "registry/LEGACY_CONSUMERS_20261021.tsv",
-    "registry/LEGACY_PATHS_20261021.tsv",
-    "studies/session_model_exports/README.md",
-    "studies/session_model_exports/attach_kpms.py",
-    "tests/unit/.folder-map.md"
+    "registry/checkpoints/attach_kpms_entrypoint_20261025.json",
+    "tests/unit/test_attach_kpms_entrypoint.py"
   ],
   "interpretation": "Static references are candidates for review, not proof of live use; unknown external consumers and stored-object names remain retirement gates."
 }

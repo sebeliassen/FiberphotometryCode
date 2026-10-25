@@ -10,7 +10,12 @@ VFI mapping/conversion, two-stream/length-mismatch policy, distinct legacy/libra
 timelines, no downsample rescaling and late overwrite/output behavior are retained.
 --cpu remains legacy-loader forwarding; library device policy is unchanged.
 
-Validation complete: 71 focused checks (42 new); 1,239 full CPU tests pass in
+Initial hosted CI exposed an invalid test assumption: editable installs can expose
+src even under -I. Revised ambient/pre-existing-path cases preserve exact caller
+state; production sources are unchanged. Original architecture/wheel/installed-API/
+dependency evidence is retained; final functional/lint/maps checks rerun.
+
+Validation complete: 73 focused checks (44 new); 1,241 full CPU tests pass in
 lab and isolated pinned environments (6 existing warnings each). Architecture
 202/no cycles, lint 3,064/no new debt, 150-directory navigation, new outside-checkout
 wheel build/install/resources/help and dependencies pass. Attachment API/help

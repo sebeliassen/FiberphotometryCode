@@ -256,16 +256,25 @@ assert_inert()
 
 
 @pytest.mark.parametrize("physical", PHYSICAL)
-def test_main_bootstrap_restores_paths_after_test_owned_import_failure(physical, tmp_path):
+@pytest.mark.parametrize("preexisting_paths", [False, True])
+def test_main_bootstrap_restores_paths_after_test_owned_import_failure(physical, preexisting_paths, tmp_path):
     result = child(f'''
 root = Path({str(ROOT)!r})
-assert str(root) not in sys.path and str(root / 'src') not in sys.path
+# Editable installs may already expose src even under -I. Preserve the ambient
+# baseline, and separately exercise pre-existing paths owned by the caller.
+if {preexisting_paths!r}:
+    for selected_path in (str(root), str(root / 'src')):
+        if selected_path not in sys.path:
+            sys.path.insert(0, selected_path)
+paths = list(sys.path)
+expected_additions = {{str(root), str(root / 'src')}} - set(paths)
 class TestOwnedImportFailure(RuntimeError):
     pass
 original_import = builtins.__import__
 def import_failure(name, *args, **kwargs):
     if name.startswith('studies.session_model_exports.utils'):
         assert str(root) in sys.path and str(root / 'src') in sys.path
+        assert set(sys.path) - set(paths) == expected_additions
         raise TestOwnedImportFailure('test-owned utility import failure')
     return original_import(name, *args, **kwargs)
 builtins.__import__ = import_failure
@@ -279,6 +288,8 @@ else:
     raise AssertionError('synthetic dependency failure did not occur')
 assert sys.modules['__main__'] is original_main
 assert_inert()
+if {preexisting_paths!r}:
+    assert str(root) in sys.path and str(root / 'src') in sys.path
 ''', tmp_path, activate=False)
     assert result.stdout == ""
 
