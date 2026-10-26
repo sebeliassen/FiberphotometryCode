@@ -9,7 +9,7 @@ if project_root not in sys.path:
 
 # Need to ensure classes are importable for unpickling
 try:
-    from syllable_generation.loaders.jonathan.loader import SessionRecord
+    from fpcode.contracts.session_record import SessionRecord as SessionRecord
 except ImportError:
     pass
 

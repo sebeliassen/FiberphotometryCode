@@ -1,139 +1,26 @@
-# Legacy retirement status
+# Canonical owners and historical interfaces
 
-21 October 2026. The foundation, seqNMF delivery and first consumer migrations are integrated into main through reviewed normal merges. Legacy retirement remains in progress. See [execution state](../tasks/CONSOLIDATION_PROGRESS_20261021.md) and [the plan](../tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md).
+Reusable implementation belongs in `src/fpcode`, project analysis and cohort
+policy in `studies/<project>`, and operational tools in `ops/<purpose>`.
+Maintained callers should import these owners directly. Root `compat` contains
+historical interfaces, including `compat/core` and `compat/pipelines`; `src/fpcode/compat` separately owns
+historical library implementations and numerical policies.
 
-The canonical library is src/fpcode. Current study launchers should invoke fpcode.cli modules or installed commands; new study code should import the owning capability directly. Root core/pipelines/compat aliases remain supported while their consumers and artifact obligations are reviewed. A root directory is not retired merely because its imports are deprecated.
+Follow the [current consolidation checklist](../tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md).
+Preserve the workflows from the original source and seqNMF delivery; unsupported
+historical experiments do not require new functionality as part of consolidation.
 
-## Completed migrations
+Before retiring an adapter, check its maintained imports, literal script paths
+and explicitly supported serialized objects. Preserve units, clocks, masks,
+cohort policy and numerical expectations when moving callers. Keep independent
+behavioral tests and required import identities; use the
+[validation guidance](../agent-workflows/validation.md) to select checks.
 
-- Eight multiview training/fusion launchers now invoke `python -m fpcode.cli.train` or `python -m fpcode.cli.fuse`. Configurations, forwarded arguments and child failure status are preserved by direct-entry tests.
-- CLI orchestration tests now exercise canonical modules. Fresh-process tests separately preserve all five historical pipeline alias identities in both import orders.
-- Six active language-model analyses now import Jensen-Shannon divergence from fpcode.statistics.divergence, avoiding an empirical presentation renderer for that calculation. Its base-2 logarithms, clipping and last-axis normalization match the frozen original exactly in float32/float64 tests. The renderer reexports the shared helper. A frozen review-package copy remains historical source; its old imports are not evidence of a supported current entry point.
-- Twenty accidentally ignored source files in project data/models packages have been recovered. Their numerical definitions and original import sets are preserved; source-only Git exceptions continue excluding empirical payloads.
+The removed dated inventory and per-slice reports remain available in Git history
+at `ce281cc`. They described their recorded checkpoint and are not current
+completion gates. A static import scan or passing CPU suite does not establish
+universal compatibility with historical pickles or empirical workflows.
 
-- Six study alignment consumers now import fpcode.photometry.alignment directly. Four had referenced a lost public helper, build_aligned_moseq_phot. Its exact original function AST was restored from the pinned pre-scaffolding source into fpcode.compat.photometry.frame_merge. Independent native-frame order, missing-support, missing-photometry and fallback-column expectations pass, with original wrapper parity and legacy alias identity. The preserved default470/historical interpolation profile is explicit; complete export jobs and alternate historical configurations were not executed.
-
-## Inventory and limits
-
-The versioned inventory is [LEGACY_PATHS_20261021.tsv](../../registry/LEGACY_PATHS_20261021.tsv), [LEGACY_CONSUMERS_20261021.tsv](../../registry/LEGACY_CONSUMERS_20261021.tsv) and [scan metadata](../../registry/LEGACY_INVENTORY_20261021.json). It records current aliases, targets, imports, literal path candidates, code-cell references and per-consumer source hashes. Static references are review candidates, not proof of live execution. Notebook line numbers refer to concatenated code cells. Forty-four parse/budget limitations are recorded; unknown external users are not detectable from this scan.
-
-Root compat is distinct from src/fpcode/compat, which still owns historical policies and calibration resources. Neither migration of study imports nor a successful CPU suite establishes that every historical pickle can be loaded without its old namespace.
-
-## Next retirement gates
-
-1. Classify the remaining active syllable_generation/fiberphotometry imports by owner and migrate one capability at a time, keeping scientific defaults explicit.
-2. Review historical notebook, exported-bundle and operational consumers separately. Some empirical presentation scripts still contain old workstation/output paths and import-time filesystem effects; do not import or execute them as metadata checks.
-3. Inventory named trusted session/model artifacts and prove a canonical loader, separate converter or retained small legacy component for each supported family.
-4. Update shim registries and historical shim-generation maps before deleting adapters so tooling cannot recreate retired paths. Preserve physical direct-script/runpy obligations where supported.
-5. Verify external archive/legacy links, large-artifact backups and human feedback exports before any physical relocation. Git/source bundles do not contain the ignored empirical products.
-6. Continue reviewed changes from integrated main. The foundation, seqNMF, CLI/statistics and photometry integration PRs #2–#5 are merged with preserved ancestry; retirement still requires the capability and artifact gates above.
-
-Legacy roots remain intact at this checkpoint. No migration of recordings, models, generated media or human feedback was performed.
-
-## Checkpoint callers and remaining implementation gaps
-
-Three training runners now import checkpoint patching from fpcode.kpms.checkpoints.
-Both import orders retain legacy/canonical module and apply/remove-function
-identity without initializing modeling backends. Runner algorithms and import
-execution order are preserved; their empirical workflows were not executed.
-See registry/checkpoints/checkpoint_consumer_imports_20261021.json for the AST audit.
-
-The README documents explicit checkout activation for historical namespaces;
-those paths are not installed by the canonical wheel. Known next repairs include
-tracking's bare config/symlink identity and
-session-export utility alias/registry disagreements. Some target implementations
-are missing. Alias files and a passing CPU suite do not establish executable
-historical cohort pipelines; repair and validate those named routes separately.
-
-## Deep-research loading boundary
-
-Explicit canonical study imports replace the obsolete loader/processing search
-path. Discovery now resolves the configured data mirror; optional pkl_path selects
-a trusted file. Named/newest/generic priority, valid-session exclusions, metadata
-normalization, enrichment, optional1Hz filter and five-minute AMPH delay retain
-their historical policies. Diagnostics now load only from guarded mains. Their
-physical legacy proxies and registry targets agree, with both-order leaf identity
-and controlled runpy checks; parent-package identity is not promised.
-
-Fourteen focused cases and972 CPU passes in each of two environments use synthetic
-fixtures. They do not prove arbitrary historical pickle reconstruction or full PPE
-analysis execution; PPE output paths and optional plotting remain outstanding.
-See registry/checkpoints/deep_research_loading_20261021.json. Legacy roots remain.
-
-## Jonathan contract and leaf identity boundary
-
-Nine nonbuilder legacy leaf modules now resolve to physical canonical Jonathan
-owners; three parent bridges retain physical proxy paths. Config/context/tracking
-classes and parser functions share identity in both orders. The package defers
-build imports so these contracts do not require its broken enrichment namespace.
-Juvenile imports the canonical config class with its complete policy AST preserved.
-Three test-created historical class states reconstruct as canonical types; actual
-artifact-family reconstruction remains unverified. Full991 CPU passes in each
-environment and19 focused cases preserve independent chamber/timestamp/channel
-and synthetic discovery expectations. Scientific module source is unchanged.
-
-Direct studies.behavior directory-symlink identity, the obsolete builder enrichment
-route and the missing Karen/monoamine configuration owners remain obligations.
-See registry/checkpoints/jonathan_alias_identity_20261021.json. No symlink or legacy
-root was removed; this is a bounded import/identity repair, not full cohort delivery.
-
-## Export helper alias boundary
-
-Sampling, result and placeholder utility proxies now target the existing physical
-canonical study modules; their structural parent preserves leaf routing and four
-registry targets agree. Helper/driver source is unchanged. Both-order identity and
-physical execution are checked alongside independent sparse-frame masks, matching,
-placeholder and length expectations. Full1007 CPU passes in each environment.
-The result loader's historical extraction request includes save_results=True;
-tests use a nonwriting stub and do not execute a model. Full driver migration,
-missing legacy_support, named real artifact reconstruction and backup/feedback
-recovery still block retirement. No legacy root or empirical artifact was moved.
-See registry/checkpoints/export_utility_aliases_20261021.json.
-
-## Restored absolute-frame compatibility helper
-
-The lost migrate_legacy_vfi helper is recovered from the latest pre-refactor source
-under studies.session_model_exports.utils. That version had already removed rate
-heuristics after a synchronization correction: it only copies arrays and preserves
-values/dtype. Canonical caller imports, physical legacy leaf identity and matching
-source/shim records are restored.13 focused and1020 full CPU cases in each local
-environment pass. No real exporter/model/artifact was executed. Driver paths,
-backend setup, write policy and real artifact support remain gates; old reports
-about automatic scaling do not describe this restored implementation.
-
-## Original cohort policy recovery
-
-Karen's272-byte project config is restored from a checksum-verified source archive;
-baseline config is restored from pinned Git and identical archived source. They
-retain different ranges/rules and independent instances. Two tracking callers now
-use explicit policy/parser owners; four function ASTs remain exact.19focused and
-1039fullCPU cases in both environments pass, with independent provenance review.
-Unified-builder dynamic imports/global config propagation and old study namespace
-identity remain separate gates. No empirical cohort discovery was performed.
-
-## Jonathan direct builder and source-policy boundary
-
-The direct builder and historical enrichment proxy target the physical IFdN owner.
-Seven original source-policy override files from pinned969c893 now accompany it,
-with all legacy copies retained. Source hashes and AST evidence preserve the exact
-historical metadata priority, eight-stage order and numerical implementation.
-Sixteen new focused synthetic/cold tests cover leaf identity, physical proxies,
-stage flow, discovery precedence and inclusive manual/automatic mask union;
-broader validation remains pending parent integration. See
-registry/checkpoints/jonathan_builder_policy_20261021.json.
-
-Use `from studies.session_building.jonathan.build import build`; package-level
-build-name ambiguity remains. Unified project discovery, bare imports and global
-config replacement, other cohort policy selection, ignored mask files and named
-real-artifact recovery remain separate gates. No legacy root or empirical input
-was removed, and no complete cohort build was executed.
-
-## Remaining unified-policy propagation gate
-
-The direct IFdN builder/import/default-source boundary is restored with1055CPU
-passes in each local environment. The unified entry remains separate: bare module
-reloads, project-directory assumptions and copied JCFG aliases can mix policy
-across stages; process workers require explicit selected configuration rather than
-parent-global patching. AMPH enrichment is not equivalent to IFdN and retains a
-historical index-based clock rule requiring separate provenance/policy review.
-No full cohort/AMPH execution or universal artifact support is established.
+Keep recovery bundles and ignored empirical products separate from source
+cleanup. Removing an obsolete tracked adapter is not permission to delete
+recordings, models, output directories, browser feedback or external link targets.

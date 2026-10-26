@@ -15,20 +15,26 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 SHIMS_MAP = {
-    "core/cache_manifest.py": "fpcode.common.cache_manifest",
-    "core/camera_correspondence.py": "fpcode.tracking.camera_correspondence",
-    "core/eval_artifacts.py": "fpcode.kpms.evaluation",
-    "core/evaluation_metrics.py": "fpcode.kpms.metrics",
-    "core/fusion_engine.py": "fpcode.tracking.fusion",
-    "core/h5_guard.py": "fpcode.common.h5_guard",
-    "core/io_utils.py": "fpcode.common.io",
-    "core/logging_utils.py": "fpcode.common.logging",
-    "core/pair_matching.py": "fpcode.tracking.pair_matching",
-    "core/paths.py": "fpcode.common.paths",
-    "core/run_record.py": "fpcode.common.run_record",
-    "core/schemas.py": "fpcode.common.schemas",
-    "core/static_fusion_engine.py": "fpcode.tracking.static_fusion",
-    "core/ttl_sync.py": "fpcode.tracking.clock_sync",
+    "compat/core/cache_manifest.py": "fpcode.common.cache_manifest",
+    "compat/core/camera_correspondence.py": "fpcode.tracking.camera_correspondence",
+    "compat/core/eval_artifacts.py": "fpcode.kpms.evaluation",
+    "compat/core/evaluation_metrics.py": "fpcode.kpms.metrics",
+    "compat/core/fusion_engine.py": "fpcode.tracking.fusion",
+    "compat/core/h5_guard.py": "fpcode.common.h5_guard",
+    "compat/core/io_utils.py": "fpcode.common.io",
+    "compat/core/logging_utils.py": "fpcode.common.logging",
+    "compat/core/pair_matching.py": "fpcode.tracking.pair_matching",
+    "compat/core/paths.py": "fpcode.common.paths",
+    "compat/core/run_record.py": "fpcode.common.run_record",
+    "compat/core/schemas.py": "fpcode.common.schemas",
+    "compat/core/static_fusion_engine.py": "fpcode.tracking.static_fusion",
+    "compat/core/ttl_sync.py": "fpcode.tracking.clock_sync",
+    "compat/pipelines/train.py": "fpcode.cli.train",
+    "compat/pipelines/evaluate.py": "fpcode.cli.evaluate",
+    "compat/pipelines/fuse.py": "fpcode.cli.fuse",
+    "compat/pipelines/render.py": "fpcode.cli.render",
+    "compat/pipelines/export.py": "fpcode.cli.export",
+    "syllable_generation/datamodel.py": "fpcode.contracts.session_record",
     "syllable_generation/syllabizers/keypoint_moseq_syll/utils/batch_init.py": "fpcode.kpms.init_model",
     "syllable_generation/syllabizers/keypoint_moseq_syll/utils/compact_checkpoint.py": "fpcode.kpms.checkpoints",
     "syllable_generation/syllabizers/keypoint_moseq_syll/utils/patch_checkpoint.py": "fpcode.kpms.checkpoints",
@@ -48,10 +54,9 @@ SHIMS_MAP = {
 
 def update_core_shims():
     for rel_path, target in SHIMS_MAP.items():
-        if not rel_path.startswith("core/"):
+        if not rel_path.startswith("compat/core/"):
             continue
         p = REPO_ROOT / rel_path
-        mod_name = p.stem
         code = f'''"""
 [DEPRECATED SHIM] {rel_path}
 ==========================================
@@ -63,7 +68,7 @@ import sys
 import warnings
 
 warnings.warn(
-    "{rel_path.replace('/', '.').replace('.py', '')} is deprecated; import from {target} instead",
+    "{rel_path.removeprefix('compat/').replace('/', '.').replace('.py', '')} is deprecated; import from {target} instead",
     DeprecationWarning,
     stacklevel=2,
 )
@@ -90,12 +95,21 @@ def write_shims_tsv():
     if tsv_path.is_file():
         for line in tsv_path.read_text().splitlines()[1:]:
             if line:
-                records[line.split("\t", 1)[0]] = line
+                path, _, fields = line.partition("\t")
+                if path.startswith(("core/", "pipelines/")):
+                    path = "compat/" + path
+                    line = path + "\t" + fields
+                records[path] = line
     for rel_path, target in sorted(SHIMS_MAP.items()):
         p = REPO_ROOT / rel_path
-        shim_type = "module_proxy" if rel_path.startswith("core/") or "utils" in rel_path else "forwarder"
+        shim_type = "module_proxy" if rel_path.startswith(("compat/core/", "compat/pipelines/")) or "utils" in rel_path else "forwarder"
         status = "ACTIVE" if (p.exists() or (REPO_ROOT / "compat" / rel_path).exists()) else "MISSING"
         notes = "Emits DeprecationWarning"
+        if rel_path.startswith("compat/pipelines/"):
+            notes = "Physical compatibility entry point"
+        elif rel_path == "syllable_generation/datamodel.py":
+            shim_type = "module_proxy"
+            notes = "Historical class names resolve to canonical records"
         records[rel_path] = f"{rel_path}\t{target}\t{shim_type}\t{status}\t{notes}"
     lines = ["shim_path\ttarget_module\ttype\tstatus\tnotes", *[records[key] for key in sorted(records)]]
     tsv_path.write_text("\n".join(lines) + "\n")

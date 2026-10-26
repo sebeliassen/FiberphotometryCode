@@ -2,7 +2,6 @@
 
 import hashlib
 import importlib
-import json
 import os
 import subprocess
 import sys
@@ -23,17 +22,24 @@ ENRICH = 'studies.oft_baseline.ifdn_policy.enrich'
 OLD_ENRICH = 'syllable_generation.projects.jonathan_openfield_example.enrich'
 
 
-def test_preserved_source_policy_matches_pinned_checkpoint_and_legacy_originals():
-    checkpoint = ROOT/'registry/checkpoints/jonathan_builder_policy_20261021.json'
-    manifest = json.loads(checkpoint.read_text())['source_policy']
-    assert len(manifest) == 7
-    for name, reference in manifest.items():
+def test_preserved_source_policy_matches_pinned_originals():
+    # Original policy blobs from 969c893b8b6ba7ddd42af178f36aff3406f84cea.
+    expected = (
+        ('animals.csv', 432, '5c47448b92171f4e10afd504dc340fa0f33a2588d05de556a76b3cf36f059c84'),
+        ('animals_old.csv', 423, '545436bb9f59a4be257d0fcfd72de845b7da8dc115847f32a73ae97c7ade542e'),
+        ('exclusions.csv', 333, '4f8bf74e0aa1c8bc0464d3089632711f22fbfcf00c12ac9285f4aa3f61b1fa9b'),
+        ('experiment.csv', 0, 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'),
+        ('reviewed_sessions.txt', 588, '16947411fb86dec2105fe8470b72cbfb4aa24f3b3d9a8fc998c5bd86ffa1a8d5'),
+        ('sessions.csv', 0, 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'),
+        ('time_overlays.csv', 0, 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'),
+    )
+    for name, size, sha256 in expected:
         canonical = ROOT/'studies/oft_baseline/ifdn_policy/overrides'/name
         historical = ROOT/'compat/syllable_generation/projects/jonathan_openfield_example/overrides'/name
         payload = canonical.read_bytes()
         assert payload == historical.read_bytes()
-        assert len(payload) == reference['bytes']
-        assert hashlib.sha256(payload).hexdigest() == reference['sha256']
+        assert len(payload) == size
+        assert hashlib.sha256(payload).hexdigest() == sha256
 
 
 def child(script, tmp_path):

@@ -1,10 +1,13 @@
-# Archive Index
+# Historical archive index
 
-This document registers all historical snapshots, legacy packages, execution logs,
-and temporary files relocated to the `archive/` hierarchy as part of Phase 3 clean scaffolding.
+This dated catalogue records the October 9 scaffolding relocations. Paths below
+are historical local storage, not active source owners. Ignored archive contents
+and external symlink targets are preserved separately from Git. See
+[recovery](../recovery.md) for actual backup coverage.
 
-**Reversibility Guarantee**: Every item moved has an entry in [`MOVES.tsv`](file:///home/fsp585/Desktop/FiberphotometryCode/MOVES.tsv) and can be reverted
-instantly using [`undo_moves.sh`](file:///home/fsp585/Desktop/FiberphotometryCode/undo_moves.sh).
+The [move ledger](../../registry/MOVES.tsv) records source/storage relocations.
+It is a historical record, not a guarantee that every ignored payload is backed
+up or that an old undo script is safe to execute against the current layout.
 
 ## Cataloged Relocations
 

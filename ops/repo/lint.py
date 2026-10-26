@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 BASELINE = ROOT / "registry/LINT_BASELINE.json"
 STRICT_PATHS = (
-    "src/fpcode", "pipelines", "ops/backup", "ops/repo/dependencies.py",
+    "src/fpcode", "compat/pipelines", "ops/backup", "ops/repo/dependencies.py",
     "ops/repo/lint.py", "ops/repo/package_check.py",
 )
 MAINTAINED_PATHS = ("studies", "tests", "ops")

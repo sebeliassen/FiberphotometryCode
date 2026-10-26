@@ -8,10 +8,9 @@ filename and chamber rules; the monoamine/juvenile relaxed regex and frame range
 are separate cohort policies. `analysis/tracking.py` imports this Karen policy
 explicitly and retains its timestamp-level grouping and empty-animal filtering.
 Filename-only synthetic tests cover those discovery rules without reading video
-or H5 contents. The unified builder's global configuration changes, direct old
-study symlink identity and real artifact reconstruction remain separate gates.
-Provenance and exact check limits are recorded in
-[`project_tracking_policies_20261021.json`](../../registry/checkpoints/project_tracking_policies_20261021.json).
+or H5 contents. Real artifact reconstruction remains separate from these filename-only checks.
+The [policy regressions](../../tests/unit/test_project_tracking_policies.py)
+preserve the original cohort choices; historical provenance is retained in Git.
 
 The physical `session_policy.enrich` and `session_policy.tracking` adapters now
 forward directly to `analysis.enrich` and `analysis.tracking`. Their historical

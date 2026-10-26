@@ -14,8 +14,7 @@ contents, load cohorts or write outputs. Synthetic tests use empty files and
 verify chamber mapping, empty-animal filtering and matching references.
 
 The retained `studies/monoamine_interactions/projects/jonathan_oft_baseline`
-symlink leads here. The unified builder's dynamic imports and global configuration
-mutation remain a separate repair; restoring this policy does not validate its
-complete empirical execution. See
-[`project_tracking_policies_20261021.json`](../../registry/checkpoints/project_tracking_policies_20261021.json)
-for pinned original source, AST comparisons and validation limits.
+symlink leads here. The [policy regressions](../../tests/unit/test_project_tracking_policies.py)
+preserve cohort choices, and [unified-builder tests](../../tests/unit/test_unified_builder_projects.py)
+cover supported project selection. These synthetic checks do not establish
+complete empirical execution or compatibility with arbitrary saved sessions.

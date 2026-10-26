@@ -15,8 +15,8 @@ configuration directory.
 | `data/{raw,sessions,models,fused,analysis_cache}` | Ignored empirical inputs, model states and caches |
 | `outputs/<run-id>` | Disposable results and runtime validation evidence |
 | `ops/{monitoring,dlc,compaction,repo,backup,diagnostics}` | Operational implementations, organized by purpose |
-| `compat` | Live historical import paths and compatibility entry points |
-| `archive` | Preserved historical source, reports and frozen bundles |
+| `compat` | Historical import/file adapters, including `core` and `pipelines`; implementations stay with canonical owners |
+| Local ignored `archive` | Historical payloads; retrieval notes live in `docs/reports/ARCHIVE_INDEX.md` |
 | `registry` | Source inventories, migration records and validation references |
 
 Studies are grouped by project, without a top-level behavior/photometry split.

@@ -16,7 +16,7 @@ from studies.session_building.jonathan.build import build
 ```
 
 The package-level `jonathan.build` name can refer to a module or a function,
-depending on import order. That separate lazy-export issue remains unresolved.
+depending on import order. Use the leaf API above or `build_sessions` for an unambiguous callable.
 Importing the builder or its historical leaf proxies does not execute a build,
 read policy CSVs/NPZs, probe videos or initialize modeling backends.
 
@@ -28,9 +28,7 @@ to `enrich()` selects exclusions and automatic masks; it does not change animal
 metadata lookup. Manual interval endpoints remain inclusive and are unioned with
 automatic frame exclusions. `skip_exclusions=True` skips both exclusion sources.
 
-The unified builder's dynamic project lookup, bare configuration imports and
-singleton replacement remain separate repair work. This source restoration does
-not validate AMPH or monoamine cohort selection, ignored `auto_mask.npz` files,
-real session/model artifacts or a complete empirical build. The evidence is
-[the checkpoint](../../../registry/checkpoints/jonathan_builder_policy_20261021.json)
-and controlled synthetic tests; no empirical inputs were loaded.
+The [policy regression tests](../../../tests/unit/test_jonathan_builder_policy.py)
+retain the seven original file checksums and controlled synthetic checks.
+They do not validate ignored `auto_mask.npz` files, arbitrary saved sessions or a
+complete empirical build. No empirical inputs were loaded during consolidation.

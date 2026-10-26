@@ -7,7 +7,7 @@ Start with [current task state](docs/tasks/CURRENT.md) and the [capability contr
 - Reusable implementation: `src/fpcode`; read [library guidance](src/fpcode/AGENTS.md) before changing it.
 - Scientific policy, cohort choices and analyses: `studies/<project>`; read [study guidance](studies/AGENTS.md).
 - Operations: `ops/<purpose>`; read [operations guidance](ops/AGENTS.md).
-- Historical namespaces: root `compat`; read [compatibility guidance](compat/AGENTS.md). `fpcode.compat` instead owns historical library implementations/profiles. `core` and `pipelines` are physical adapters.
+- Historical namespaces: root `compat`; read [compatibility guidance](compat/AGENTS.md). `fpcode.compat` instead owns historical library implementations/profiles. Historical `core` and `pipelines` physical adapters also live under `compat`.
 - Empirical inputs/models belong under ignored `data` or configured external storage; generated products belong at explicitly selected output locations. Do not stage raw recordings, pickles or model payloads with source.
 
 ## Setup and checks

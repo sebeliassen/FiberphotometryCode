@@ -529,3 +529,24 @@ compat/syllable_generation/projects/jonathan_openfield_amph/overrides/exclusions
 compat/syllable_generation/projects/jonathan_openfield_amph/overrides/exclusions_test_ifdn.csv	studies/oft_amph/overrides/exclusions_test_ifdn.csv	SOURCE_POLICY_COPY	Exact pinned969c893 AMPH source policy; historical original retained; no empirical auto-mask copy	NO
 compat/syllable_generation/projects/jonathan_openfield_amph/overrides/reviewed_sessions.txt	studies/oft_amph/overrides/reviewed_sessions.txt	SOURCE_POLICY_COPY	Exact pinned969c893 AMPH source policy; historical original retained; no empirical auto-mask copy	NO
 compat/syllable_generation/projects/jonathan_openfield_amph/overrides/sessions.csv	studies/oft_amph/overrides/sessions.csv	SOURCE_POLICY_COPY	Exact pinned969c893 AMPH source policy; historical original retained; no empirical auto-mask copy	NO
+core/__init__.py	compat/core/__init__.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/cache_manifest.py	compat/core/cache_manifest.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/camera_correspondence.py	compat/core/camera_correspondence.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/eval_artifacts.py	compat/core/eval_artifacts.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/evaluation_metrics.py	compat/core/evaluation_metrics.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/fusion_engine.py	compat/core/fusion_engine.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/h5_guard.py	compat/core/h5_guard.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/io_utils.py	compat/core/io_utils.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/logging_utils.py	compat/core/logging_utils.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/pair_matching.py	compat/core/pair_matching.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/paths.py	compat/core/paths.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/run_record.py	compat/core/run_record.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/schemas.py	compat/core/schemas.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/static_fusion_engine.py	compat/core/static_fusion_engine.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+core/ttl_sync.py	compat/core/ttl_sync.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+pipelines/train.py	compat/pipelines/train.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+pipelines/evaluate.py	compat/pipelines/evaluate.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+pipelines/fuse.py	compat/pipelines/fuse.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+pipelines/render.py	compat/pipelines/render.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+pipelines/export.py	compat/pipelines/export.py	COMPAT_RELOCATION	Consolidate physical historical adapter under existing compatibility boundary	NO
+archive/ARCHIVE_INDEX.md	docs/reports/ARCHIVE_INDEX.md	DOC_RELOCATION	Preserve historical archive retrieval index outside ignored storage	NO

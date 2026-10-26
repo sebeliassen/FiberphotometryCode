@@ -1,19 +1,19 @@
 shim_path	target_module	type	status	notes
-core/__init__.py	unknown	forwarder	ACTIVE	Emits DeprecationWarning
-core/cache_manifest.py	fpcode.common.cache_manifest	forwarder	ACTIVE	Emits DeprecationWarning
-core/camera_correspondence.py	fpcode.tracking.camera_correspondence	forwarder	ACTIVE	Emits DeprecationWarning
-core/eval_artifacts.py	fpcode.kpms.evaluation	forwarder	ACTIVE	Emits DeprecationWarning
-core/evaluation_metrics.py	fpcode.kpms.metrics	forwarder	ACTIVE	Emits DeprecationWarning
-core/fusion_engine.py	fpcode.tracking.fusion	forwarder	ACTIVE	Emits DeprecationWarning
-core/h5_guard.py	fpcode.common.h5_guard	forwarder	ACTIVE	Emits DeprecationWarning
-core/io_utils.py	fpcode.common.io	forwarder	ACTIVE	Emits DeprecationWarning
-core/logging_utils.py	fpcode.common.logging	forwarder	ACTIVE	Emits DeprecationWarning
-core/pair_matching.py	fpcode.tracking.pair_matching	forwarder	ACTIVE	Emits DeprecationWarning
-core/paths.py	fpcode.common.paths	forwarder	ACTIVE	Emits DeprecationWarning
-core/run_record.py	fpcode.common.run_record	forwarder	ACTIVE	Emits DeprecationWarning
-core/schemas.py	fpcode.common.schemas	forwarder	ACTIVE	Emits DeprecationWarning
-core/static_fusion_engine.py	fpcode.tracking.static_fusion	forwarder	ACTIVE	Emits DeprecationWarning
-core/ttl_sync.py	fpcode.tracking.clock_sync	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/__init__.py	fpcode.common	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/cache_manifest.py	fpcode.common.cache_manifest	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/camera_correspondence.py	fpcode.tracking.camera_correspondence	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/eval_artifacts.py	fpcode.kpms.evaluation	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/evaluation_metrics.py	fpcode.kpms.metrics	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/fusion_engine.py	fpcode.tracking.fusion	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/h5_guard.py	fpcode.common.h5_guard	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/io_utils.py	fpcode.common.io	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/logging_utils.py	fpcode.common.logging	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/pair_matching.py	fpcode.tracking.pair_matching	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/paths.py	fpcode.common.paths	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/run_record.py	fpcode.common.run_record	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/schemas.py	fpcode.common.schemas	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/static_fusion_engine.py	fpcode.tracking.static_fusion	forwarder	ACTIVE	Emits DeprecationWarning
+compat/core/ttl_sync.py	fpcode.tracking.clock_sync	forwarder	ACTIVE	Emits DeprecationWarning
 fiberphotometry/analysis/performance_funcs.py	studies/photometry_exploration/analysis/performance_funcs.py	forwarder	ACTIVE	Emits DeprecationWarning
 fiberphotometry/analysis/plotting.py	studies/photometry_exploration/analysis/plotting.py	forwarder	ACTIVE	Emits DeprecationWarning
 fiberphotometry/analysis/response_metrics.py	studies/photometry_exploration/analysis/response_metrics.py	forwarder	ACTIVE	Emits DeprecationWarning
@@ -677,3 +677,9 @@ syllable_generation/videogen/grids/video.py	studies/multimodal_movies/grids/vide
 syllable_generation/videogen/main.py	studies/multimodal_movies/main.py	forwarder	ACTIVE	Emits DeprecationWarning
 syllable_generation/videogen/utils.py	studies/multimodal_movies/utils.py	forwarder	ACTIVE	Emits DeprecationWarning
 update_nb_cell.py	ops.scripts.update_nb_cell	forwarder	MISSING	DeprecationWarning
+compat/pipelines/train.py	fpcode.cli.train	module_proxy	ACTIVE	Physical compatibility entry point
+compat/pipelines/evaluate.py	fpcode.cli.evaluate	module_proxy	ACTIVE	Physical compatibility entry point
+compat/pipelines/fuse.py	fpcode.cli.fuse	module_proxy	ACTIVE	Physical compatibility entry point
+compat/pipelines/render.py	fpcode.cli.render	module_proxy	ACTIVE	Physical compatibility entry point
+compat/pipelines/export.py	fpcode.cli.export	module_proxy	ACTIVE	Physical compatibility entry point
+syllable_generation/datamodel.py	fpcode.contracts.session_record	module_proxy	ACTIVE	Historical class names resolve to canonical records

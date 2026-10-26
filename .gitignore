@@ -97,7 +97,6 @@ outputs/
 output/
 _backups/
 archive/*
-!archive/ARCHIVE_INDEX.md
 **/visualizations_*
 **/visualizations_*/
 **/output
