@@ -157,7 +157,7 @@ Two different seqNMF implementations exist. Delivery’s `reference_seqnmf.py` p
 
 ## Preservation priorities before departure
 
-1. Retain the captured primary and delivery source checkpoints (`31326cc` and `2c43b75`) and verified recovery bundles. Their manifests and restore checks are recorded in `docs/tasks/CONSOLIDATION_PROGRESS_20261021.md` and primary `outputs/consolidation_20261021`. Preserve later work separately; do not reset or clean the original worktrees.
+1. Retain the captured primary and delivery source checkpoints (`31326cc` and `2c43b75`) and verified recovery bundles. Recovery bundles and restore evidence remain under primary `outputs/consolidation_20261021`; [current status](../tasks/CURRENT.md) records the completed consolidation. Preserve ignored empirical products and feedback separately from Git source.
 2. Preserve the shared-library provenance of the frozen 21 October atlas execution: its editable install resolved shared `fpcode` imports from the primary checkout. Consult `runtime_library_sources.json` and the output source snapshots for actual paths/hashes. For new runs, verify import origins against the selected integrated checkout.
 3. Transfer ignored empirical material separately: tracking/frame caches, video, masks, mappings, fitted models, source arrays and frozen inputs. Git and the portable viewing ZIPs are not a full reproducibility backup.
 4. Export browser feedback JSON from every relevant gallery before changing machine or browser origin. Local autosave is not shared lab storage.
