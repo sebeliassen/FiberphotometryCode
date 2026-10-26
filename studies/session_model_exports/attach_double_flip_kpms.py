@@ -25,13 +25,13 @@ if str(REPO_ROOT) not in sys.path:
 
 import keypoint_moseq as kpms
 
-from syllable_generation.analysis.attach_kpms import _attach_kpms_full_to_sessions
+from studies.session_model_exports.attach_kpms import _attach_kpms_full_to_sessions
 from fpcode.photometry.alignment import build_aligned_moseq_phot
 from studies.session_model_exports.utils.legacy_support import migrate_legacy_vfi
-from syllable_generation.analysis.utils.sampling import (
+from studies.session_model_exports.utils.sampling import (
     build_aligned_dfs,
 )
-from syllable_generation.analysis.utils.syll_results import (
+from studies.session_model_exports.utils.syll_results import (
     build_result_to_session_map,
     compute_actual_lengths_from_sessions,
     load_kpms_results_and_vfi,

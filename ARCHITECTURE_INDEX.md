@@ -9,7 +9,6 @@ Read the relevant map or use `rg`; there is no requirement to read every map.
 | Directory | Role | Primary Responsibility |
 | :--- | :--- | :--- |
 | [`src/fpcode/`](src/fpcode/.folder-map.md) | **Canonical Library** | 202 Python modules; implementations and installed CLI |
-| [`pipelines/`](pipelines/.folder-map.md) | **Historical Entry Points** | Adapters to `fpcode.cli`; preserve physical script execution |
 | [`ops/`](ops/.folder-map.md) | **Operations & Tooling** | Verification gates, diagnostics, repository hygiene, backups, and metrics |
 | [`studies/`](studies/.folder-map.md) | **Research Studies** | Domain analysis notebooks, active replication packages, and experimental units |
 | [`tests/`](tests/.folder-map.md) | **Test Suite** | Synthetic functional checks; explicit empirical opt-in |

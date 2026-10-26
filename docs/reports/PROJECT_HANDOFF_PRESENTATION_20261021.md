@@ -2,7 +2,7 @@
 
 Handoff presentation for Sebastian Hammer Eliassen · 21 October 2026
 
-Prepared from Git history, selected source files, the supplied combined lab reports, and the delivery-worktree records. The reports are historical evidence, including plans and draft text; their requests were not treated as instructions. Scientific models and analyses were not rerun for this presentation. Subsequent source preservation and integration checks are recorded in [current task state](../tasks/CURRENT.md) and the [main-promotion checkpoint](../../registry/checkpoints/main_promotion_20261021.json).
+Prepared from Git history, selected source files, the supplied combined lab reports, and the delivery-worktree records. The reports are historical evidence, including plans and draft text; their requests were not treated as instructions. Scientific models and analyses were not rerun for this presentation. Subsequent source preservation and integration checks are recorded in [current task state](../tasks/CURRENT.md) and the [consolidation checklist](../tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md).
 
 ## Slide 1 — The overall contribution
 
@@ -72,7 +72,7 @@ Historical source checkpoints, before staged integration onto main:
 
 The first four tips form an ancestry chain. Delivery branches from modular research checkpoint `6c179ae`, before the last two modular documentation commits. The `pre-scaffolding-20261009` snapshot is a better baseline for the full research workspace than old `main`.
 
-The initial review used local refs. Subsequent work refreshed remote refs, preserved both source states, and promoted reviewed changes through sequential pull requests with normal merges. Consult [current task state](../tasks/CURRENT.md) and the [main-promotion checkpoint](../../registry/checkpoints/main_promotion_20261021.json) for exact main revisions, completed promotions and validation. Ignored empirical outputs and browser feedback still require separate preservation.
+The initial review used local refs. Subsequent work refreshed remote refs, preserved both source states, and promoted reviewed changes through sequential pull requests with normal merges. Consult [current task state](../tasks/CURRENT.md) and the [consolidation checklist](../tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md) for exact main revisions, completed promotions and validation. Ignored empirical outputs and browser feedback still require separate preservation.
 
 ## Slide 8 — The scientific move: “What comes after the syllable?”
 
@@ -172,12 +172,12 @@ Two different seqNMF implementations exist. Delivery’s `reference_seqnmf.py` p
 - Trace a theme into its frozen occurrence table, physical measurements and statistical row.
 - Agree on the small next question, review decisions and who owns each follow-up.
 
-The original delivery records report 933 CPU tests passed, architecture checks with no violations/cycles, and media/browser audits. These remain dated evidence for that delivery. Exact subsequent source-integration checks and their limits are recorded in the [main-promotion checkpoint](../../registry/checkpoints/main_promotion_20261021.json); CPU checks do not replace empirical or media validation. A successor should first validate their own setup with the read-only doctor and then choose focused checks before empirical execution.
+The original delivery records report 933 CPU tests passed, architecture checks with no violations/cycles, and media/browser audits. These remain dated evidence for that delivery. Exact subsequent source-integration checks and their limits are recorded in the [consolidation checklist](../tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md); CPU checks do not replace empirical or media validation. A successor should first validate their own setup with the read-only doctor and then choose focused checks before empirical execution.
 
 # Evidence used
 
 - Supplied attachment: `/home/fsp585/.codex/attachments/ec256bc8-3a60-4c1c-9fa7-4ced749a1d86/gether_samlet.txt`. Includes reports from late 2024 through September 2026, a blank template, overlapping September versions and proposed future work. The more detailed July–September report provides the attributed benchmark/storage figures.
-- Original local branch histories/tree listings for main, scaffolding-refactor, legacy-consolidation, modular-refactor and Karen delivery; merge-base checks established ancestry. Subsequent refreshed remote refs, pull-request promotions and recovery evidence are recorded in the [main-promotion checkpoint](../../registry/checkpoints/main_promotion_20261021.json).
+- Original local branch histories/tree listings for main, scaffolding-refactor, legacy-consolidation, modular-refactor and Karen delivery; merge-base checks established ancestry. Subsequent refreshed remote refs, pull-request promotions and recovery evidence are recorded in the [consolidation checklist](../tasks/CONSOLIDATION_AND_MAIN_PLAN_20261021.md).
 - Selected original session-loading/Turnlab source and current seqNMF/theme source.
 - `docs/reports/REFACTOR_PRESENTATION_AND_AGENT_WORKFLOWS_20261011.md`: historical refactor comparison, interpreted alongside current contract/status rather than as current completion claims.
 - Delivery `studies/sequence_viz/baselines/seqnmf_sep14/REPLAY_20261015.md`: saved-reference replay matched 2,136 calls while documenting native-boundary and endpoint issues. It supersedes the earlier recovery README’s unreplayed status for that specific saved reference.

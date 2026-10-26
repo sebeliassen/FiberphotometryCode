@@ -40,7 +40,7 @@ if str(REPO_ROOT) not in sys.path:
 import keypoint_moseq as kpms
 
 from fpcode.photometry.alignment import build_aligned_moseq_phot
-from syllable_generation.analysis.utils.sampling import build_aligned_dfs, flatten_results_to_timeline
+from studies.session_model_exports.utils.sampling import build_aligned_dfs, flatten_results_to_timeline
 
 logging.basicConfig(
     level=logging.INFO,

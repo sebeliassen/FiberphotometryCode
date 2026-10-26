@@ -1,26 +1,22 @@
 # Recovery and verification
 
-The working branch is `codex/modular-refactor`. The clean Gemini baseline is
-`0891de1b1c288f16c42d23d7e4b4cbdb020f8cee`, tagged
-`pre-codex-modularization-20261009`. The accepted implementation checkpoint is
-`6ca24f3`, tagged `codex-refactor-implementation-20261009`.
+Current maintained source is on `main`. Original modular (`31326cc`) and Karen
+seqNMF delivery (`2c43b75`) source are part of its history. Older branch names
+may have been retired; use preserved tags or Git commits to inspect those states.
+`codex/pre-consolidation-20261026` preserves the old primary tip `16c5337`,
+including its unique task notes, and is available on origin.
 
-Review changes with:
+Source/history bundles and restore evidence from the integration are retained
+under the primary checkout's `outputs/consolidation_20261021`. For example,
+`preserved_all_refs.bundle` records the original five local branches. Use the
+[current task state](tasks/CURRENT.md) for the latest source revision/checks.
+Inspect older source with `git show COMMIT:path`; restore into a separate empty
+location when needed, rather than resetting a live runtime checkout.
 
-```bash
-git diff pre-codex-modularization-20261009..codex-refactor-implementation-20261009
-```
-
-Inspect the previous code without replacing current files:
-
-```bash
-git worktree add /tmp/fpcode-before-refactor pre-codex-modularization-20261009
-```
-
-Git snapshots cover tracked source and configuration. They do not restore raw
-videos, empirical pickles or untracked outputs. Avoid a broad reset or cleanup
-when another process is writing in the repository. Restore selected source only
-after reviewing its dependencies, or use a fresh checkout/worktree.
+Git snapshots do not restore ignored recordings, model/session payloads,
+generated review products or browser-local feedback. Symlinks preserve a target
+name, not a backup of that target. Keep current empirical storage and both review
+viewers' outputs intact; source cleanup does not authorize their removal.
 
 ## Existing HDD backups
 
@@ -73,5 +69,5 @@ become sealed content-verified snapshots.
 
 To restore Git history separately, clone `repository.bundle` into a new directory.
 Verify the bundle and SHA-256 values against `backup.json` first. A source archive
-can also be extracted into a fresh directory and tested there. A final code restore
-drill has not been recorded. Keep data recovery and code rollback separate.
+can also be extracted into a fresh directory and tested there. Existing source restore evidence is under `outputs/consolidation_20261021`.
+Keep empirical recovery and code rollback separate.

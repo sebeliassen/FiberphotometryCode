@@ -9,9 +9,10 @@ The reusable implementation is in `src/fpcode`, organized into contracts,
 adapters, alignment, tracking, photometry, behavior, KPMS, statistics,
 visualization, workflows and installed CLI modules. Study-specific analyses
 live in `studies/<project>`, with methods and cohort policy kept alongside their
-project. Physical `core` and `pipelines` adapters remain at the repository root.
-Historical `syllable_generation` and `fiberphotometry` namespaces live under
-`compat`; `archive` contains preserved historical material.
+project. Historical import/file adapters, including `core`, `pipelines`,
+`syllable_generation` and `fiberphotometry`, live under `compat`. Current commands
+use the installed `fpcode` CLI. Ignored historical storage may remain locally
+under `archive`; its [retrieval index](docs/reports/ARCHIVE_INDEX.md) is documentation.
 
 Start with the [documentation index](docs/README.md) for current guidance and
 preserved historical reports. The agreed architecture is documented in
@@ -19,6 +20,21 @@ preserved historical reports. The agreed architecture is documented in
 ownership is described in [configs/README.md](configs/README.md), and backup and
 rollback procedures are in [recovery.md](docs/recovery.md). The existing
 [October 9 handoff](docs/reports/handoff.md) remains a dated record.
+
+For the current seqNMF project, start with the
+[Karen analysis guide](studies/karen_pff_vs_monomer/analysis/README.md),
+[delivered theme report and recipe](studies/karen_pff_vs_monomer/analysis/EXPLORATORY_THEME_DELIVERY_20261021.md)
+and [atlas inputs/methods](studies/karen_pff_vs_monomer/analysis/BEHAVIOR_ATLAS.md).
+The source from the original modular and Karen delivery branches is integrated;
+new work should start from `main`. The reference and shared seqNMF solvers retain
+their different numerical policies. Existing exploratory findings are not new
+validated disease endpoints.
+
+Empirical inputs/models remain under `data` or configured external storage;
+generated reports/media remain under their original `outputs` locations. The
+preserved delivery checkout has its own outputs. `FP_DATA_ROOT`, when used, is a
+mirror root containing `data/`. Source consolidation does not move these products
+or refit models. See [recovery](docs/recovery.md) for source and empirical limits.
 
 Coding/research agents should start with [AGENTS.md](AGENTS.md), the
 [navigation index](ARCHITECTURE_INDEX.md) and [current task state](docs/tasks/CURRENT.md).
@@ -53,7 +69,9 @@ Use a fresh Python process when switching checkouts. This exposes retained
 aliases; their presence does not prove that every historical artifact or script
 works with current dependencies. Prefer `fpcode` imports and CLI commands for
 new work. Tests explicitly exercise this checkout setup in a separate process;
-pytest's own path configuration is not an installation mechanism.
+pytest's own path configuration is not an installation mechanism. Physical
+historical CLI files are under `compat/pipelines/<verb>.py`; use the installed
+commands above or `python -m fpcode.cli.<verb>` for maintained workflows.
 
 The default test suite uses tiny functional fixtures. Empirical scientific
 reproduction and GPU model fitting are separate checks. Existing models, videos,

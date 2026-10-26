@@ -57,9 +57,9 @@ Study instructions belong alongside their analysis under [studies](../studies/).
 Projects are organized directly under `studies/<project>`, rather than separate
 behavior and photometry trees. Shared implementations live in `src/fpcode`;
 project-specific hypotheses, exclusions and cohort policies stay with the project.
-Live historical imports live in [compat](../compat/). Frozen review bundles
-belong under `archive/bundles` and are indexed by
-[archive/ARCHIVE_INDEX.md](../archive/ARCHIVE_INDEX.md).
+Live historical imports live in [compat](../compat/). Local historical payloads may remain under ignored `archive`; the dated
+[retrieval index](reports/ARCHIVE_INDEX.md) records their original locations.
+Tracked implementations do not use archive as a source owner.
 
 New broadly reusable guidance belongs here; study hypotheses, exclusions and
 cohort-specific notes belong with their study. Consolidation should handle a

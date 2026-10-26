@@ -72,7 +72,9 @@ def test_historical_metrics_split_exports_keep_identity_without_import_cycles(sp
         for name in ['calculate_kinematics', 'get_syllable_instances', 'get_syllable_usage',
                      'calculate_entropy_metrics', 'calculate_duration_entropy', 'analyze_session',
                      'calculate_advanced_stats', 'get_fingerprint_data']:
-            assert getattr(metrics, name).__module__ == historical_name
+            assert getattr(metrics, name).__module__ == canonical_prefix + 'metrics'
+        canonical_metrics = importlib.import_module(canonical_prefix + 'metrics')
+        assert metrics is bare_metrics is canonical_metrics
         assert len(metrics.__all__) == 15 and set(metrics.__all__) <= set(dir(metrics))
         try:
             metrics.unknown_api

@@ -24,7 +24,6 @@ ROOT = Path(__file__).resolve().parents[2]
 # Target directory roots to include in hierarchical indexing
 DEFAULT_TARGETS = (
     "src/fpcode",
-    "pipelines",
     "ops",
     "configs",
     "tests",
@@ -445,7 +444,6 @@ def render_architecture_index(root_dirs: list[DirectoryInfo]) -> str:
     lines.append("| :--- | :--- | :--- |")
     module_count = sum(len(d.files) for d in root_dirs if d.rel_path.startswith("src/fpcode"))
     lines.append(f"| [`src/fpcode/`](src/fpcode/.folder-map.md) | **Canonical Library** | {module_count} Python modules; implementations and installed CLI |")
-    lines.append("| [`pipelines/`](pipelines/.folder-map.md) | **Historical Entry Points** | Adapters to `fpcode.cli`; preserve physical script execution |")
     lines.append("| [`ops/`](ops/.folder-map.md) | **Operations & Tooling** | Verification gates, diagnostics, repository hygiene, backups, and metrics |")
     lines.append("| [`studies/`](studies/.folder-map.md) | **Research Studies** | Domain analysis notebooks, active replication packages, and experimental units |")
     lines.append("| [`tests/`](tests/.folder-map.md) | **Test Suite** | Synthetic functional checks; explicit empirical opt-in |")
